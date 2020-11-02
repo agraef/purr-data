@@ -21,7 +21,7 @@
 
 /* ------------------------ pdf~ ----------------------------- */
 
-static t_class *pdf_class;
+static t_class *pdf_class=NULL;
 
 typedef struct _pdf {
   t_object x_obj;
@@ -122,7 +122,8 @@ static void pdf_free(t_pdf *x)
 
 static void pdf_tilde_helper(void)
 {
-  post("\n"HEARTSYMBOL " pdf~\t:: get the probability density function of a signal (-1.0 to +1.0)");
+  post("\n"HEARTSYMBOL
+       " pdf~\t:: get the probability density function of a signal (-1.0 to +1.0)");
   post("'bang'\t  : output a list of the probabilities of 'n' function values"
        "\n'clear'\t  : clear the buffer (set all probabilities to zero)"
        "\n<1/0>\t  : short for 'bang' and 'clear'"
@@ -130,20 +131,18 @@ static void pdf_tilde_helper(void)
   post("creation :: 'pdf~ [<n>]':: get the pdf for <n> (default: 64) values");
 }
 
-void pdf_tilde_setup(void)
+ZEXY_SETUP void pdf_tilde_setup(void)
 {
-  pdf_class = class_new(gensym("pdf~"), (t_newmethod)pdf_new,
-                        (t_method)pdf_free,
-                        sizeof(t_pdf), 0, A_DEFFLOAT, 0);
+  pdf_class = zexy_new("pdf~",
+                       pdf_new, pdf_free, t_pdf, 0, "F");
 
-  class_addmethod(pdf_class, nullfn, gensym("signal"), 0);
-  class_addmethod(pdf_class, (t_method)pdf_dsp, gensym("dsp"),
-                  A_CANT, 0);
+  zexy_addmethod(pdf_class, (t_method)nullfn, "signal", "");
+  zexy_addmethod(pdf_class, (t_method)pdf_dsp, "dsp", "!");
 
-  class_addmethod(pdf_class, (t_method)pdf_bang, gensym("bang"), 0);
-  class_addmethod(pdf_class, (t_method)clear_pdfbuf, gensym("clear"), 0);
+  zexy_addmethod(pdf_class, (t_method)pdf_bang, "bang", "");
+  zexy_addmethod(pdf_class, (t_method)clear_pdfbuf, "clear", "");
   class_addfloat(pdf_class, pdf_float);
 
-  class_addmethod(pdf_class, (t_method)pdf_tilde_helper, gensym("help"), 0);
+  zexy_addmethod(pdf_class, (t_method)pdf_tilde_helper, "help", "");
   zexy_register("pdf~");
 }

@@ -40,9 +40,14 @@
 
 #include "zexy.h"
 
-#ifdef __WIN32__
-# define USE_TIMEB
+#if (defined __WIN32__)
+# if (defined __i386__) && (defined __MINGW32__)
+/* unless compiling under mingw/32bit, we want USE_TIMEB in redmond-land */
+# else
+#  define USE_TIMEB
+# endif
 #endif
+
 
 #ifdef __APPLE__
 # include <sys/types.h>
@@ -61,7 +66,7 @@
 
 /* ----------------------- date --------------------- */
 
-static t_class *date_class;
+static t_class *date_class=NULL;
 
 typedef struct _date {
   t_object x_obj;
@@ -79,10 +84,10 @@ typedef struct _date {
 static void *date_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
 {
   t_date *x = (t_date *)pd_new(date_class);
-  char buf[5];
 
   x->GMT=0;
   if (argc) {
+    char buf[5];
     atom_string(argv, buf, 5);
     if (buf[0]=='G' && buf[1]=='M' && buf[2]=='T') {
       x->GMT = 1;
@@ -126,14 +131,13 @@ static void help_date(t_date* UNUSED(x))
   post("\ncreation\t::'date [GMT]': show local date or GMT");
 }
 
-void date_setup(void)
+ZEXY_SETUP void date_setup(void)
 {
-  date_class = class_new(gensym("date"),
-                         (t_newmethod)date_new, 0,
-                         sizeof(t_date), 0, A_GIMME, 0);
+  date_class = zexy_new("date",
+                        date_new, 0, t_date, 0, "*");
 
   class_addbang(date_class, date_bang);
 
-  class_addmethod(date_class, (t_method)help_date, gensym("help"), 0);
+  zexy_addmethod(date_class, (t_method)help_date, "help", "");
   zexy_register("date");
 }

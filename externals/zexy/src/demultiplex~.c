@@ -19,7 +19,7 @@
 
 #include "zexy.h"
 
-static t_class *demux_class;
+static t_class *demux_tilde_class=NULL;
 
 typedef struct _demux {
   t_object x_obj;
@@ -79,7 +79,8 @@ static void demux_dsp(t_demux *x, t_signal **sp)
 
 static void demux_helper(void)
 {
-  post("\n"HEARTSYMBOL " demux~\t:: demultiplex a signal to one of various outlets");
+  post("\n"HEARTSYMBOL
+       " demux~\t:: demultiplex a signal to one of various outlets");
   post("<#out>\t : the outlet-number (counting from 0) to witch the inlet is routed"
        "'help'\t : view this");
   post("creation : \"demux~ [arg1 [arg2...]]\"\t: the number of arguments equals the number of outlets\n");
@@ -92,7 +93,7 @@ static void demux_free(t_demux *x)
 
 static void *demux_new(t_symbol* UNUSED(s), int argc, t_atom* UNUSED(argv))
 {
-  t_demux *x = (t_demux *)pd_new(demux_class);
+  t_demux *x = (t_demux *)pd_new(demux_tilde_class);
   int i;
 
   if (!argc) {
@@ -113,26 +114,28 @@ static void *demux_new(t_symbol* UNUSED(s), int argc, t_atom* UNUSED(argv))
 
   return (x);
 }
-
-void demultiplex_tilde_setup(void)
+static t_class* zclass_setup(const char*name)
 {
-  demux_class = class_new(gensym("demultiplex~"), (t_newmethod)demux_new,
-                          (t_method)demux_free, sizeof(t_demux), 0, A_GIMME, 0);
-  class_addcreator((t_newmethod)demux_new, gensym("demux~"), A_GIMME, 0);
+  t_class *c = zexy_new(name,
+                        demux_new, demux_free, t_demux, 0, "*");
+  class_addfloat(c, demux_output);
+  zexy_addmethod(c, (t_method)demux_dsp, "dsp", "!");
+  zexy_addmethod(c, (t_method)nullfn, "signal", "");
 
-  class_addfloat(demux_class, demux_output);
-  class_addmethod(demux_class, (t_method)demux_dsp, gensym("dsp"),
-                  A_CANT, 0);
-  class_addmethod(demux_class, nullfn, gensym("signal"), 0);
-
-  class_addmethod(demux_class, (t_method)demux_helper, gensym("help"), 0);
-
+  zexy_addmethod(c, (t_method)demux_helper, "help", "");
+  return c;
+}
+static void dosetup()
+{
   zexy_register("demultiplex~");
+  demux_tilde_class=zclass_setup("demultiplex~");
+  zclass_setup("demux~");
+}
+ZEXY_SETUP void demultiplex_tilde_setup(void)
+{
+  dosetup();
 }
 void demux_tilde_setup(void)
 {
-  demultiplex_tilde_setup();
+  dosetup();
 }
-
-
-

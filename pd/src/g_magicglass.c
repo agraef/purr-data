@@ -19,7 +19,7 @@ void magicGlass_clearText(t_magicGlass *x);
 
 void magicGlass_bind(t_magicGlass *x, t_object *obj, int outno)
 {
-    //fprintf(stderr,"magicglass_bind %lx\n", (t_int)x);
+    //fprintf(stderr,"magicglass_bind %zx\n", (t_uint)x);
     if (x->x_connectedObj != obj)
     {
         if (x->x_connectedObj)
@@ -39,7 +39,7 @@ void magicGlass_bind(t_magicGlass *x, t_object *obj, int outno)
 
 void magicGlass_unbind(t_magicGlass *x)
 {
-    //fprintf(stderr,"magicglass_unbind %lx\n", (t_int)x);
+    //fprintf(stderr,"magicglass_unbind %zx\n", (t_uint)x);
     if (x->x_connectedObj)
     {
         obj_disconnect(x->x_connectedObj,
@@ -108,8 +108,8 @@ void magicGlass_updateText(t_magicGlass *x, int moved)
 
 void magicGlass_drawNew(t_magicGlass *x)
 {
-    gui_vmess("gui_gobj_new", "xssiii",
-        x->x_c, "cord_inspector", "cord_inspector", 0, 0, 0);
+    gui_vmess("gui_gobj_new", "xssiiii",
+        x->x_c, "cord_inspector", "cord_inspector", 0, 0, 0, 0);
     gui_vmess("gui_cord_inspector_new", "xi",
         x->x_c, x->x_display_font);
     magicGlass_updateText(x, 0);
@@ -387,7 +387,7 @@ void *magicGlass_new(t_glist *c)
 
 void magicGlass_free(t_magicGlass *x)
 {
-    //fprintf(stderr,"magicglass_free %lx\n", (t_int)x);
+    //fprintf(stderr,"magicglass_free %zx\n", (t_uint)x);
     magicGlass_unbind(x);
     x->x_dspOn = 0;
     clock_free(x->x_clearClock);

@@ -242,7 +242,7 @@ int alsamm_open_audio(int rate, int blocksize)
 
   for(i=0;i<alsa_noutdev;i++)
   {  
-        /*   post("open audio out %d, of %lx, %d",i,&alsa_device[i],
+        /*   post("open audio out %d, of %zx, %d",i,&alsa_device[i],
                    alsa_outdev[i].a_handle); */
       if((err = set_hwparams(alsa_outdev[i].a_handle, hw_params,
                              &(alsa_outdev[i].a_channels))) < 0)
@@ -370,7 +370,7 @@ void alsamm_close_audio(void)
 
 #ifdef ALSAMM_DEBUG
     if(sys_verbose)
-      post("unlink audio out %d, of %lx",i,used_outdevice[i]);
+      post("unlink audio out %d, of %zx",i,used_outdevice[i]);
 #endif
 
     if(alsa_outdev[i].a_synced != 0){

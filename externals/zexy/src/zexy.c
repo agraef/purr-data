@@ -22,7 +22,6 @@
 */
 
 #include "zexy.h"
-#include "z_zexy.h"
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -32,13 +31,16 @@
 # define vsnprintf _vsnprintf
 #endif
 
+/* foward declarations */
+void  z_zexy_setup(void);
+
 /* do a little help thing */
 
 typedef struct zexy {
   t_object t_ob;
 } t_zexy;
 
-t_class *zexy_class;
+t_class *zexy_class=NULL;
 
 static void zexy_help(void)
 {
@@ -88,7 +90,7 @@ static void zexy_help(void)
   post("sigzero~\t:: indicates whether a signal is zero throughout the block");
   post("avg~\t\t:: outputs average of a signal as float");
   post("tavg~\t\t:: outputs average of a signal between two bangs");
-  post("envrms~\t\t:: an env~-object that ouputs rms instead of db");
+  post("envrms~\t\t:: an env~-object that outputs rms instead of db");
   post("pdf~\t\t:: power density function");
 
   endpost();
@@ -137,7 +139,7 @@ static void zexy_help(void)
   endpost();
 }
 
-static void *zexy_new(void)
+static void *zexy_ctor(void)
 {
   t_zexy *x = (t_zexy *)pd_new(zexy_class);
   return (x);
@@ -165,8 +167,9 @@ void zexy_setup(void)
   endpost();
   endpost();
 
-  zexy_class = class_new(gensym("zexy"), zexy_new, 0, sizeof(t_zexy), 0, 0);
-  class_addmethod(zexy_class, zexy_help, gensym("help"), 0);
+  zexy_class = zexy_new("zexy",
+                        zexy_ctor, 0, t_zexy, 0, "");
+  zexy_addmethod(zexy_class, (t_method)zexy_help, "help", "");
 
   zexy_register("zexy");
 

@@ -74,6 +74,29 @@ exports.set_focused_patchwin = function(cid) {
     last_focused = cid;
 }
 
+// ico@vt.edu 2020-08-12: check which OS we have since Windows has a different
+// windows positioning logic on nw.js 0.14.7 than Linux/OSX. Go figure...
+function check_os(name) {
+
+    var os = require('os');
+    //post("os=" + os.platform());
+    return os.platform() === name ? 1 : 0;
+}
+
+exports.check_os = check_os;
+
+// ico@vt.edu 2020-08-14: used to speed-up window size consistency and other
+// OS-centric operations by avoiding constant calls to string comparisons.
+// Most pertinent calls can be found in index.js' nw_create_window and pdgui.js'
+// canvas_check_geometry
+var nw_os_is_linux = check_os("linux");
+var nw_os_is_osx = check_os("darwin");
+var nw_os_is_windows = check_os("win32");
+
+exports.nw_os_is_linux = nw_os_is_linux;
+exports.nw_os_is_osx = nw_os_is_osx;
+exports.nw_os_is_windows = nw_os_is_windows;
+
 // Keyword index (cf. dialog_search.html)
 
 var fs = require("fs");
@@ -81,14 +104,30 @@ var path = require("path");
 var dive = require("./dive.js"); // small module to recursively search dirs
 var elasticlunr = require("./elasticlunr.js"); // lightweight full-text search engine in JavaScript, cf. https://github.com/weixsong/elasticlunr.js/
 
-var index = elasticlunr();
+function init_elasticlunr()
+{
+    index = elasticlunr();
+    index.addField("title");
+    index.addField("keywords");
+    index.addField("description");
+    //index.addField("body");
+    index.addField("path");
+    index.setRef("id");
+    return index;
+}
 
-index.addField("title");
-index.addField("keywords");
-index.addField("description");
-//index.addField("body");
-index.addField("path");
-index.setRef("id");
+var index = init_elasticlunr();
+var index_cache = new Array();
+var index_manif = new Set();
+
+function index_entry_esc(s) {
+    if (s) {
+	var t = s.replace(/\\/g, "\\\\").replace(/:/g, "\\:");
+	return t.replace(/(?:\r\n|\r|\n)/g, "\\n");
+    } else {
+	return "";
+    }
+}
 
 function add_doc_to_index(filename, data) {
     var title = path.basename(filename, ".pd"),
@@ -111,6 +150,12 @@ function add_doc_to_index(filename, data) {
     if (title.slice(-5) === "-help") {
         title = title.slice(0, -5);
     }
+    index_cache[index_cache.length] = [filename, title, keywords, desc]
+	.map(index_entry_esc).join(":");
+    var d = path.dirname(filename);
+    index_manif.add(d);
+    // Also add the parent directory to catch additions of siblings.
+    index_manif.add(path.dirname(d));
     index.addDoc({
         "id": filename,
         "title": title,
@@ -142,21 +187,82 @@ function read_file(err, filename, stat) {
 
 var index_done = false;
 var index_started = false;
+var index_start_time;
+
+// Filenames for the index cache, relative to the user's homedir.
+const cache_basename = nw_os_is_windows
+      ? "~/AppData/Roaming/Purr-Data/search"
+      : "~/.purr-data/search";
+const cache_name = cache_basename + ".index";
+const stamps_name = cache_basename + ".stamps";
 
 function finish_index() {
     index_done = true;
-    post("finished building help index");
+    var have_cache = index_cache.length > 0;
+    try {
+	// write the index cache if we have one
+	if (have_cache) {
+	    var a = new Array();
+	    index_manif.forEach(function(x) {
+		var st = fs.statSync(x);
+		a[a.length] = index_entry_esc(x) + ":" + st.mtimeMs;
+	    });
+	    a.sort();
+	    // Make sure that the target dir exists:
+	    try {
+		fs.mkdirSync(expand_tilde(path.dirname(cache_name)));
+	    } catch (err) {
+		//console.log(err);
+	    }
+	    fs.writeFileSync(expand_tilde(cache_name),
+			     index_cache.join("\n"), {mode: 0o644});
+	    // also write a manifest with the timestamps of all directories:
+	    fs.writeFileSync(expand_tilde(stamps_name),
+			     a.join("\n"), {mode: 0o644});
+	}
+    } catch (err) {
+	console.log(err);
+    }
+    var t = new Date().getTime() / 1000;
+    post("finished " + (have_cache?"building":"loading") + " help index (" +
+	 (t-index_start_time).toFixed(2) + " secs)");
 }
 
 // AG: pilfered from https://stackoverflow.com/questions/21077670
 function expand_tilde(filepath) {
     if (filepath[0] === '~') {
-        return path.join(process.env.HOME, filepath.slice(1));
+        var home = nw_os_is_windows ? process.env.HOMEPATH : process.env.HOME;
+        return path.join(home, filepath.slice(1));
     }
     return filepath;
 }
 
-// AG: This is supposed to be executed only once, after lib_dir has been set.
+function check_timestamps(manif)
+{
+    manif = manif.split('\n');
+    for (var j = 0, l = manif.length; j < l; j++) {
+	if (manif[j]) {
+	    var e = manif[j].replace(/\\:/g, "\x1c").split(':')
+		.map(x => x
+		     .replace(/\x1c/g, ":")
+		     .replace(/\\n/g, "\n")
+		     .replace(/\\\\/g, "\\"));
+	    var dirname = e[0] ? e[0] : null;
+	    var stamp = e[1] ? parseFloat(e[1]) : 0.0;
+	    try {
+		var st = fs.statSync(dirname);
+		if (st.mtimeMs > stamp) {
+		    return false;
+		}
+	    } catch (err) {
+		return false;
+	    }
+	}
+    }
+    return true;
+}
+
+// AG: This is normally executed only once, after lib_dir has been set.
 // Note that dive() traverses lib_dir asynchronously, so we report back in
 // finish_index() when this is done.
 function make_index() {
@@ -181,9 +287,50 @@ function make_index() {
             finish_index();
         }
     }
+    pdsend("pd gui-busy 1");
     index_started = true;
-    post("building help index in " + doc_path);
-    dive(doc_path, read_file, browser_path?make_index_cont:finish_index);
+    index_start_time = new Date().getTime() / 1000;
+    var idx, manif;
+    try {
+	// test for index cache and manifest
+	idx = fs.readFileSync
+	(expand_tilde(cache_name), 'utf8');
+	manif = fs.readFileSync
+	(expand_tilde(stamps_name), 'utf8');
+    } catch (err) {
+	//console.log(err);
+    }
+    if (idx && manif && check_timestamps(manif)) {
+	// index cache is present and up-to-date, load it
+	post("loading cached help index from " + cache_name);
+	idx = idx.split('\n');
+	for (var j = 0, l = idx.length; j < l; j++) {
+	    if (idx[j]) {
+		var e = idx[j].replace(/\\:/g, "\x1c").split(':')
+		    .map(x => x
+			 .replace(/\x1c/g, ":")
+			 .replace(/\\n/g, "\n")
+			 .replace(/\\\\/g, "\\"));
+		var filename = e[0] ? e[0] : null;
+		var title = e[1] ? e[1] : null;
+		var keywords = e[2] ? e[2] : null;
+		var descr = e[3] ? e[3] : null;
+		index.addDoc({
+		    "id": filename,
+		    "title": title,
+		    "keywords": keywords,
+		    "description": descr
+		});
+	    }
+	}
+        finish_index();
+    } else {
+	// no index cache, or it is out of date, so (re)build it now, and
+	// save the new cache along the way
+	post("building help index in " + doc_path);
+	dive(doc_path, read_file, browser_path?make_index_cont:finish_index);
+    }
+    pdsend("pd gui-busy 0");
 }
 
 // AG: This is called from dialog_search.html with a callback that expects to
@@ -205,6 +352,42 @@ function build_index(cb) {
 }
 
 exports.build_index = build_index;
+
+// this doesn't actually rebuild the index, it just clears it, so that it
+// will be rebuilt the next time the help browser is opened
+function rebuild_index()
+{
+    post("clearing help index (reopen browser to rebuild!)");
+    index = init_elasticlunr();
+    index_started = index_done = false;
+    try {
+	fs.unlink(expand_tilde(cache_name));
+	fs.unlink(expand_tilde(stamps_name));
+    } catch (err) {
+	//console.log(err);
+    }
+}
+
+// this is called from the gui tab of the prefs dialog
+function update_browser(doc_flag, path_flag)
+{
+    var changed = false;
+    doc_flag = doc_flag?1:0;
+    path_flag = path_flag?1:0;
+    if (browser_doc !== doc_flag) {
+	browser_doc = doc_flag;
+	changed = true;
+    }
+    if (browser_path !== path_flag) {
+	browser_path = path_flag;
+	changed = true;
+    }
+    if (changed) {
+	rebuild_index();
+    }
+}
+
+exports.update_browser = update_browser;
 
 // Modules
 
@@ -793,13 +976,43 @@ function pd_geo_string(w, h, x, y) {
     return  [w,"x",h,"+",x,"+",y].join("");
 }
 
+// ico@vt.edu: we moved this from index.js, so that we can use the versioning
+// to also deal with weird offsets between nwjs 0.14/0.24 and 0.46 and upwards
+function check_nw_version(version) {
+    // aggraef: check that process.versions["nw"] is at least the given version
+    // NOTE: We assume that "0.x.y" > "0.x", and just ignore any -beta
+    // suffixes if present.
+    var nwjs_array = process.versions["nw"].split("-")[0].
+        split(".").map(Number);
+    var vers_array = version.split("-")[0].
+        split(".").map(Number);
+    // lexicographic comparison
+    for (var i = 0; i < vers_array.length; ++i) {
+        if (nwjs_array.length <= i || vers_array[i] > nwjs_array[i])
+            return false;
+        else if (vers_array[i] < nwjs_array[i])
+            return true;
+    }
+    return vers_array.length <= nwjs_array.length;
+}
+
+exports.check_nw_version = check_nw_version;
+
+// ico@vt.edu 2020-08-11: this appears to have to be 25 at all times
+// we will leave this here for later if we encounter issues with inconsistencies
+// across different nw.js versions...
+var nw_menu_offset = check_nw_version("0.46") ? 25 : 25;
+
+exports.nw_menu_offset = nw_menu_offset;
+
 // quick hack so that we can paste pd code from clipboard and
 // have it affect an empty canvas' geometry
 // requires nw.js API
 function gui_canvas_change_geometry(cid, w, h, x, y) {
     gui(cid).get_nw_window(function(nw_win) {
         nw_win.width = w;
-        nw_win.height = h + 23; // 23 is a kludge to account for menubar
+        // nw_menu_offset is a kludge to account for menubar
+        nw_win.height = h + nw_menu_offset;
         nw_win.x = x;
         nw_win.y = y;
     });
@@ -816,21 +1029,32 @@ function canvas_check_geometry(cid) {
         // in nw_create_window of index.js
         // ico@vt.edu in 0.46.2 this is now 25 pixels, so I guess
         // it is now officially kludge^2
-        win_h = patchwin[cid].height - 25,
+        win_h = patchwin[cid].height - 
+            (nw_menu_offset * !nw_os_is_osx),
         win_x = patchwin[cid].x,
         win_y = patchwin[cid].y,
         cnv_width = patchwin[cid].window.innerWidth,
-        cnv_height = patchwin[cid].window.innerHeight - 25;
+        cnv_height = patchwin[cid].window.innerHeight;
+    //post("canvas_check_geometry w=" + win_w + " h=" + win_h +
+    //    " x=" + win_x + " y=" + win_y + "cnv_w=" + cnw_width + " cnv_h=" + cnv_height);
+
+    // ico@vt.edu 2020-08-31:
+    // why does Windows have different innerWidth and innerHeight from other OSs?
+    // See canvas_params for the explanation...
+    // 2020-10-01: this was a bug in 0.14.7 but is no longer needed
+    //win_w += 16 * nw_os_is_windows;
+    //win_h += 8 * nw_os_is_windows;
+
     // We're reusing win_x and win_y below, as it
     // shouldn't make a difference to the bounds
-    // algorithm in Pd (ico@vt.edu: this is not true anymore)
+    // algorithm in Pd (ico@vt.edu: this is not true anymore for nw 0.46+)
     //post("relocate " + pd_geo_string(cnv_width, cnv_height, win_x, win_y) + " " +
     //       pd_geo_string(cnv_width, cnv_height, win_x, win_y));
-    // ico@vt.edu: replaced first pd_geo_string's first two args (originally
-    // win_x and win_y with cnv_width and cnv_height + 25 to ensure the window
-    // reopens exactly how it was saved)
+    // IMPORTANT! ico@vt.edu: for nw 0.46+ we will need to replace first pd_geo_string's
+    // first two args (win_w and win_h with cnv_width and cnv_height + nw_menu_offset
+    // to ensure the window reopens exactly how it was saved)
     pdsend(cid, "relocate",
-           pd_geo_string(cnv_width, cnv_height + 25, win_x, win_y),
+           pd_geo_string(win_w, win_h, win_x, win_y),
            pd_geo_string(cnv_width, cnv_height, win_x, win_y)
     );
 }
@@ -896,7 +1120,7 @@ function gui_canvas_saveas(name, initfile, initdir, close_flag) {
         type: "file",
         id: "saveDialog",
         // using an absolute path here, see comment above
-        nwsaveas: path.join(initdir, initfile),
+        nwsaveas: check_nw_version("0.46") ? initfile : path.join(initdir, initfile),
         nwworkingdir: initdir,
         accept: ".pd"
     });
@@ -938,51 +1162,16 @@ function menu_saveas(name) {
 exports.menu_saveas = menu_saveas;
 
 function gui_canvas_print(name, initfile, initdir) {
-    // AG: This works mostly like gui_canvas_saveas above, except that we
-    // create a pdf file and use a different input element and callback.
-    var input, chooser,
-        span = patchwin[name].window.document.querySelector("#printDialogSpan");
-    if (!fs.existsSync(initdir)) {
-        initdir = pwd;
-    }
-    // If we don't have a ".pd" file extension (e.g., "Untitled-1", add one)
-    if (initfile.slice(-3) !== ".pd") {
-        initfile += ".pd";
-    }
-    // Adding an "f" now gives .pdf which is what we want.
-    initfile += "f";
-    input = build_file_dialog_string({
-        style: "display: none;",
-        type: "file",
-        id: "printDialog",
-        nwsaveas: path.join(initdir, initfile),
-        nwworkingdir: initdir,
-        accept: ".pdf"
-    });
-    span.innerHTML = input;
-    chooser = patchwin[name].window.document.querySelector("#printDialog");
-    chooser.onchange = function() {
-        print_callback(name, this.value);
-        // reset value so that we can open the same file twice
-        this.value = null;
-        console.log("tried to print something");
-    }
-    chooser.click();
+    // AG: The print dialog presents its own file picker anyway if PDF
+    // output is chosen, and just ignores the settings for pdf_path. So
+    // initfile and initdir are only used here to provide a useful default
+    // for the header and footer information -- otherwise the print() method
+    // uses some random internal document URL which isn't helpful.
+    pdsend("pd gui-busy 1");
+    patchwin[name].print({ autoprint: false, headerString: initfile, footerString: path.join(initdir, initfile) });
+    pdsend("pd gui-busy 0");
+    post("printed "+initfile);
 }
-
-function print_callback(cid, file) {
-    var filename = defunkify_windows_path(file);
-    // It probably isn't possible to arrive at the callback with an
-    // empty string.  But I've only tested on Debian so far...
-    if (filename === null) {
-        return;
-    }
-    // Let nw.js do the rest (requires nw.js 0.14.6+)
-    patchwin[cid].print({ pdf_path: filename, headerFooterEnabled: false });
-    post("printed to: " + filename);
-}
-
-exports.print_callback = print_callback;
 
 function menu_print(name) {
     pdsend(name + " menuprint");
@@ -1122,6 +1311,48 @@ function gui_canvas_menuclose(cid_for_dialog, cid, force) {
         }, 450);
 }
 
+function canvas_abstract_callback(cid_for_dialog, cid, matches) {
+    var nw = patchwin[cid_for_dialog],
+        w = nw.window,
+        doc = w.document,
+        dialog = doc.getElementById("abstract_dialog"),
+        dialog_candidates = doc.getElementById("abstract_dialog_candidates"),
+        single_button = doc.getElementById("abstract_single_button"),
+        all_button = doc.getElementById("abstract_all_button"),
+        none_button = doc.getElementById("abstract_none_button");
+
+    dialog_candidates.textContent = matches.toString();
+    dialog_candidates.title = matches.toString()
+    all_button.disabled = (matches === 1);
+
+    single_button.onclick = function() {
+        dialog.close();
+        w.canvas_events[w.canvas_events.get_previous_state()]();
+        pdsend(cid, "dialog", 0);
+    };
+    all_button.onclick = function() {
+        dialog.close();
+        w.canvas_events[w.canvas_events.get_previous_state()]();
+        pdsend(cid, "dialog", 1);
+    };
+    none_button.onclick = function() {
+        dialog.close();
+        w.canvas_events[w.canvas_events.get_previous_state()]();
+    }
+
+    w.canvas_events.none();
+
+    w.setTimeout(function() {
+        dialog.showModal();
+    }, 150);
+}
+
+function gui_canvas_abstract(cid_for_dialog, cid, matches) {
+    setTimeout(function() {
+            canvas_abstract_callback(cid_for_dialog, cid, matches);
+        }, 450);
+}
+
 function gui_quit_dialog() {
     gui_raise_pd_window();
     var reply = pd_window.window.confirm("Really quit?");
@@ -1134,12 +1365,45 @@ function gui_quit_dialog() {
 function menu_send(name) {
     var message,
         win = name ? patchwin[name] : pd_window;
+    pdsend("pd gui-busy 1");
     message = win.window.prompt("Type a message to send to Pd", name);
+    pdsend("pd gui-busy 0");
     if (message != undefined && message.length) {
         post("Sending message to Pd: " + message + ";");
         pdsend(message);
     }
 }
+
+/*
+ico@vt.edu 20200907: added svg tiled background to reflect edit mode and
+integrated it into the canvas_set_editmode below.
+
+LATER: consider adding an interim version that reflects only the ctrl button press
+*/
+var gui_editmode_svg_background = "url(\"data:image/svg+xml,%3Csvg " +
+        "xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 " +
+        " 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity" +
+        "='0.4'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1" +
+        "v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-" +
+        "1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9" +
+        "H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9" +
+        "V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v" +
+        "1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h" +
+        "9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-1" +
+        "0 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9" +
+        "h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-" +
+        "10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9" +
+        "h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9" +
+        "v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h" +
+        "9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h" +
+        "9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-1" +
+        "0 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-" +
+        "9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm1" +
+        "0 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9" +
+        "h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9" +
+        "h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0" +
+        "h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d" +
+        "='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")";
 
 // requires nw.js API (Menuitem)
 function canvas_set_editmode(cid, state) {
@@ -1147,8 +1411,15 @@ function canvas_set_editmode(cid, state) {
         w.set_editmode_checkbox(state !== 0 ? true : false);
         if (state !== 0) {
             patchsvg.classList.add("editmode");
+            if (showgrid[cid]) {
+                //post("editmode:" + gui_editmode_svg_background);
+                patchwin[cid].window.document.body.style.setProperty
+                ("background-image", gui_editmode_svg_background);
+            }
         } else {
             patchsvg.classList.remove("editmode");
+            patchwin[cid].window.document.body.style.setProperty("background-image",
+                "none");  
         }
     });
 }
@@ -1158,6 +1429,32 @@ exports.canvas_set_editmode = canvas_set_editmode;
 function gui_canvas_set_editmode(cid, state) {
     canvas_set_editmode(cid, state);
 }
+
+// ask the engine about the current edit mode
+function canvas_query_editmode(cid) {
+    pdsend(cid, "query-editmode");
+}
+
+exports.canvas_query_editmode = canvas_query_editmode;
+
+function update_grid(grid) {
+    // Update the grid background of all canvas windows when the corresponding
+    // option in the gui prefs changes.
+    var bg = grid != 0 ? gui_editmode_svg_background : "none";
+    for (var cid in patchwin) {
+	gui(cid).get_elem("patchsvg", function(patchsvg, w) {
+            var editmode = patchsvg.classList.contains("editmode");
+            if (editmode) {
+                patchwin[cid].window.document.body.style.setProperty
+                ("background-image", bg);
+            }
+	});
+    }
+    // Also update the showgrid flags.
+    set_showgrid(grid);
+}
+
+exports.update_grid = update_grid;
 
 // requires nw.js API (Menuitem)
 function gui_canvas_set_cordinspector(cid, state) {
@@ -1415,6 +1712,7 @@ var scroll = {},
     redo = {},
     font = {},
     doscroll = {},
+    showgrid = {},
     last_loaded, // last loaded canvas
     last_focused, // last focused canvas (doesn't include Pd window or dialogs)
     loading = {},
@@ -1424,6 +1722,12 @@ var scroll = {},
 
     var patchwin = {}; // object filled with cid: [Window object] pairs
     var dialogwin = {}; // object filled with did: [Window object] pairs
+
+var set_showgrid = function(grid) {
+    for (var cid in showgrid) {
+	showgrid[cid] = grid;
+    }
+}
 
 exports.get_patchwin = function(name) {
     return patchwin[name];
@@ -1523,6 +1827,8 @@ function gui_canvas_cursor(cid, pd_event_type) {
 function canvas_sendkey(cid, state, evt, char_code, repeat) {
     var shift = evt.shiftKey ? 1 : 0,
         repeat_number = repeat ? 1 : 0;
+    //post("canvas_sendkey state=" + state + " evt=" + evt +
+    //	" char_code=<" + char_code + "> repeat=" + repeat);
     pdsend(cid, "key", state, char_code, shift, 1, repeat_number);
 }
 
@@ -1582,7 +1888,7 @@ function create_window(cid, type, width, height, xpos, ypos, attr_array) {
 }
 
 // create a new canvas
-function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir, dirty_flag, hide_scroll, hide_menu, has_toplevel_scalars, cargs) {
+function gui_canvas_new(cid, width, height, geometry, grid, zoom, editmode, name, dir, dirty_flag, warid, hide_scroll, hide_menu, has_toplevel_scalars, cargs) {
     // hack for buggy tcl popups... should go away for node-webkit
     //reset_ctrl_on_popup_window
     
@@ -1609,6 +1915,7 @@ function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir,
     redo[cid] = false;
     font[cid] = 10;
     doscroll[cid] = 0;
+    showgrid[cid] = grid != 0;
     toplevel_scalars[cid] = has_toplevel_scalars;
     // geometry is just the x/y screen offset "+xoff+yoff"
     geometry = geometry.slice(1);   // remove the leading "+"
@@ -1627,6 +1934,8 @@ function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir,
     last_loaded = cid;
     // Not sure why resize and topmost are here-- but we'll pass them on for
     // the time being...
+    // ico@vt.edu 2020-08-24: this is because in 1.x we can change these window
+    // properties via scripting. We should add this to 2.x soon...
     create_window(cid, "pd_canvas", width, height,
         xpos, ypos, {
             menu_flag: menu_flag,
@@ -1636,6 +1945,7 @@ function gui_canvas_new(cid, width, height, geometry, zoom, editmode, name, dir,
             name: name,
             dir: dir,
             dirty: dirty_flag,
+            warid: warid,
             args: cargs,
             zoom: zoom,
             editmode: editmode,
@@ -2133,7 +2443,7 @@ exports.gui = gui;
 // In the future, it might make sense to combine the scalar and object
 // creation, in which case a flag to toggle the offset would be appropriate.
 
-function gui_gobj_new(cid, tag, type, xpos, ypos, is_toplevel) {
+function gui_gobj_new(cid, tag, type, xpos, ypos, is_toplevel, is_canvas_obj) {
     var g;
     xpos += 0.5,
     ypos += 0.5,
@@ -2142,7 +2452,7 @@ function gui_gobj_new(cid, tag, type, xpos, ypos, is_toplevel) {
         g = create_item(cid, "g", {
             id: tag + "gobj",
             transform: transform_string,
-            class: type + (is_toplevel !== 0 ? "" : " gop")
+            class: type + (is_toplevel !== 0 ? "" : " gop") + (is_canvas_obj === 0 ? "" : " canvasobj")
         });
         add_gobj_to_svg(svg_elem, g);
     });
@@ -2263,6 +2573,36 @@ function message_border_points(width, height) {
         .join(" ");
 }
 
+// called from pd_canvas.js text events to deal with 
+// the drawing of the msg box
+function gui_message_update_textarea_border(elem, init_width) {
+	if (elem.classList.contains("msg")) {
+		if (init_width) {
+			var i, ncols = 0,
+			    text = elem.innerHTML,
+			    textByLine = text.split(/\r*\n/);
+			for (i = 0; i < textByLine.length; i++) {
+				if (textByLine[i].length > ncols) {
+					ncols = textByLine[i].length;
+				}
+			}
+			configure_item(elem, {
+	            cols: ncols
+        	});
+        	gui_gobj_erase_io(elem.getAttribute("cid"), elem.getAttribute("tag"));
+		}
+
+		gui_message_redraw_border(
+			elem.getAttribute("cid"),
+			elem.getAttribute("tag"),
+			parseInt(elem.offsetWidth / elem.getAttribute("font_width")) * elem.getAttribute("font_width") + 4,
+			parseInt(elem.offsetHeight / elem.getAttribute("font_height")) * elem.getAttribute("font_height") + 4
+			);
+	}
+}
+
+exports.gui_message_update_textarea_border = gui_message_update_textarea_border;
+
 function gui_message_draw_border(cid, tag, width, height) {
     gui(cid).get_gobj(tag)
     .append(function(frag) {
@@ -2361,7 +2701,9 @@ function gui_atom_redraw_border(cid, tag, type, width, height) {
 }
 
 // draw a patch cord
-function gui_canvas_line(cid,tag,type,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
+// ico@vt.edu: p11 added to provide different color for when the cord is
+// being created vs when it is being finished
+function gui_canvas_line(cid,tag,type,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11) {
     gui(cid).get_elem("patchsvg")
     .append(function(frag) {
         var svg = get_item(cid, "patchsvg"),
@@ -2379,12 +2721,14 @@ function gui_canvas_line(cid,tag,type,p1,p2,p3,p4,p5,p6,p7,p8,p9,p10) {
             d: d_array.join(" "),
             fill: "none",
             //"shape-rendering": "optimizeSpeed",
-            id: tag,
-            "class": "cord " + type
+            id: tag, 
+            "class": "cord " + type + (p11 == 1 ? " new" : "")
         });
         frag.appendChild(path);
         return frag;
     });
+    // ico@vt.edu 2020-08-12: update scroll when cord is drawn
+    gui_canvas_get_scroll(cid);
 }
 
 function gui_canvas_select_line(cid, tag) {
@@ -2404,6 +2748,8 @@ function gui_canvas_delete_line(cid, tag) {
     gui(cid).get_elem(tag, function(e) {
         e.parentNode.removeChild(e);
     });
+    // ico@vt.edu 2020-08-12: update scroll when cord is deleted
+    gui_canvas_get_scroll(cid);
 }
 
 function gui_canvas_update_line(cid, tag, x1, y1, x2, y2, yoff) {
@@ -2539,7 +2885,20 @@ function gobj_font_y_kludge(fontsize) {
 
 function gui_text_new(cid, tag, type, isselected, left_margin, font_height, text, font) {
     //ico@vt.edu: different text spacing for GOPs
+    //post("gui_text_new type=" + type + " tag=" + tag);
     var xoff = 0.5; // Default value for normal objects, GOP uses -0.5
+    /* ico@vt.edu 20200907: the following id_suffix is used for gatom objects.
+    When activated, they tend to highlight both the label and the gatom contents
+    since prior to this there was no differentiation between the two in terms of
+    their tags. However, g_rtext.c instantiates gatom contents with type "atom"
+    whereas the label inside g_text.c is instantiated as "gatom". We use this
+    difference here to provide the two with different tag names, so that we can
+    prevent the label from being also "activated" (e.g. when user clicks on the
+    gatom to edit its contents in non-edit mode). */
+    var classname = "box_text";
+    if (type === "atom") {
+        classname = "box_text data";
+    }
     gui(cid).get_gobj(tag, function(e) {
         xoff = e.classList.contains("graph") ? -0.5 : 0.5;
     });
@@ -2571,7 +2930,7 @@ function gui_text_new(cid, tag, type, isselected, left_margin, font_height, text
             "font-size": pd_fontsize_to_gui_fontsize(font) + "px",
             "font-weight": "normal",
             id: tag + "text",
-            "class": "box_text"
+            "class": classname
         });
         // trim off any extraneous leading/trailing whitespace. Because of
         // the way binbuf_gettext works we almost always have a trailing
@@ -2603,6 +2962,22 @@ function gui_text_set (cid, tag, text) {
     });
 }
 
+function gui_text_set_mynumbox (cid, tag, text, active) {
+    gui(cid).get_elem(tag + "text", function(e) {
+        //post("gui_text_set_mynumbox " + tag + " " + text + " " + active);
+        text = text.trim();
+        e.textContent = "";
+        text_to_tspans(cid, e, text);
+        if (active === 2) {
+            e.classList.remove("activated");
+        } else if (active === 1) {
+            e.classList.add("activated");
+        } else {
+            e.classList.remove("activated");           
+        }
+    });
+}
+
 function gui_text_redraw_border(cid, tag, width, height) {
     // Hm, need to figure out how to refactor to get rid of
     // configure_item call...
@@ -2631,6 +3006,81 @@ function gui_gobj_deselect(cid, tag) {
         // during deselect. LATER: make handles always fit inside the
         // object, so this won't be necessary
         gui_canvas_get_scroll(cid);
+    });
+}
+
+function gui_gobj_dirty(cid, tag, state) {
+    gui(cid).get_gobj(tag, function(e) {
+        var border = e.querySelector(".border");
+        border.classList.remove("dirty");
+        border.classList.remove("subdirty");
+        if(state === 1) border.classList.add("dirty");
+        else if(state === 2) border.classList.add("subdirty");
+    });
+}
+
+function gui_canvas_warning(cid, warid) {
+    var warning = get_item(cid, "canvas_warning");
+    switch(warid)
+    {
+        case 0:
+            warning.style.setProperty("display", "none");
+            break;
+        case 1:
+            warning.title = lang.get_local_string("canvas.warning.unsaved_tt");
+            warning.onclick = function(){ pdsend(cid, "showdirty"); }
+            warning.style.setProperty("color", "coral");
+            warning.style.setProperty("font-size", "x-large");
+            warning.style.setProperty("display", "inline");
+            break;
+        case 2:
+            warning.title = lang.get_local_string("canvas.warning.multipleunsaved_tt");
+            warning.onclick = function(){ pdsend(cid, "showdirty"); }
+            warning.style.setProperty("color", "red");
+            warning.style.setProperty("font-size", "xx-large");
+            warning.style.setProperty("display", "inline");
+            break;
+
+        default:
+            break;
+    }
+}
+
+exports.gui_canvas_warning = gui_canvas_warning;
+
+function gui_canvas_emphasize(cid) {
+    gui(cid).get_elem("patchsvg", function(e) {
+        // raise the window
+        gui_raise_window(cid);
+        // animate the background, except for Windows and old OSX versions.
+        // We *really* have to update all platforms to the same most recent
+        // stable version. Otherwise the entire codebase is going to become
+        // conditional branches...
+        if (check_nw_version("0.15")) {
+            e.animate([
+                {"backgroundColor": "white"},
+                {"backgroundColor": "#ff9999"},
+                {"backgroundColor": "white"}
+            ], { duration: 900, easing: "ease-in-out", iterations: 1 });
+        }
+    });
+}
+
+// bring a gobj into the viewport, plus do an animation to catch the
+// user's attention
+function gui_gobj_emphasize(cid, tag) {
+    gui(cid).get_gobj(tag, function(e) {
+        var border = e.querySelector(".border");
+        e.scrollIntoView();
+        // quick and dirty, plus another check because Windows and old OSX
+        // versions of nwjs are ancient and don't include web animations API...
+        if (border && check_nw_version("0.15")) {
+            border.animate([
+                 {fill: "white"},
+                 {fill: "#ff9999"},
+                 {fill: "white"}
+            ], { duration: 300, easing: "ease-in-out", iterations: 3});
+        }
     });
 }
 
@@ -2822,13 +3272,18 @@ function gui_toggle_update(cid, tag, state, color) {
     })
 }
 
-function numbox_data_string(w, h) {
+function numbox_data_string_frame(w, h) {
     return ["M", 0, 0,
             "L", w - 4, 0,
                  w, 4,
                  w, h,
                  0, h,
-            "z",
+            "z"]
+    .join(" ");
+}
+
+function numbox_data_string_triangle(w, h) {
+    return ["M", 0, 0,
             "L", 0, 0,
                  (h / 2)|0, (h / 2)|0, // |0 to force int
                  0, h]
@@ -2836,27 +3291,38 @@ function numbox_data_string(w, h) {
 }
 
 // Todo: send fewer parameters from c
-function gui_numbox_new(cid, tag, color, x, y, w, h, is_toplevel) {
+function gui_numbox_new(cid, tag, color, x, y, w, h, drawstyle, is_toplevel) {
     // numbox doesn't have a standard iemgui border,
     // so we must create its gobj manually
     gui(cid).get_elem("patchsvg", function() {
         var g = gui_gobj_new(cid, tag, "iemgui", x, y, is_toplevel);
-        var data = numbox_data_string(w, h);
         var border = create_item(cid, "path", {
-            d: data,
+            d: numbox_data_string_frame(w, h),
             fill: color,
             stroke: "black",
-            "stroke-width": 1,
+            "stroke-width": (drawstyle < 2 ? 1 : 0),
             id: (tag + "border"),
             "class": "border"
         });
         g.appendChild(border);
+        var triangle = create_item(cid, "path", {
+            d: numbox_data_string_triangle(w, h),
+            fill: color,
+            stroke: "black",
+            "stroke-width": (drawstyle == 0 || drawstyle ==  2 ? 1 : 0),
+            id: (tag + "triangle"),
+            "class": "border"
+        });
+        g.appendChild(triangle);
     });
 }
 
 function gui_numbox_coords(cid, tag, w, h) {
     gui(cid).get_elem(tag + "border", {
-        d: numbox_data_string(w, h)
+        d: numbox_data_string_frame(w, h)
+    });
+    gui(cid).get_elem(tag + "triangle", {
+        d: numbox_data_string_triangle(w, h)
     });
 }
 
@@ -2865,6 +3331,8 @@ function gui_numbox_draw_text(cid,tag,text,font_size,color,xpos,ypos,basex,basey
     // below. But it works for most font sizes.
     gui(cid).get_gobj(tag)
     .append(function(frag, w) {
+    	//post("ypos=" + ypos + " int=" + Math.floor(ypos));
+    	//ypos = Math.floor(ypos);
         var svg_text = create_item(cid, "text", {
             transform: "translate(" +
                         (xpos - basex) + "," +
@@ -2880,14 +3348,14 @@ function gui_numbox_draw_text(cid,tag,text,font_size,color,xpos,ypos,basex,basey
     });
 }
 
-function gui_numbox_update(cid, tag, fcolor, bgcolor, font_name, font_size, font_weight) {
+function gui_numbox_update(cid, tag, fcolor, bgcolor, num_font_size, font_name, font_size, font_weight) {
     gui(cid)
     .get_elem(tag + "border", {
         fill: bgcolor
     })
     .get_elem(tag + "text", {
         fill: fcolor,
-        "font-size": font_size
+        "font-size": num_font_size
     })
     // label may or may not exist, but that's covered by the API
     .get_elem(tag + "label", function() {
@@ -3534,7 +4002,7 @@ function gui_scalar_new(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
                     //matrix = [t1,t2,t3,t4+1,t5+0.5,t6+0.5];
                     matrix = 0;
                     transform_string = "translate(" + (t5+(t1 < 1 ? 0.5 : 1.5)) +
-                        "," + (t6+1) + ") scale(" + t1 + "," + t4 + ")";
+                        "," + (t6+1.5) + ") scale(" + t1 + "," + t4 + ")";
                     //post("transform_string = " + transform_string);
                     break;
                 default:
@@ -3938,9 +4406,11 @@ function img_size_setter(cid, svg_image_tag, type, data, tk_anchor) {
     img.onload = function() {
         w = this.width,
         h = this.height;
+        // ico@vt.edu here we subtract one from the svg interpretation
+        // of the anchor to keep it 1.x and K12 mode compatible
         configure_item(get_item(cid, svg_image_tag), {
-            width: w,
-            height: h,
+            width: w + 1,
+            height: h + 1,
             x: tk_anchor === "center" ? 0 - w/2 : 0,
             y: tk_anchor === "center" ? 0 - h/2 : 0
         });
@@ -4088,31 +4558,38 @@ function gui_image_size_callback(cid, key, callback) {
         ";base64," + pd_cache.get(key).data;
 }
 
-function gui_image_draw_border(cid, tag, x, y, w, h) {
-    gui(cid).get_gobj(tag)
-    .append(function(frag) {
-        var b = create_item(cid, "path", {
-            "stroke-width": "1",
-            fill: "none",
-            d: ["m", x, y, w, 0,
-                "m", 0, 0, 0, h,
-                "m", 0, 0, -w, 0,
-                "m", 0, 0, 0, -h
-               ].join(" "),
-            visibility: "hidden",
-            class: "border"
+function gui_image_toggle_border(cid, tag, x, y, w, h, onoff) {
+    if (onoff == 0) {
+        gui(cid).get_gobj(tag)
+        .q("path", function(border) {
+            border.parentNode.removeChild(border);
         });
-        frag.appendChild(b);
-        return frag;
-    });
+    } else {
+        gui(cid).get_gobj(tag)
+        .append(function(frag) {
+            var b = create_item(cid, "path", {
+                "stroke-width": "1",
+                fill: "none",
+                d: ["m", x, y, w, 0,
+                    "m", 0, 0, 0, h,
+                    "m", 0, 0, -w, 0,
+                    "m", 0, 0, 0, -h
+                   ].join(" "),
+                visibility: "visible",
+                class: "border"
+            });
+            frag.appendChild(b);
+            return frag;
+        });
+    }
 }
 
-function gui_image_toggle_border(cid, tag, state) {
+/*function gui_image_toggle_border(cid, tag, state) {
     gui(cid).get_gobj(tag)
     .q(".border", {
         visibility: state === 0 ? "hidden" : "visible"
     });
-}
+}*/
 
 // Switch the data for an existing svg image
 function gui_image_configure(cid, tag, image_key, tk_anchor) {
@@ -4782,7 +5259,7 @@ function zoom_kludge(zoom_level) {
     return zfactor;
 }
 
-function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
+function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, cansaveas, isobject) {
     // Get page coords for top of window, in case we're scrolled
     gui(cid).get_nw_window(function(nw_win) {
         // ico@vt.edu updated win_left and win_top for the 0.46.2
@@ -4805,6 +5282,7 @@ function gui_canvas_popup(cid, xpos, ypos, canprop, canopen, isobject) {
         //popup_coords[1] = ypos;
         popup_menu[cid].items[0].enabled = canprop;
         popup_menu[cid].items[1].enabled = canopen;
+        popup_menu[cid].items[2].enabled = cansaveas;
 
         // We'll use "isobject" to enable/disable "To Front" and "To Back"
         //isobject;
@@ -5206,6 +5684,9 @@ function file_dialog(cid, type, target, start_path) {
     // it just doesn't work. So this requires us to have the parent <span>
     // around the <input>. Then when we change the innerHTML of the span the
     // new value for nwworkingdir magically works.
+    if(nw_os_is_windows) {
+        start_path = start_path.replace(/\//g, '\\');
+    }
     dialog_options = {
         style: "display: none;",
         type: "file",
@@ -5264,12 +5745,13 @@ function attr_array_to_object(attr_array) {
 }
 
 function gui_gatom_dialog(did, attr_array) {
-    dialogwin[did] = create_window(did, "gatom", 265, 300,
+    dialogwin[did] = create_window(did, "gatom", 259, 278-5,
         popup_coords[2], popup_coords[3],
         attr_array_to_object(attr_array));
 }
 
 function gui_gatom_activate(cid, tag, state) {
+    //post("gui_gatom_activate tag=" + tag + " state=" + state);
     gui(cid).get_gobj(tag, function(e) {
         if (state !== 0) {
             e.classList.add("activated");
@@ -5280,10 +5762,14 @@ function gui_gatom_activate(cid, tag, state) {
 }
 
 function gui_dropdown_dialog(did, attr_array) {
-    // Just reuse the "gatom" dialog
-    dialogwin[did] = create_window(did, "gatom", 265, 300,
+    // Just reuse the "gatom" dialog (this is not true anymore, see below)
+    // ico@vt.edu 2020-08-21: made this into a separate dialog due to inability to easily retitle
+    // the window
+    dialogwin[did] = create_window(did, "dropdown", 228, 268-5,
         popup_coords[2], popup_coords[3],
         attr_array_to_object(attr_array));
+    // ico@vt.edu 2020-08-21: the following does not work because the window is not created yet?
+    //dialogwin[did].window.document.getElementById("titlebar_title").innerHTML = "dropdown properties";
 }
 
 function dropdown_populate(w, label_array, current_index) {
@@ -5376,8 +5862,12 @@ function gui_iemgui_dialog(did, attr_array) {
     //for (var i = 0; i < attr_array.length; i++) {
     //    attr_array[i] = '"' + attr_array[i] + '"';
     //}
-    create_window(did, "iemgui", 265, 450,
-        popup_coords[2], popup_coords[3],
+    // ico@vt.edu: updated window size to match actual, thereby minimizing the flicker
+    // We are subtracting 25 for the menu
+    // ico@vt.edu: since adding frameless window, we use top 20px for draggable titlebar,
+    // so now we subtract only 5 (25-20)
+    create_window(did, "iemgui", 298, 414-5,
+        popup_coords[2] + 10, popup_coords[3] + 60,
         attr_array_to_object(attr_array));
 }
 
@@ -5398,6 +5888,28 @@ function gui_font_dialog_change_size(did, font_size) {
     }
 }
 
+function gui_menu_font_change_size(canvas, newsize) {
+    pdsend(canvas, "menufont", newsize);
+    	// ico@vt.edu 2020-08-24: changed to use submenu
+    	// this was the following
+        /*+document.querySelector('input[name="font_size"]:checked').value,
+        current_size,
+        100,
+        0 // "$noundo" from pd.tk-- not sure what it does*/
+}
+
+exports.gui_menu_font_change_size = gui_menu_font_change_size;
+
+function gui_menu_font_set_initial_size(cid, size) {
+	//post("gui_menu_font_set_initial_size " + cid + " " + size);
+	gui(cid).get_nw_window(function(nw_win) {
+		if (cid !== "nobody") {
+    		nw_win.window.init_menu_font_size(size);
+    		//post("this should work");
+    	}
+    });
+}
+
 function gui_array_new(did, count) {
     var attr_array = [{
         array_gfxstub: did,
@@ -5408,11 +5920,13 @@ function gui_array_new(did, count) {
         array_outline: "black",
         array_in_existing_graph: 0
     }];
-    dialogwin[did] = create_window(did, "canvas", 265, 340, 20, 20,
+    dialogwin[did] = create_window(did, "canvas",
+        240 + (5 * nw_os_is_linux) - (30 * nw_os_is_osx), 268-25, 20, 20,
         attr_array);
 }
 
 function gui_canvas_dialog(did, attr_arrays) {
+	//post("gui_canvas_dialog");
     var i, j, inner_array, prop;
     // Convert array of arrays to an array of objects
     for (i = 0; i < attr_arrays.length; i++) {
@@ -5423,13 +5937,26 @@ function gui_canvas_dialog(did, attr_arrays) {
             }
         }
     }
-    dialogwin[did] = create_window(did, "canvas", 300, 100,
+    var has_array = (attr_arrays.length > 1 ? 1 : 0);
+    /*
+    post("array.length=" + attr_arrays.length + " has_array=" + has_array +" width=" +
+    	(230 - (8 * has_array)) + " height=" +
+    	(attr_arrays.length > 1 ? 494-25+(attr_arrays.length > 2 ? 38 : 0) : 392-25));
+    */
+    dialogwin[did] = create_window(did, "canvas",
+        // ico@vt.edu: property dialog size is larger when one has
+        // arrays inside the canvas.
+        // 1 for regular canvas and 2 for a canvas with 1 array,
+        // 3 for canvas with 2 arrays, etc.
+        // We also substract here 5 for the smaller top bar...
+        238 + (8 * has_array),
+        (attr_arrays.length > 1 ? 535-25 : 392-25),
         popup_coords[2], popup_coords[3],
         attr_arrays);
 }
 
 function gui_data_dialog(did, data_string) {
-    dialogwin[did] = create_window(did, "data", 250, 300,
+    dialogwin[did] = create_window(did, "data", 195, 323 + (22 * nw_os_is_osx),
         popup_coords[2], popup_coords[3],
         data_string);
 }
@@ -5485,19 +6012,28 @@ function gui_remove_gfxstub(did) {
     }
 }
 
-function gui_font_dialog(cid, gfxstub, font_size) {
-    var attrs = { canvas: cid, font_size: font_size };
-    dialogwin[gfxstub] = create_window(gfxstub, "font", 265, 200, 0, 0,
-        attrs);
+function gui_font_dialog(cid, font_size) {
+    //var attrs = { canvas: cid, font_size: font_size };
+    //dialogwin[gfxstub] = create_window(gfxstub, "font", 136, 187, 0, 0,
+    //    attrs);
+    // ico@vt.edu: 2020-08-24: we don't need this anymore since everything
+    // is now inside the menu
 }
 
 function gui_external_dialog(did, external_name, attr_array) {
-    create_window(did, "external", 265, 450,
+    create_window(did, "external", 202, 323 + (22 * nw_os_is_osx),
         popup_coords[2], popup_coords[3],
         {
             name: external_name,
             attributes: attr_array
         });
+}
+
+function gui_abstractions_dialog(cid, gfxstub, filebased_abs, private_abs) {
+    var attrs = { canvas: cid, filebased_abs: filebased_abs,
+                    private_abs: private_abs };
+    dialogwin[gfxstub] = create_window(gfxstub, "abstractions", 300, 
+        Math.min(600, (private_abs.length*10 + 190+(nw_os_is_osx?20:0))), 0, 0, attrs);
 }
 
 // Global settings
@@ -5510,7 +6046,7 @@ function gui_pd_dsp(state) {
 
 function open_prefs() {
     if (!dialogwin["prefs"]) {
-        create_window("prefs", "prefs", 370, 470, 0, 0, null);
+        create_window("prefs", "prefs", 486, 532, 0, 0, null);
     } else {
         dialog_raise("prefs");
     }
@@ -5526,7 +6062,7 @@ function open_search() {
     }
 }
 
-exports.open_search= open_search;
+exports.open_search = open_search;
 
 // This is the same for all windows (initialization is in pd_menus.js).
 var recent_files_submenu = null;
@@ -5623,10 +6159,10 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
     }
 }
 
-function gui_gui_properties(dummy, name, save_zoom, browser_doc, browser_path,
+function gui_gui_properties(dummy, name, show_grid, save_zoom, browser_doc, browser_path,
     browser_init, autopatch_yoffset) {
     if (dialogwin["prefs"] !== null) {
-        dialogwin["prefs"].window.gui_prefs_callback(name, save_zoom,
+        dialogwin["prefs"].window.gui_prefs_callback(name, show_grid, save_zoom,
             browser_doc, browser_path, browser_init, autopatch_yoffset);
     }
 }
@@ -5658,7 +6194,12 @@ var skin = exports.skin = (function () {
             return dir + preset + ".css";
         },
         set: function (name) {
-            preset = name;
+            // ag: if the preset doesn't exist (e.g., user preset that
+            // has disappeared), just stick to the default
+            var base = process.platform === "darwin" ? (lib_dir + "/") : "";
+            if (fs.existsSync(base + dir + name + ".css")) {
+                preset = name;
+            }
             for (id in patchwin) {
                 if (patchwin.hasOwnProperty(id) && patchwin[id]) {
                     set_css(patchwin[id].window);
@@ -5674,15 +6215,25 @@ var skin = exports.skin = (function () {
     };
 }());
 
-function select_text(cid, elem) {
+function select_text(cid, elem, sel_start, sel_end) {
     var range, win = patchwin[cid].window;
     if (win.document.selection) {
         range = win.document.body.createTextRange();
         range.moveToElementText(elem);
+        var len = elem.textContent.length,
+            ms = Math.max(Math.min(sel_start, len), 0),
+            me = Math.max(Math.min(sel_end, len), ms);
+        if(sel_start != -1) range.moveStart("character", ms);
+        if(sel_end != -1) range.moveEnd("character", me-len);
         range.select();
     } else if (win.getSelection) {
         range = win.document.createRange();
         range.selectNodeContents(elem);
+        var len = elem.textContent.length,
+            ms = Math.max(Math.min(sel_start, len), 0),
+            me = Math.max(Math.min(sel_end, len), ms);
+        if(sel_start != -1) range.setStart(elem.firstChild, ms);
+        if(sel_end != -1) range.setEnd(elem.firstChild, me);
         win.getSelection().removeAllRanges();
         win.getSelection().addRange(range);
     }
@@ -5721,57 +6272,72 @@ function get_style_by_selector(w, selector) {
 // for debugging purposes
 exports.get_style_by_selector = get_style_by_selector;
 
-// Big, stupid, ugly SVG data url to shove into CSS when
-// the user clicks a box in edit mode. One set of points for
-// the "head", or main box, and the other for the "tail", or
-// message flag at the right.
-function generate_msg_box_bg_data(type, stroke) {
-   return 'url(\"data:image/svg+xml;utf8,' +
-            '<svg ' +
-              "xmlns:svg='http://www.w3.org/2000/svg' " +
-              "xmlns='http://www.w3.org/2000/svg' " +
-              "xmlns:xlink='http://www.w3.org/1999/xlink' " +
-              "version='1.0' " +
-              "viewBox='0 0 10 10' " +
-              "preserveAspectRatio='none'" +
-            ">" +
-              "<polyline vector-effect='non-scaling-stroke' " +
-                "id='bubbles' " +
-                "fill='none' " +
-                "stroke=' " +
-                  stroke + // Here's our stroke color
-                "' " +
-                "stroke-width='1' " +
-                (type === "head" ?
-                    "points='10 0 0 0 0 10 10 10' " : // box
-                    "points='0 0 10 0 0 2 0 8 10 10 0 10' ") + // flag
-              "/>" +
-            "</svg>" +
-          '")';
+// 2020-10-06 ico@vt.edu: the following deals with nw.js' discrepancy between
+// positioning svg text, versus html paragraph (editable) text
+var textarea_font_height_array_kludge = [
+// zoom levels      -7  -6  -5  -4  -3  -2  -1  0   1   2   3   4   5   6   7
+/* font size 8  */ [ 40, 48, 70, 90,116,140,150,133,133,136,133,135,136,133,135],
+/* font size 10 */ [ 50, 70, 90,116,132,133,133,133,134,133,134,133,132,131,130],
+/* font size 12 */ [ 80, 90,100,134,148,140,140,140,144,140,140,140,140,140,140],
+/* font size 16 */ [ 90,100,120,120,120,120,120,120,120,115,115,115,115,115,115],
+/* font size 24 */ [128,128,128,128,128,128,128,128,128,128,128,126,126,126,125],
+/* font size 36 */ [127,124,124,122,122,122,122,122,122,122,121,121,120,121,121]
+];
+
+var textarea_y_offset_array_kludge = [
+// zoom levels      -7  -6  -5  -4  -3  -2  -1  0   1   2   3   4   5   6   7
+/* font size 8  */ [1.5,1.5,1.5,1.5,1.5,0. ,-2.,1.5,1.5,1.0,1.0,1.0,0.2,0.5,0.5],
+/* font size 10 */ [0.5,0.5,0.5,1.5,0.5,1.5,0. ,0.5,0.7,0.8,0.8,1.0,0.5,0.5,0.8],
+/* font size 12 */ [1.5,1.5,1.5,2.0,1.5,1.5,1.5,1.5,1.5,1.5,1.5,2.0,1.5,1.5,1.5],
+/* font size 16 */ [1.5,1.5,-1.,1.5,1.0,1.5,0.0,1.5,1.5,1.5,1.2,1.5,1.0,0.7,1.2],
+/* font size 24 */ [1.5,2.5,2.5,3.0,1.5,2.5,2.5,1.5,2.5,2.5,1.5,2.0,1.5,1.5,2.2],
+/* font size 36 */ [1.5,1.5,1.5,3.0,1.5,1.5,1.5,2.5,2.5,1.5,2.0,2.5,1.7,1.6,1.9]
+];
+
+// helper function to get the right index inside the aforesaid kludge arrays
+// used by functions below
+function textarea_font_size_to_index(font_size) {
+    switch(font_size) {
+        case  8: return 0;
+        case 10: return 1;
+        case 12: return 2;
+        case 16: return 3;
+        case 24: return 4;
+        case 36: return 5;
+    }
 }
 
-// Big problem here-- CSS fails miserably at something as simple as the
-// message box flag. We use a backgroundImage svg to address this, but
-// for security reasons HTML5 doesn't provide access to svg image styles.
-// As a workaround we just seek out the relevant CSS rules and shove the
-// whole svg data url into them. We do this each time the user
-// clicks a box to edit.
-// Also, notice that both CSS and SVG _still_ fail miserably at drawing a
-// message box flag that expands in the middle while retaining the same angles
-// at the edges. As the message spans more and more lines the ugliness becomes
-// more and more apparent.
-// Anyhow, this enormous workaround makes it possible to just specify the
-// edit box color in CSS for the presets.
-function shove_svg_background_data_into_css(w) {
-    var head_style = get_style_by_selector(w, "#new_object_textentry.msg"),
-        tail_style = get_style_by_selector(w, "p.msg::after"),
-        stroke = head_style.outlineColor;
-    head_style.backgroundImage = generate_msg_box_bg_data("head", stroke);
-    tail_style.backgroundImage = generate_msg_box_bg_data("tail", stroke);
+function textarea_line_height_kludge(font_size, zoom) {
+	return textarea_font_height_array_kludge
+        [textarea_font_size_to_index(font_size)][zoom+7]+"%";
+}
+
+function textarea_y_offset_kludge(font_size, zoom) {
+    return textarea_y_offset_array_kludge
+        [textarea_font_size_to_index(font_size)][zoom+7];
+}
+
+function textarea_x_offset_kludge(font_size, zoom) {
+	if (font_size === 36) {
+		return -2;
+	} else {
+		return -0.5;
+	}
+}
+
+function textarea_msg_y_offset_kludge(zoom) {
+    if (zoom == 0) {
+        return -1;
+    } else if (zoom > 0) {
+        return -0.5;
+    } else {
+        //default
+        return 0;
+    }
 }
 
 function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
-    font_size, is_gop, state) {
+    font_size, font_width, font_height, is_gop, state, sel_start, sel_end) {
     var range, svg_view, p,
         gobj = get_gobj(cid, tag), zoom;
     gui(cid).get_nw_window(function(nw_win) {
@@ -5790,16 +6356,38 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         // (We can probably solve this problem by throwing in yet another
         // gui_canvas_get_scroll, but this seems like the right way to go
         // anyway.)
-        configure_item(gobj, { visibility: "hidden" });
+
+        // Hide elements:
+        // all text objects except for the message box hide everything,
+        // while the message box has a new approach that retains the svg
+        // shape below it. LATER: we may want to:
+        //     1) extend this to support nlets (currently we hide them);
+        //     2) extend this to adjust patch cords as things are being edited, and
+        //     3) extend this to all text objects.
+        if (type === "msg") {
+        	// Message approach
+	        var i, nlets = patchwin[cid].window.document
+	        	.getElementById(tag+"gobj").querySelectorAll(".xlet_control");
+	        for (i = 0; i < nlets.length; i++) {
+	        	nlets[i].style.setProperty("visibility", "hidden");        	
+	        }
+	        gui(cid).get_gobj(tag).q(".box_text", { visibility: "hidden" });
+	    } else {
+	    	// Anything else but message
+			configure_item(gobj, { visibility: "hidden" });
+	    }
+
         p = patchwin[cid].window.document.createElement("p");
         configure_item(p, {
-            id: "new_object_textentry"
+            id: "new_object_textentry",
+            cid: cid,
+            tag: tag,
+            font_width: font_width,
+            font_height: font_height
         });
         svg_view = patchwin[cid].window.document.getElementById("patchsvg")
             .viewBox.baseVal;
         p.classList.add(type);
-        // ico@vt.edu: is there a better way to monitor vars inside nw?
-        // p.classList.add("zoom=" + zoom);
         p.contentEditable = "true";
 
         if (is_gop == 0) {
@@ -5820,32 +6408,59 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
             */   
         }
         
-        p.style.setProperty("left", (x - svg_view.x) + "px");
-        p.style.setProperty("top", (y - svg_view.y) + "px");
+        p.style.setProperty("left", (x - svg_view.x + textarea_x_offset_kludge(font_size, zoom)) + "px");
+        p.style.setProperty("top", (y - svg_view.y + textarea_y_offset_kludge(font_size, zoom)) + "px");
         p.style.setProperty("font-size",
             pd_fontsize_to_gui_fontsize(font_size) + "px");
         p.style.setProperty("line-height",
-            pd_fontsize_to_gui_fontsize(font_size) + 1 + "px");
+        	textarea_line_height_kludge(font_size, zoom));
+            //pd_fontsize_to_gui_fontsize(font_size) + 1 + "px");
         p.style.setProperty("transform", "translate(0px, " + 
             (zoom > 0 ? 0.5 : 0) + "px)");
         p.style.setProperty("max-width",
-            width_spec !== 0 ? width_spec + "ch" : "60ch");
+            width_spec > 0 ? width_spec + "ch" : "60ch");
+        //p.style.setProperty("width", -width_spec - 2 + "px");
+        p.style.setProperty("-webkit-padding-after", "1px");
         p.style.setProperty("min-width",
-            width_spec <= 0 ? "3ch" :
-                (is_gop == 1 ? (width_spec - 5) + "px" :
-                    width_spec + "ch"));
-        
-        // set backgroundimage for message box
-        if (type === "msg") {
-            shove_svg_background_data_into_css(patchwin[cid].window);
+            width_spec == 0 ? "3ch" :
+                (is_gop == 1 ? width_spec - 3 + "px" :
+                    (width_spec < 0 ? (-width_spec) - 2 + "px" : width_spec + "ch")));
+
+        if (is_gop == 1) {
+            p.style.setProperty("min-height", height_spec - 4 + "px");
         }
         // remove leading/trailing whitespace
         text = text.trim();
         p.textContent = text;
         // append to doc body
         patchwin[cid].window.document.body.appendChild(p);
+        if (type === "msg")
+        {
+            // ico@vt.edu 2020-09-30: New approach to drawing
+            // messages that utilizes the original svg border
+            p.style.setProperty("-webkit-padding-before", "2px");
+            p.style.setProperty("-webkit-padding-after", "3px");
+            p.style.setProperty("-webkit-padding-start", "0px");
+            p.style.setProperty("-webkit-padding-end", "0px");
+            p.style.setProperty("margin-left", "2.5px");
+            p.style.setProperty("transform", "translate(0px, " +
+                textarea_msg_y_offset_kludge(zoom) + "px)");
+            p.style.setProperty("background-color", "");
+            //post("line-height="+ parseInt(p.style.lineHeight) / 100 * font_size);
+            //shove_svg_background_data_into_css(patchwin[cid].window,
+            //    parseInt(get_gobj(cid, tag).getBoundingClientRect().height /
+            //        (parseInt(p.style.lineHeight) / 100 * font_size)));
+        	gui_message_update_textarea_border(p,1);
+        }
         p.focus();
-        select_text(cid, p);
+        select_text(cid, p, sel_start, sel_end);
+        if (font_size === 36) {
+            if (is_gop) {
+                p.style.setProperty("padding", "2px 0px 2px 2.5px");
+            } else {
+                p.style.setProperty("padding", "2px 0px 2px 1.5px");
+            }
+        }
         if (state === 1) {
             patchwin[cid].window.canvas_events.text();
         } else {
@@ -5857,6 +6472,15 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         if (p !== null) {
             p.parentNode.removeChild(p);
         }
+
+        // MSG approach
+        var i, nlets = patchwin[cid].window.document
+        	.getElementById(tag+"gobj").querySelectorAll(".xlet_control");
+        for (i = 0; i < nlets.length; i++) {
+        	nlets[i].style.setProperty("visibility", "visible");        	
+        }
+        gui(cid).get_gobj(tag).q(".box_text", { visibility: "visible" });
+
         if (patchwin[cid].window.canvas_events.get_previous_state() ===
                "search") {
             patchwin[cid].window.canvas_events.search();
@@ -5940,27 +6564,38 @@ function canvas_params(nw_win)
     var bbox, width, height, min_width, min_height, x, y, svg_elem;
     svg_elem = nw_win.window.document.getElementById("patchsvg");
     bbox = svg_elem.getBBox();
+    //post("canvas_params calculated bbox: " + bbox.width + " " + bbox.height);
     // We try to do Pd-extended style canvas origins. That is, coord (0, 0)
     // should be in the top-left corner unless there are objects with a
     // negative x or y.
     // To implement the Pd-l2ork behavior, the top-left of the canvas should
     // always be the topmost, leftmost object.
     width = bbox.x > 0 ? bbox.x + bbox.width : bbox.width;
-    height = bbox.y > 0 ? bbox.y + bbox.height : bbox.height;
+    // ico@vt.edu 2020-08-12: we add 1 due to an unknown nw.js discrapancy,
+    // perhaps because of rounding taking place further below?
+    height = bbox.y > 0 ? bbox.y + bbox.height + 1 : bbox.height + 1;
     x = bbox.x > 0 ? 0 : bbox.x,
     y = bbox.y > 0 ? 0 : bbox.y;
 
     // ico@vt.edu: adjust body width and height to match patchsvg to ensure
     // scrollbars only come up when we are indeed inside svg and not before
     // with extra margins around. This is accurate to a pixel on nw 0.47.0.
-    // This is also needed when maximizing and restoring the window in order
-    // to trigger resizing of scrollbars.
+    // This is needed when maximizing and restoring the window in order
+    // to trigger resizing of scrollbars. This value reflects the pre-zoom
+    // size but this is good enough for detecting window resizing changes.
+
+    // ico @vt.edu 2020-08-13 UPDATE: I tracked down the inconsistency in
+    // measuring window size between Windows and OSX/Linux and it boils down
+    // to innerWidth and innerHeight for some reason giving out inconsistent
+    // values. For this reason, I have added the checks in the index.js'
+    // nw_create_window, and the pdgui.js' canvas_check_geometry.
     min_width = nw_win.window.innerWidth;
     min_height = nw_win.window.innerHeight;
     
     var body_elem = nw_win.window.document.body;
     body_elem.style.width = min_width + "px";
     body_elem.style.height = min_height + "px";
+    //post("canvas_params min_w=" + min_width + " min_h=" + min_height);
 
     // Since we don't do any transformations on the patchsvg,
     // let's try just using ints for the height/width/viewBox
@@ -5986,14 +6621,21 @@ function canvas_params(nw_win)
     // yScrollSize reflects the amount of the patch we currently see,
     // so if it drops below 1, that means we need our scrollbars 
     if (yScrollSize < 1) {
-        var yHeight = Math.floor(yScrollSize * (min_height + 3));
-        vscroll.style.setProperty("height", (yHeight - 6) + "px");
-        vscroll.style.setProperty("top", (yScrollTopOffset + 2) + "px");
+        var yHeight = Math.floor(yScrollSize * (min_height + 3 + nw_version_bbox_offset));
+        vscroll.style.setProperty("height", (yHeight - 1 + nw_version_bbox_offset) + "px");
+        // was (yScrollTopOffset + 2) to make it peel away from the edge
+        vscroll.style.setProperty("top", (yScrollTopOffset + 0) + "px");
         vscroll.style.setProperty("-webkit-clip-path",
-            "polygon(0px 0px, 5px 0px, 5px " + (yHeight - 6) +
-            "px, 0px " + (yHeight - 11) + "px, 0px 5px)");
-        vscroll.style.setProperty("width", (5 * zoom) + "px");
-        vscroll.style.setProperty("right", (2 * zoom) + "px");
+            "polygon(0px 0px, 5px 0px, 5px " + (yHeight - 1 + nw_version_bbox_offset) +
+            "px, 0px " + (yHeight - 6 + nw_version_bbox_offset) + "px, 0px 5px)");
+        // ico@vt.edu: this could go either way. We can zoom here to compensate for
+        // the zoom and keep the scrollbars the same size, or, as is the case with
+        // this new commit, we enlarge them together with the patch since one of the
+        // possible rationales is that zooming is there to improve visibility. If
+        // we decide to reenable this, we may want to fine-tune scrollbar height to
+        // ensure its size is accurate.
+        //vscroll.style.setProperty("width", (5 * zoom) + "px");
+        //vscroll.style.setProperty("right", (2 * zoom) + "px");
         vscroll.style.setProperty("visibility", "visible");
     } else {
         vscroll.style.setProperty("visibility", "hidden");
@@ -6006,19 +6648,28 @@ function canvas_params(nw_win)
 
     if (xScrollSize < 1) {
         var xWidth = Math.floor(xScrollSize * (min_width + 3));
-        hscroll.style.setProperty("width", (xWidth - 6) + "px");
-        hscroll.style.setProperty("left", (xScrollLeftOffset + 2) + "px");
+        hscroll.style.setProperty("width", (xWidth - 1) + "px");
+        // was (xScrollTopOffset + 2) to make it peel away from the edge
+        hscroll.style.setProperty("left", (xScrollLeftOffset + 0) + "px");
         hscroll.style.setProperty("-webkit-clip-path",
-            "polygon(0px 0px, " + (xWidth - 11) + "px 0px, " +
-            (xWidth - 6) + "px 5px, 0px 5px)");
-        hscroll.style.setProperty("height", (5 * zoom) + "px");
-        hscroll.style.setProperty("bottom", (2 * zoom) + "px");
+            "polygon(0px 0px, " + (xWidth - 6) + "px 0px, " +
+            (xWidth - 1) + "px 5px, 0px 5px)");
+        // ico@vt.edu: this could go either way. We can zoom here to compensate for
+        // the zoom and keep the scrollbars the same size, or, as is the case with
+        // this new commit, we enlarge them together with the patch since one of the
+        // possible rationales is that zooming is there to improve visibility. If
+        // we decide to reenable this, we may want to fine-tune scrollbar width to
+        // ensure its size is accurate.
+        //hscroll.style.setProperty("height", (5 * zoom) + "px");
+        //hscroll.style.setProperty("bottom", (2 * zoom) + "px");
         hscroll.style.setProperty("visibility", "visible");
     } else {
         hscroll.style.setProperty("visibility", "hidden");    
     }
     
     //post("x=" + xScrollSize + " y=" + yScrollSize);
+    //post("canvas_params final: x=" + x + " y=" + y + "w=" + width +
+    //  " h=" + height + " min_w=" + min_width + " min_h=" + min_height);
     
     return { x: x, y: y, w: width, h: height,
              mw: min_width, mh: min_height };
@@ -6042,6 +6693,10 @@ function pd_do_getscroll(cid) {
 
 exports.pd_do_getscroll = pd_do_getscroll;*/
 
+// ico@vt.edu: we need this because of inconsistent canvas size between
+// nw <=0.24 and >=0.46
+var nw_version_bbox_offset = check_nw_version("0.46") ? 0 : -4;
+
 function do_getscroll(cid, checkgeom) {
     // Since we're throttling these getscroll calls, they can happen after
     // the patch has been closed. We remove the cid from the patchwin
@@ -6059,6 +6714,12 @@ function do_getscroll(cid, checkgeom) {
         var svg_elem = nw_win.window.document.getElementById("patchsvg");
         var { x: x, y: y, w: width, h: height,
             mw: min_width, mh: min_height } = canvas_params(nw_win);
+
+        //post("nw_version_bbox_offset=" + nw_version_bbox_offset +
+        //  " min_height=" + min_height);
+        min_height += nw_version_bbox_offset;
+        //post("post-calc min_height=" + min_height);
+
         if (width < min_width) {
             width = min_width;
         }
@@ -6142,6 +6803,21 @@ function gui_canvas_get_overriding_scroll(cid) {
 
 exports.gui_canvas_get_overriding_scroll = gui_canvas_get_overriding_scroll;
 
+/* ico@vt.edu 20200920: this last variant that executes immediately
+   is needed for g_text.c when one displaces a text object and it
+   immediately activates and it falls outside the visible canvas bounds
+   this can trigger the object to have its activated box at an incorrect
+   location due to asynchronous behavior of other getscroll calls. Having
+   it here as a separate call as it may prove useful later in other contexts.
+*/
+
+function gui_canvas_get_immediate_scroll(cid) {
+    //post("gui_canvas_get_immediate_scroll");
+    do_getscroll(cid, 0);
+}
+
+exports.gui_canvas_get_immediate_scroll = gui_canvas_get_immediate_scroll;
+
 function do_optimalzoom(cid, hflag, vflag) {
     // determine an optimal zoom level that makes the entire patch fit within
     // the window
@@ -6175,6 +6851,7 @@ function do_optimalzoom(cid, hflag, vflag) {
             nw_win.zoomLevel = z;
             pdsend(cid, "zoom", z);
         }
+        do_getscroll(cid,1);
     });
 }
 
@@ -6186,7 +6863,7 @@ var optimalzoom_var = {};
 // 100 msec are enough for do_optimalzoom to finish.
 function gui_canvas_optimal_zoom(cid, h, v) {
     clearTimeout(optimalzoom_var[cid]);
-    optimalzoom_var[cid] = setTimeout(do_optimalzoom, 10, cid, h, v);
+    optimalzoom_var[cid] = setTimeout(do_optimalzoom, 50, cid, h, v);
 }
 
 exports.gui_canvas_optimal_zoom = gui_canvas_optimal_zoom;
@@ -6283,8 +6960,20 @@ exports.dialog_bindings = function(did) {
 exports.resize_window = function(did) {
     var w = dialogwin[did].window.document.body.scrollWidth,
         h = dialogwin[did].window.document.body.scrollHeight;
-    dialogwin[did].width = w;
-    dialogwin[did].height = h;
+    // ico@vt.edu: the following is a change needed for the nw.js 0.47
+    // for the dialog window to be properly resized
+    //dialogwin[did].width = w;
+    //dialogwin[did].height = h;
+    //dialogwin[did].window.document.body.titlebar_close_button.style.setProperty
+    //    ("font-size", (process.platform === "win32" ? "21px" : "15px"));
+    /*post(did + " body: w=" + dialogwin[did].window.document.body.clientWidth +
+        " h=" + dialogwin[did].window.document.body.clientHeight + " scroll: w=" +
+        w + " h=" + h);*/
+    dialogwin[did].resizeTo(w,h);
+    //ico@vt.edu: comment the following line when working on dialog sizes...
+    dialogwin[did].setResizable(false);
+    //post("dialog set always on top");
+    //dialogwin[did].setAlwaysOnTop(true);
 }
 
 // External GUI classes
@@ -6331,11 +7020,11 @@ function gui_update_scrollbars(cid) {
             
             if (yScrollSize < 1) {
                 var yHeight = Math.floor(yScrollSize * min_height);
-                vscroll.style.setProperty("height", (yHeight - 6) + "px");
-                vscroll.style.setProperty("top", (yScrollTopOffset + 2) + "px");
+                vscroll.style.setProperty("height", (yHeight - 1 + nw_version_bbox_offset) + "px");
+                vscroll.style.setProperty("top", (yScrollTopOffset + 0) + "px");
                 vscroll.style.setProperty("-webkit-clip-path",
-                    "polygon(0px 0px, 5px 0px, 5px " + (yHeight - 6) +
-                    "px, 0px " + (yHeight - 11) + "px, 0px 5px)");
+                    "polygon(0px 0px, 5px 0px, 5px " + (yHeight - 1 + nw_version_bbox_offset) +
+                    "px, 0px " + (yHeight - 6 + nw_version_bbox_offset) + "px, 0px 5px)");
                 vscroll.style.setProperty("visibility", "visible");
             } else {
                 vscroll.style.setProperty("visibility", "hidden");    
@@ -6357,11 +7046,11 @@ function gui_update_scrollbars(cid) {
 
             if (xScrollSize < 1) {
                 var xWidth = Math.floor(xScrollSize * min_width);
-                hscroll.style.setProperty("width", (xWidth - 6) + "px");
-                hscroll.style.setProperty("left", (xScrollTopOffset + 2) + "px");
+                hscroll.style.setProperty("width", (xWidth - 1) + "px");
+                hscroll.style.setProperty("left", (xScrollTopOffset + 0) + "px");
                 hscroll.style.setProperty("-webkit-clip-path",
-                    "polygon(0px 0px, " + (xWidth - 11) + "px 0px, " +
-                    (xWidth - 6) + "px 5px, 0px 5px)");
+                    "polygon(0px 0px, " + (xWidth - 6) + "px 0px, " +
+                    (xWidth - 1) + "px 5px, 0px 5px)");
                 hscroll.style.setProperty("visibility", "visible");
             } else {
                 hscroll.style.setProperty("visibility", "hidden");    
@@ -6375,3 +7064,21 @@ function gui_update_scrollbars(cid) {
 }
 
 exports.gui_update_scrollbars = gui_update_scrollbars;
+
+// ico@vt.edu 2020-08-29: fine-tune appearance of various
+// css elements because, consistency in HTML font rendering
+// across different OSs is a joke
+function gui_check_for_dialog_appearance_inconsistencies(id)
+{
+    if (nw_os_is_osx)
+        gui_osx_dialog_appearance(id);
+}
+
+exports.gui_check_for_dialog_appearance_inconsistencies = gui_check_for_dialog_appearance_inconsistencies;
+
+function gui_osx_dialog_appearance(id)
+{
+    var close_button = dialogwin[id].window.document.getElementById("titlebar_close_button");
+    close_button.style.setProperty("line-height", "14px");
+    close_button.style.setProperty("border-radius", "10px");
+}

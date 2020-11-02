@@ -10,11 +10,19 @@ to be different but are now unified except for some fossilized names.) */
 #include "m_pd.h"
 #include "m_imp.h"
 #include "s_stuff.h"
+#include "s_utf8.h"
 #include "g_magicglass.h"
 #include "g_canvas.h"
 #include "g_all_guis.h"
 #include <string.h>
 #include <math.h>
+
+#ifdef MSW
+#include <io.h>
+#endif
+#ifdef _MSC_VER
+#define snprintf _snprintf
+#endif
 
 t_garray *array_garray;
 t_class *preset_hub_class;
@@ -34,6 +42,19 @@ struct _canvasenvironment
     int ce_dollarzero;     /* value of "$0" */
     t_namelist *ce_path;   /* search path */
 };
+
+t_canvasenvironment *dummy_canvas_env(const char *dir)
+{
+ static t_canvasenvironment dummy_env = {
+   .ce_dir = NULL,
+   .ce_argc = 0,
+   .ce_argv = NULL,
+   .ce_dollarzero = 0,
+   .ce_path = NULL
+ };
+ dummy_env.ce_dir = gensym(dir);
+ return &dummy_env;
+}
 
 #define GLIST_DEFCANVASWIDTH 450
 #define GLIST_DEFCANVASHEIGHT 300
@@ -74,6 +95,8 @@ static t_symbol *canvas_newdirectory = &s_;
 static int canvas_newargc;
 static t_atom *canvas_newargv;
 
+static t_ab_definition *canvas_newabsource = 0;
+
     /* maintain the list of visible toplevels for the GUI's "windows" menu */
 void canvas_updatewindowlist( void)
 {
@@ -90,7 +113,7 @@ void canvas_updatewindowlist( void)
             if (x->gl_havewindow)
             {
                 gui_s(x->gl_name->s_name);
-                gui_x((long unsigned int)x);
+                gui_x((t_int)x);
             }
         }
     }
@@ -134,6 +157,12 @@ void glob_setfilename(void *dummy, t_symbol *filesym, t_symbol *dirsym)
 {
     canvas_newfilename = filesym;
     canvas_newdirectory = dirsym;
+}
+
+/* set the source for the next canvas, it will be an ab instance */
+void canvas_setabsource(t_ab_definition *abdef)
+{
+    canvas_newabsource = abdef;
 }
 
 t_canvas *canvas_getcurrent(void)
@@ -210,12 +239,16 @@ t_symbol *canvas_realizedollar(t_canvas *x, t_symbol *s)
 
 t_symbol *canvas_getcurrentdir(void)
 {
-    t_canvasenvironment *e = canvas_getenv(canvas_getcurrent());
-    return (e->ce_dir);
+    return (canvas_getdir(canvas_getcurrent()));
 }
 
+/* ** refactored function, check for errors */
 t_symbol *canvas_getdir(t_canvas *x)
 {
+    x = canvas_getrootfor(x);
+    /* in the case the root is an ab instance, we borrow the
+        dir from the main root canvas (where the definition is stored) */
+    if(x->gl_isab) x = x->gl_absource->ad_owner;
     t_canvasenvironment *e = canvas_getenv(x);
     return (e->ce_dir);
 }
@@ -388,6 +421,9 @@ static int calculate_zoom(t_float zoom_hack)
   return zoom;
 }
 
+int canvas_dirty_broadcast_all(t_symbol *name, t_symbol *dir, int mess);
+int canvas_dirty_broadcast_ab(t_canvas *x, t_ab_definition *abdef, int mess);
+
     /* make a new glist.  It will either be a "root" canvas or else
     it appears as a "text" object in another window (canvas_getcurrent() 
     tells us which.) */
@@ -416,7 +452,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     x->gl_obj.te_type = T_OBJECT;
     if (!owner)
         canvas_addtolist(x);
-    /* post("canvas %lx, owner %lx", x, owner); */
+    /* post("canvas %zx, owner %zx", x, owner); */
 
     if (argc == 5)  /* toplevel: x, y, w, h, font */
     {
@@ -463,6 +499,20 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     }
     else x->gl_env = 0;
 
+    x->gl_abdefs = 0;
+    /* if canvas_newabsource is set means that
+        this canvas is going to be an ab instance */
+    if(canvas_newabsource)
+    {
+        x->gl_isab = 1;
+        x->gl_absource = canvas_newabsource;
+        canvas_newabsource = 0;
+    }
+    else x->gl_isab = 0;
+
+    x->gl_subdirties = 0;
+    x->gl_dirties = 0;
+
     if (yloc < GLIST_DEFCANVASYLOC)
         yloc = GLIST_DEFCANVASYLOC;
     if (xloc < 0)
@@ -479,7 +529,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     canvas_bind(x);
     x->gl_loading = 1;
     x->gl_unloading = 0;
-    //fprintf(stderr,"loading = 1 .x%lx owner=.x%lx\n", (t_int)x, (t_int)x->gl_owner);
+    //fprintf(stderr,"loading = 1 .x%zx owner=.x%zx\n", (t_uint)x, (t_uint)x->gl_owner);
     x->gl_goprect = 0;      /* no GOP rectangle unless it's turned on later */
         /* cancel "vis" flag if we're a subpatch of an
          abstraction inside another patch.  A separate mechanism prevents
@@ -495,6 +545,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     }
     x->gl_willvis = vis;
     x->gl_edit = !strncmp(x->gl_name->s_name, "Untitled", 8);
+    x->gl_edit_save = 0;
     x->gl_font = sys_nearestfontsize(font);
     x->gl_zoom = zoom;
     pd_pushsym(&x->gl_pd);
@@ -510,6 +561,17 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     canvas_field_templatesym = NULL;
     canvas_field_vec = NULL;
     canvas_field_gp = NULL;
+
+    /* in the case it is an abstraction (gl_env is not null)
+        get the number of dirty instances of this same abstraction */
+    if(x->gl_env)
+    {
+        if(!x->gl_isab)
+            x->gl_dirties = canvas_dirty_broadcast_all(x->gl_name,
+                                canvas_getdir(x), 0);
+        else
+            x->gl_dirties = canvas_dirty_broadcast_ab(canvas_getrootfor_ab(x), x->gl_absource, 0);
+    }
 
     return(x);
 }
@@ -618,6 +680,8 @@ void glist_glist(t_glist *g, t_symbol *s, int argc, t_atom *argv)
 {
     if (canvas_hasarray(g)) return;
     pd_vmess(&g->gl_pd, gensym("editmode"), "i", 1);
+    // disallow creation of new objects in scalars only window
+    if (canvas_has_scalars_only(g) == 2) return;
     t_symbol *sym = atom_getsymbolarg(0, argc, argv);
     /* if we wish to put a graph where the mouse is we need to replace bogus name */
     if (!strcmp(sym->s_name, "NULL")) sym = &s_;  
@@ -704,6 +768,14 @@ t_symbol *canvas_makebindsym(t_symbol *s)
     return (gensym(buf));
 }
 
+t_symbol *canvas_makebindsym_ab(t_symbol *s)
+{
+    char buf[MAXPDSTRING];
+    snprintf(buf, MAXPDSTRING-1, "ab-%s", s->s_name);
+    buf[MAXPDSTRING-1] = 0;
+    return (gensym(buf));
+}
+
 int garray_getname(t_garray *x, t_symbol **namep);
 
 void canvas_args_to_string(char *namebuf, t_canvas *x)
@@ -728,14 +800,15 @@ void canvas_args_to_string(char *namebuf, t_canvas *x)
     {
         namebuf[0] = 0;
         t_gobj *g = NULL;
+        t_garray *a = NULL;
         t_symbol *arrayname;
-        int found = 0;
+        int found = 0, res;
         for (g = x->gl_list; g; g = g->g_next)
         {
 
             if (pd_class(&g->g_pd) == garray_class)
             {
-                garray_getname((t_garray *)g, &arrayname);
+                res = garray_getname((t_garray *)g, &arrayname);
                 if (found)
                 {
                     strcat(namebuf, " ");
@@ -757,6 +830,186 @@ void canvas_reflecttitle(t_canvas *x)
         namebuf, canvas_getdir(x)->s_name, x->gl_dirty);
 }
 
+/* --------------------- */
+
+/* climbs up to the root canvas while enabling or disabling visual markings for dirtiness
+    of traversed canvases */
+void canvas_dirtyclimb(t_canvas *x, int n)
+{
+    if (x->gl_owner)
+    {
+        gobj_dirty(&x->gl_gobj, x->gl_owner,
+            (n ? 1 : (x->gl_subdirties ? 2 : 0)));
+        x = x->gl_owner;
+        while(x->gl_owner)
+        {
+            x->gl_subdirties += ((unsigned)n ? 1 : -1);
+            if(!x->gl_dirty)
+                gobj_dirty(&x->gl_gobj, x->gl_owner, (x->gl_subdirties ? 2 : 0));
+            x = x->gl_owner;
+        }
+    }
+}
+
+/* the following functions are used to broadcast messages to all instances of
+    a specific abstraction (either file-based or ab).
+    the state of these instances change accoring to the message sent. */
+
+void clone_iterate(t_pd *z, t_canvas_iterator it, void* data);
+int clone_match(t_pd *z, t_symbol *name, t_symbol *dir);
+int clone_isab(t_pd *z);
+int clone_matchab(t_pd *z, t_ab_definition *source);
+
+static void canvas_dirty_common(t_canvas *x, int mess)
+{
+    if(mess == 2)
+    {
+        if(x->gl_dirty)
+        {
+            if(!x->gl_havewindow) canvas_vis(x, 1);
+            gui_vmess("gui_canvas_emphasize", "x", x);
+        }
+    }
+    else
+    {
+        x->gl_dirties += mess;
+        if(x->gl_havewindow)
+            canvas_warning(x, (x->gl_dirties > 1 ?
+                                (x->gl_dirty ? 2 : 1)
+                                : (x->gl_dirties ? !x->gl_dirty : 0)));
+    }
+}
+
+/* packed data passing structure for canvas_dirty_broadcast */
+typedef struct _dirty_broadcast_data
+{
+    t_symbol *name;
+    t_symbol *dir;
+    int mess;
+    int *res;   /* return value */
+} t_dirty_broadcast_data;
+
+static void canvas_dirty_deliver_packed(t_canvas *x, t_dirty_broadcast_data *data)
+{
+    *data->res += (x->gl_dirty > 0);
+    canvas_dirty_common(x, data->mess);
+}
+
+static void canvas_dirty_broadcast_packed(t_canvas *x, t_dirty_broadcast_data *data);
+
+static int canvas_dirty_broadcast(t_canvas *x, t_symbol *name, t_symbol *dir, int mess)
+{
+    int res = 0;
+    t_gobj *g;
+    for (g = x->gl_list; g; g = g->g_next)
+    {
+        if(pd_class(&g->g_pd) == canvas_class)
+        {
+            if(canvas_isabstraction((t_canvas *)g) && !((t_canvas *)g)->gl_isab
+                && ((t_canvas *)g)->gl_name == name
+                && canvas_getdir((t_canvas *)g) == dir)
+            {
+                res += (((t_canvas *)g)->gl_dirty > 0);
+                canvas_dirty_common((t_canvas *)g, mess);
+            }
+            else
+            {
+                res += canvas_dirty_broadcast((t_canvas *)g, name, dir, mess);
+            }
+        }
+        else if(pd_class(&g->g_pd) == clone_class)
+        {
+            int cres = 0;
+            t_dirty_broadcast_data data;
+            data.name = name; data.dir = dir; data.mess = mess; data.res = &cres;
+            if(clone_match(&g->g_pd, name, dir))
+            {
+                clone_iterate(&g->g_pd, canvas_dirty_deliver_packed, &data);
+            }
+            else
+            {
+                clone_iterate(&g->g_pd, canvas_dirty_broadcast_packed, &data);
+            }
+            res += cres;
+        }
+    }
+    return (res);
+}
+
+static void canvas_dirty_broadcast_packed(t_canvas *x, t_dirty_broadcast_data *data)
+{
+    *data->res = canvas_dirty_broadcast(x, data->name, data->dir, data->mess);
+}
+
+int canvas_dirty_broadcast_all(t_symbol *name, t_symbol *dir, int mess)
+{
+    int res = 0;
+    t_canvas *x;
+    for (x = pd_this->pd_canvaslist; x; x = x->gl_next)
+        res += canvas_dirty_broadcast(x, name, dir, mess);
+    return (res);
+}
+
+/* same but for ab */
+
+typedef struct _dirty_broadcast_ab_data
+{
+    t_ab_definition *abdef;
+    int mess;
+    int *res;
+} t_dirty_broadcast_ab_data;
+
+static void canvas_dirty_deliver_ab_packed(t_canvas *x, t_dirty_broadcast_ab_data *data)
+{
+    *data->res += (x->gl_dirty > 0);
+    canvas_dirty_common(x, data->mess);
+}
+
+static void canvas_dirty_broadcast_ab_packed(t_canvas *x, t_dirty_broadcast_ab_data *data);
+
+int canvas_dirty_broadcast_ab(t_canvas *x, t_ab_definition *abdef, int mess)
+{
+    int res = 0;
+    t_gobj *g;
+    for (g = x->gl_list; g; g = g->g_next)
+    {
+        if(pd_class(&g->g_pd) == canvas_class)
+        {
+            if(canvas_isabstraction((t_canvas *)g) && ((t_canvas *)g)->gl_isab
+                && ((t_canvas *)g)->gl_absource == abdef)
+            {
+                res += (((t_canvas *)g)->gl_dirty > 0);
+                canvas_dirty_common((t_canvas *)g, mess);
+            }
+            else if(!canvas_isabstraction((t_canvas *)g) || ((t_canvas *)g)->gl_isab)
+            {
+                res += canvas_dirty_broadcast_ab((t_canvas *)g, abdef, mess);
+            }
+        }
+        else if(pd_class(&g->g_pd) == clone_class)
+        {
+            int cres = 0;
+            t_dirty_broadcast_ab_data data;
+            data.abdef = abdef; data.mess = mess; data.res = &cres;
+            if(clone_matchab(&g->g_pd, abdef))
+            {
+                clone_iterate(&g->g_pd, canvas_dirty_deliver_ab_packed, &data);
+            }
+            else if(clone_isab(&g->g_pd))
+            {
+                clone_iterate(&g->g_pd, canvas_dirty_broadcast_ab_packed, &data);
+            }
+            res += cres;
+        }
+    }
+    return (res);
+}
+
+static void canvas_dirty_broadcast_ab_packed(t_canvas *x, t_dirty_broadcast_ab_data *data)
+{
+    *data->res = canvas_dirty_broadcast_ab(x, data->abdef, data->mess);
+}
+
     /* mark a glist dirty or clean */
 void canvas_dirty(t_canvas *x, t_floatarg n)
 {
@@ -768,6 +1021,23 @@ void canvas_dirty(t_canvas *x, t_floatarg n)
         x2->gl_dirty = n;
         if (x2->gl_havewindow)
             canvas_reflecttitle(x2);
+
+        /* set dirtiness visual markings */
+        canvas_dirtyclimb(x2, (unsigned)n);
+
+        /* in the case it is an abstraction, we tell all other
+            instances that there is eiher one more dirty instance or
+            one less dirty instance */
+        if(canvas_isabstraction(x2)
+            && (x2->gl_owner || x2->gl_isclone))
+        {
+            if(!x2->gl_isab)
+                canvas_dirty_broadcast_all(x2->gl_name, canvas_getdir(x2),
+                    (x2->gl_dirty ? 1 : -1));
+            else
+                canvas_dirty_broadcast_ab(canvas_getrootfor_ab(x2), x2->gl_absource,
+                    (x2->gl_dirty ? 1 : -1));
+        }
     }
 }
 
@@ -808,9 +1078,9 @@ void canvas_draw_gop_resize_hooks(t_canvas* x)
         x->gl_goprect && !x->gl_editor->e_selection)
     {
         //Drawing and Binding Resize_Blob for GOP
-        //fprintf(stderr,"draw_gop_resize_hooks DRAW %lx %lx\n", (t_int)x, (t_int)glist_getcanvas(x));
-        sprintf(sh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)sh);
-        sprintf(mh->h_pathname, ".x%lx.h%lx", (t_int)x, (t_int)mh);
+        //fprintf(stderr,"draw_gop_resize_hooks DRAW %zx %zx\n", (t_uint)x, (t_uint)glist_getcanvas(x));
+        sprintf(sh->h_pathname, ".x%zx.h%zx", (t_uint)x, (t_uint)sh);
+        sprintf(mh->h_pathname, ".x%zx.h%zx", (t_uint)x, (t_uint)mh);
 
         /* These are handled now in canvas_doclick */
         //scalehandle_draw_select(sh,
@@ -861,7 +1131,7 @@ void canvas_drawredrect(t_canvas *x, int doit)
     called from the GUI after the fact to "notify" us that we're mapped. */
 void canvas_map(t_canvas *x, t_floatarg f)
 {
-    //fprintf(stderr,"canvas_map %lx %f\n", (t_int)x, f);
+    //fprintf(stderr,"canvas_map %zx %f\n", (t_uint)x, f);
     int flag = (f != 0);
     t_gobj *y;
     if (flag)
@@ -915,7 +1185,7 @@ void canvas_map(t_canvas *x, t_floatarg f)
 void canvas_redraw(t_canvas *x)
 {
     if (do_not_redraw) return;
-    //fprintf(stderr,"canvas_redraw %lx\n", (t_int)x);
+    //fprintf(stderr,"canvas_redraw %zx\n", (t_uint)x);
     if (glist_isvisible(x))
     {
         //fprintf(stderr,"canvas_redraw glist_isvisible=true\n");
@@ -958,7 +1228,7 @@ void glist_menu_open(t_glist *x)
         else
         {
             // Not sure if this needs to get ported... need to test
-            //sys_vgui("focus .x%lx\n", (t_int)x);
+            //sys_vgui("focus .x%zx\n", (t_uint)x);
         }
     }
     else
@@ -992,10 +1262,30 @@ int glist_getfont(t_glist *x)
 }
 
 extern void canvas_group_free(t_pd *x);
+static void canvas_deregister_ab(t_canvas *x, t_ab_definition *a);
 
 void canvas_free(t_canvas *x)
 {
-    //fprintf(stderr,"canvas_free %lx\n", (t_int)x);
+    //fprintf(stderr,"canvas_free %zx\n", (t_uint)x);
+
+    /* crude hack. in the case it was a clone instance, it shouldn't have an owner.
+        For ab instances, we have set the owner inside clone_free because we need it
+        in order to deregister the dependencies.
+        here we set it to NULL again to prevent any error in the functions called bellow */
+    t_canvas *aux = x->gl_owner;
+    if(x->gl_isclone) x->gl_owner = 0;
+
+    /* in the case it is a dirty abstraction, we tell all other
+        instances that there is one less dirty instance */
+    if(canvas_isabstraction(x) && x->gl_dirty
+        && (x->gl_owner || x->gl_isclone))
+    {
+        if(!x->gl_isab)
+            canvas_dirty_broadcast_all(x->gl_name, canvas_getdir(x), -1);
+        else
+            canvas_dirty_broadcast_ab(canvas_getrootfor_ab(x), x->gl_absource, -1);
+    }
+
     t_gobj *y;
     int dspstate = canvas_suspend_dsp();
 
@@ -1033,6 +1323,26 @@ void canvas_free(t_canvas *x)
         canvas_takeofflist(x);
     if (x->gl_svg)                   /* for groups, free the data */
         canvas_group_free(x->gl_svg);
+
+    /* freeing an ab instance */
+    if(x->gl_isab)
+    {
+        x->gl_absource->ad_numinstances--;
+        canvas_deregister_ab((x->gl_isclone ? aux : x->gl_owner),
+            x->gl_absource);
+    }
+
+    /* free stored ab definitions */
+    t_ab_definition *d = x->gl_abdefs, *daux;
+    while(d)
+    {
+        daux = d->ad_next;
+        binbuf_free(d->ad_source);
+        freebytes(d->ad_dep, sizeof(t_ab_definition*)*d->ad_numdep);
+        freebytes(d->ad_deprefs, sizeof(int)*d->ad_numdep);
+        freebytes(d, sizeof(t_ab_definition));
+        d = daux;
+    }
 }
 
 /* ----------------- lines ---------- */
@@ -1083,7 +1393,7 @@ void canvas_deletelinesfor(t_canvas *x, t_text *text)
             {
                 /* Still don't see any place where this gets used. Maybe it's
                    used by older externals? Need to test... */
-                //sys_vgui(".x%lx.c delete l%lx\n",
+                //sys_vgui(".x%zx.c delete l%zx\n",
                 //    glist_getcanvas(x), oc);
                 /* probably need a gui_vmess here */
             }
@@ -1106,7 +1416,7 @@ void canvas_eraselinesfor(t_canvas *x, t_text *text)
             if (x->gl_editor)
             {
                 char tagbuf[MAXPDSTRING];
-                sprintf(tagbuf, "l%lx", (long unsigned int)oc);
+                sprintf(tagbuf, "l%zx", (t_uint)oc);
                 gui_vmess("gui_canvas_delete_line", "xs",
                     glist_getcanvas(x), tagbuf);
             }
@@ -1130,7 +1440,7 @@ void canvas_deletelinesforio(t_canvas *x, t_text *text,
             if (x->gl_editor)
             {
                 char buf[MAXPDSTRING];
-                sprintf(buf, "l%lx", (long unsigned int)oc);
+                sprintf(buf, "l%zx", (t_uint)oc);
                 gui_vmess("gui_canvas_delete_line", "xs",
                     glist_getcanvas(x),
                     buf);
@@ -1148,7 +1458,7 @@ static void canvas_pop(t_canvas *x, t_floatarg fvis)
     canvas_resortinlets(x);
     canvas_resortoutlets(x);
     x->gl_loading = 0;
-    //fprintf(stderr,"loading = 0 .x%lx owner=.x%lx\n", x, x->gl_owner);
+    //fprintf(stderr,"loading = 0 .x%zx owner=.x%zx\n", x, x->gl_owner);
 }
 
 extern void *svg_new(t_pd *x, t_symbol *s, int argc, t_atom *argv);
@@ -1168,7 +1478,7 @@ void canvas_restore(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_pd *z;
     int is_draw_command = 0;
-    //fprintf(stderr,"canvas_restore %lx\n", x);
+    //fprintf(stderr,"canvas_restore %zx\n", x);
     /* for [draw g] and [draw svg] we add an inlet to the svg attr proxy */
     if (atom_getsymbolarg(2, argc, argv) == gensym("draw"))
     {
@@ -1211,7 +1521,7 @@ void canvas_loadbangsubpatches(t_canvas *x, t_symbol *s)
         {
             if (!canvas_isabstraction((t_canvas *)y))
             {
-            //fprintf(stderr,"%lx s:canvas_loadbangsubpatches %s\n",
+            //fprintf(stderr,"%zx s:canvas_loadbangsubpatches %s\n",
             //    x, s->s_name);
             canvas_loadbangsubpatches((t_canvas *)y, s);
             }
@@ -1220,7 +1530,7 @@ void canvas_loadbangsubpatches(t_canvas *x, t_symbol *s)
         if ((pd_class(&y->g_pd) != canvas_class) &&
             zgetfn(&y->g_pd, s))
         {
-            //fprintf(stderr,"%lx s:obj_loadbang %s\n",x,s->s_name);
+            //fprintf(stderr,"%zx s:obj_loadbang %s\n",x,s->s_name);
             pd_vmess(&y->g_pd, s, "f", (t_floatarg)LB_LOAD);
         }
 }
@@ -1234,13 +1544,13 @@ static void canvas_loadbangabstractions(t_canvas *x, t_symbol *s)
         {
             if (canvas_isabstraction((t_canvas *)y))
             {
-                //fprintf(stderr,"%lx a:canvas_loadbang %s\n",x,s->s_name);
+                //fprintf(stderr,"%zx a:canvas_loadbang %s\n",x,s->s_name);
                 canvas_loadbangabstractions((t_canvas *)y, s);
                 canvas_loadbangsubpatches((t_canvas *)y, s);
             }
             else
             {
-                //fprintf(stderr,"%lx a:canvas_loadbangabstractions %s\n",
+                //fprintf(stderr,"%zx a:canvas_loadbangabstractions %s\n",
                 //    x, s->s_name);
                 canvas_loadbangabstractions((t_canvas *)y, s);
             }
@@ -1251,14 +1561,14 @@ void canvas_loadbang(t_canvas *x)
 {
     //t_gobj *y;
     // first loadbang preset hubs and nodes
-    //fprintf(stderr,"%lx 0\n", x);
+    //fprintf(stderr,"%zx 0\n", x);
     canvas_loadbangabstractions(x, gensym("pre-loadbang"));
     canvas_loadbangsubpatches(x, gensym("pre-loadbang"));
-    //fprintf(stderr,"%lx 1\n", x);
+    //fprintf(stderr,"%zx 1\n", x);
     // then do the regular loadbang
     canvas_loadbangabstractions(x, gensym("loadbang"));
     canvas_loadbangsubpatches(x, gensym("loadbang"));
-    //fprintf(stderr,"%lx 2\n", x);
+    //fprintf(stderr,"%zx 2\n", x);
 }
 
 /* JMZ/MSP:
@@ -1391,13 +1701,15 @@ static void canvas_relocate(t_canvas *x, t_symbol *canvasgeom,
 void canvas_popabstraction(t_canvas *x)
 {
     newest = &x->gl_pd;
+    gensym("#A")->s_thing = 0;
+    pd_bind(newest, gensym("#A"));
     pd_popsym(&x->gl_pd);
     //x->gl_loading = 1;
-    //fprintf(stderr,"loading = 1 .x%lx owner=.x%lx\n", x, x->gl_owner);
+    //fprintf(stderr,"loading = 1 .x%zx owner=.x%zx\n", x, x->gl_owner);
     canvas_resortinlets(x);
     canvas_resortoutlets(x);
     x->gl_loading = 0;
-    //fprintf(stderr,"loading = 0 .x%lx owner=.x%lx\n", x, x->gl_owner);
+    //fprintf(stderr,"loading = 0 .x%zx owner=.x%zx\n", x, x->gl_owner);
 }
 
 void canvas_logerror(t_object *y)
@@ -1415,7 +1727,7 @@ static void *subcanvas_new(t_symbol *s)
 {
     t_atom a[6];
     t_canvas *x, *z = canvas_getcurrent();
-    //fprintf(stderr,"subcanvas_new current canvas .x%lx\n", (t_int)z);
+    //fprintf(stderr,"subcanvas_new current canvas .x%zx\n", (t_uint)z);
     if (!*s->s_name) s = gensym("/SUBPATCH/");
     SETFLOAT(a, 0);
     SETFLOAT(a+1, GLIST_DEFCANVASYLOC);
@@ -1564,13 +1876,17 @@ static int canvas_should_bind(t_canvas *x)
 
 static void canvas_bind(t_canvas *x)
 {
-    if (canvas_should_bind(x))
+    if (x->gl_isab) /* if it is an ab instance, we bind it to symbol 'ab-<name>' */
+        pd_bind(&x->gl_pd, canvas_makebindsym_ab(x->gl_name));
+    else if (canvas_should_bind(x))
         pd_bind(&x->gl_pd, canvas_makebindsym(x->gl_name));
 }
 
 static void canvas_unbind(t_canvas *x)
 {
-    if (canvas_should_bind(x))
+    if (x->gl_isab)
+        pd_unbind(&x->gl_pd, canvas_makebindsym_ab(x->gl_name));
+    else if (canvas_should_bind(x))
         pd_unbind(&x->gl_pd, canvas_makebindsym(x->gl_name));
 }
 
@@ -1812,7 +2128,7 @@ static void glist_redrawall(t_template *template, t_glist *gl, int action)
     {
         /* Haven't tested scalars inside gop yet, but we
            probably need a gui_vmess here */
-        sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
+        sys_vgui("pdtk_select_all_gop_widgets .x%zx %zx %d\n",
             glist_getcanvas(gl), gl, 1);
     }
 }
@@ -1851,6 +2167,533 @@ void canvas_redrawallfortemplatecanvas(t_canvas *x, int action)
         canvas_redrawallfortemplate(tmpl, action);
     }
     canvas_redrawallfortemplate(0, action);
+}
+
+/* ------------------------------- ab ------------------------ */
+
+static char ab_templatecanvas[] = "#N canvas;\n";
+
+/* create an ab instance from its source */
+static t_pd *do_create_ab(t_ab_definition *abdef, int argc, t_atom *argv)
+{
+    canvas_setargs(argc, argv);
+    int dspstate = canvas_suspend_dsp();
+    glob_setfilename(0, abdef->ad_name, gensym("[ab]"));
+
+    /* set ab source, next canvas is going to be a private abstraction */
+    canvas_setabsource(abdef);
+    binbuf_eval(abdef->ad_source, 0, 0, 0);
+    canvas_initbang((t_canvas *)(s__X.s_thing));
+
+    glob_setfilename(0, &s_, &s_);
+    canvas_resume_dsp(dspstate);
+    canvas_popabstraction((t_canvas *)(s__X.s_thing));
+    canvas_setargs(0, 0);
+
+    /* open the canvas if we are creating it for the first time */
+    canvas_vis((t_canvas *)newest, !glist_amreloadingabstractions
+                                    && !abdef->ad_numinstances
+                                    && binbuf_getnatom(abdef->ad_source) == 3);
+
+    return(newest);
+}
+
+/* get root canvas crossing ab boundaries, where ab definitions are stored */
+t_canvas *canvas_getrootfor_ab(t_canvas *x)
+{
+    if ((!x->gl_owner && !x->gl_isclone) || (canvas_isabstraction(x) && !x->gl_isab))
+        return (x);
+    else if (x->gl_isab) /* shortcut + workaround for clones (since they haven't owner)*/
+        return (x->gl_absource->ad_owner);
+    else
+        return (canvas_getrootfor_ab(x->gl_owner));
+}
+
+/* check if the dependency graph has a cycle, assuming an new edge between parent and
+    current nodes if there is a cycle, a visual scheme of the cycle is stored in 'res' */
+static int ab_check_cycle(t_ab_definition *current, t_ab_definition *parent, int pathlen,
+    char *path, char *res)
+{
+    if(current == parent)
+    {
+        sprintf(path+pathlen, "[ab %s]", current->ad_name->s_name);
+        strcpy(res, path);
+        return (1);
+    }
+    else
+    {
+        /* if it is a local private abstraction, get rid of classmember-like names (only used internally) */
+        char *hash = strrchr(current->ad_name->s_name, '#');
+        if(!hash) hash = current->ad_name->s_name;
+        else hash += 1;
+        int len = strlen(hash);
+        sprintf(path+pathlen, "[ab %s]<-", hash);
+        pathlen += (len+7);
+        int i, cycle = 0;
+        for(i = 0; !cycle && i < current->ad_numdep; i++)
+        {
+            cycle = ab_check_cycle(current->ad_dep[i], parent, pathlen, path, res);
+        }
+        pathlen -= (len+7);
+        return (cycle);
+    }
+}
+
+/* try to register a new dependency into the dependency graph,
+    returns 0 and the scheme in 'res' if a dependency issue is found */
+static int canvas_register_ab(t_canvas *x, t_ab_definition *a, char *res)
+{
+    /* climb to closest ab */
+    while(x && !x->gl_isab)
+        x = x->gl_owner;
+
+    if(x && x->gl_isab)
+    {
+        t_ab_definition *f = x->gl_absource;
+
+        int i, found = 0;
+        for(i = 0; !found && i < a->ad_numdep; i++)
+            found = (a->ad_dep[i] == f);
+
+        if(!found)
+        {
+            char path[MAXPDSTRING];
+            sprintf(path, "[ab %s]<-", a->ad_name->s_name);
+            if(!ab_check_cycle(f, a, strlen(path), path, res))
+            {
+                /* no dependency issues found so we add the new dependency */
+                a->ad_dep =
+                    (t_ab_definition **)resizebytes(a->ad_dep, sizeof(t_ab_definition *)*a->ad_numdep,
+                            sizeof(t_ab_definition *)*(a->ad_numdep+1));
+                a->ad_deprefs =
+                    (int *)resizebytes(a->ad_deprefs, sizeof(int)*a->ad_numdep,
+                            sizeof(int)*(a->ad_numdep+1));
+                a->ad_dep[a->ad_numdep] = f;
+                a->ad_deprefs[a->ad_numdep] = 1;
+                a->ad_numdep++;
+            }
+            else return (0);
+        }
+        else
+        {
+            a->ad_deprefs[i-1]++;
+        }
+    }
+    return (1);
+}
+
+static void canvas_deregister_ab(t_canvas *x, t_ab_definition *a)
+{
+    /* climb to closest ab */
+    while(x && !x->gl_isab)
+        x = x->gl_owner;
+
+    if(x && x->gl_isab)
+    {
+        t_ab_definition *f = x->gl_absource;
+
+        int i, found = 0;
+        for(i = 0; !found && i < a->ad_numdep; i++)
+            found = (a->ad_dep[i] == f);
+
+        if(found)
+        {
+            a->ad_deprefs[i-1]--;
+
+            if(!a->ad_deprefs[i-1])
+            {
+                /* we can delete the dependency since there are no instances left */
+                t_ab_definition **ad =
+                        (t_ab_definition **)getbytes(sizeof(t_ab_definition *) * (a->ad_numdep - 1));
+                int *adr = (int *)getbytes(sizeof(int) * (a->ad_numdep - 1));
+                memcpy(ad, a->ad_dep, sizeof(t_ab_definition *) * (i-1));
+                memcpy(ad+(i-1), a->ad_dep+i, sizeof(t_ab_definition *) * (a->ad_numdep - i));
+                memcpy(adr, a->ad_deprefs, sizeof(int) * (i-1));
+                memcpy(adr+(i-1), a->ad_deprefs+i, sizeof(int) * (a->ad_numdep - i));
+                freebytes(a->ad_dep, sizeof(t_ab_definition *) * a->ad_numdep);
+                freebytes(a->ad_deprefs, sizeof(int) * a->ad_numdep);
+                a->ad_numdep--;
+                a->ad_dep = ad;
+                a->ad_deprefs = adr;
+            }
+        }
+        else bug("canvas_deregister_ab");
+    }
+}
+
+/* tries to find an ab definition given its name */
+static t_ab_definition *canvas_find_ab(t_canvas *x, t_symbol *name)
+{
+    t_canvas *c = canvas_getrootfor_ab(x);
+    t_ab_definition* d;
+    for (d = c->gl_abdefs; d; d = d->ad_next)
+    {
+        if (d->ad_name == name)
+            return d;
+    }
+    return 0;
+}
+
+/* tries to add a new ab definition. returns the definition if it has been added, 0 otherwise */
+static t_ab_definition *canvas_add_ab(t_canvas *x, t_symbol *name, t_binbuf *source)
+{
+    if(!canvas_find_ab(x, name))
+    {
+        t_canvas *c = canvas_getrootfor_ab(x);
+        t_ab_definition *abdef = (t_ab_definition *)getbytes(sizeof(t_ab_definition));
+
+        abdef->ad_name = name;
+        abdef->ad_source = source;
+        abdef->ad_numinstances = 0;
+        abdef->ad_owner = c;
+        abdef->ad_numdep = 0;
+        abdef->ad_dep = (t_ab_definition **)getbytes(0);
+        abdef->ad_deprefs = (int *)getbytes(0);
+        abdef->ad_visflag = 0;
+
+        abdef->ad_next = c->gl_abdefs;
+        c->gl_abdefs = abdef;
+        return (abdef);
+    }
+    return (0);
+}
+
+static int canvas_del_ab(t_canvas *x, t_symbol *name)
+{
+    t_canvas *c = canvas_getrootfor_ab(x);
+    t_ab_definition *abdef, *abdefpre;
+    for(abdef = c->gl_abdefs, abdefpre = 0; abdef; abdefpre = abdef, abdef = abdef->ad_next)
+    {
+        if(abdef->ad_name == name && !abdef->ad_numinstances)
+        {
+            if(abdefpre) abdefpre->ad_next = abdef->ad_next;
+            else c->gl_abdefs = abdef->ad_next;
+            binbuf_free(abdef->ad_source);
+            freebytes(abdef->ad_dep, sizeof(t_ab_definition*)*abdef->ad_numdep);
+            freebytes(abdef->ad_deprefs, sizeof(int)*abdef->ad_numdep);
+            freebytes(abdef, sizeof(t_ab_definition));
+            return (1);
+        }
+    }
+    return (0);
+}
+
+/* given the ab definitions list, returns its topological ordering */
+
+static int currvisflag = 0;
+
+static void ab_topological_sort_rec(t_ab_definition *a, t_ab_definition **stack, int *head)
+{
+    a->ad_visflag = currvisflag;
+
+    int i;
+    for(i = 0; i < a->ad_numdep; i++)
+    {
+        if(a->ad_dep[i]->ad_visflag != currvisflag)
+            ab_topological_sort_rec(a->ad_dep[i], stack, head);
+    }
+
+    stack[*head] = a;
+    (*head)++;
+}
+
+static void ab_topological_sort(t_ab_definition *abdefs, t_ab_definition **stack, int *head)
+{
+    currvisflag++;
+    t_ab_definition *abdef;
+    for(abdef = abdefs; abdef; abdef = abdef->ad_next)
+    {
+        if(abdef->ad_visflag != currvisflag)
+            ab_topological_sort_rec(abdef, stack, head);
+    }
+}
+
+/* saves all ab definition within the scope into the b binbuf,
+    they are sorted topollogially before saving in order to get exactly the
+    same state (ab objects that can't be instantiated due dependencies) when reloading the file */
+void canvas_saveabdefinitionsto(t_canvas *x, t_binbuf *b)
+{
+    if(!x->gl_abdefs)
+        return;
+
+    int numabdefs = 0;
+    t_ab_definition *abdef;
+    for(abdef = x->gl_abdefs; abdef; abdef = abdef->ad_next)
+        numabdefs++;
+
+    t_ab_definition **stack =
+        (t_ab_definition **)getbytes(sizeof(t_ab_definition *) * numabdefs);
+    int head = 0;
+    ab_topological_sort(x->gl_abdefs, stack, &head);
+
+    int i, fra = 0;
+    for(i = 0; i < head; i++)
+    {
+        if(stack[i]->ad_numinstances)
+        {
+            if(!fra)
+            {
+                binbuf_addv(b, "ssi;", gensym("#X"), gensym("abframe"), 1);
+                fra = 1;
+            }
+
+            binbuf_add(b, binbuf_getnatom(stack[i]->ad_source), binbuf_getvec(stack[i]->ad_source));
+            binbuf_addv(b, "sss", gensym("#X"), gensym("abpush"), stack[i]->ad_name);
+
+            int j;
+            for(j = 0; j < stack[i]->ad_numdep; j++)
+                binbuf_addv(b, "s", stack[i]->ad_dep[j]->ad_name);
+            binbuf_addsemi(b);
+        }
+    }
+    if(fra) binbuf_addv(b, "ssi;", gensym("#X"), gensym("abframe"), 0);
+
+    freebytes(stack, sizeof(t_ab_definition *) * numabdefs);
+}
+
+/* saves last canvas as an ab definition */
+static void canvas_abpush(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
+{
+    canvas_pop(x, 0);
+
+    t_canvas *c = canvas_getcurrent();
+    t_symbol *name = argv[0].a_w.w_symbol;
+    t_binbuf *source = binbuf_new();
+    x->gl_env = dummy_canvas_env(canvas_getdir(x)->s_name); //to save it as a root canvas
+    mess1(&((t_text *)x)->te_pd, gensym("saveto"), source);
+    x->gl_env = 0;
+
+    t_ab_definition *n;
+    if(!(n = canvas_add_ab(c, name, source)))
+    {
+        error("canvas_abpush: ab definition for '%s' already exists, skipping",
+                name->s_name);
+    }
+    else
+    {
+        if(argc > 1)
+        {
+            /* restore all dependencies, to get exactly the
+                same state (ab objects that can't be instantiated due dependencies) as before */
+            n->ad_numdep = argc-1;
+            n->ad_dep =
+                (t_ab_definition **)resizebytes(n->ad_dep, 0, sizeof(t_ab_definition *)*n->ad_numdep);
+            n->ad_deprefs =
+                (int *)resizebytes(n->ad_deprefs, 0, sizeof(int)*n->ad_numdep);
+
+            int i;
+            for(i = 1; i < argc; i++)
+            {
+                t_symbol *abname = argv[i].a_w.w_symbol;
+                t_ab_definition *absource = canvas_find_ab(c, abname);
+                if(!absource) { bug("canvas_abpush"); return; }
+                n->ad_dep[i-1] = absource;
+                n->ad_deprefs[i-1] = 0;
+            }
+        }
+    }
+
+    pd_free(&x->gl_pd);
+}
+
+/* extends the name for a local ab, using a classmember-like format */
+static t_symbol *ab_extend_name(t_canvas *x, t_symbol *s)
+{
+    char res[MAXPDSTRING];
+    t_canvas *next = canvas_getrootfor(x);
+    if(next->gl_isab)
+        sprintf(res, "%s#%s", next->gl_absource->ad_name->s_name, s->s_name);
+    else
+        strcpy(res, s->s_name);
+    return gensym(res);
+}
+
+int abframe = 0;
+static void canvas_abframe(t_canvas *x, t_float val)
+{
+    abframe = val;
+}
+
+extern t_class *text_class;
+
+/* creator for "ab" objects */
+static void *ab_new(t_symbol *s, int argc, t_atom *argv)
+{
+    if(abframe)
+        /* return dummy text object so that creator
+            does not throw an error */
+        return pd_new(text_class);
+
+    t_canvas *c = canvas_getcurrent();
+
+    if (argc && argv[0].a_type != A_SYMBOL)
+    {
+        error("ab_new: ab name must be a symbol");
+        newest = 0;
+    }
+    else
+    {
+        t_symbol *name = (argc ? argv[0].a_w.w_symbol : gensym("(ab)"));
+        t_ab_definition *source;
+
+        if(name->s_name[0] == '@') /* is local ab */
+            name = ab_extend_name(c, name);
+
+        if(!(source = canvas_find_ab(c, name)))
+        {
+            t_binbuf *b = binbuf_new();
+            binbuf_text(b, ab_templatecanvas, strlen(ab_templatecanvas));
+            source = canvas_add_ab(c, name, b);
+        }
+
+        char res[MAXPDSTRING];
+        if(canvas_register_ab(c, source, res))
+        {
+            newest = do_create_ab(source, (argc ? argc-1 : 0), (argc ? argv+1 : 0));
+            source->ad_numinstances++;
+        }
+        else
+        {
+            if(!glist_amreloadingabstractions)
+                error("ab_new: can't insantiate ab within itself\n cycle: %s", res);
+            newest = 0;
+        }
+    }
+    return (newest);
+}
+
+static void canvas_getabstractions(t_canvas *x)
+{
+    t_canvas *c = canvas_getrootfor_ab(x),
+             *r = canvas_getrootfor(x);
+    gfxstub_deleteforkey(x);
+    char *gfxstub = gfxstub_new2(&x->gl_pd, &x->gl_pd);
+    t_ab_definition *abdef;
+    gui_start_vmess("gui_abstractions_dialog", "xs", x, gfxstub);
+    gui_start_array();
+    gui_end_array();
+    gui_start_array();
+    for(abdef = c->gl_abdefs; abdef; abdef = abdef->ad_next)
+    {
+        char *hash = strrchr(abdef->ad_name->s_name, '#');
+        if(!hash)
+        {
+            if(abdef->ad_name->s_name[0] != '@' || !r->gl_isab)
+            {
+                gui_s(abdef->ad_name->s_name);
+                gui_i(abdef->ad_numinstances);
+            }
+        }
+        else
+        {
+            *hash = '\0';
+            if(r->gl_isab &&
+                gensym(abdef->ad_name->s_name) == r->gl_absource->ad_name)
+            {
+                gui_s(hash+1);
+                gui_i(abdef->ad_numinstances);
+            }
+            *hash = '#';
+        }
+    }
+    gui_end_array();
+    gui_end_vmess();
+}
+
+static void canvas_delabstractions(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_symbol *name;
+    int i;
+    for(i = 0; i < argc; i++)
+    {
+        name = atom_getsymbol(argv++);
+        if(name->s_name[0] == '@')
+            name = ab_extend_name(x, name);
+        if(!canvas_del_ab(x, name))
+            bug("canvas_delabstractions");
+    }
+    startpost("info: a total of [%d] ab definitions have been deleted\n      > ", argc);
+    postatom(argc, argv-argc);
+    endpost();
+}
+
+/* --------- */
+
+static t_class *abdefs_class;
+
+typedef struct _abdefs
+{
+    t_object x_obj;
+    t_canvas *x_canvas;
+} t_abdefs;
+
+static void *abdefs_new(void)
+{
+    t_abdefs *x = (t_abdefs *)pd_new(abdefs_class);
+    x->x_canvas = canvas_getcurrent();
+    outlet_new(&x->x_obj, &s_list);
+    return (x);
+}
+
+static void abdefs_get(t_abdefs *x);
+static void abdefs_bang(t_abdefs *x)
+{
+    abdefs_get(x);
+}
+
+static void abdefs_get(t_abdefs *x)
+{
+    t_canvas *c = canvas_getrootfor_ab(x->x_canvas),
+             *r = canvas_getrootfor(x->x_canvas);
+    t_binbuf *out = binbuf_new();
+    t_ab_definition *abdef;
+    for(abdef = c->gl_abdefs; abdef; abdef = abdef->ad_next)
+    {
+        char *hash = strrchr(abdef->ad_name->s_name, '#');
+        if(!hash)
+        {
+            if(abdef->ad_name->s_name[0] != '@' || !r->gl_isab)
+            {
+                binbuf_addv(out, "si", abdef->ad_name, abdef->ad_numinstances);
+            }
+        }
+        else
+        {
+            *hash = '\0';
+            if(r->gl_isab &&
+                gensym(abdef->ad_name->s_name) == r->gl_absource->ad_name)
+            {
+                binbuf_addv(out, "si", gensym(hash+1), abdef->ad_numinstances);
+            }
+            *hash = '#';
+        }
+    }
+    outlet_list(x->x_obj.ob_outlet, &s_list,
+        binbuf_getnatom(out), binbuf_getvec(out));
+    binbuf_free(out);
+}
+
+static void abdefs_instances(t_abdefs *x, t_symbol *s)
+{
+    t_ab_definition *abdef;
+    if((abdef = canvas_find_ab(x->x_canvas, s)))
+    {
+        t_atom at[1];
+        SETFLOAT(at, abdef->ad_numinstances);
+        outlet_list(x->x_obj.ob_outlet, &s_list, 1, at);
+    }
+    else
+        error("abdefs: couldn't find definition for '%s'", s->s_name);
+}
+
+/* --------- */
+
+static void canvas_showdirty(t_canvas *x)
+{
+    if(!x->gl_isab)
+        canvas_dirty_broadcast_all(x->gl_name, canvas_getdir(x), 2);
+    else
+        canvas_dirty_broadcast_ab(canvas_getrootfor_ab(x), x->gl_absource, 2);
 }
 
 /* ------------------------------- declare ------------------------ */
@@ -2054,7 +2897,14 @@ void canvas_declare(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
             canvas_stdlib(e, atom_getsymbolarg(i+1, argc, argv)->s_name);
             i++;
         }
-        else post("declare: %s: unknown declaration", flag);
+        // ag: Handle the case of an unrecognized option argument (presumably
+        // a float).
+        else if (!*flag) {
+            post("declare: %g: unknown argument", atom_getfloatarg(i, argc, argv));
+        }
+        else {
+            post("declare: %s: unknown declaration", flag);
+        }
     }
 }
 
@@ -2236,7 +3086,7 @@ static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
     static int warned_future_version;
     static int warned_old_syntax;
-    //fprintf(stderr,"canvas_f %lx %d current=%lx %s\n",
+    //fprintf(stderr,"canvas_f %zx %d current=%zx %s\n",
     //    (t_int)x, argc, canvas_getcurrent(),
     //    last_typedmess != NULL ? last_typedmess->s_name : "none");
     t_canvas *xp = x; //parent window for a special case dealing with subpatches
@@ -2271,7 +3121,7 @@ static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     {
         for (g = x->gl_list; g2 = g->g_next; g = g2)
             ;
-        //fprintf(stderr,"same canvas .x%lx .x%lx\n", (t_int)g, (t_int)x);
+        //fprintf(stderr,"same canvas .x%zx .x%zx\n", (t_uint)g, (t_uint)x);
     }
     if ((ob = pd_checkobject(&g->g_pd)) || pd_class(&g->g_pd) == canvas_class)
     {
@@ -2291,7 +3141,7 @@ void canvasgop_draw_move(t_canvas *x, int doit)
     //delete the earlier GOP window so that when dragging 
     //there is only one GOP window present on parent
     /* don't think we need this anymore */
-    //sys_vgui(".x%lx.c delete GOP\n",  x);
+    //sys_vgui(".x%zx.c delete GOP\n",  x);
         
     //redraw the GOP
     canvas_setgraph(x, x->gl_isgraph+2*x->gl_hidetext, 0);
@@ -2443,7 +3293,16 @@ void canvasgop__motionhook(t_scalehandle *sh, t_floatarg mouse_x,
         t_glist *owner = glist_getcanvas(x);
         /* Just unvis the object, then vis it once we've done our
            mutation and checks */
-        gobj_vis((t_gobj *)x, owner, 0);
+        /* ico@vt.edu 2020-08-26: this was owner instead of x->gl_owner However,
+           there is a special case where this causes consistency check error 
+           in canvas_vis because a gop patch size is being manipulated on the
+           parent window and its window is also visible, glist_getcanvas() will
+           return its own window even though the user is manipulating the size
+           on the parent window. So, here we ensure that we are always getting
+           the parent window, and then we update the red rectangle on its own
+           window below (see if (x->gl_havewindow)). The same is true for vising
+           towards the bottom of this function. */
+        gobj_vis((t_gobj *)x, x->gl_owner, 0);
         /* struct _glist has its own member e_xnew for storing our offset.
            At some point we need to refactor since our t_scalehandle has
            members for storing offsets already. */
@@ -2479,8 +3338,21 @@ void canvasgop__motionhook(t_scalehandle *sh, t_floatarg mouse_x,
         owner->gl_editor->e_xnew = mouse_x;
         owner->gl_editor->e_ynew = mouse_y;
         canvas_fixlinesfor(owner, (t_text *)x);
-        gobj_vis((t_gobj *)x, owner, 1);
+        gobj_vis((t_gobj *)x, x->gl_owner, 1);
         canvas_dirty(owner, 1);
+
+        /* ico@vt.edu 2020-08-26: if we are changing the gop size
+           on the parent window with our own window open, updated the 
+           red rectangle on our own window */
+        if (x->gl_havewindow)
+        {
+            gui_vmess("gui_canvas_redrect_coords", "xiiii",
+                x,
+                x->gl_xmargin,
+                x->gl_ymargin,
+                x->gl_xmargin + x->gl_pixwidth,
+                x->gl_ymargin + x->gl_pixheight);
+        }
 
         int properties = gfxstub_haveproperties((void *)x);
         if (properties)
@@ -2514,6 +3386,14 @@ void canvasgop__motionhook(t_scalehandle *sh, t_floatarg mouse_x,
                 "x_pix",x->gl_pixwidth + sh->h_dragx);
             properties_set_field_int(properties,
                 "y_pix",x->gl_pixheight + sh->h_dragy);
+        }
+        /* ico@vt.edu: resize parent window gop rectangle if visible
+           as an added bonus, this also works even if it is only
+           visible inside another gop (gop within a gop within a gop) */
+        if (x->gl_owner && glist_isvisible(x->gl_owner))
+        {
+            gobj_vis(&x->gl_gobj, x->gl_owner, 0);
+            gobj_vis(&x->gl_gobj, x->gl_owner, 1);
         }
     }
     else /* move_gop hook */
@@ -2656,6 +3536,8 @@ void g_canvas_setup(void)
         gensym("vis"), A_FLOAT, A_NULL);
     class_addmethod(canvas_class, (t_method)glist_menu_open,
         gensym("menu-open"), A_NULL);
+    class_addmethod(canvas_class, (t_method)canvas_query_editmode,
+        gensym("query-editmode"), A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_map,
         gensym("map"), A_FLOAT, A_NULL);
     class_addmethod(canvas_class, (t_method)canvas_dirty,
@@ -2693,6 +3575,29 @@ void g_canvas_setup(void)
     class_addcreator((t_newmethod)table_new, gensym("table"),
         A_DEFSYM, A_DEFFLOAT, 0);
 
+/* ------------------- */
+
+    class_addmethod(canvas_class, (t_method)canvas_showdirty,
+        gensym("showdirty"), 0);
+
+/*---------------------------- ab ------------------- */
+
+    class_addcreator((t_newmethod)ab_new, gensym("ab"), A_GIMME, 0);
+    class_addmethod(canvas_class, (t_method)canvas_abpush,
+        gensym("abpush"), A_GIMME, 0);
+    class_addmethod(canvas_class, (t_method)canvas_abframe,
+        gensym("abframe"), A_FLOAT, 0);
+
+    abdefs_class = class_new(gensym("abdefs"), (t_newmethod)abdefs_new,
+        0, sizeof(t_abdefs), CLASS_DEFAULT, A_NULL);
+    class_addbang(abdefs_class, (t_method)abdefs_bang);
+    class_addmethod(abdefs_class, (t_method)abdefs_get, gensym("get"), 0);
+    class_addmethod(abdefs_class, (t_method)abdefs_instances, gensym("instances"), A_SYMBOL, 0);
+
+    class_addmethod(canvas_class, (t_method)canvas_getabstractions,
+        gensym("getabstractions"), 0);
+    class_addmethod(canvas_class, (t_method)canvas_delabstractions,
+        gensym("delabstractions"), A_GIMME, 0);
 /*---------------------------- declare ------------------- */
     declare_class = class_new(gensym("declare"), (t_newmethod)declare_new,
         (t_method)declare_free, sizeof(t_declare), CLASS_NOINLET, A_GIMME, 0);

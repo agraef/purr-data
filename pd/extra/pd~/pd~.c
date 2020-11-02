@@ -11,7 +11,7 @@
 #include <process.h>
 #include <windows.h>
 typedef int socklen_t;
-#define EADDRINUSE WSAEADDRINUSE
+//#define EADDRINUSE WSAEADDRINUSE
 #else
 #include <stdio.h>
 #include <string.h>

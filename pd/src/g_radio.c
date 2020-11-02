@@ -115,7 +115,7 @@ void radio_draw_config(t_radio *x, t_glist *glist)
     iemgui_base_draw_config(&x->x_gui);
     for (i=0; i<n; i++)
     {
-        //sys_vgui(".x%lx.c itemconfigure %lxBUT%d -fill #%6.6x -stroke #%6.6x\n",
+        //sys_vgui(".x%zx.c itemconfigure %zxBUT%d -fill #%6.6x -stroke #%6.6x\n",
         //    canvas, x, i,
         //    (x->x_on==i) ? x->x_gui.x_fcol : x->x_gui.x_bcol,
         //    (x->x_on==i) ? x->x_gui.x_fcol : x->x_gui.x_bcol);
@@ -203,7 +203,7 @@ static void radio_getrect(t_gobj *z, t_glist *glist, int *xp1, int *yp1,
 static void radio_save(t_gobj *z, t_binbuf *b)
 {
     t_radio *x = (t_radio *)z;
-    int bflcol[3];
+    t_symbol *bflcol[3];
     t_symbol *srl[3];
     t_class *c = pd_class((t_pd *)x);
     t_symbol *cname =
@@ -212,7 +212,7 @@ static void radio_save(t_gobj *z, t_binbuf *b)
         x->x_orient ? gensym("vradio") : gensym("hradio");
     
     iemgui_save(&x->x_gui, srl, bflcol);
-    binbuf_addv(b, "ssiisiiiisssiiiiiiii", gensym("#X"),gensym("obj"),
+    binbuf_addv(b, "ssiisiiiisssiiiisssi", gensym("#X"),gensym("obj"),
         (int)x->x_gui.x_obj.te_xpix, (int)x->x_gui.x_obj.te_ypix,
         cname, x->x_gui.x_w,
         x->x_change, iem_symargstoint(&x->x_gui), x->x_number,
@@ -458,10 +458,13 @@ static void *radio_new(t_symbol *s, int argc, t_atom *argv)
         s==gensym("vdl") ? vradio_old_class :
         s==gensym("vradio") ? vradio_class : hradio_class);
     x->x_orient = s==gensym("vdl") || s==gensym("vradio");
-    int bflcol[]={-262144, -1, -1};
     int a=IEM_GUI_DEFAULTSIZE, on=0, ldx=0, ldy=-8, chg=1, num=8, fs=10;
     iem_inttosymargs(&x->x_gui, 0);
     iem_inttofstyle(&x->x_gui, 0);
+
+    x->x_gui.x_bcol = 0xFCFCFC;
+    x->x_gui.x_fcol = 0x00;
+    x->x_gui.x_lcol = 0x00;
 
     if((argc == 15)&&IS_A_FLOAT(argv,0)&&IS_A_FLOAT(argv,1)&&IS_A_FLOAT(argv,2)
        &&IS_A_FLOAT(argv,3)
@@ -469,8 +472,7 @@ static void *radio_new(t_symbol *s, int argc, t_atom *argv)
        &&(IS_A_SYMBOL(argv,5)||IS_A_FLOAT(argv,5))
        &&(IS_A_SYMBOL(argv,6)||IS_A_FLOAT(argv,6))
        &&IS_A_FLOAT(argv,7)&&IS_A_FLOAT(argv,8)
-       &&IS_A_FLOAT(argv,9)&&IS_A_FLOAT(argv,10)&&IS_A_FLOAT(argv,11)
-       &&IS_A_FLOAT(argv,12)&&IS_A_FLOAT(argv,13)&&IS_A_FLOAT(argv,14))
+       &&IS_A_FLOAT(argv,9)&&IS_A_FLOAT(argv,10)&&IS_A_FLOAT(argv,14))
     {
         a = atom_getintarg(0, argc, argv);
         chg = atom_getintarg(1, argc, argv);
@@ -481,9 +483,7 @@ static void *radio_new(t_symbol *s, int argc, t_atom *argv)
         ldy = atom_getintarg(8, argc, argv);
         iem_inttofstyle(&x->x_gui, atom_getintarg(9, argc, argv));
         fs = maxi(atom_getintarg(10, argc, argv),4);
-        bflcol[0] = atom_getintarg(11, argc, argv);
-        bflcol[1] = atom_getintarg(12, argc, argv);
-        bflcol[2] = atom_getintarg(13, argc, argv);
+        iemgui_all_loadcolors(&x->x_gui, argv+11, argv+12, argv+13);
         on = mini(maxi(atom_getintarg(14, argc, argv),0),num-1);
     }
     else iemgui_new_getnames(&x->x_gui, 4, 0);
@@ -502,7 +502,6 @@ static void *radio_new(t_symbol *s, int argc, t_atom *argv)
     x->x_gui.x_w = iemgui_clip_size(a);
     x->x_gui.x_h = x->x_gui.x_w;
     iemgui_verify_snd_ne_rcv(&x->x_gui);
-    iemgui_all_colfromload(&x->x_gui, bflcol);
     outlet_new(&x->x_gui.x_obj, &s_list);
 
     x->x_gui.x_handle = scalehandle_new((t_object *)x,x->x_gui.x_glist,1,radio__clickhook,radio__motionhook);

@@ -24,6 +24,7 @@ exports.menu = {
 
   "reselect": { key: String.fromCharCode(10), modifiers: cmd_or_ctrl },
   "clear_console": { key: "l", modifiers: cmd_or_ctrl + "+shift" },
+  "encapsulate": { key: "e", modifiers: cmd_or_ctrl + "+shift" },
   "tidyup": { key: "y", modifiers: cmd_or_ctrl },
   "cordinspector":   { key: "r", modifiers: cmd_or_ctrl + "+shift" },
   "find":   { key: "f", modifiers: cmd_or_ctrl },

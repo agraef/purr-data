@@ -5,10 +5,21 @@
     <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
     <title>Canvas Dialog</title>
   </head>
-  <body class="dialog_body">
+  <body class="dialog_body" style="overflow: hidden;">
     <div class="container noselect">
+      <table id="titlebar">
+        <tr>
+          <td style="width: 100%;">
+            <div id="titlebar_title">Canvas Properties</div>
+          </td>
+          <td id="titlebar_buttons_td">
+            <div class="titlebar_buttons">
+              <div id="titlebar_close_button" onclick="cancel(false);">&#215</div>
+            </div>
+          </td>
+        </tr>
+      </table>
     <form> 
-
       <fieldset class="canvas"> 
         <legend data-i18n="canvas.prop.heading.gop"></legend> 
 
@@ -96,7 +107,7 @@
 
       <fieldset class="canvas"> 
         <legend data-i18n="canvas.prop.heading.data_scaling"></legend> 
-<div style="display: inline-block; align: left;">
+<div style="display: inline-block; margin-right: -5px; width: 100%;">
           <div class="x_scale prop hidden">
             <nobr>
             <label class="no_gop_opt" data-i18n="[title]canvas.prop.x_scale_tt">
@@ -140,7 +151,6 @@
          </label>
        </div>
     </div>
-</div>
       </fieldset> 
 
 
@@ -151,7 +161,7 @@
           <select id="arrays_select" class="hidden"></select>
         </label>
 
-          <div class="array-name prop">
+          <div class="array-name prop" style="margin-right: -5px;">
             <label class="array-name"
                    data-i18n="[title]canvas.prop.array_name_tt">
               <span data-i18n="canvas.prop.array_name"></span>
@@ -187,7 +197,7 @@
             </label>
             <br/>
 
-            <span data-i18n="canvas.prop.array_style"></span>
+            <span style="position: relative; top: 4px;" data-i18n="canvas.prop.array_style"></span>
             <br/>
             <table class="array_style">
               <tr>
@@ -245,7 +255,7 @@
             </table>
           </div>
 
-      <div class="array-fill">
+      <div class="array-fill" style="margin-top: 2px;">
         <label data-i18n="[title]canvas.prop.array_fill_tt">
           <input onchange="update_array_attr(this);"
                  type="color"
@@ -289,6 +299,7 @@
         </label>
       </div>
       </fieldset> 
+</div>
 
     <div class="submit_buttons">
       <button type="button" id="ok_button" onClick="ok()" data-i18n="[title]iem.prop.ok_tt">
@@ -620,9 +631,11 @@ function populate_array_form(objects) {
         a_field = document.getElementById("arrays"),
         opt, i;
     a_field.classList.remove("hidden");
+    a_field.style.setProperty("height", "240px");
     if (objects.length > 1) {
         // show the select element if there's more than one array
         arrays_select.classList.remove("hidden");
+        arrays_select.style.setProperty("margin", "0px 0px 5px 0px");
     }
     for (i = 0; i < objects.length; i++) {
         opt = document.createElement("option");
@@ -669,6 +682,7 @@ function register_window_id(gfxstub, attr_objects) {
     // attr_objects[0]: canvas properties
     // attr_objects[1...n-1]: array properties
     add_events(gfxstub);
+    pdgui.gui_check_for_dialog_appearance_inconsistencies(gfxstub);
     // not sure that we need this for properties windows...
     // pdgui.canvas_map(gfxstub);
     translate_form();
@@ -690,7 +704,7 @@ function register_window_id(gfxstub, attr_objects) {
         new_array_dialog = false; // this is a canvas/array props dialog
         populate_form(attr_objects[0]);
     }
-        init_arrays(pd_garray_attrs);
+    init_arrays(pd_garray_attrs);
 
     // Disabling the menus does not yet work, so we hide that button for
     // the moment

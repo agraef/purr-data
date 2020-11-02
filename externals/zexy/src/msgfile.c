@@ -42,17 +42,33 @@
 /* ****************************************************************************** */
 /* msgfile : save and load messages... */
 
-#define PD_MODE 0
-#define CR_MODE 1
-#define CSV_MODE 2
-/* modi
-   PD : separate items by ' '; seperate lines by ";\n"
-   looks like a PD-file
-   CR : separate items by ' '; seperate lines by " \n"
-   how you would expect a file to look like
-   CSV: separate items by ','; seperate lines by " \n"
-   spreadsheet: each argument gets its own column
-*/
+typedef enum {
+  /* PD
+   * separate items by whitespace (' ', '\t'), separate lines by ";"
+   * looks like a Pd-file */
+  FORMAT_PD = 0,
+  /* FUDI
+   * separate items by whitespace (' ', '\t'), separate lines by ";"
+   * looks like a Pd-file, but uses our own parser (to better handle escaped linebreaks) */
+  FORMAT_FUDI = 0,
+  /* CR
+   * separate items by whitespace (' ', '\t'), separate lines by linebreaks ("\n")
+   * how you would expect a file to look like
+   * (use Pd's parser that has some quirks with escaped linebreaks) */
+  FORMAT_CR,
+  /* TXT:
+   * separate items by whitespace (' ', '\t'), separate lines by "\n"
+   * how you would expect a file to look like
+   * (uses our own parser that handles escaped '\n' better!) */
+  FORMAT_TXT,
+  /* CSV: separate items by ','; separate lines by " \n"
+   * spreadsheet: each argument gets its own column
+   * with proper escaping of everything */
+  FORMAT_CSV,
+
+  /* illegal format */
+  FORMAT_ILLEGAL,
+} t_msgfile_format;
 
 
 typedef struct _msglist {
@@ -67,7 +83,7 @@ typedef struct _msgfile {
   t_object x_obj;              /* everything */
   t_outlet *x_secondout;        /* "done" */
 
-  int mode;
+  t_msgfile_format format;
 
   t_msglist *start;
 
@@ -81,7 +97,7 @@ typedef struct _msgfile {
 
 } t_msgfile;
 
-static t_class *msgfile_class;
+static t_class *msgfile_class=NULL;
 
 
 
@@ -94,7 +110,47 @@ static void msgfile_end(t_msgfile *x);
 static void msgfile_goto(t_msgfile *x, t_float f);
 
 /* ************************************************************************ */
-/* help functions                                                           */
+/* helper functions                                                         */
+
+static t_msgfile_format symbol2format(t_msgfile*x, t_symbol*s)
+{
+  if (!s || gensym("")==s) {
+    return x->format;
+  }
+  if (gensym("pd")==s) {
+    return FORMAT_PD;
+  }
+  if (gensym("fudi")==s) {
+    return FORMAT_FUDI;
+  }
+  if (gensym("cr")==s) {
+    return FORMAT_CR;
+  }
+  if (gensym("txt")==s) {
+    return FORMAT_TXT;
+  }
+  if (gensym("csv")==s) {
+    return FORMAT_CSV;
+  }
+  pd_error(x, "msgfile: ignoring unknown format: '%s'", s->s_name);
+  return x->format;
+}
+
+static int is_float(t_atom*a)
+{
+  return (a && A_FLOAT == a->a_type);
+}
+
+static int node_count(t_msgfile *x)
+{
+  t_msglist *dummy = x->start;
+  unsigned int counter = 0;
+  while (dummy && dummy->next) {
+    counter++;
+    dummy = dummy->next;
+  }
+  return counter;
+}
 
 static int node_wherearewe(t_msgfile *x)
 {
@@ -128,12 +184,14 @@ static void write_currentnode(t_msgfile *x, int ac, t_atom *av)
 
   newsize = cur->n + ac;
 
-  ap = (t_atom *)getbytes(newsize * sizeof(t_atom));
-  memcpy(ap, cur->thislist, cur->n * sizeof(t_atom));
-  cur->thislist = ap;
-  memcpy(cur->thislist + cur->n, av, ac * sizeof(t_atom));
+  ap = (t_atom*)resizebytes(cur->thislist, cur->n * sizeof(t_atom),
+                            newsize * sizeof(t_atom));
+  if (ap) {
+    cur->thislist = ap;
+    memcpy(cur->thislist + cur->n, av, ac * sizeof(t_atom));
 
-  cur->n = newsize;
+    cur->n = newsize;
+  }
 }
 
 static void delete_currentnode(t_msgfile *x)
@@ -271,14 +329,7 @@ static void delete_region(t_msgfile *x, int start, int stop)
   int newwhere, oldwhere = node_wherearewe(x);
 
   /* get the number of lists in the buffer */
-  t_msglist *dummy = x->start;
-  int counter = 0;
-
-  /* go to the end of the buffer */
-  while (dummy && dummy->next) {
-    counter++;
-    dummy = dummy->next;
-  }
+  int counter = node_count(x);
 
   if ((stop > counter) || (stop == -1)) {
     stop = counter;
@@ -332,25 +383,350 @@ static int atomcmp(t_atom *this, t_atom *that)
 }
 
 
-static void msgfile_binbuf2listbuf(t_msgfile *x, t_binbuf *bbuf)
+static t_atomtype str2atom(const char*atombuf, t_atom*ap,
+                           int force_symbol)
 {
-  int ac = binbuf_getnatom(bbuf);
-  t_atom *ap = binbuf_getvec(bbuf);
-
-  while (ac--) {
-    if (ap->a_type == A_SEMI) {
-      add_currentnode(x);
-    } else {
-      write_currentnode(x, 1, ap);
+  if(!force_symbol) {
+    double f = 0;
+    unsigned int count=0;
+    int x = sscanf(atombuf, "%lg%n", &f, &count);
+    if(x && strlen(atombuf)==count) {
+      SETFLOAT(ap, f);
+      return A_FLOAT;
     }
-    ap++;
+  }
+  SETSYMBOL(ap, gensym(atombuf));
+  return A_SYMBOL;
+}
+
+static const char*parse_csv(const char*src, char dst[MAXPDSTRING],
+                            int *_eol, int*_quoted)
+{
+  size_t len = 0;
+  int quoted = (src[0] == '"');
+  *_eol = 0;
+  *_quoted = quoted;
+  if (quoted) {
+    src++;
   }
 
+  while(*src) {
+    if (!quoted || '"' == src[0]) {
+      switch (src[quoted]) {
+      default:
+        break;
+      case '\n': /* EOL */
+        *_eol = 1;
+      /* fallthrough */
+      case ',': /* EOC */
+        if(len<MAXPDSTRING) {
+          dst[len++]=0;
+        }
+        dst[MAXPDSTRING-1] = 0;
+        return src+1+quoted;
+      case '"': /* quote */
+        if(quoted) {
+          src++;
+        }
+        break;
+      }
+    }
+    if(len<MAXPDSTRING) {
+      dst[len++]=*src;
+    }
+    src++;
+  }
+  dst[MAXPDSTRING-1] = 0;
+  return src;
+}
+
+static const char*parse_fudi(const char*src, char dst[MAXPDSTRING],
+                             int *_eol, int*_quoted)
+{
+  size_t len = 0;
+  *_quoted = 0;
+  *_eol = 0;
+
+  while(*src) {
+    char c = *src++;
+    char c2;
+    switch (c) {
+    case '\\': /* quoting */
+      c2=c;
+      c=*src++;
+      switch(c) {
+      case ',':
+      case ';':
+      case '\t':
+      case ' ':
+      case '\n':
+      case '\r':
+        break;
+      default:
+        if(len<MAXPDSTRING) {
+          dst[len++]=c2;
+        }
+        break;
+      }
+      break;
+    case ';':
+      *_eol = 1;
+    case '\n':
+    case '\r': /* EOL/EOA */
+    case '\t':
+    case ' ':  /* EOA */
+      goto atomend;
+      break;
+    }
+    if(len<MAXPDSTRING) {
+      dst[len++]=c;
+    }
+  }
+atomend:
+  if(len<MAXPDSTRING) {
+    dst[len++]=0;
+  }
+
+  while(*src) {
+    switch(*src) {
+    /* skip remaining whitespace */
+    case '\n':
+    case '\r':
+    case ' ':
+    case '\t':
+      break;
+    default:
+      return src;
+    }
+    src++;
+  }
+  return src;
+}
+
+static const char*parse_txt(const char*src, char dst[MAXPDSTRING],
+                            int *_eol, int*_quoted)
+{
+  size_t len = 0;
+  *_quoted = 0;
+  *_eol = 0;
+
+  while(*src) {
+    char c = *src++;
+    char c2;
+    switch (c) {
+    case '\\': /* quoting */
+      c2=c;
+      c=*src++;
+      switch(c) {
+      case ',':
+      case ';':
+      case '\t':
+      case ' ':
+      case '\n':
+      case '\r':
+        break;
+      default:
+        if(len<MAXPDSTRING) {
+          dst[len++]=c2;
+        }
+        break;
+      }
+      break;
+    case '\n':
+    case '\r': /* EOL/EOA */
+      *_eol = 1;
+    case '\t':
+    case ' ':  /* EOA */
+      goto atomend;
+      break;
+    }
+    if(len<MAXPDSTRING) {
+      dst[len++]=c;
+    }
+  }
+atomend:
+  if(len<MAXPDSTRING) {
+    dst[len++]=0;
+  }
+
+  while(*src) {
+    switch(*src) {
+    /* skip remaining whitespace */
+    case '\n':
+    case '\r':
+      *_eol = 1;
+    case ' ':
+    case '\t':
+      break;
+    default:
+      return src;
+    }
+    src++;
+  }
+  return src;
+}
+
+typedef const char*(*t_parsefn)(const char*src, char dst[MAXPDSTRING],
+                                int *_eol, int*_symbol);
+
+static void msgfile_str2parse(t_msgfile *x, const char*src,
+                              t_parsefn parsefn)
+{
+  t_binbuf*bbuf=binbuf_new();
+  char atombuf[MAXPDSTRING + 1];
+  while(*src) {
+    int issymbol = 0;
+    int iseol = 0;
+    src = parsefn(src, atombuf, &iseol, &issymbol);
+    atombuf[MAXPDSTRING] = 0;
+    if(*atombuf) {
+      t_atom a;
+      str2atom(atombuf, &a, issymbol);
+      binbuf_add(bbuf, 1, &a);
+    }
+    if(iseol) {
+      t_atom*argv = binbuf_getvec(bbuf);
+      int argc =  binbuf_getnatom(bbuf);
+      add_currentnode(x);
+      write_currentnode(x, argc, argv);
+      binbuf_clear(bbuf);
+    }
+  }
+
+  do {
+    t_atom*argv = binbuf_getvec(bbuf);
+    int argc =  binbuf_getnatom(bbuf);
+    if(argc) {
+      add_currentnode(x);
+      write_currentnode(x, argc, argv);
+    }
+  } while(0);
+  binbuf_free(bbuf);
   delete_emptynodes(x);
 }
 
+static int nextsemi(t_atom*argv, int argc)
+{
+  int count = 0;
+  for(count=0; count<argc; count++) {
+    if (A_SEMI==argv[count].a_type) {
+      return count + 1;
+    }
+  }
+  return 0;
+}
 
+static void msgfile_addbinbuf(t_msgfile *x, t_binbuf*bbuf)
+{
+  t_atom*argv = binbuf_getvec(bbuf);
+  int argc =  binbuf_getnatom(bbuf);
 
+  while(argc>0) {
+    int next = nextsemi(argv, argc);
+    if(next>1) {
+      add_currentnode(x);
+      write_currentnode(x, next-1, argv);
+    } else if (next<1) {
+      add_currentnode(x);
+      write_currentnode(x, argc, argv);
+      break;
+    }
+    argv+=next;
+    argc-=next;
+  }
+  delete_emptynodes(x);
+}
+
+static char* escape_pd(const char*src, char*dst)
+{
+  /* ',' -> '\,'; ' ' -> '\ ' */
+  char*dptr = dst;
+  while(*src) {
+    switch(*src) {
+    default:
+      break;
+#if 0
+    /* Pd already escapes these for us... */
+    case ',':
+    case ';':
+#endif
+    case ' ':
+    case '\n':
+    case '\r':
+    case '\t':
+      *dptr++ = '\\';
+      break;
+    case 0:
+      *dptr++ = 0;
+      return dst;
+    }
+    *dptr++=*src++;
+  }
+  *dptr++ = 0;
+  return dst;
+}
+static char* escape_csv(const char*src, char*dst)
+{
+  /* if there are special characters in the string, quote everything */
+  int needsquotes = 0;
+  const char*sptr;
+  char*dptr = dst;
+  for(sptr = src; *sptr; sptr++) {
+    switch(*sptr) {
+    default:
+      break;
+    case ',':
+    case '"':
+    case '\n':
+      needsquotes = 1;
+      break;
+    }
+    if(needsquotes) {
+      break;
+    }
+  }
+  if (needsquotes) {
+    *dptr++ = '"';
+  }
+
+  for(sptr = src; *sptr; sptr++) {
+    switch(*sptr) {
+    default:
+      break;
+
+    /* unescape "\," and "\;" */
+    case '\\':
+      switch(sptr[1]) {
+      default:
+        break;
+      case ',':
+      case ';':
+      case '\\':
+        sptr++;
+        break;
+      }
+      break;
+    }
+
+    /* escape quotes */
+    switch(*sptr) {
+    default:
+      break;
+    case '"':
+      *dptr++ = '"';
+      break;
+    }
+    *dptr++=*sptr;
+  }
+
+  if (needsquotes) {
+    *dptr++ = '"';
+  }
+  *dptr++ = 0;
+  return dst;
+}
+
+typedef char*(*t_escapefn)(const char*src, char*dst);
 
 
 /* ************************************************************************ */
@@ -427,10 +803,31 @@ static void msgfile_clear(t_msgfile *x)
   }
 }
 
-static void msgfile_delete(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
+static int atom2rangeint(t_atom*a, int range)
 {
+  t_float f = atom_getfloat(a);
+  if (f>range) {
+    return range;
+  }
+  if (f<-range) {
+    return -range;
+  }
+  return (unsigned int)f;
+}
+static void msgfile_delete(t_msgfile *x, t_symbol *UNUSED(s), int ac,
+                           t_atom *av)
+{
+  int count = node_count(x);
+  int pos = atom2rangeint(av+0, count);
+  if (!is_float(av)) {
+    pd_error(x, "[msgfile] illegal deletion index %s",
+             atom_getsymbol(av)->s_name);
+    return;
+  }
+  if (count<1) {
+    return;
+  }
   if (ac==1) {
-    int pos = atom_getfloat(av);
     int oldwhere = node_wherearewe(x);
 
     if (pos<0) {
@@ -443,8 +840,13 @@ static void msgfile_delete(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
     delete_currentnode(x);
     msgfile_goto(x, oldwhere);
   } else if (ac==2) {
-    int pos1 = atom_getfloat(av++);
-    int pos2 = atom_getfloat(av);
+    int pos1 = pos;
+    int pos2 = atom2rangeint(av+1, count);
+    if (!is_float(av+1)) {
+      pd_error(x, "[msgfile] illegal deletion range %s",
+               atom_getsymbol(av+1)->s_name);
+      return;
+    }
 
     if ((pos1 < pos2) || (pos2 == -1)) {
       if (pos2+1) {
@@ -461,13 +863,15 @@ static void msgfile_delete(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
   }
 }
 
-static void msgfile_add(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
+static void msgfile_add(t_msgfile *x, t_symbol *UNUSED(s), int ac,
+                        t_atom *av)
 {
   msgfile_end(x);
   add_currentnode(x);
   write_currentnode(x, ac, av);
 }
-static void msgfile_add2(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
+static void msgfile_add2(t_msgfile *x, t_symbol *UNUSED(s), int ac,
+                         t_atom *av)
 {
   msgfile_end(x);
   if (x->current) {
@@ -483,7 +887,8 @@ static void msgfile_add2(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
     x->current = x->current->next;
   }
 }
-static void msgfile_append(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
+static void msgfile_append(t_msgfile *x, t_symbol *UNUSED(s), int ac,
+                           t_atom *av)
 {
   add_currentnode(x);
   write_currentnode(x, ac, av);
@@ -500,14 +905,16 @@ static void msgfile_append2(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
     msgfile_append(x, s, ac, av);
   }
 }
-static void msgfile_insert(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
+static void msgfile_insert(t_msgfile *x, t_symbol *UNUSED(s), int ac,
+                           t_atom *av)
 {
   t_msglist *cur = x->current;
   insert_currentnode(x);
   write_currentnode(x, ac, av);
   x->current = cur;
 }
-static void msgfile_insert2(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
+static void msgfile_insert2(t_msgfile *x, t_symbol *UNUSED(s), int ac,
+                            t_atom *av)
 {
   t_msglist *cur = x->current;
   if ((x->current) && (x->current->previous)) {
@@ -523,7 +930,8 @@ static void msgfile_set(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
   msgfile_add(x, s, ac, av);
 }
 
-static void msgfile_replace(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
+static void msgfile_replace(t_msgfile *x, t_symbol *UNUSED(s), int ac,
+                            t_atom *av)
 {
   if(x->current) {
     if(x->current->thislist) {
@@ -600,7 +1008,8 @@ static void msgfile_bang(t_msgfile *x)
   }
 }
 
-static void msgfile_find(t_msgfile *x, t_symbol *s, int ac, t_atom *av)
+static void msgfile_find(t_msgfile *x, t_symbol *UNUSED(s), int ac,
+                         t_atom *av)
 {
   t_msglist *found = 0;
   t_msglist *cur=x->current;
@@ -663,8 +1072,8 @@ static void msgfile_where(t_msgfile *x)
 static void msgfile_sort(t_msgfile *x, t_symbol *s0, t_symbol*s1,
                          t_symbol*r)
 {
-  post("sorting not implemented yet: '%s', '%s' -> '%s'", s0->s_name,
-       s1->s_name, r->s_name);
+  pd_error(x, "sorting not implemented yet: '%s', '%s' -> '%s'", s0->s_name,
+           s1->s_name, r->s_name);
 
 
 #if 0
@@ -707,47 +1116,76 @@ static void msgfile_sort(t_msgfile *x, t_symbol *s0, t_symbol*s1,
 /* file I/O                           */
 
 static void msgfile_read2(t_msgfile *x, t_symbol *filename,
-                          t_symbol *format)
+                          t_symbol *sformat)
 {
   int rmode = 0;
 
   int fd=0;
   FILE*fil=NULL;
-  long readlength, length, pos;
+  long readlength, length;
   char filnam[MAXPDSTRING];
   char buf[MAXPDSTRING], *bufptr, *readbuf;
-  char *charbinbuf=NULL, *cbb;
-  int charbinbuflength=0;
-  char*dirname=canvas_getdir(x->x_canvas)->s_name;
+  const char*dirname=canvas_getdir(x->x_canvas)->s_name;
+  t_parsefn parsefn = 0;
 
-  int mode = x->mode;
-  char separator, eol;
-
-  t_binbuf *bbuf = binbuf_new();
+  t_msgfile_format format = symbol2format(x, sformat);
 
 #ifdef __WIN32__
   rmode |= O_BINARY;
 #endif
+
+  switch(format) {
+  case FORMAT_CSV:
+    parsefn = parse_csv;
+    break;
+  case FORMAT_TXT:
+    parsefn = parse_txt;
+    break;
+  case FORMAT_FUDI:
+    parsefn = parse_fudi;
+    break;
+  default:
+    parsefn = 0;
+  }
+
+  if( !parsefn ) {
+    /* use Pd's own parser
+     * this gives somewhat weird results with escaped LF,
+     * but is consistent with how [textfile] reads the data
+     */
+    t_binbuf*bbuf = binbuf_new();
+    binbuf_read_via_canvas(bbuf, filename->s_name, x->x_canvas,
+                           (FORMAT_CR == format));
+    msgfile_addbinbuf(x, bbuf);
+    binbuf_free(bbuf);
+    return;
+  }
+
+  /* cannot use Pd's binbuf parser, so we do our own thing */
 
   fd = open_via_path(dirname,
                      filename->s_name, "", buf, &bufptr, MAXPDSTRING, 0);
 
   if (fd < 0) {
     /* open via path failed, fall back */
-    fd=z_open(filename->s_name, rmode);
+    fd=sys_open(filename->s_name, rmode);
     if(fd < 0) {
       pd_error(x, "can't open in %s/%s",  dirname, filename->s_name);
       return;
     } else {
-      z_close(fd);
-      sprintf(filnam, "%s", filename->s_name);
+      sys_close(fd);
+      snprintf(filnam, MAXPDSTRING, "%s", filename->s_name);
     }
   } else {
-    z_close(fd);
-    sprintf(filnam, "%s/%s", buf, bufptr);
+    sys_close(fd);
+    if(snprintf(filnam, MAXPDSTRING, "%s/%s", buf, bufptr) < 0) {
+      pd_error(x, "can't create in '%s/%s'",  buf, bufptr);
+      return;
+    }
   }
+  filnam[MAXPDSTRING-1]=0;
 
-  fil=z_fopen(filnam, "rb");
+  fil=sys_fopen(filnam, "rb");
   if(fil==NULL) {
     pd_error(x, "could not open '%s'", filnam);
     return;
@@ -756,95 +1194,30 @@ static void msgfile_read2(t_msgfile *x, t_symbol *filename,
   length=ftell(fil);
   fseek(fil, 0, SEEK_SET);
 
-  if (!(readbuf = t_getbytes(length))) {
+  if (!(readbuf = t_getbytes(length+1))) {
     pd_error(x, "msgfile_read: could not reserve %ld bytes to read into",
              length);
-    z_fclose(fil);
+    sys_fclose(fil);
     return;
-  }
-
-  if (gensym("cr")==format) {
-    mode = CR_MODE;
-  } else if (gensym("csv")==format) {
-    mode = CSV_MODE;
-  } else if (gensym("pd")==format) {
-    mode = PD_MODE;
-  } else if (*format->s_name) {
-    pd_error(x, "msgfile_read: unknown flag: %s", format->s_name);
-  }
-
-  switch (mode) {
-  case CR_MODE:
-    separator = ' ';
-    eol = '\n';
-    break;
-  case CSV_MODE:
-    separator = ',';
-    eol = ' ';
-    break;
-  default:
-    separator = '\n';
-    eol = ';';
-    break;
   }
 
   /* read */
   if ((readlength = fread(readbuf, sizeof(char), length, fil)) < length) {
     pd_error(x, "msgfile_read: unable to read %s: %ld of %ld", filnam,
              readlength, length);
-    z_fclose(fil);
-    t_freebytes(readbuf, length);
+    sys_fclose(fil);
+    t_freebytes(readbuf, length+1);
     return;
   }
-
   /* close */
-  z_fclose(fil);
+  sys_fclose(fil);
 
-  /* convert separators and eols to what pd expects in a binbuf*/
-  bufptr=readbuf;
+  /* we overallocated readbuf by 1, so we can store a terminating 0 */
+  readbuf[length] = 0;
 
-# define MSGFILE_HEADROOM 1024
-  charbinbuflength=2*length+MSGFILE_HEADROOM;
+  msgfile_str2parse(x, readbuf, parsefn);
 
-  charbinbuf=(char*)getbytes(charbinbuflength);
-
-  cbb=charbinbuf;
-  for(pos=0; pos<charbinbuflength; pos++) {
-    charbinbuf[pos]=0;
-  }
-
-  *cbb++=';';
-  pos=1;
-  while (readlength--) {
-    if(pos>=charbinbuflength) {
-      pd_error(x, "msgfile: read error (headroom %d too small!)",
-               MSGFILE_HEADROOM);
-      goto read_error;
-      break;
-    }
-    if (*bufptr == separator) {
-      *cbb = ' ';
-    } else if (*bufptr==eol) {
-      *cbb++=';';
-      pos++;
-      *cbb='\n';
-    } else {
-      *cbb=*bufptr;
-    }
-
-    bufptr++;
-    cbb++;
-    pos++;
-  }
-
-  /* convert to binbuf */
-  binbuf_text(bbuf, charbinbuf, charbinbuflength);
-  msgfile_binbuf2listbuf(x, bbuf);
-
-read_error:
-  binbuf_free(bbuf);
-  t_freebytes(readbuf, length);
-  t_freebytes(charbinbuf, charbinbuflength);
+  t_freebytes(readbuf, length+1);
 }
 static void msgfile_read(t_msgfile *x, t_symbol *filename,
                          t_symbol *format)
@@ -853,48 +1226,31 @@ static void msgfile_read(t_msgfile *x, t_symbol *filename,
   msgfile_read2(x, filename, format);
 }
 
+
 static void msgfile_write(t_msgfile *x, t_symbol *filename,
-                          t_symbol *format)
+                          t_symbol *sformat)
 {
   char buf[MAXPDSTRING];
-  t_binbuf *bbuf = binbuf_new();
   t_msglist *cur = x->start;
 
-  char *mytext = 0, *dumtext;
   char filnam[MAXPDSTRING];
-  int textlen = 0, i;
-
   char separator, eol;
-  int mode = x->mode;
+  t_msgfile_format format = symbol2format(x, sformat);
+  int errcount = 0;
+  t_escapefn escapefn = escape_pd;
 
   FILE *f=0;
 
-  while(cur) {
-    binbuf_add(bbuf, cur->n, cur->thislist);
-    binbuf_addsemi(bbuf);
-    cur = cur->next;
-  }
-
-  if(format&&gensym("")!=format) {
-    if(gensym("cr")==format) {
-      mode = CR_MODE;
-    } else if(gensym("csv")==format) {
-      mode = CSV_MODE;
-    } else if(gensym("pd")==format) {
-      mode = PD_MODE;
-    } else if(format&&format->s_name) {
-      pd_error(x, "msgfile_write: ignoring unknown flag: %s", format->s_name);
-    }
-  }
-
-  switch (mode) {
-  case CR_MODE:
+  switch (format) {
+  case FORMAT_TXT:
+  case FORMAT_CR:
     separator = ' ';
-    eol = ' ';
+    eol = 0;
     break;
-  case CSV_MODE:
+  case FORMAT_CSV:
     separator = ',';
-    eol = ' ';
+    eol = 0;
+    escapefn = escape_csv;
     break;
   default:
     separator = ' ';
@@ -902,37 +1258,54 @@ static void msgfile_write(t_msgfile *x, t_symbol *filename,
     break;
   }
 
-  binbuf_gettext(bbuf, &mytext, &textlen);
-  dumtext = mytext;
-  i = textlen;
-
-  while(i--) {
-    if (*dumtext==' ') {
-      *dumtext=separator;
-    } else if ((*dumtext==';') && (dumtext[1]=='\n')) {
-      *dumtext = eol;
-    }
-    dumtext++;
-  }
 
   /* open */
   canvas_makefilename(x->x_canvas, filename->s_name,
                       buf, MAXPDSTRING);
   sys_bashfilename(buf, filnam);
-  if (!(f = z_fopen(filnam, "w"))) {
+  f = sys_fopen(filnam, "w");
+  if (!f) {
     pd_error(x, "msgfile : failed to open %s", filnam);
-  } else {
-    /* write */
-    if (fwrite(mytext, textlen*sizeof(char), 1, f) < 1) {
-      pd_error(x, "msgfile : failed to write %s", filnam);
-    }
-  }
-  /* close */
-  if (f) {
-    z_fclose(f);
+    return;
   }
 
-  binbuf_free(bbuf);
+  for(cur = x->start; cur; cur=cur->next) {
+    int i;
+    for(i=0; i<cur->n; i++) {
+      t_atom*a = cur->thislist + i;
+      switch(a->a_type) {
+      case A_FLOAT:
+        errcount += (fprintf(f, "%g", atom_getfloat(a)) < 1);
+        break;
+      case A_POINTER:
+        errcount += (fprintf(f, "%p", a->a_w.w_gpointer) < 1);
+        break;
+      default: {
+        int mylen = 0;
+        char mytext[MAXPDSTRING];
+        char mytext2[MAXPDSTRING*2];
+        atom_string(a, mytext, MAXPDSTRING);
+        escapefn(mytext, mytext2);
+        mylen = strnlen(mytext2, MAXPDSTRING);
+        errcount += (fwrite(mytext2, mylen, sizeof(char), f) < 1);
+      }
+      }
+      if(i + 1 < cur->n) {
+        errcount += (fwrite(&separator, sizeof(char), 1, f) < 1);
+      }
+    }
+    if(eol) {
+      errcount += (fwrite(&eol, sizeof(char), 1, f) < 1);
+    }
+    errcount += (fwrite("\n", sizeof(char), 1, f) < 1);
+  }
+
+  if (errcount > 0) {
+    pd_error(x, "msgfile : failed to write '%s': % d errors", filnam,
+             errcount);
+  }
+  /* close */
+  sys_fclose(f);
 }
 
 /* ********************************** */
@@ -947,8 +1320,8 @@ static void msgfile_print(t_msgfile *x)
   while (cur) {
     t_msglist *dum=cur;
     int i;
-    j++;
     startpost("line %d:", j);
+    j++;
     for (i = 0; i < dum->n; i++) {
       t_atom *a = dum->thislist + i;
       postatom(1, a);
@@ -958,7 +1331,7 @@ static void msgfile_print(t_msgfile *x)
   }
 }
 
-static void msgfile_help(t_msgfile *x)
+static void msgfile_help(t_msgfile *UNUSED(x))
 {
   post("\n"HEARTSYMBOL " msgfile\t:: handle and store files of lists");
   post("goto <n>\t: goto line <n>"
@@ -984,10 +1357,10 @@ static void msgfile_help(t_msgfile *x)
        "\nfind <list>\t: search for <list>"
        "\nread <file> [<format>]\t: read <file> as <format>"
        "\nwrite <file> [<format>]\t: write <file> as <format>"
-       "\n\t\t: valid <formats> are\t: PD, CR, CSV"
+       "\n\t\t: valid <formats> are\t: pd, cr, fudi, txt, csv"
        "\n\nprint\t\t: show buffer (for debugging)"
        "\nhelp\t\t: show this help");
-  post("creation: \"msgfile [<format>]\": <format> defines fileaccess-mode(default is PD)");
+  post("creation: \"msgfile [<format>]\": <format> defines fileaccess-mode(default is 'pd')");
 }
 static void msgfile_free(t_msgfile *x)
 {
@@ -995,7 +1368,7 @@ static void msgfile_free(t_msgfile *x)
   freebytes(x->current, sizeof(t_msglist));
 }
 
-static void *msgfile_new(t_symbol *s, int argc, t_atom *argv)
+static void *msgfile_new(t_symbol *UNUSED(s), int argc, t_atom *argv)
 {
   t_msgfile *x = (t_msgfile *)pd_new(msgfile_class);
 
@@ -1004,19 +1377,10 @@ static void *msgfile_new(t_symbol *s, int argc, t_atom *argv)
   x->start   = 0;
   x->previous= 0;
 
-  x->mode=PD_MODE; /* that's the default */
+  x->format=FORMAT_PD; /* that's the default */
 
   if ((argc==1) && (argv->a_type == A_SYMBOL)) {
-    t_symbol*mode=atom_getsymbol(argv);
-    if      (gensym("cr") == mode) {
-      x->mode = CR_MODE;
-    } else if (gensym("csv")== mode) {
-      x->mode = CSV_MODE;
-    } else if (gensym("pd") == mode) {
-      x->mode = PD_MODE;
-    } else {
-      pd_error(x, "msgfile: unknown argument %s", argv->a_w.w_symbol->s_name);
-    }
+    x->format = symbol2format(x, atom_getsymbol(argv));
   }
 
   outlet_new(&x->x_obj, gensym("list"));
@@ -1029,74 +1393,49 @@ static void *msgfile_new(t_symbol *s, int argc, t_atom *argv)
   return (x);
 }
 
-void msgfile_setup(void)
+ZEXY_SETUP void msgfile_setup(void)
 {
-  msgfile_class = class_new(gensym("msgfile"), (t_newmethod)msgfile_new,
-                            (t_method)msgfile_free, sizeof(t_msgfile), 0, A_GIMME, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_goto, gensym("goto"),
-                  A_DEFFLOAT, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_rewind, gensym("rewind"),
-                  0);
-  class_addmethod(msgfile_class, (t_method)msgfile_rewind, gensym("begin"),
-                  0);
-  class_addmethod(msgfile_class, (t_method)msgfile_end, gensym("end"), 0);
+  msgfile_class = zexy_new("msgfile",
+                           msgfile_new, msgfile_free, t_msgfile, 0, "*");
+  zexy_addmethod(msgfile_class, (t_method)msgfile_goto, "goto", "F");
+  zexy_addmethod(msgfile_class, (t_method)msgfile_rewind, "rewind", "");
+  zexy_addmethod(msgfile_class, (t_method)msgfile_rewind, "begin", "");
+  zexy_addmethod(msgfile_class, (t_method)msgfile_end, "end", "");
+  zexy_addmethod(msgfile_class, (t_method)msgfile_next, "next", "F");
+  zexy_addmethod(msgfile_class, (t_method)msgfile_prev, "prev", "F");
 
-  class_addmethod(msgfile_class, (t_method)msgfile_next, gensym("next"),
-                  A_DEFFLOAT, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_prev, gensym("prev"),
-                  A_DEFFLOAT, 0);
+  zexy_addmethod(msgfile_class, (t_method)msgfile_skip, "skip", "F");
 
-  class_addmethod(msgfile_class, (t_method)msgfile_skip, gensym("skip"),
-                  A_DEFFLOAT, 0);
+  zexy_addmethod(msgfile_class, (t_method)msgfile_set, "set", "*");
 
-  class_addmethod(msgfile_class, (t_method)msgfile_set, gensym("set"),
-                  A_GIMME, 0);
+  zexy_addmethod(msgfile_class, (t_method)msgfile_clear, "clear", "");
+  zexy_addmethod(msgfile_class, (t_method)msgfile_delete, "delete", "*");
 
-  class_addmethod(msgfile_class, (t_method)msgfile_clear, gensym("clear"),
-                  0);
-  class_addmethod(msgfile_class, (t_method)msgfile_delete, gensym("delete"),
-                  A_GIMME, 0);
+  zexy_addmethod(msgfile_class, (t_method)msgfile_add, "add", "*");
+  zexy_addmethod(msgfile_class, (t_method)msgfile_add2, "add2", "*");
+  zexy_addmethod(msgfile_class, (t_method)msgfile_append, "append", "*");
+  zexy_addmethod(msgfile_class, (t_method)msgfile_append2, "append2", "*");
+  zexy_addmethod(msgfile_class, (t_method)msgfile_insert, "insert", "*");
+  zexy_addmethod(msgfile_class, (t_method)msgfile_insert2, "insert2", "*");
 
-  class_addmethod(msgfile_class, (t_method)msgfile_add, gensym("add"),
-                  A_GIMME, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_add2, gensym("add2"),
-                  A_GIMME, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_append, gensym("append"),
-                  A_GIMME, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_append2,
-                  gensym("append2"), A_GIMME, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_insert, gensym("insert"),
-                  A_GIMME, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_insert2,
-                  gensym("insert2"), A_GIMME, 0);
+  zexy_addmethod(msgfile_class, (t_method)msgfile_replace, "replace", "*");
 
-  class_addmethod(msgfile_class, (t_method)msgfile_replace,
-                  gensym("replace"), A_GIMME, 0);
+  zexy_addmethod(msgfile_class, (t_method)msgfile_find, "find", "*");
 
-  class_addmethod(msgfile_class, (t_method)msgfile_find, gensym("find"),
-                  A_GIMME, 0);
-
-  class_addmethod(msgfile_class, (t_method)msgfile_read, gensym("read"),
-                  A_SYMBOL, A_DEFSYM, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_read2, gensym("read2"),
-                  A_SYMBOL, A_DEFSYM, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_write, gensym("write"),
-                  A_SYMBOL, A_DEFSYM, 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_print, gensym("print"),
-                  0);
-  class_addmethod(msgfile_class, (t_method)msgfile_flush, gensym("flush"),
-                  0);
+  zexy_addmethod(msgfile_class, (t_method)msgfile_read, "read", "sS");
+  zexy_addmethod(msgfile_class, (t_method)msgfile_read2, "read2", "sS");
+  zexy_addmethod(msgfile_class, (t_method)msgfile_write, "write", "sS");
+  zexy_addmethod(msgfile_class, (t_method)msgfile_print, "print", "");
+  zexy_addmethod(msgfile_class, (t_method)msgfile_flush, "flush", "");
 
   class_addbang(msgfile_class, msgfile_bang);
-  class_addmethod(msgfile_class, (t_method)msgfile_this, gensym("this"), 0);
-  class_addmethod(msgfile_class, (t_method)msgfile_where, gensym("where"),
-                  0);
+  zexy_addmethod(msgfile_class, (t_method)msgfile_this, "this", "");
+  zexy_addmethod(msgfile_class, (t_method)msgfile_where, "where", "");
 
 
-  class_addmethod(msgfile_class, (t_method)msgfile_sort, gensym("sort"),
-                  A_SYMBOL, A_SYMBOL, A_SYMBOL, 0);
+  zexy_addmethod(msgfile_class, (t_method)msgfile_sort, "sort", "sss");
 
-  class_addmethod(msgfile_class, (t_method)msgfile_help, gensym("help"), 0);
+  zexy_addmethod(msgfile_class, (t_method)msgfile_help, "help", "");
 
   zexy_register("msgfile");
 }

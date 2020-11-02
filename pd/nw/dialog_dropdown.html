@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
+  </head>
+  <body class="dialog_body">
+    <div class="container noselect">
+      <table id="titlebar">
+        <tr>
+          <td style="width: 100%;">
+            <div id="titlebar_title">Dropdown Properties</div>
+          </td>
+          <td>
+            <div class="titlebar_buttons">
+              <div id="titlebar_close_button" onclick="cancel(false);">&#215</div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    <form> 
+      <fieldset> 
+        <legend id="dialog_header"></legend>
+
+        <table class="pairs">
+          <tr class="width prop">
+            <td>
+              <label data-i18n="[title]gatom.prop.width_tt"> 
+                <span data-i18n="gatom.prop.width"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]gatom.prop.width_tt">
+              <input type="text" id="width" name="width"
+                     onchange="update_attr(this)">
+            </td>
+            <td>
+            </td>
+            <td>
+            </td>
+          </tr>
+          <tr class="draglo prop pair">
+            <td>
+              <label data-i18n="[title]iem.prop.minimum_tt">
+                <span data-i18n="iem.prop.minimum"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.minimum_tt">
+              <input type="text" id="draglo" name="draglo"
+                     onchange="update_attr(this)">
+            </td>
+            <td>
+              <label data-i18n="[title]iem.prop.maximum_tt">
+                <span data-i18n="iem.prop.maximum"></span>
+              </label>
+            </td>
+            <td data-i18n="[title]iem.prop.maximum_tt">
+              <input type="text" id="draghi" name="draghi"
+                     onchange="update_attr(this)">
+            </td>
+          </tr>
+
+          <tr class="outtype prop">
+            <td>
+              <label data-i18n="[title]gatom.prop.dropdown_outtype_tt">
+                <span data-i18n="gatom.prop.dropdown_outtype"></span>
+              </label>
+            </td>
+            <td colspan="3"
+                data-i18n="[title]gatom.prop.dropdown_outtype_tt">
+              <select id="outtype_select"
+                      onchange="update_dropdown_outtype(this);">
+                <option>index</option>
+                <option>value</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label data-i18n="[title]iem.prop.send_tt">
+                <span data-i18n="iem.prop.send"></span>
+              </label>
+            </td>
+            <td colspan="3"
+                data-i18n="[title]iem.prop.send_tt">
+              <input type="text" id="send_symbol" name="send_symbol"
+                     onchange="update_attr(this);">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label data-i18n="[title]iem.prop.receive_tt">
+                <span data-i18n="iem.prop.receive"></span>
+              </label>
+            </td>
+            <td colspan="3"
+                data-i18n="[title]iem.prop.receive_tt">
+            <input type="text" id="receive_symbol" name="receive_symbol"
+                   onchange="update_attr(this);">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label data-i18n="[title]gatom.prop.label_tt">
+                <span data-i18n="gatom.prop.label"></span>
+              </label>
+            </td>
+            <td colspan="3"
+                data-i18n="[title]gatom.prop.label_tt">
+              <input type="text" id="label" name="label"
+                     onchange="update_attr(this)">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label data-i18n="[title]gatom.prop.labelpos_tt">
+                <span data-i18n="gatom.prop.labelpos"></span>
+              </label> 
+            </td>
+            <td colspan="3">
+              <label class="points"
+                     data-i18n="[title]gatom.prop.labelpos_tt">
+
+                <input class="label-pos"
+                       type="radio"
+                       id="labelpos_top"
+                       value="2"
+                       name="labelpos"
+                       style="margin-left: 27px;"
+                       onchange="update_attr(this)">
+                <span data-i18n="gatom.prop.label_top"></span>
+
+                <br/>
+
+                <input class="label-pos"
+                       type="radio"
+                       id="labelpos_left"
+                       value="0"
+                       name="labelpos"
+                       onchange="update_attr(this)">
+                <span data-i18n="gatom.prop.label_left"></span>
+
+                <input class="label-pos"
+                       type="radio"
+                       id="labelpos_right"
+                       value="1"
+                       name="labelpos"
+                       onchange="update_attr(this)">
+                <span data-i18n="gatom.prop.label_right"></span>
+
+                <br/>
+
+                <input class="label-pos"
+                       type="radio"
+                       id="labelpos_bottom"
+                       value="3"
+                       name="labelpos"
+                       style="margin-left: 27px;"
+                       onchange="update_attr(this)">
+                <span data-i18n="gatom.prop.label_bottom"></span>
+
+              </label>
+
+        </table>
+
+      </fieldset> 
+
+    <div class="submit_buttons">
+      <button type="button" onClick="ok()" data-i18n="[title]iem.prop.ok_tt">
+        <span data-i18n="iem.prop.ok"></span>
+      </button>
+      <button type="button" onClick="apply()" data-i18n="[title]iem.prop.apply_tt">
+        <span data-i18n="iem.prop.apply"></span>
+      </button>
+      <button type="button" onClick="cancel(true)" data-i18n="[title]iem.prop.cancel_tt">
+        <span data-i18n="iem.prop.cancel"></span>
+      </button>
+    </div>
+
+  </form> 
+  </div>      
+
+  <script>
+"use strict";
+var gui = require("nw.gui");
+var pdgui = require("./pdgui.js");
+
+// For translations
+var l = pdgui.get_local_string;
+
+pdgui.skin.apply(window);
+
+var pd_object_callback,
+    old_attrs = {}, // original state. Used if we cancel the dialog
+    new_attrs = {}; // changed state. Used if we apply or click "Ok"
+
+function substitute_space(arg) {
+    var fake_space = String.fromCharCode(11);
+    return arg.split(" ").join(fake_space);
+}
+
+function strip_problem_chars(arg) {
+    var problem_chars = [";", ",", "\\"];
+    var ret = arg;
+    for(var i = 0; i < problem_chars.length; i++) {
+        ret = ret.split(problem_chars[i]).join("");
+    }
+    return ret;
+}
+
+function gatom_escape(str) {
+    var ret;
+    if (str.length === 0) {
+        ret = "-";
+    } else if (str.slice(0,1) === "-") {
+        ret = "-" + str;
+    } else {
+        var arr = str.split("");
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] === "$" && i+1 < arr.length &&
+                arr[i+1] >= "0" && arr[i+1] <= "9") {
+                arr[i] = "#";
+            }
+        }
+        ret = arr.join("");
+    }
+    return strip_problem_chars(ret);
+}
+
+function gatom_unescape(str) {
+    if (str.slice(0,1) === "-") {
+        str = str.slice(1);
+    } else {
+        var arr = str.split("");
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] === "#" && i+1 < arr.length &&
+                arr[i+1] >= "0" && arr[i+1] <= "9") {
+                arr[i] = "$";
+            }
+        }
+        str = arr.join("");
+    }
+    return str;
+}
+
+function update_attr(elem) {
+    new_attrs[elem.name] = elem.value;
+}
+
+function update_dropdown_outtype(elem) {
+    new_attrs.outtype = elem.selectedIndex;
+}
+
+function send_params(attrs, create_undo_point) {
+    //pdgui.post("we're applying gatom changes!");
+    var gatom = attrs.name === "atom";
+    pdgui.pdsend(pd_object_callback, "param",
+        +attrs.width,
+        gatom ? +attrs.draglo : +attrs.outtype,
+        gatom ? +attrs.draghi : 0,
+        gatom_escape(attrs.label),
+        +attrs.labelpos,
+        gatom_escape(attrs.receive_symbol),
+        gatom_escape(attrs.send_symbol),
+        create_undo_point ? 1 : 0
+    );
+}
+
+function cancel(revert_changes) {
+    var dirty = false, attr;
+    //window.close(true);
+    if (revert_changes) {
+        for (attr in old_attrs) {
+            if (old_attrs[attr] !== new_attrs[attr]) {
+                dirty = true;
+            }
+        }
+        if (dirty) {
+            send_params(old_attrs, false);
+        }
+    }
+    pdgui.pdsend(pd_object_callback, "cancel");
+}
+
+function apply() {
+    send_params(new_attrs, false);
+}
+
+function ok() {
+    // Steal focus from any active input to make sure it triggers an
+    // onchange event
+    document.querySelector("button").focus();
+    // send the old attrs first so we can set an undo point on them
+    send_params(old_attrs, false);
+    send_params(new_attrs, true);
+    cancel(false);
+}
+
+// This gets called from the nw_create_window function in index.html
+// It provides us with our window id from the C side.  Once we have it
+// we can create the menu and register event callbacks
+function register_window_id(gfxstub, attributes) {
+    var attr;
+    pd_object_callback = gfxstub;
+    add_events(gfxstub);
+
+    // before translating, set the header based on class name:
+    document.querySelector("#dialog_header")
+        .setAttribute("data-i18n", "gatom.prop." +
+            (attributes.name === "dropdown" ? "dropdown" : "gatom"));
+
+    translate_form();
+    populate_form(attributes);
+
+    // hide outtype select for "dropdown", or draglo/hi for "gatom"
+    document.querySelector(attributes.name === "atom" ? ".outtype" : ".draglo")
+        .style.setProperty("display", "none");
+
+
+    // Hack... change incoming "-" to empty string
+    if (attributes.label === "-") { attributes.label = ""; }
+    if (attributes.send_symbol === "-") { attributes.send_symbol= ""; }
+    if (attributes.receive_symbol === "-") { attributes.receive_symbol = ""; }
+
+    // Initialize the new_attrs to the current ones
+    for (attr in attributes) {
+        if (attributes.hasOwnProperty(attr)) {
+            new_attrs[attr] = attributes[attr];
+        }
+    }
+
+    old_attrs = attributes;
+    // We don't turn on rendering of the "container" div until
+    // We've finished displaying all the spans and populating the
+    // labels and form elements.  That makes it more efficient and
+    // snappier, at least on older machines.
+    document.getElementsByClassName("container")[0]
+        .style.setProperty("display", "inline");
+    pdgui.resize_window(pd_object_callback);
+}
+
+function tr_text(id) {
+    var elem = document.getElementById("iem.prop." + id);
+    elem.textContent = l("iem.prop." + id);
+}
+
+// Stop-gap translator
+function translate_form() {
+    var i
+    var elements = document.querySelectorAll("[data-i18n]");
+    for (i = 0; i < elements.length; i++) {
+        var data = elements[i].dataset.i18n;
+        if (data.slice(0,7) === "[title]") {
+            elements[i].title = l(data.slice(7));
+        } else {
+            elements[i].textContent = l(data);
+        }
+    }
+}
+
+function get_attr(name, attrs) {
+    return attrs[attrs.indexOf(name)+1];
+}
+
+function get_elem(name) {
+    return document.getElementById(name);
+}
+
+function populate_form(attributes) {
+    var label, snd, rcv, labelpos, i, radios;
+    get_elem("width").value = attributes.width;
+    if (attributes.name === "atom") {
+        get_elem("draglo").value = attributes.draglo;
+        get_elem("draghi").value = attributes.draghi;
+    } else {
+        get_elem("outtype_select").selectedIndex = attributes.outtype;
+    }
+    label = attributes.label;
+    get_elem("label").value = gatom_unescape(label);
+    snd = attributes.send_symbol;
+    get_elem("send_symbol").value = gatom_unescape(snd);
+    rcv = attributes.receive_symbol;
+    get_elem("receive_symbol").value = gatom_unescape(rcv);
+
+    labelpos = attributes.labelpos;
+    radios = document.getElementsByName("labelpos");
+    for (i = 0; i < radios.length; i++) {
+        if (+radios[i].value === labelpos) {
+            radios[i].checked = true;
+        }
+    }
+}
+
+function add_events(name) {
+    // closing the Window
+    gui.Window.get().on("close", function() {
+        // this needs to do whatever the "cancel" button does
+        cancel(false);
+    });
+    pdgui.dialog_bindings(name);
+}
+
+  </script>
+  </body>
+</html>

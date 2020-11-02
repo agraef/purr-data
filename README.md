@@ -19,6 +19,7 @@ maintainers:
   * [OSX](#osx-64-bit-using-homebrew)
   * [Windows](#windows-32-bit-using-msys2)
 * [Code of Conduct](#code-of-conduct)
+* [Project Governance](#project-governance)
 * [Contributor Guide](#contributor-guide)
 * [Human Interface Guidelines](#human-interface-guidelines)
 * [Core Pd Notes](#core-pd-notes)
@@ -63,16 +64,22 @@ Pd-L2ork has the following goals:
    documentation.  We like documentation, so it follows that we like consistent
    interfaces.
 
-### User Guide
+### User Guide and Weblinks
 
 For a more in-depth look at Purr Data for new users and developers, see:
 
-[https://agraef.github.io/purr-data-intro/Purr-Data-Intro.html](https://agraef.github.io/purr-data-intro/Purr-Data-Intro.html)
+<https://agraef.github.io/purr-data-intro/Purr-Data-Intro.html>
 
 For more resources see:
 
-[https://agraef.github.io/purr-data/](https://agraef.github.io/purr-data/)
+<https://agraef.github.io/purr-data/>
 
+For Ico Bukvic's original Pd-l2ork website see:
+
+<http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/>
+
+(Note that the latter link is more about "classic" Pd-L2Ork a.k.a. Pd-L2Ork 1.0, see below. But it also contains some information about Purr Data.)
+ 
 ### Relationship of Purr Data to Pure Data
 
 There are three maintained distributions of Pure Data:
@@ -81,7 +88,7 @@ There are three maintained distributions of Pure Data:
    external libraries and uses a modern GUI written using HTML5.
 2. Pd-L2Ork 1.0, the version used by Ivica Bukvic for his laptop orchestra.
    Pd-l2ork 1.0 uses tcl/tk (and tkpath) for the GUI. You can find it
-   [here](http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/)
+   [here](http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/).
 3. Pure Data "Vanilla".  Miller Puckette's personal version which he hosts on
    his website and maintains.  It doesn't come with external libraries
    pre-installed, but it does include an interface you can use to search
@@ -89,156 +96,36 @@ There are three maintained distributions of Pure Data:
 
 ### Downloads
 
-Packages for Windows and OSX:
+**Windows and OSX:**
 
-[https://github.com/jonwwilkes/purr-data/releases](https://github.com/jonwwilkes/purr-data/releases)
+Releases are done on GitHub:
 
-Gnu/Linux installation instructions:
+<https://github.com/jonwwilkes/purr-data/releases>
 
-* [Arch](#arch)
+This is where the packages first come out as soon as Jonathan Wilkes releases them. The same packages can also be dowloaded (usually shortly after release) on Albert Gräf's mirror, which also provides a website, wiki, additional documentation, and an up-to-date mirror of the source code repository:
 
-* [Debian 9, 10, and testing](#debian)
+<https://github.com/agraef/purr-data/releases>
 
-* [Raspbian 9, and 10](#raspbian)
+**Linux:**
 
-* [Ubuntu 16.04, 18.04, 19.04, and 19.10](#ubuntu)
+Packages for various Linux distributions (including Arch, Debian, Ubuntu, and openSUSE) are available through the JGU package repositories maintained by Albert Gräf on the OBS (Open Build System). Detailed instructions can be found [here](https://github.com/agraef/purr-data/wiki/Installation#linux).
 
-* [openSUSE](#opensuse)
-
-### Installation Guide
-
-#### Arch
-
-All of this needs to be done as root, using either `sudo` or `su`.
-
-The following goes into /etc/pacman.conf:
-
-~~~
-[home_aggraef_Arch]
-SigLevel = Never
-Server = https://download.opensuse.org/repositories/home:aggraef/Arch/$arch
-~~~
-
-Then just run:
-
-~~~
-pacman -Sy
-pacman -S purr-data
-~~~
-
-#### Debian 
-
-All of this needs to be done as root, using either `sudo` or `su`. Use "Debian_9.0" instead if you're running Debian Stretch rather than Buster; likewise if you're running Unstable or Testing.
-
-You should import the repository key first, so that the packages can be updated automatically (this only needs to be done once):
-
-~~~
-wget -nv https://download.opensuse.org/repositories/home:aggraef/Debian_10/Release.key
-apt-key add Release.key
-~~~
-
-Then add the repository to your apt sources as follows (taking Debian 10 as an example):
-
-~~~
-echo 'deb http://download.opensuse.org/repositories/home:/aggraef/Debian_10/ /' > /etc/apt/sources.list.d/home:aggraef.list
-apt update
-~~~
-
-**NOTE:** This creates the source in a separate file /etc/apt/sources.list.d/home:aggraef.list. You can just remove this file when you don't need the repository any more.
-
-Finally install the package:
-
-~~~
-apt install purr-data
-~~~
-
-#### Raspbian
-
-All of this needs to be done as root, using either `sudo` or `su`. Use "Raspbian_9.0" instead if you're running Raspbian Stretch rather than Buster.
-
-~~~
-sudo su
-~~~
-
-You should import the repository key first, so that the packages can be updated automatically (this only needs to be done once):
-
-~~~
-wget -nv https://download.opensuse.org/repositories/home:aggraef/Raspbian_10/Release.key
-apt-key add Release.key
-~~~
-
-Then add the repository to your apt sources as follows:
-
-~~~
-echo 'deb http://download.opensuse.org/repositories/home:/aggraef/Raspbian_10/ /' > /etc/apt/sources.list.d/home:aggraef.list
-apt update
-~~~
-
-Finally install the package:
-
-~~~
-apt install purr-data
-~~~
-
-#### Ubuntu
-
-All of this needs to be done as root, using either `sudo` or `su`. Replace "18.04" with the version of Ubuntu you use.
-
-~~~
-sudo su
-~~~
-
-You should import the repository key first, so that the packages can be updated automatically (this only needs to be done once):
-
-~~~
-wget -nv https://download.opensuse.org/repositories/home:aggraef/xUbuntu_18.04/Release.key
-apt-key add Release.key
-~~~
-
-Then add the repository to your apt sources as follows:
-
-~~~
-echo 'deb http://download.opensuse.org/repositories/home:/aggraef/xUbuntu_18.04/ /' > /etc/apt/sources.list.d/home:aggraef.list
-apt update
-~~~
-
-Finally install the package:
-
-~~~
-apt install purr-data
-~~~
-
-#### openSUSE
-
-**NOTE:** The openSUSE builds are somewhat experimental right now. In particular, the flite external is not supported, because the required dependencies are not available. Also note that some of the multimedia functionality (Gem video, in particular) will require proprietary media codecs and thus won't work in stock openSUSE. You will need to add third-party repositories like [Packman](https://en.opensuse.org/Additional_package_repositories#Packman) to make these work.
-
-We take Tumbleweed as an example here, if you're running Leap then replace "Tumbleweed" with "Leap_15.1" or whatever version you use.
-
-~~~
-sudo su
-
-zypper addrepo https://download.opensuse.org/repositories/home:aggraef/openSUSE_Tumbleweed/home:aggraef.repo
-zypper refresh
-zypper install purr-data
-~~~
+You can also just go to the [OBS Download](https://software.opensuse.org/download/package?package=purr-data&project=home%3Aaggraef), pick your Linux system, and follow the instructions.
 
 ### Build Guide
 
-**NOTE:** The instructions for Windows and OSX below talk about running the `tar_em_up.sh` build
-script, which is still the recommended way to build Purr Data right now.
-However, Purr Data also has a new (and experimental) toplevel Makefile so that
-just typing `make` will build the package. You may find this easier. The
-Makefile also offers the customary targets to clean (`make clean`, or
-`make realclean` to put the sources in pristine state again) and to roll a
-self-contained distribution tarball (`make dist`). Please check the comments
-at the beginning of the Makefile for more information.
+Purr Data is usually built by just running `make` in the toplevel source directory after checking out the sources from its git repository. This works across all supported platforms (Linux, Mac and Windows at this time). The Makefile also offers the customary targets to clean (`make clean`, or `make realclean` to put the sources in pristine state again) and to roll a self-contained distribution tarball (`make dist`), as well as some other convenience targets  (please check the comments at the beginning of the Makefile for more information).
+
+However, to make this work, you will most likely have to install some prerequisites first: *build tools* such as a C/C++ compiler and the make program itself, as well as *dependencies*, the libraries that Purr Data needs. Detailed instructions for each of the supported platforms are given below.
 
 #### Linux
 
 Time to build: *10 minutes light install, 45 minutes to 1.5 hours full install*
 Hard drive space required: *roughly 2.5 GB*
 
-1. Install the dependencies
+1. Install the dependencies (please note that the packages may be named
+   slightly differently for different Linux distributions; the given names are
+   for Debian/Ubuntu)
 
         sudo apt-get install bison flex automake libasound2-dev \
              libjack-jackd2-dev libtool libbluetooth-dev libgl1-mesa-dev \
@@ -261,26 +148,17 @@ Hard drive space required: *roughly 2.5 GB*
 
         git clone https://git.purrdata.net/jwilkes/purr-data.git
 
-4. Compile the code *(5 minutes to 1.5 hours)* full 
+4. Compile the code *(5 minutes [light] to 1.5 hours [full])*
 
    * to build only the core: `make light` *(5 minutes)*
-   * to build core and all externals: `make all` *(20 minutes to 1.5 hours)*
+   * to build the core and all externals: `make all` *(20 minutes to 1.5 hours)*
    * to build everything *except* Gem: `make incremental` *(10 to 20 minutes)*
 
-5. There should now be an installer file in the main directory of the repo. 
-   If you're using an apt-based Linux distribution it will be an apt package.
-   Otherwise, it will be a tarball which you can unzip, enter, and run
-   `make install` (as well as `make uninstall` to remove it).
-
-To install using a pre-compiled binary, follow these instructions:
-http://l2ork.music.vt.edu/main/?page_id=56
-
-To set up a development environment, first make sure you have the following
-package dependencies listed here:
-http://l2ork.music.vt.edu/main/?page_id=56
-
-Then follow the steps outlined here:
-http://l2ork.music.vt.edu/main/?page_id=56#install-dev
+5. If you're using an apt-based Linux distribution and you have the necessary
+   Debian packaging tools installed, there should now be an installer file in
+   the main source directory, which can be installed as usual. Otherwise, run
+   `make install` to install the software, and `make uninstall` to remove it
+   again.
 
 #### OSX 64-bit using Homebrew
 
@@ -311,45 +189,42 @@ Hard drive space required: *roughly 2 GB*
 
         git clone https://git.purrdata.net/jwilkes/purr-data.git
 
-4. Change to the directory
+4. Change to the source directory
 
-        cd purr-data/l2ork_addons
+        cd purr-data
 
-5. Run the installer *(15 minutes)*
+5. Build the OSX app and the installer disk image (.dmg file) *(15 minutes)*
 
-        ./tar_em_up.sh -X
+        make
 
-6. When the installer finishes, type
-
-        cd ..
-
-7. There should now be a .dmg file in your current directory
+6. There should now be a .dmg file in your current directory, which lets you install the app in the usual way
 
 #### Windows 32-bit Using msys2
 
 Time to build: *roughly 1.5 hours-- 30 minutes of this is for Gem alone*  
 Hard drive space required to build: *rougly 2.5 GB*
 
-Important note: check the name of your Windows user account. If it has a space
-in it-- like "My Home Computer" or "2nd Laptop", then **stop**. You may not
-use this guide.  (Actually you can probably just install everything in ~/.. in
-that case, but I haven't tested doing it like that. Sorry. Get a better OS...)
+**Important note:** We recommend doing the build under your msys2 home
+directory (usually /home/username in the msys2 shell). This directory should
+not have any spaces in it, which would otherwise cause trouble during the
+build. Never try using your Windows home directory for this purpose instead,
+since it will usually contain spaces, making the build fail.
 
 1. Download and install [msys2](https://msys2.github.io/) *(5 minutes)*  
-   There are two installers-- one for 32-bit Windows systems (i386) and one for
-   64-bit Windows (x_64). Be sure you know which
-   [version](http://windows.microsoft.com/en-us/windows/32-bit-and-64-bit-windows#1TC=windows-7)
+   There are two installers-- one for 32-bit Windows systems (i686) and one for
+   64-bit Windows (x86_64). Be sure you know which
+   [version](http://windows.microsoft.com/en-us/windows/32-bit-and-64-bit-windows)
    of Windows you are running and download the appropriate installer.  
-   Note: don't run it after it installs. You'll open it manually in the next
-   step.
+   Note: don't run the shell after installation finishes. You'll do that
+   manually in step 3.
 
-2. Download and install [inno setup](http://www.jrsoftware.org/isdl.php) *(5 minutes)*
+2. Download and install the [inno setup Quickstart Pack](http://www.jrsoftware.org/isdl.php) which includes the Script Editor *(5 minutes)*
 
-3. Run MinGW-w64 Win32 Shell *(less than a minute)*  
+3. Run the "MSYS2 MinGW 32-bit" shell *(less than a minute)*  
    msys2 adds three Start Menu items for different "flavors" of shell:
-    + MinGW-w64 __Win32__ Shell <- click this one!
-    + MinGW-w64 Win64 Shell
-    + MSYS Shell
+    + MSYS2 MinGW __32-bit__ <- click this one!
+    + MSYS2 MinGW 64-bit
+    + MSYS2 MSYS
 
 4. Install the dependencies *(5-10 minutes)*  
    Once the shell opens, we need to install the dependencies for building
@@ -367,11 +242,13 @@ that case, but I haven't tested doing it like that. Sorry. Get a better OS...)
         pacman -S autoconf automake git libtool \
           make mingw-w64-i686-dlfcn mingw-w64-i686-fftw \
           mingw-w64-i686-fluidsynth \
+          mingw-w64-i686-SDL2 \
           mingw-w64-i686-ftgl mingw-w64-i686-fribidi \
           mingw-w64-i686-ladspa-sdk mingw-w64-i686-lame \
           mingw-w64-i686-libsndfile mingw-w64-i686-libvorbis \
           mingw-w64-i686-lua mingw-w64-i686-toolchain \
           mingw-w64-i686-libjpeg-turbo \
+          mingw-w64-i686-speex \
           rsync unzip wget
 
 5. Download the source code *(3-6 minutes)*  
@@ -380,16 +257,24 @@ that case, but I haven't tested doing it like that. Sorry. Get a better OS...)
 
         git clone https://git.purrdata.net/jwilkes/purr-data.git
 
-6. Enter the purr-data/l2ork_addons directory *(less than a minute)*
+6. Enter the source directory *(less than a minute)*
 
-        cd purr-data/l2ork_addons
+        cd purr-data
 
 7. Finally, build Purr-Data *(45-80 minutes)*
 
-        ./tar_em_up.sh -Z
+        make
 
-8. Look in the top level directory of the Git repository and click the setup file to
-   start installing Purr Data to your machine.
+8. Look in the top level source directory and double-click the setup file to
+   start installing Purr Data on your system.
+
+#### Windows 64-bit Using msys2
+
+The instructions are exactly the same as for the 32 bit build (see above), but the build needs to be done using mingw64 instead of mingw32. That is:
+
+- Install the mingw64 packages for the dependencies. See the i686 packages listed under dependencies above, and replace i686 with x86_64 in the package names when installing.
+
+- Use the MSYS2 MinGW 64-bit shell (rather than the 32-bit shell) to do the build.
 
 ### Code of Conduct
 
@@ -405,6 +290,16 @@ that case, but I haven't tested doing it like that. Sorry. Get a better OS...)
 
 It is a bad idea to break this Code of Conduct *even if* no one complains
 about your behavior.
+
+### Project Governance
+
+* the three maintainers listed at the top of this document are the ones in
+  charge of this project
+* unanimous decisions are preferred
+* 2 out of 3 can break a disagreement
+* there will only ever be three maintainers of this project at any given time.
+  If you'd like to temporarily step in as one of the three,
+  send an inquiry to the list and we cany discuss it
 
 ### Contributor Guide
 

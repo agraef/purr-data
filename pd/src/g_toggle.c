@@ -178,10 +178,10 @@ static void toggle_getrect(t_gobj *z, t_glist *glist,
 static void toggle_save(t_gobj *z, t_binbuf *b)
 {
     t_toggle *x = (t_toggle *)z;
-    int bflcol[3];
+    t_symbol *bflcol[3];
     t_symbol *srl[3];
     iemgui_save(&x->x_gui, srl, bflcol);
-    binbuf_addv(b, "ssiisiisssiiiiiiiff;", gensym("#X"),gensym("obj"),
+    binbuf_addv(b, "ssiisiisssiiiisssff;", gensym("#X"),gensym("obj"),
         (int)x->x_gui.x_obj.te_xpix, (int)x->x_gui.x_obj.te_ypix,
         gensym("tgl"), x->x_gui.x_w, iem_symargstoint(&x->x_gui),
         srl[0], srl[1], srl[2], x->x_gui.x_ldx, x->x_gui.x_ldy,
@@ -349,7 +349,6 @@ static void toggle_nonzero(t_toggle *x, t_floatarg f)
 static void *toggle_new(t_symbol *s, int argc, t_atom *argv)
 {
     t_toggle *x = (t_toggle *)pd_new(toggle_class);
-    int bflcol[]={-262144, -1, -1};
     int a=IEM_GUI_DEFAULTSIZE;
     int ldx=17, ldy=7;
     int fs=10;
@@ -358,14 +357,17 @@ static void *toggle_new(t_symbol *s, int argc, t_atom *argv)
     iem_inttosymargs(&x->x_gui, 0);
     iem_inttofstyle(&x->x_gui, 0);
 
+    x->x_gui.x_bcol = 0xFCFCFC;
+    x->x_gui.x_fcol = 0x00;
+    x->x_gui.x_lcol = 0x00;
+
     if(((argc == 13)||(argc == 14))&&IS_A_FLOAT(argv,0)
        &&IS_A_FLOAT(argv,1)
        &&(IS_A_SYMBOL(argv,2)||IS_A_FLOAT(argv,2))
        &&(IS_A_SYMBOL(argv,3)||IS_A_FLOAT(argv,3))
        &&(IS_A_SYMBOL(argv,4)||IS_A_FLOAT(argv,4))
        &&IS_A_FLOAT(argv,5)&&IS_A_FLOAT(argv,6)
-       &&IS_A_FLOAT(argv,7)&&IS_A_FLOAT(argv,8)&&IS_A_FLOAT(argv,9)
-       &&IS_A_FLOAT(argv,10)&&IS_A_FLOAT(argv,11)&&IS_A_FLOAT(argv,12))
+       &&IS_A_FLOAT(argv,7)&&IS_A_FLOAT(argv,8)&&IS_A_FLOAT(argv,12))
     {
         a = atom_getintarg(0, argc, argv);
         iem_inttosymargs(&x->x_gui, atom_getintarg(1, argc, argv));
@@ -374,9 +376,7 @@ static void *toggle_new(t_symbol *s, int argc, t_atom *argv)
         ldy = atom_getintarg(6, argc, argv);
         iem_inttofstyle(&x->x_gui, atom_getintarg(7, argc, argv));
         fs = maxi(atom_getintarg(8, argc, argv),4);
-        bflcol[0] = atom_getintarg(9, argc, argv);
-        bflcol[1] = atom_getintarg(10, argc, argv);
-        bflcol[2] = atom_getintarg(11, argc, argv);
+        iemgui_all_loadcolors(&x->x_gui, argv+9, argv+10, argv+11);
         on = atom_getfloatarg(12, argc, argv);
     }
     else iemgui_new_getnames(&x->x_gui, 2, 0);
@@ -399,7 +399,6 @@ static void *toggle_new(t_symbol *s, int argc, t_atom *argv)
     x->x_gui.x_fontsize = fs;
     x->x_gui.x_w = iemgui_clip_size(a);
     x->x_gui.x_h = x->x_gui.x_w;
-    iemgui_all_colfromload(&x->x_gui, bflcol);
     iemgui_verify_snd_ne_rcv(&x->x_gui);
     outlet_new(&x->x_gui.x_obj, &s_float);
 

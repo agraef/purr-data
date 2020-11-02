@@ -1,10 +1,10 @@
-#N canvas 431 34 555 619 10;
+#N canvas 436 61 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
-14 -228856 -66577 0;
+14 #dcdcdc #404040 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header inlet~ 3 12 0 18
--204280 -1 0;
-#X obj 0 350 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
--228856 -1 0;
+#c4dcdc #000000 0;
+#X obj 0 325 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#dcdcdc #000000 0;
 #N canvas 486 283 494 344 META 0;
 #X text 12 85 LIBRARY internal;
 #X text 12 125 WEBSITE http://crca.ucsd.edu/~msp/;
@@ -18,15 +18,15 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X text 12 5 KEYWORDS signal nonlocal canvas_op;
 #X text 12 145 RELEASE_DATE 1997;
 #X restore 500 597 pd META;
-#X obj 0 377 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
-13 -228856 -1 0;
-#X obj 0 459 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
-0 13 -228856 -1 0;
+#X obj 0 352 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 #dcdcdc #000000 0;
+#X obj 0 434 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 #dcdcdc #000000 0;
 #X obj 0 566 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
-0 13 -228856 -1 0;
+0 13 #dcdcdc #000000 0;
 #N canvas 220 515 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
+14 #c4dcdc #000000 0;
 #X obj 22 43 inlet;
 #X obj 67 43 outlet;
 #X obj 118 43 inlet~;
@@ -35,16 +35,16 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X text 8 2 [inlet~] Related Objects;
 #X obj 277 43 switch~;
 #X restore 102 598 pd Related_objects;
-#X obj 78 386 cnv 17 3 60 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
-#X obj 369 259 print~;
-#X obj 369 199 sig~ 12;
-#X floatatom 126 203 0 0 0 0 - - -;
-#X floatatom 126 255 0 0 0 0 - - -;
-#X text 96 182 messages in and out;
-#X text 339 176 audio in and out;
-#X obj 369 237 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
--1 -1;
+#X obj 78 361 cnv 17 3 60 empty \$0-pddp.cnv.let.0 0 5 9 0 16 #dcdcdc
+#9c9c9c 0;
+#X obj 369 234 print~;
+#X obj 369 174 sig~ 12;
+#X floatatom 126 178 0 0 0 0 - - -;
+#X floatatom 126 228 0 0 0 0 - - -;
+#X text 96 157 messages in and out;
+#X text 339 151 audio in and out;
+#X obj 369 212 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
+#000000 #000000;
 #N canvas 50 247 428 293 subpatch-with-inlets-and-outlets 0;
 #X obj 68 68 inlet;
 #X text 20 38 control inlet for receiving messages;
@@ -60,30 +60,30 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X text 333 38 same for;
 #X text 334 57 signals.;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
+14 #c4dcdc #000000 0;
 #X text 8 2 [inlet~] Creating Inlets/Outlets on Subpatches;
 #X connect 0 0 2 0;
 #X connect 3 0 4 0;
 #X connect 6 0 7 0;
 #X connect 8 0 7 0;
 #X connect 10 0 9 0;
-#X restore 126 229 pd subpatch-with-inlets-and-outlets;
-#X text 98 353 (none);
+#X restore 126 204 pd subpatch-with-inlets-and-outlets;
+#X text 98 328 (none);
 #X text 11 23 signal inlet for a subpatch;
 #X obj 497 10 inlet~;
-#X text 98 385 signal;
+#X text 98 360 signal;
 #N canvas 61 152 428 466 up/downsampling 0;
 #X obj 30 396 print~;
-#X obj 48 370 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
--1;
+#X obj 48 370 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc #000000
+#000000;
 #X obj 112 396 print~;
-#X obj 130 372 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
--1 -1;
+#X obj 130 372 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
+#000000 #000000;
 #X obj 195 396 print~;
-#X obj 213 370 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
--1 -1;
+#X obj 213 370 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
+#000000 #000000;
 #N canvas 0 0 450 300 (subpatch) 0;
-#X array \$0-tab 64 float 3;
+#X array \$0-tab 64 float 3 black black;
 #A 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0;
 #X coords 0 1 64 -1 200 140 1;
@@ -91,22 +91,22 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X obj 274 368 s \$0-tab;
 #X msg 274 341 const 0 \, 0 0 1;
 #X obj 145 233 print~;
-#X obj 145 208 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
--1 -1;
+#X obj 145 208 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
+#000000 #000000;
 #X obj 23 181 tabreceive~ \$0-tab;
 #N canvas 81 269 585 267 test-subpatch-upsampled 0;
 #X obj 40 17 block~ 128 1 2;
 #X obj 209 149 inlet~ hold;
 #X obj 367 153 inlet~ lin;
 #X obj 23 202 print~;
-#X obj 41 176 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
--1;
+#X obj 41 176 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc #000000
+#000000;
 #X obj 209 209 print~;
-#X obj 227 183 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
--1 -1;
+#X obj 227 183 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
+#000000 #000000;
 #X obj 366 213 print~;
-#X obj 383 187 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
--1 -1;
+#X obj 383 187 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
+#000000 #000000;
 #X text 42 49 Upsampling methods:;
 #X text 206 114 sample/hold;
 #X text 337 111 linear interpolation;
@@ -141,7 +141,7 @@ sample rate \, as demonstrated below.) There is no corresponding choice
 of downsampling method - downsampling is done simply by dropping the
 extra samples.;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
+14 #c4dcdc #000000 0;
 #X text 8 2 [inlet~] Up/downsampling;
 #X connect 1 0 0 0;
 #X connect 3 0 2 0;
@@ -155,25 +155,61 @@ extra samples.;
 #X connect 13 0 0 0;
 #X connect 13 1 2 0;
 #X connect 13 2 4 0;
-#X restore 171 538 pd up/downsampling;
-#X text 80 477 1) symbol atom;
-#X text 98 127 The subpatch below shows how to use [inlet] \, [inlet~]
+#X restore 171 513 pd up/downsampling;
+#X text 80 452 1) symbol atom;
+#X text 98 102 The subpatch below shows how to use [inlet] \, [inlet~]
 \, [outlet] \, and [outlet~] objects to get data into and out of a
 subpatch:;
-#X text 168 477 - (optional) The word "hold" will cause sample/hold
+#X text 168 452 - (optional) The word "hold" will cause sample/hold
 upsampling/downsampling \, and the word "lin" will cause linear upsampling/downsampling.
 See the subpatch below for more details:;
-#X text 98 77 The [inlet~] object allows signals to be sent to a subpatch
+#X text 98 62 The [inlet~] object allows signals to be sent to a subpatch
 from objects on the parent canvas.;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X text 168 385 - the [inlet~] object outputs the signal sent to the
+#X text 168 360 - the [inlet~] object outputs the signal sent to the
 inlet of the subpatch in which it is found. When multiple [inlet~]
 or [inlet] objects are in one subpatch \, their horizontal order corresponds
 with the inlets drawn on the containing object in the parent patch.
 ;
+#N canvas 582 179 543 415 inlet~-forwarding 0;
+#X obj 173 182 inlet~ fwd;
+#X obj 106 145 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
+#000000 #000000;
+#X floatatom 131 145 5 0 0 0 - - -, f 5;
+#X msg 174 145 1 2 3;
+#X msg 221 145 poodle 50;
+#X obj 174 283 print~;
+#X text 206 254 (check that audio is on);
+#X obj 186 256 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
+#000000 #000000;
+#X text 58 16 you can pass "fwd" as an argument to inlet~ to ask for
+a second outlet that forwards messages. Float messages aren't forwarded
+though - instead \, they set the signal output value in case the parent
+inlet isn't connected. Messages to the inlet~ object are treated the
+same as messages to the inlet on the parent.;
+#X text 64 339 (note: inlet~ objects inside patches that are copied
+using clone~ are always connected to incoming signals \, so a float
+message to such an inlet~ has no effect.);
+#X obj 240 214 print fwd;
+#X connect 0 0 5 0;
+#X connect 0 1 10 0;
+#X connect 7 0 5 0;
+#X restore 118 294 pd inlet~-forwarding;
+#X obj 50 259 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc #000000
+#000000;
+#X floatatom 75 259 5 0 0 0 - - -, f 5;
+#X msg 118 259 1 2 3;
+#X msg 165 259 poodle 50;
+#X text 267 293 <= catching messages to inlet~ objects;
+#X text 168 532 - the word "fwd" will allow non-signal message to be
+forwarded. See [pd inlet~-forwarding] above for details.;
 #X connect 10 0 16 1;
 #X connect 11 0 16 0;
 #X connect 15 0 9 0;
 #X connect 16 0 12 0;
 #X connect 16 1 9 0;
+#X connect 29 0 28 0;
+#X connect 30 0 28 0;
+#X connect 31 0 28 0;
+#X connect 32 0 28 0;

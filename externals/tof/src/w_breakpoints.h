@@ -518,7 +518,7 @@ static int breakpoints_newclick(t_breakpoints *x, struct _glist *glist,
          breakpoints_next_doodle(x,glist,xpos,ypos);
 
          glist_grab(x->w.glist, &x->x_obj.te_g, (t_glistmotionfn) breakpoints_motion,
-                    (t_glistkeyfn) breakpoints_key, xpos, ypos);
+                    (t_glistkeyfn) breakpoints_key, 0, xpos, ypos);
              
          x->w.shift = shift;
          breakpoints_followpointer(x,glist);
@@ -544,7 +544,7 @@ static int breakpoints_newclick(t_breakpoints *x, struct _glist *glist,
          breakpoints_next_doodle(x,glist,xpos,ypos);
 
          glist_grab(x->w.glist, &x->x_obj.te_g, (t_glistmotionfn) breakpoints_motion,
-                    (t_glistkeyfn) breakpoints_key, xpos, ypos);
+                    (t_glistkeyfn) breakpoints_key, 0, xpos, ypos);
 
          x->resizing = 0;     
          if (x->resizeable && (xpos > wxpos + x->w.width) && 

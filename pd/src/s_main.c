@@ -57,6 +57,8 @@ int sys_unique = 0;     /* by default off, prevents multiple instances
                            of pd-l2ork */
 int sys_legacy = 0;     /* by default off, used to enable legacy features,
                            such as offsets in iemgui object positioning */
+int sys_legacy_bendin = 0; /* by default off, used to enable vanilla-
+                              compatible (unsigned) pitch bend input */
 char *sys_guicmd;
 t_symbol *sys_gui_preset; /* name of gui theme to be used */
 t_symbol *sys_libdir;
@@ -91,6 +93,11 @@ char sys_extraflagsstring[MAXPDSTRING];
 int sys_run_scheduler(const char *externalschedlibname,
     const char *sys_extraflagsstring);
 int sys_noautopatch = 0;    /* temporary hack to defeat new 0.42 editing */
+int glob_autopatch_connectme = 0;   /* added to compensate for weird gui objects 
+                                       whose positioning is not true to its xy
+                                       origin, to ensure they can be at least
+                                       somewhat reasonably autopatched
+                                    */
 
     /* here the "-1" counts signify that the corresponding vector hasn't been
     specified in command line arguments; sys_set_audio_settings will detect it
@@ -345,14 +352,14 @@ int sys_main(int argc, char **argv)
     if (WSAStartup(version, &nobby)) sys_sockerror("WSAstartup");
     /* use Win32 "binary" mode by default since we don't want the
      * translation that Win32 does by default */
-# ifdef _MSC_VER /* MS Visual Studio */
+# ifdef MSC /* MS Visual Studio */
     _set_fmode( _O_BINARY );
 # else  /* MinGW */
     {
         extern int _fmode;
         _fmode = _O_BINARY;
     }
-# endif /* _MSC_VER */
+# endif /* MSC */
 #endif  /* _WIN32 */
 #ifndef _WIN32
     /* long ago Pd used setuid to promote itself to real-time priority.
@@ -365,7 +372,7 @@ int sys_main(int argc, char **argv)
     }
 #endif  /* _WIN32 */
     pd_init();                                  /* start the message system */
-    logpost(NULL, 2, "PD_FLOATSIZE = %lu bits", sizeof(t_float)*8);
+    logpost(NULL, 2, "PD_FLOATSIZE = %u bits", (unsigned)sizeof(t_float)*8);
     sys_findprogdir(argv[0]);                   /* set sys_progname, guipath */
     for (i = noprefs = 0; i < argc; i++)        /* prescan args for noprefs */
         if (!strcmp(argv[i], "-noprefs"))
@@ -423,7 +430,8 @@ int sys_main(int argc, char **argv)
         sys_reopen_midi();
         sys_reopen_audio();
 
-        if (sys_console) sys_vgui("pdtk_toggle_console 1\n");
+        // ag: no longer needed (cruft from the pd-l2ork1 days)
+        //if (sys_console) sys_vgui("pdtk_toggle_console 1\n");
         if (sys_k12_mode)
         {
             t_namelist *path = pd_extrapath;
@@ -531,6 +539,7 @@ static char *(usagemessage[]) = {
 "-k12             -- enable K-12 education mode (requires L2Ork K12 lib)\n",
 "-unique          -- enable multiple instances (disabled by default)\n",
 "-legacy          -- enable legacy features (disabled by default)\n", 
+"-legacy-bendin   -- enable legacy (unsigned) bendin (disabled by default)\n", 
 "\n",
 };
 
@@ -935,6 +944,12 @@ int sys_argparse(int argc, char **argv)
         else if (!strcmp(*argv, "-legacy"))
         {
             sys_legacy = 1;
+            argc -= 1;
+            argv += 1;
+        }
+        else if (!strcmp(*argv, "-legacy-bendin"))
+        {
+            sys_legacy_bendin = 1;
             argc -= 1;
             argv += 1;
         }

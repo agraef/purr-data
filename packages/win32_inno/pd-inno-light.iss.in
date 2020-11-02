@@ -12,7 +12,7 @@ AppPublisher=purrdata.net
 AppPublisherURL=http://purrdata.net
 AppSupportURL=http://puredata.org/community/lists/
 AppUpdatesURL=http://puredata.org/downloads/
-DefaultDirName={pf}\Purr Data
+DefaultDirName={commonpf}\Purr Data
 DefaultGroupName=Purr Data
 LicenseFile=..\gpl-3.0.txt
 DisableWelcomePage=no
@@ -706,12 +706,12 @@ Source: pd.ico; DestDir: {app}\lib
 ;-----------------------------------------------------------------------------
 ; put pdsend and pdreceive in the System dir so that they are in the path
 ;
-Source: build\bin\pdsend.exe; DestDir: {sys}; Flags: confirmoverwrite promptifolder
-Source: build\bin\pdreceive.exe; DestDir: {sys}; Flags: confirmoverwrite promptifolder
+;Source: build\bin\pdsend.exe; DestDir: {sys}; Flags: confirmoverwrite promptifolder
+;Source: build\bin\pdreceive.exe; DestDir: {sys}; Flags: confirmoverwrite promptifolder
 ; add Cyclone's cyclist.exe if it is present
-#ifexist "build\bin\cyclist.exe"
-Source: build\bin\cyclist.exe; DestDir: {sys}; Flags: confirmoverwrite promptifolder
-#endif
+;#ifexist "build\bin\cyclist.exe"
+;Source: build\bin\cyclist.exe; DestDir: {sys}; Flags: confirmoverwrite promptifolder
+;#endif
 ;
 ;
 ;-----------------------------------------------------------------------------
@@ -756,13 +756,13 @@ Source: build\lib\*.*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
 ;
 ; DLLs
 ;
-Source: build\bin\lib*.dll; DestDir: {sys}; Flags: restartreplace confirmoverwrite sharedfile
-#ifexist "build\msvcp71.dll"
-Source: build\msvcp71.dll; DestDir: {sys}; Flags: restartreplace uninsneveruninstall sharedfile
-#endif
-#ifexist "build\msvcr71.dll"
-Source: build\msvcr71.dll; DestDir: {sys}; Flags: restartreplace uninsneveruninstall sharedfile
-#endif
+;Source: build\bin\lib*.dll; DestDir: {sys}; Flags: restartreplace confirmoverwrite sharedfile
+;#ifexist "build\msvcp71.dll"
+;Source: build\msvcp71.dll; DestDir: {sys}; Flags: restartreplace uninsneveruninstall sharedfile
+;#endif
+;#ifexist "build\msvcr71.dll"
+;Source: build\msvcr71.dll; DestDir: {sys}; Flags: restartreplace ;uninsneveruninstall sharedfile
+;#endif
 ;; build stuff is not included now
 ;Source: build\portaudio\*.*; DestDir: {app}\portaudio; Flags: ignoreversion recursesubdirs
 ;Source: build\src\*.*; DestDir: {app}\src; Flags: ignoreversion recursesubdirs
@@ -779,11 +779,11 @@ begin
 		if(FileExists(ExpandConstant('{app}\unins000.exe')) AND FileExists(ExpandConstant('{app}\bin\pd.exe'))) then begin
 			if MsgBox('Found a previous Version of Pure Data at ' + ExpandConstant('{app} ') + #13#13 'Do you want to uninstall it first? (recommended)', mbConfirmation, MB_YESNO) = idYes then begin
 			if not Exec(ExpandConstant('{app}\unins000.exe'), '', '', SW_SHOWNORMAL, ewWaitUntilTerminated, ResultCode) then
-            MsgBox('NextButtonClick:' #13#13 'The uninstall file could not be executed. ' + SysErrorMessage(ResultCode) + '.', mbError, MB_OK);
+            MsgBox('Error:' #13#13 'The uninstall file could not be executed. ' + SysErrorMessage(ResultCode) + '.', mbError, MB_OK);
 			end;
 		end;
         BringToFrontAndRestore();
-        MsgBox('NextButtonClick:' #13#13 'The normal installation will now start.', mbInformation, MB_OK);
+        MsgBox('Note:' #13#13 'The installation will now start.', mbInformation, MB_OK);
       end;
   end;
 

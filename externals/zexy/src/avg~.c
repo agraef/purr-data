@@ -23,7 +23,7 @@
 
 /* tilde object to take absolute value. */
 
-static t_class *avg_class;
+static t_class *avg_class=NULL;
 
 typedef struct _avg {
   t_object x_obj;
@@ -71,14 +71,13 @@ static void avg_help(void)
 }
 
 
-void avg_tilde_setup(void)
+ZEXY_SETUP void avg_tilde_setup(void)
 {
-  avg_class = class_new(gensym("avg~"), (t_newmethod)avg_new, 0,
-                        sizeof(t_avg), 0, A_DEFFLOAT, 0);
-  class_addmethod(avg_class, nullfn, gensym("signal"), 0);
-  class_addmethod(avg_class, (t_method)avg_dsp, gensym("dsp"),
-                  A_CANT, 0);
+  avg_class = zexy_new("avg~",
+                       avg_new, 0, t_avg, 0, "");
+  zexy_addmethod(avg_class, (t_method)nullfn, "signal", "");
+  zexy_addmethod(avg_class, (t_method)avg_dsp, "dsp", "!");
 
-  class_addmethod(avg_class, (t_method)avg_help, gensym("help"), 0);
+  zexy_addmethod(avg_class, (t_method)avg_help, "help", "");
   zexy_register("avg~");
 }

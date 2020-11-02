@@ -325,6 +325,20 @@ typedef struct _objectinfo {
     t_canvas *x_canvas;
 } t_objectinfo;
 
+static t_class *debuginfo_class;
+
+typedef struct _debuginfo {
+    t_object x_obj;
+} t_debuginfo;
+
+static t_class *abinfo_class;
+
+typedef struct _abinfo
+{
+    t_object x_obj;
+    t_ab_definition *abdef;
+} t_abinfo;
+
 /* used by all the *info objects */
 
 static int info_to_console = 0;
@@ -576,7 +590,7 @@ void canvasinfo_name(t_canvasinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_canvas *c = canvas_climb(x->x_canvas, x->x_depth);
     char buf[MAXPDSTRING];
-    snprintf(buf, MAXPDSTRING, "x%lx", (long unsigned int)c);
+    snprintf(buf, MAXPDSTRING, "x%zx", (t_uint)c);
     t_atom at[1];
     SETSYMBOL(at, gensym(buf));
     info_out((t_text *)x, s, 1, at);
@@ -1623,12 +1637,112 @@ void objectinfo_setup(void)
     post("stable objectinfo methods: class");
 }
 
+/* -------------------------- abinfo ------------------------------ */
+
+void *abinfo_new(void)
+{
+    t_abinfo *x;
+    t_canvas *c = canvas_getcurrent();
+    while(c->gl_owner && !c->gl_isab) c = c->gl_owner;
+    if(c->gl_isab)
+    {
+        x = (t_abinfo *)pd_new(abinfo_class);
+        x->abdef = c->gl_absource;
+        outlet_new(&x->x_obj, &s_list);
+    }
+    else
+    {
+        if(!abframe)
+        {
+            error("abinfo: only instantiable inside an ab object");
+            x = 0;
+        }
+        else
+            x = pd_new(text_class);
+    }
+    return (x);
+}
+
+void abinfo_name(t_abinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_atom at[1];
+    SETSYMBOL(at, x->abdef->ad_name);
+    info_out((t_text *)x, s, 1, at);
+}
+
+void abinfo_instances(t_abinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_atom at[1];
+    SETFLOAT(at, x->abdef->ad_numinstances);
+    info_out((t_text *)x, s, 1, at);
+}
+
+void abinfo_within(t_abinfo *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_binbuf *buf = binbuf_new();
+    int i;
+    for(i = 0; i < x->abdef->ad_numdep; i++)
+    {
+        binbuf_addv(buf, "s", x->abdef->ad_dep[i]->ad_name);
+    }
+    info_out((t_text *)x, s, binbuf_getnatom(buf), binbuf_getvec(buf));
+    binbuf_free(buf);
+}
+
+//ADD MORE METHODS
+
+void abinfo_setup(void)
+{
+    abinfo_class = class_new(gensym("abinfo"), (t_newmethod)abinfo_new, 0,
+        sizeof(t_abinfo), CLASS_DEFAULT, 0);
+
+    class_addmethod(abinfo_class, (t_method)abinfo_name,
+        gensym("name"), A_GIMME, 0);
+    class_addmethod(abinfo_class, (t_method)abinfo_instances,
+        gensym("instances"), A_GIMME, 0);
+    class_addmethod(abinfo_class, (t_method)abinfo_within,
+        gensym("within"), A_GIMME, 0);
+}
+
+
+void debuginfo_print(t_debuginfo *x)
+{
+    info_print((t_text *)x);
+}
+
+    /* replace incoming message's selector with zero and output it */
+void debuginfo_nullselector(t_debuginfo *x, t_symbol *s, int argc,
+    t_atom *argv)
+{
+    info_out((t_text *)x, 0, argc, argv);
+}
+
+void *debuginfo_new(void)
+{
+    t_debuginfo *x = (t_debuginfo *)pd_new(debuginfo_class);
+    outlet_new(&x->x_obj, &s_anything);
+    return (void *)x;
+}
+
+void debuginfo_setup(void)
+{
+    debuginfo_class = class_new(gensym("debuginfo"),
+        (t_newmethod)debuginfo_new, 0, sizeof(t_debuginfo),
+        CLASS_DEFAULT, 0);
+    class_addmethod(debuginfo_class, (t_method)debuginfo_nullselector,
+        gensym("null-selector"), A_GIMME, 0);
+    class_addmethod(debuginfo_class, (t_method)debuginfo_print,
+        gensym("print"), A_GIMME, 0);
+}
+
 void x_interface_setup(void)
 {
+    canvasinfo_setup();
+    classinfo_setup();
+    debuginfo_setup();
+    objectinfo_setup();
+    abinfo_setup();
+    pdinfo_setup();
     print_setup();
     unpost_setup();
-    canvasinfo_setup();
-    pdinfo_setup();
-    classinfo_setup();
-    objectinfo_setup();
 }

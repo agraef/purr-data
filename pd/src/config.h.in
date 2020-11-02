@@ -172,7 +172,10 @@
 #undef HAVE_SYS_TYPES_H
 
 /* Define to 1 if you have the <unistd.h> header file. */
+#ifndef __MINGW64_VERSION_MAJOR
+// mingw64 has this, but this isn't complete so we better disable it
 #undef HAVE_UNISTD_H
+#endif
 
 /* Define to 1 if you have the `vprintf' function. */
 #undef HAVE_VPRINTF

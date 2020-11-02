@@ -57,7 +57,7 @@ static int isatty(int fd) {return 0;}
 typedef int pid_t;
 # endif
 typedef int socklen_t;
-#define EADDRINUSE WSAEADDRINUSE
+//#define EADDRINUSE WSAEADDRINUSE
 #endif
 
 #include <stdarg.h>
@@ -94,7 +94,7 @@ typedef int socklen_t;
 #define LOCALHOST "localhost"
 #endif
 
-#define X_SPECIFIER "x%.6lx"
+#define X_SPECIFIER "x%.6zx"
 
 #if PD_FLOATSIZE == 32
 #define FLOAT_SPECIFIER "%.6g"
@@ -195,6 +195,7 @@ double sys_getrealtime(void)
 }
 
 extern int sys_nosleep;
+static int fdschanged;
 
 static int sys_domicrosleep(int microsec, int pollem)
 {
@@ -203,7 +204,7 @@ static int sys_domicrosleep(int microsec, int pollem)
     t_fdpoll *fp;
     timout.tv_sec = 0;
     timout.tv_usec = (sys_nosleep ? 0 : microsec);
-    if (pollem)
+    if (pollem && sys_nfdpoll)
     {
         fd_set readset, writeset, exceptset;
         FD_ZERO(&writeset);
@@ -216,8 +217,10 @@ static int sys_domicrosleep(int microsec, int pollem)
                 Sleep(microsec/1000);
         else
 #endif
-        select(sys_maxfd+1, &readset, &writeset, &exceptset, &timout);
-        for (i = 0; i < sys_nfdpoll; i++)
+        if (select(sys_maxfd+1, &readset, &writeset, &exceptset, &timout) < 0)
+          perror("microsleep select");
+        fdschanged = 0;
+        for (i = 0; i < sys_nfdpoll && !fdschanged; i++)
             if (FD_ISSET(sys_fdpoll[i].fdp_fd, &readset))
         {
 #ifdef THREAD_LOCKING
@@ -229,18 +232,23 @@ static int sys_domicrosleep(int microsec, int pollem)
 #endif
             didsomething = 1;
         }
-        return (didsomething);
+        if (didsomething) return (1);
     }
-    else
+    if (microsec)
     {
-#ifdef MSW
-        if (sys_maxfd == 0)
-              Sleep(microsec/1000);
-        else
+#ifdef THREAD_LOCKING
+        sys_unlock();
 #endif
-        select(0, 0, 0, 0, &timout);
-        return (0);
+#ifdef MSW
+        Sleep(microsec/1000);
+#else
+        usleep(microsec);
+#endif
+#ifdef THREAD_LOCKING
+        sys_lock();
+#endif
     }
+    return (0);
 }
 
 void sys_microsleep(int microsec)
@@ -438,6 +446,7 @@ void sys_addpollfn(int fd, t_fdpollfn fn, void *ptr)
     fp->fdp_ptr = ptr;
     sys_nfdpoll = nfd + 1;
     if (fd >= sys_maxfd) sys_maxfd = fd + 1;
+    fdschanged = 1;
 }
 
 void sys_rmpollfn(int fd)
@@ -445,6 +454,7 @@ void sys_rmpollfn(int fd)
     int nfd = sys_nfdpoll;
     int i, size = nfd * sizeof(t_fdpoll);
     t_fdpoll *fp;
+    fdschanged = 1;
     for (i = nfd, fp = sys_fdpoll; i--; fp++)
     {
         if (fp->fdp_fd == fd)
@@ -501,12 +511,12 @@ static int socketreceiver_doread(t_socketreceiver *x)
         if (c == ';' && (!indx || inbuf[indx-1] != '\\'))
         {
             intail = (indx+1)&(INBUFSIZE-1);
-            binbuf_text(inbinbuf, messbuf, bp - messbuf);
+            binbuf_text(inbinbuf, messbuf, (int)(bp - messbuf));
             if (sys_debuglevel & DEBUG_MESSDOWN) {
                 if (stderr_isatty)
-                    fprintf(stderr,"\n<- \e[0;1;36m%.*s\e[0m", bp - messbuf, messbuf);
+                    fprintf(stderr,"\n<- \e[0;1;36m%.*s\e[0m", (int)(bp - messbuf), messbuf);
                 else
-                    fprintf(stderr,"\n<- %.*s", bp - messbuf, messbuf);
+                    fprintf(stderr,"\n<- %.*s", (int)(bp - messbuf), messbuf);
             }
             x->sr_inhead = inhead;
             x->sr_intail = intail;
@@ -624,6 +634,7 @@ void socketreceiver_read(t_socketreceiver *x, int fd)
 void sys_closesocket(int fd)
 {
 #ifdef HAVE_UNISTD_H
+    if (fd<0) return;
     close(fd);
 #endif
 #ifdef MSW
@@ -887,7 +898,7 @@ void gui_do_vmess(const char *sel, char *fmt, int end, va_list ap)
         case 's': escape_double_quotes(va_arg(ap, const char *)); break;
         case 'i': sys_vgui("%d", va_arg(ap, int)); break;
         case 'x': sys_vgui("\"" X_SPECIFIER "\"",
-            va_arg(ap, long unsigned int));
+            va_arg(ap, t_uint));
             break;
         //case 'p': SETPOINTER(at, va_arg(ap, t_gpointer *)); break;
         default: goto done;
@@ -965,7 +976,7 @@ void gui_s(const char *s)
     gui_array_tail = 0;
 }
 
-void gui_x(long unsigned int i)
+void gui_x(t_uint i)
 {
     if (gui_array_head && !gui_array_tail)
         sys_vgui("\"x%.6lx\"", i);
@@ -1347,10 +1358,11 @@ int sys_startgui(const char *guidir)
         {
 #ifdef MSW
             int err = WSAGetLastError();
+            if ((ntry++ > 20) || (err != WSAEADDRINUSE))
 #else
             int err = errno;
-#endif
             if ((ntry++ > 20) || (err != EADDRINUSE))
+#endif
             {
                 perror("bind");
                 fprintf(stderr,
@@ -1438,7 +1450,7 @@ int sys_startgui(const char *guidir)
                 portno,
                 (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"),
                 guidir2,
-                (long unsigned int)pd_this);
+                (t_uint)pd_this);
 #else
             sprintf(cmdbuf,
                 "TCL_LIBRARY=\"%s/tcl/library\" TK_LIBRARY=\"%s/tk/library\" \
@@ -1480,7 +1492,7 @@ int sys_startgui(const char *guidir)
                 portno,
                 (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"),
                 guidir2,
-                (long unsigned int)pd_this);
+                (t_uint)pd_this);
 #endif
             sys_guicmd = cmdbuf;
         }
@@ -1537,7 +1549,7 @@ int sys_startgui(const char *guidir)
         //sys_bashfilename(scriptbuf, scriptbuf);
 
         char pd_this_string[80];
-        sprintf(pd_this_string, X_SPECIFIER, (long unsigned int)pd_this);
+        sprintf(pd_this_string, X_SPECIFIER, (t_uint)pd_this);
         sprintf(scriptbuf, "\""); /* use quotes in case there are spaces */
         strcat(scriptbuf, sys_libdir->s_name);
         strcat(scriptbuf, "/" PDBINDIR);
@@ -1775,6 +1787,16 @@ extern int do_not_redraw;
 
 void glob_quit(void *dummy, t_floatarg status)
 {
+    if (sys_nogui)
+    {
+        // ag: Take the quick way out. Specifically, we do *not* want to clean
+        // up a non-existent gui here (which also causes spurious segfaults in
+        // gui-less operation on Windows).
+        canvas_suspend_dsp();
+        sys_bail(status);
+        // sys_bail shouldn't return, but just in case:
+        return;
+    }
     /* If we're going to try to cleanly close everything here, we should
        do the same for all open patches and that is currently not the case,
        so for the time being, let's just leave OS to deal with freeing of all

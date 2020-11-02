@@ -4,7 +4,7 @@
 
 /*  "filters", both linear and nonlinear.
 */
-#include "m_pd.h"
+#include "zexy.h"
 #include <math.h>
 
 //* ---------------- doublepole~ - raw doublepole filter ----------------- */
@@ -64,8 +64,8 @@ static t_int *sigdoublepole_perform(t_int *w)
   return (w+5);
 }
 
-static void sigdoublepole_list(t_sigdoublepole *x, t_symbol *s, int argc,
-                               t_atom *argv)
+static void sigdoublepole_list(t_sigdoublepole *x, t_symbol* UNUSED(s),
+                               int argc, t_atom *argv)
 {
   t_float fb1 = atom_getfloatarg(0, argc, argv);
   t_float fb2 = atom_getfloatarg(1, argc, argv);
@@ -93,8 +93,8 @@ stable:
   c->c_fb2 = fb2;
 }
 
-static void sigdoublepole_set(t_sigdoublepole *x, t_symbol *s, int argc,
-                              t_atom *argv)
+static void sigdoublepole_set(t_sigdoublepole *x, t_symbol* UNUSED(s),
+                              int argc, t_atom *argv)
 {
   t_doublepolectl *c = x->x_ctl;
   c->c_x1 = atom_getfloatarg(0, argc, argv);
@@ -109,19 +109,17 @@ static void sigdoublepole_dsp(t_sigdoublepole *x, t_signal **sp)
 
 }
 
-void doublepole_tilde_setup(void)
+ZEXY_SETUP void doublepole_tilde_setup(void)
 {
-  sigdoublepole_class = class_new(gensym("doublepole~"),
-                                  (t_newmethod)sigdoublepole_new,
-                                  0, sizeof(t_sigdoublepole), 0, A_GIMME, 0);
+  sigdoublepole_class = zexy_new("doublepole~",
+                                 sigdoublepole_new, 0, t_sigdoublepole, 0, "*");
   CLASS_MAINSIGNALIN(sigdoublepole_class, t_sigdoublepole, x_f);
-  class_addmethod(sigdoublepole_class, (t_method)sigdoublepole_dsp,
-                  gensym("dsp"), A_CANT, 0);
+  zexy_addmethod(sigdoublepole_class, (t_method)sigdoublepole_dsp, "dsp",
+                 "!");
   class_addlist(sigdoublepole_class, sigdoublepole_list);
-  class_addmethod(sigdoublepole_class, (t_method)sigdoublepole_set,
-                  gensym("set"),
-                  A_GIMME, 0);
-  class_addmethod(sigdoublepole_class, (t_method)sigdoublepole_set,
-                  gensym("clear"),
-                  A_GIMME, 0);
+  zexy_addmethod(sigdoublepole_class, (t_method)sigdoublepole_set, "set",
+                 "*");
+  zexy_addmethod(sigdoublepole_class, (t_method)sigdoublepole_set, "clear",
+                 "*");
+  zexy_register("doublepole~");
 }

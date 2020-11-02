@@ -48,7 +48,7 @@ DEST_PATHS = BUILDLAYOUT_DIR=$(BUILDLAYOUT_DIR) \
 BUILDSRC_OS_NAME = $(OS_NAME)
 
 WARN_FLAGS = -Wall -W -Wno-unused-parameter
-CFLAGS = -DPD -I$(pd_src)/src $(WARN_FLAGS) $(DEBUG_CFLAGS) $(CFLAGS_ADD) -I$(gem_src)/src
+CFLAGS = -DPD -D__USE_MINGW_ANSI_STDIO=1 -I$(pd_src)/src $(WARN_FLAGS) $(DEBUG_CFLAGS) $(CFLAGS_ADD) -I$(gem_src)/src
 LDFLAGS =  
 LIBS = -lm
 
@@ -139,7 +139,7 @@ ifeq ($(LIGHT),yes)
 lib_targets = loaders-libdir pddp
 INCREMENTAL = yes
 else
-lib_targets = adaptive arraysize autotune bassemu boids bsaylor comport creb cxc cyclone disis earplug ekext ext13 fftease flatgui fluid freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdlua pdogg plugin pmpd rjlib sigpack smlib tof unauthorized vbap windowing zexy
+lib_targets = adaptive arraysize autotune bassemu bendinfix boids bsaylor comport creb cxc cyclone disis earplug ekext ext13 fftease flatgui fluid freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdlua pdogg plugin pmpd rjlib sigpack smlib tof unauthorized vbap windowing zexy
 endif
 
 # NEW (IN-PROGRESS): flext
@@ -356,6 +356,21 @@ bassemu_install:
 
 bassemu_clean:
 	make -C $(externals_src)/bassemu~ clean
+
+
+#------------------------------------------------------------------------------#
+# BENDINFIX
+
+bendinfix:
+	make -C $(externals_src)/bendinfix PD_PATH=$(pd_src) \
+		pdbinpath=$(pd_src)/src CFLAGS="$(CFLAGS_ADD)"
+
+bendinfix_install:
+	make -C $(externals_src)/bendinfix DESTDIR="$(DESTDIR)" \
+		objectsdir="$(objectsdir)" install
+
+bendinfix_clean:
+	make -C $(externals_src)/bendinfix clean
 
 
 #------------------------------------------------------------------------------#
@@ -1328,6 +1343,7 @@ motex_clean:
 # MRPEACH
 MRPEACH_NAME=mrpeach
 MRPEACH_OBJECTS := $(wildcard $(externals_src)/mrpeach/*/*.c)
+mrpeach: WARN_FLAGS=-Wno-pedantic-ms-format
 mrpeach: $(MRPEACH_OBJECTS:.c=.$(EXTENSION))
 
 mrpeach_install: mrpeach
@@ -1860,72 +1876,17 @@ windowing_clean:
 ZEXY_NAME = zexy
 zexy_src := $(externals_src)/$(ZEXY_NAME)
 
-$(zexy_src)/configure: $(zexy_src)/configure.ac
-	cd $(zexy_src) && ./autogen.sh
-
-$(zexy_src)/Makefile: $(zexy_src)/configure $(zexy_src)/Makefile.am $(zexy_src)/src/Makefile.am
-	cd $(zexy_src) && ./configure --disable-library \
-		--with-extension=$(EXTENSION) \
-		--prefix=$(prefix) \
-		--libdir=$(objectsdir) \
-		--with-pd=$(pd_src)
-
 zexy: $(zexy_src)/Makefile
-	$(MAKE) -C $(zexy_src)
+	$(MAKE) -C $(zexy_src) PDINCLUDEDIR=$(pd_src)/src PDBINDIR=$(pd_src)/src
 
 zexy_install: zexy
 	$(MAKE) -C $(zexy_src) DESTDIR=$(DESTDIR) prefix=$(prefix) \
-		libdir=$(objectsdir) pkglibdir=$(objectsdir)/$(ZEXY_NAME) install
-# remove all .la files (libtool archives) created by autotools
-	find $(DESTDIR)$(objectsdir)/$(ZEXY_NAME) -name "*.la" -exec rm {} \;
-	find $(DESTDIR)$(objectsdir)/$(ZEXY_NAME) -name "*.dll.a" -exec rm {} \;
-# add missing aliases
-# can't do these on Windows because FAT, NTFS don't support these chars in filenames
-# on Windows, these are faked in by loading them as libs
-#ifneq ($(OS_NAME),windows)
-#	test -e $(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/..$(EXTENSION) || \
-#		ln -s 0x2e.$(EXTENSION) \
-#			$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/..$(EXTENSION)
-#	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/&&~.$(EXTENSION)' || \
-#		ln -s 0x260x26_tilde.$(EXTENSION) \
-#			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/&&~.$(EXTENSION)'
-#	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/<~.$(EXTENSION)' || \
-#		ln -s 0x3c_tilde.$(EXTENSION) \
-#			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/<~.$(EXTENSION)'
-#	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/==~.$(EXTENSION)' || \
-#		ln -s 0x3d0x3d_tilde.$(EXTENSION) \
-#			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/==~.$(EXTENSION)'
-#	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/>~.$(EXTENSION)' || \
-#		ln -s 0x3e_tilde.$(EXTENSION) \
-#			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/>~.$(EXTENSION)'
-#	test -e '$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/||~.$(EXTENSION)' || \
-#		ln -s 0x7c0x7c_tilde.$(EXTENSION) \
-#			'$(DESTDIR)$(objectsdir)/$(ZEXY_NAME)/||~.$(EXTENSION)'
-#endif
+		libdir=$(objectsdir) pkglibdir=$(objectsdir) install
 
 zexy_clean:
 	cd $(externals_src)/zexy
 	-$(MAKE) -C $(externals_src)/zexy clean
-	-rm -rf -- $(externals_src)/zexy/autom4te.cache
-	-rm -f -- $(externals_src)/zexy/aclocal.m4
-	-rm -f -- $(externals_src)/zexy/libtool
-	-rm -f -- $(externals_src)/zexy/ltmain.sh
-	-rm -f -- $(externals_src)/zexy/m4/lt*.m4
-	-rm -f -- $(externals_src)/zexy/m4/libtool.m4
-	-rm -f -- $(externals_src)/zexy/configure
 	-rm -f -- $(externals_src)/zexy/src/*.o
-	-rm -f -- $(externals_src)/zexy/Makefile
-	-rm -f -- $(externals_src)/zexy/Makefile.in
-	-rm -f -- $(externals_src)/zexy/*/Makefile
-	-rm -f -- $(externals_src)/zexy/*/Makefile.in
-	-rm -f -- $(externals_src)/zexy/compile
-	-rm -f -- $(externals_src)/zexy/config.*
-	-rm -f -- $(externals_src)/zexy/depcomp
-	-rm -f -- $(externals_src)/zexy/install-sh
-	-rm -f -- $(externals_src)/zexy/missing
-	-rm -f -- $(externals_src)/zexy/stamp-h1
-	-rm -f -- $(externals_src)/zexy/test-driver
-	-rm -f -- $(externals_src)/zexy/*.pd
 
 
 

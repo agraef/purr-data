@@ -18,6 +18,7 @@
  */
 
 #include "zexy.h"
+#include "zexy_strndup.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -25,8 +26,8 @@
 
 /* compare 2 lists ( == for lists) */
 
-static t_class *strcmp_class;
-static t_class *strcmp_proxy_class;
+static t_class *strcmp_class=NULL;
+static t_class *strcmp_proxy_class=NULL;
 
 
 typedef struct _strcmp {
@@ -94,8 +95,8 @@ static void strcmp_symbol(t_strcmp *x, t_symbol *s)
   if(x->str1&&x->n1) {
     freebytes(x->str1, x->n1);
   }
-  x->n1=0;
-  x->str1=s->s_name;
+  x->str1=zexy_strndup(s->s_name, MAXPDSTRING);
+  x->n1=strnlen(x->str1, MAXPDSTRING);
   strcmp_bang(x);
 }
 
@@ -109,8 +110,8 @@ static void strcmp_secondsymbol(t_strcmp *x, t_symbol *s)
   if(x->str2&&x->n2) {
     freebytes(x->str2, x->n2);
   }
-  x->n2=0;
-  x->str2=s->s_name;
+  x->str2=zexy_strndup(s->s_name, MAXPDSTRING);
+  x->n2=strnlen(x->str2, MAXPDSTRING);
 }
 
 static void strcmp_proxy_list(t_strcmp_proxy *y, t_symbol *s, int argc,
@@ -167,27 +168,25 @@ static void strcmp_free(t_strcmp *x)
 }
 
 
-static void strcmp_help(t_strcmp*x)
+static void strcmp_help(t_strcmp*UNUSED(x))
 {
   post("\n"HEARTSYMBOL " strcmp\t\t:: compare to lists as strings");
 }
 
 
-void strcmp_setup(void)
+ZEXY_SETUP void strcmp_setup(void)
 {
-  strcmp_class = class_new(gensym("strcmp"), (t_newmethod)strcmp_new,
-                           (t_method)strcmp_free, sizeof(t_strcmp), 0, A_GIMME, 0);
+  strcmp_class = zexy_new("strcmp",
+                          strcmp_new, strcmp_free, t_strcmp, 0, "*");
 
   class_addbang    (strcmp_class, strcmp_bang);
   class_addsymbol  (strcmp_class, strcmp_symbol);
   class_addlist    (strcmp_class, strcmp_list);
 
-  strcmp_proxy_class = class_new(gensym("strcmp proxy"), 0, 0,
-                                 sizeof(t_strcmp_proxy),
-                                 CLASS_PD | CLASS_NOINLET, 0);
+  strcmp_proxy_class = zexy_new("strcmp proxy",
+                                0, 0, t_strcmp_proxy, CLASS_PD | CLASS_NOINLET, "");
   class_addsymbol(strcmp_proxy_class, strcmp_proxy_symbol);
   class_addlist(strcmp_proxy_class, strcmp_proxy_list);
-  class_addmethod(strcmp_class, (t_method)strcmp_help, gensym("help"),
-                  A_NULL);
+  zexy_addmethod(strcmp_class, (t_method)strcmp_help, "help", "");
   zexy_register("strcmp");
 }

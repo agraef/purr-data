@@ -29,7 +29,7 @@
 
 /* ----------------------------------------------------- */
 
-static t_class *zNdelay_class;
+static t_class *zNdelay_class=NULL;
 
 typedef struct _zNdelay {
   t_object x_obj;
@@ -92,7 +92,7 @@ static void zNdelay_dsp(t_zNdelay *x, t_signal **sp)
   dsp_add(zN_perform, 4, sp[0]->s_vec, sp[1]->s_vec, x, (t_int)sp[0]->s_n);
 }
 
-static void *zNdelay_new(t_symbol*s, int argc, t_atom*argv)
+static void *zNdelay_new(t_symbol*UNUSED(s), int argc, t_atom*argv)
 {
   t_zNdelay *x = 0;
   int i = 0;
@@ -107,6 +107,7 @@ static void *zNdelay_new(t_symbol*s, int argc, t_atom*argv)
       i=atom_getint(argv);
       break;
     }
+  /* fallthrough */
   default:
     error("Bad arguments for [z~]: must be nought or initial delay [in samples]");
     return 0;
@@ -145,18 +146,15 @@ static void zdel_helper(void)
 }
 
 
-void z_tilde_setup(void)
+ZEXY_SETUP void z_tilde_setup(void)
 {
-  zNdelay_class = class_new(gensym("z~"), (t_newmethod)zNdelay_new,
-                            (t_method)zNdelay_free,
-                            sizeof(t_zNdelay), 0, A_GIMME, 0);
-  class_addmethod(zNdelay_class, nullfn, gensym("signal"), 0);
-  class_addmethod(zNdelay_class, (t_method)zNdelay_dsp, gensym("dsp"),
-                  A_CANT, 0);
+  zNdelay_class = zexy_new("z~",
+                           zNdelay_new, zNdelay_free, t_zNdelay, 0, "*");
+  zexy_addmethod(zNdelay_class, (t_method)nullfn, "signal", "");
+  zexy_addmethod(zNdelay_class, (t_method)zNdelay_dsp, "dsp", "!");
 
   class_addfloat(zNdelay_class, zdel_float);
-  class_addmethod(zNdelay_class, (t_method)zdel_float, gensym("ft1"),
-                  A_FLOAT, 0);
-  class_addmethod(zNdelay_class, (t_method)zdel_helper, gensym("help"), 0);
+  zexy_addmethod(zNdelay_class, (t_method)zdel_float, "ft1", "f");
+  zexy_addmethod(zNdelay_class, (t_method)zdel_helper, "help", "");
   zexy_register("z~");
 }

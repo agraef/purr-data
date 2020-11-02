@@ -60,6 +60,8 @@ typedef struct _updateheader
     /* types to support glists grabbing mouse motion or keys from parent */
 typedef void (*t_glistmotionfn)(void *z, t_floatarg dx, t_floatarg dy);
 typedef void (*t_glistkeyfn)(void *z, t_floatarg key);
+typedef void (*t_glistkeynamefn)(void *z, t_symbol *s, int argc, t_atom *argv);
+typedef void (*t_glistkeynameafn)(void *z, t_symbol *s, int argc, t_atom *argv);
 
 EXTERN_STRUCT _rtext;
 #define t_rtext struct _rtext
@@ -75,6 +77,8 @@ EXTERN_STRUCT _tscalar;
 
 EXTERN_STRUCT _canvasenvironment;
 #define t_canvasenvironment struct _canvasenvironment 
+
+extern t_canvasenvironment *dummy_canvas_env(const char *dir);
 
 EXTERN_STRUCT _fielddesc;
 #define t_fielddesc struct _fielddesc
@@ -106,9 +110,10 @@ typedef struct _editor
     t_rtext *e_rtext;               /* text responder linked list */
     t_selection *e_selection;       /* head of the selection list */
     t_rtext *e_textedfor;           /* the rtext if any that we are editing */
-    t_gobj *e_grab;                 /* object being "dragged" */
+    t_gobj *e_grab;                 /* object being dragged/focused */
     t_glistmotionfn e_motionfn;     /* ... motion callback */
     t_glistkeyfn e_keyfn;           /* ... keypress callback */
+    t_glistkeynameafn e_keynameafn; /* ... keyname with autorepeat press callback */
     t_binbuf *e_connectbuf;         /* connections to deleted objects */
     t_binbuf *e_deleted;            /* last stuff we deleted */
     t_guiconnect *e_guiconnect;     /* GUI connection for filtering messages */
@@ -164,6 +169,24 @@ typedef struct _tick    /* where to put ticks on x or y axes */
     int k_lperb;        /* little ticks per big; 0 if no ticks to draw */
 } t_tick;
 
+/* the t_ab_definition structure holds an ab definiton and all the attributes we need
+    to handle it */
+typedef struct _ab_definition
+{
+    t_symbol *ad_name;      /* id for the ab definition */
+    t_binbuf *ad_source;    /* binbuf where the source is stored */
+    int ad_numinstances;    /* number of instances */
+    struct _ab_definition *ad_next;     /* next ab definition */
+    t_canvas *ad_owner;     /* canvas that stores this definition */
+
+    /* dependency graph stuff */
+    int ad_numdep;      /* number of other ab definitions that it depends on */
+    struct _ab_definition **ad_dep;     /* the actual ab defintitions */
+    int *ad_deprefs;    /*  number of instances that define the dependency */
+    int ad_visflag;     /* visited flag for topological sort algorithm */
+} t_ab_definition;
+
+
 /* the t_glist structure, which describes a list of elements that live on an
 area of a window.
 
@@ -210,6 +233,7 @@ struct _glist
     unsigned int gl_loading:1;      /* am now loading from file */
     unsigned int gl_willvis:1;      /* make me visible after loading */ 
     unsigned int gl_edit:1;         /* edit mode */
+    unsigned int gl_edit_save:1;    /* set in temporary run mode */
     unsigned int gl_isdeleting:1;   /* we're inside glist_delete -- hack! */
     unsigned int gl_unloading:1;    /* we're inside canvas_free */
     unsigned int gl_goprect:1;      /* draw rectangle for graph-on-parent */
@@ -232,10 +256,20 @@ struct _glist
     t_symbol *gl_templatesym; /* for "canvas" data type */
     t_word *gl_vec;            /* for "canvas" data type */
     t_gpointer gl_gp;            /* parent for "canvas" data type */
+
+    int gl_subdirties;     /* number of descending dirty abstractions */
+    int gl_dirties;        /* number of diry instances, for multiple dirty warning */
+
+    unsigned int gl_isab:1;         /* is an ab instance */
+    t_ab_definition *gl_absource;   /* ab definition pointer,
+                                        in the case it is an ab instance */
+    t_ab_definition *gl_abdefs;     /* stored ab definitions */
 };
 
 #define gl_gobj gl_obj.te_g
 #define gl_pd gl_gobj.g_pd
+
+typedef void (*t_canvas_iterator)(t_canvas *x, void *data);
 
 /*-------------------universal preset stuff---------------------*/
 // for the universal preset_node ability (see g_editor.c doconnect/disconnect functions)
@@ -436,6 +470,7 @@ EXTERN void gobj_save(t_gobj *x, t_binbuf *b);
 EXTERN void gobj_properties(t_gobj *x, struct _glist *glist);
 EXTERN void gobj_save(t_gobj *x, t_binbuf *b);
 EXTERN int gobj_shouldvis(t_gobj *x, struct _glist *glist);
+EXTERN void gobj_dirty(t_gobj *x, t_glist *g, int state);
 
 /* -------------------- functions on glists --------------------- */
 EXTERN t_glist *glist_new( void);
@@ -451,7 +486,8 @@ EXTERN void glist_selectall(t_glist *x);
 EXTERN void glist_delete(t_glist *x, t_gobj *y);
 EXTERN void glist_retext(t_glist *x, t_text *y);
 EXTERN void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn,
-    t_glistkeyfn keyfn, int xpos, int ypos);
+    t_glistkeyfn keyfn, t_glistkeynameafn keynameafn,
+    int xpos, int ypos);
 EXTERN int glist_isvisible(t_glist *x);
 EXTERN int glist_istoplevel(t_glist *x);
 EXTERN t_glist *glist_findgraph(t_glist *x);
@@ -547,6 +583,8 @@ EXTERN void canvas_setcurrent(t_canvas *x);
 EXTERN void canvas_unsetcurrent(t_canvas *x);
 EXTERN t_symbol *canvas_realizedollar(t_canvas *x, t_symbol *s);
 EXTERN t_canvas *canvas_getrootfor(t_canvas *x);
+EXTERN t_canvas *canvas_getrootfor_ab(t_canvas *x);
+EXTERN int abframe;
 EXTERN void canvas_dirty(t_canvas *x, t_floatarg n);
 EXTERN int canvas_getfont(t_canvas *x);
 typedef int (*t_canvasapply)(t_canvas *x, t_int x1, t_int x2, t_int x3);
@@ -559,6 +597,7 @@ EXTERN void canvas_resortoutlets(t_canvas *x);
 EXTERN void canvas_free(t_canvas *x);
 EXTERN void canvas_updatewindowlist( void);
 EXTERN void canvas_editmode(t_canvas *x, t_floatarg yesplease);
+EXTERN void canvas_query_editmode(t_canvas *x);
 EXTERN int canvas_isabstraction(t_canvas *x);
 EXTERN int canvas_istable(t_canvas *x);
 EXTERN int canvas_showtext(t_canvas *x);
@@ -572,6 +611,9 @@ EXTERN t_gobj *canvas_findhitbox(t_canvas *x, int xpos, int ypos,
     int *x1p, int *y1p, int *x2p, int *y2p);
 EXTERN int canvas_setdeleting(t_canvas *x, int flag);
 EXTERN int canvas_hasarray(t_canvas *x);
+EXTERN int canvas_has_scalars_only(t_canvas *x);
+
+EXTERN void canvas_warning(t_canvas *x, int warid);
 
 #define LB_LOAD 0       /* "loadbang" actions - 0 for original meaning */
 #define LB_INIT 1       /* loaded but not yet connected to parent patch */

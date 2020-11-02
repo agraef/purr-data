@@ -8,7 +8,7 @@
 #include "s_stuff.h"
 #include <string.h>
 
-#ifdef HAVE_MALLOC_H
+#if defined HAVE_MALLOC_H || defined MSW
 #include <malloc.h>
 #endif
 

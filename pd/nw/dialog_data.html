@@ -3,14 +3,67 @@
   <head>
     <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
   </head>
-  <body class="dialog_body">
+  <style>
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0); 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.267); 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+input[type=checkbox] {
+    margin: 2px 0px 8px 0px;
+}
+
+input[type="text"] {
+    margin-bottom: 3px;
+}
+
+label {
+	margin-left: 0px;
+    margin-bottom: 1px;
+
+}
+  </style>
+  <body class="dialog_body" style="overflow: hidden;">
     <div class="container">
+      <table id="titlebar">
+        <tr>
+          <td style="width: 100%;">
+            <div id="titlebar_title">Data Object Properties</div>
+          </td>
+          <td id="titlebar_buttons_td">
+            <div class="titlebar_buttons">
+              <div id="titlebar_close_button" onclick="cancel(false);">&#215</div>
+            </div>
+          </td>
+        </tr>
+      </table>
     <form> 
-      <fieldset id="data_container"> 
-        <legend id="legend"></legend> 
+      <fieldset id="data_container" style="height: 267px;"> 
+        <legend id="legend"></legend>
+      	  <div id="scrollable_data" style="overflow: auto; height: 250px;">
+      	  	<table id="pairs" style="margin-right: 5px;">
+      	  	</table>
       </fieldset> 
 
-    <div class="submit_buttons">
+    <div class="submit_buttons" style="
+   		text-align: center;
+    	padding: 8px 0px 8px 0px;"
+    >
       <button type="button" onClick="ok()" data-i18n="[title]iem.prop.ok_tt">
         <span data-i18n="iem.prop.ok"></span>
       </button>
@@ -26,6 +79,8 @@
 "use strict";
 var gui = require("nw.gui");
 var pdgui = require("./pdgui.js");
+
+//gui.Window.get().setResizable(false);
 
 // For translations
 var l = pdgui.get_local_string;
@@ -146,11 +201,14 @@ function add_textarea_input(first_row) {
         textarea = document.createElement("textarea"),
         check_label = document.createElement("label"),
         check = document.createElement("input"),
-        outer_container = document.getElementById("data_container"),
+        outer_container = document.getElementById("pairs"),
         inner_container = document.createElement("div"),
         br = document.createElement("br");
 
     label.textContent = "vector fields";
+
+    inner_container.style.setProperty("display", "inline-block");
+    inner_container.style.setProperty("width", "100%");
 
     label.style.setProperty("display", "block");
     label.style.setProperty("text-align", "left");
@@ -159,7 +217,8 @@ function add_textarea_input(first_row) {
     textarea.setAttribute("id", "vector_textarea");
     textarea.setAttribute("rows", "4");
     textarea.setAttribute("col", "5");
-    textarea.style.setProperty("width", "11.3em");
+    textarea.style.setProperty("width", "97.5%");
+    textarea.style.setProperty("resize", "none");
     textarea.disabled = true;
 
     check.type = "checkbox";
@@ -181,7 +240,7 @@ function add_textarea_input(first_row) {
 function add_text_input(field, left_column, first_row) {
     var label = document.createElement("label"),
         text_input = document.createElement("input"),
-        outer_container = document.getElementById("data_container"),
+        outer_container = document.getElementById("pairs"),
         inner_container = document.createElement("div"),
         br;
     inner_container.style.setProperty("float", "left");
@@ -189,6 +248,9 @@ function add_text_input(field, left_column, first_row) {
     // the left column. For symbols, the input takes up the whole line
     if (left_column && field.type !== "symbol") {
         inner_container.style.setProperty("margin-right", "1em");
+    }
+    if (!left_column) {
+        inner_container.style.setProperty("float", "right");
     }
     label.textContent = field["var"];
     text_input.type = "text";
@@ -204,7 +266,7 @@ function add_text_input(field, left_column, first_row) {
     text_input.style.setProperty("display", "block");
     // Also in opposition to iemgui dialogs
     text_input.style.setProperty("width",
-        field.type === "float" ? "5em" : "11.3em");
+        field.type === "float" ? "5em" : "97.5%");
     // Some bottom margin
     inner_container.style.setProperty("margin-bottom", "8px");
 
@@ -301,6 +363,7 @@ function register_window_id(gfxstub, data_string) {
     var head, tail, templates, data, data_separator;
     pd_object_callback = gfxstub;
     add_events(gfxstub);
+    pdgui.gui_check_for_dialog_appearance_inconsistencies(gfxstub);
     // slice off the head of the message. This is where the templates
     // for the data-- plus any templates for (nested) arrays-- are kept.
     // We will keep the head intact for sending back to Pd since the user

@@ -30,20 +30,19 @@
       </div>
     </div>
     <div id="console_find" style="display:none;">
-      <div>
-        <label><input type="text"
-                      id="console_find_text"
-                      name="console_find_text"
-                      defaultValue="Search in Console"
-                      style="width:10em;"/>
-        </label>
-        <label>Highlight All
-               <input type="checkbox"
-                      id="console_find_highlight"
-                      name="console_find_highlight"
-                      onchange="console_find_highlight_all(this);"/>
-        </label>
-      </div>
+      <label><input type="text"
+                    id="console_find_text"
+                    name="console_find_text"
+                    defaultValue="Search in Console"
+                    style="width:10em"/>
+      </label>
+      <label style="margin-left: 7px;">Highlight All
+          <input type="checkbox"
+               id="console_find_highlight"
+               name="console_find_highlight"
+               onchange="console_find_highlight_all(this);"
+               style="position: relative; top: 2px; margin-right: 5px; left: -3px;"/> 
+      </label>
     </div>
     <script src="./console_search.js"></script>
     <script type="text/javascript" src="index.js"></script>

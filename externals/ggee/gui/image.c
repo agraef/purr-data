@@ -56,11 +56,24 @@ t_symbol *image_trytoopen(t_image* x)
     }
 }
 
+// defined in s_main.c and used to offset object at creation time
+// in case it is being autopatched
+extern int glob_autopatch_connectme;
+
 static void image_drawme(t_image *x, t_glist *glist, int firstime)
 {
     if (firstime)
     {
         t_symbol *fname = image_trytoopen(x);
+        // check if we are autopatching and offset for the default
+        // image only. Since we need to wait for the callback from
+        // the GUI to determine the custom image size, we can only
+        // compensate for the default image
+        if (glob_autopatch_connectme)
+        {
+            x->x_obj.te_xpix += 12;
+            x->x_obj.te_ypix += 12;
+        }
         // make a new gobj, border, etc.
         gui_vmess("gui_gobj_new", "xxsiii",
             glist_getcanvas(glist),
@@ -84,7 +97,7 @@ static void image_drawme(t_image *x, t_glist *glist, int firstime)
             x,
             x,
             "center");
-        //sys_vgui("catch {.x%lx.c delete %xS}\n", glist_getcanvas(glist), x);
+        //sys_vgui("catch {.x%zx.c delete %xS}\n", glist_getcanvas(glist), x);
         //sys_vgui(".x%x.c create image %d %d -tags %xS\n",
         //    glist_getcanvas(glist),text_xpix(&x->x_obj, glist),
         //    text_ypix(&x->x_obj, glist), x);
@@ -102,6 +115,12 @@ static void image_drawme(t_image *x, t_glist *glist, int firstime)
             x,
             text_xpix(&x->x_obj, glist),
             text_ypix(&x->x_obj, glist));
+        if (glist_isselected(x->x_glist, (t_gobj *)x) && glist_getcanvas(x->x_glist) == x->x_glist)
+        {
+            image_select((t_gobj *)x, glist_getcanvas(x->x_glist), 0);
+            image_select((t_gobj *)x, glist_getcanvas(x->x_glist), 1);
+        }
+        canvas_fixlinesfor(x->x_glist, (t_text*)x);
     }
 }
 
@@ -186,31 +205,6 @@ static void image_displace(t_gobj *z, t_glist *glist,
     t_image *x = (t_image *)z;
     x->x_obj.te_xpix += dx;
     x->x_obj.te_ypix += dy;
-    if (!x->x_gop_spill && (x->x_img_width + x->x_img_height) >= 2)
-    {
-        sys_vgui(".x%x.c coords %xSEL %d %d %d %d\n",
-            glist_getcanvas(glist), x,
-            text_xpix(&x->x_obj, glist) - x->x_img_width/2,
-            text_ypix(&x->x_obj, glist) - x->x_img_height/2,
-            text_xpix(&x->x_obj, glist) + x->x_img_width/2,
-            text_ypix(&x->x_obj, glist) + x->x_img_height/2);
-    }
-    else
-    {
-        sys_vgui(".x%x.c coords %xSEL %d %d %d %d\n",
-            glist_getcanvas(glist), x,
-            text_xpix(&x->x_obj, glist) - x->x_width/2,
-            text_ypix(&x->x_obj, glist) - x->x_height/2,
-            text_xpix(&x->x_obj, glist) + x->x_width/2,
-            text_ypix(&x->x_obj, glist) + x->x_height/2);
-        /*if (x->x_img_width + x->x_img_height == 0)
-            sys_vgui(".x%x.c coords %xMT %d %d %d %d\n",
-                glist_getcanvas(glist), x,
-                text_xpix(&x->x_obj, glist) - x->x_width/2,
-                text_ypix(&x->x_obj, glist) - x->x_height/2,
-                text_xpix(&x->x_obj, glist) + x->x_width/2,
-                text_ypix(&x->x_obj, glist) + x->x_height/2);*/
-    }
     image_drawme(x, glist, 0);
     canvas_fixlinesfor(glist,(t_text*) x);
 }
@@ -274,8 +268,8 @@ static void image_select(t_gobj *z, t_glist *glist, int state)
         //sys_vgui("catch {.x%x.c delete %xSEL}\n",
         //glist_getcanvas(glist), x);
         //if (glist->gl_owner && !glist_istoplevel(glist))
-        //sys_vgui(".x%lx.c dtag %xS selected\n", glist_getcanvas(glist), x);
-        //sys_vgui(".x%lx.c dtag %xMT selected\n", glist_getcanvas(glist), x);
+        //sys_vgui(".x%zx.c dtag %xS selected\n", glist_getcanvas(glist), x);
+        //sys_vgui(".x%zx.c dtag %xMT selected\n", glist_getcanvas(glist), x);
         gui_vmess("gui_image_toggle_border", "xxi", glist_getcanvas(glist),
             x, 0);
         gui_vmess("gui_gobj_deselect", "xx", glist_getcanvas(glist), x);
@@ -435,6 +429,8 @@ static void image_imagesize_callback(t_image *x, t_float w, t_float h) {
         //sys_vgui("catch {.x%x.c delete %xMT}\n", glist_getcanvas(x->x_glist), x);
         // reselect if we are on a toplevel canvas to adjust the selection rectangle, if necessary
 
+        /* ico@vt.edu: this does not work for the spill mode, so we will have to
+           draw the select box on demand
         gui_vmess("gui_image_draw_border", "xxiiii",
             glist_getcanvas(x->x_glist),
             x,
@@ -442,6 +438,7 @@ static void image_imagesize_callback(t_image *x, t_float w, t_float h) {
             0 - x->x_img_height/2,
             x->x_img_width,
             x->x_img_height);
+        */
 
         if (glist_isselected(x->x_glist, (t_gobj *)x) && glist_getcanvas(x->x_glist) == x->x_glist)
         {
@@ -505,7 +502,7 @@ static void *image_new(t_symbol *s, t_int argc, t_atom *argv)
     }
     // Create default receiver
     char buf[MAXPDSTRING];
-    sprintf(buf, "#%lx", (long)x);
+    sprintf(buf, "#%zx", (t_uint)x);
     x->x_receive = gensym(buf);
     pd_bind(&x->x_obj.ob_pd, x->x_receive);
     outlet_new(&x->x_obj, &s_bang);

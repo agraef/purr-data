@@ -50,7 +50,7 @@ OSCTimeTag OSCTT_BiggestPossibleTimeTag(void) {
 OSCTimeTag OSCTT_PlusSeconds(OSCTimeTag original, float secondsOffset) {
     int8 offset = (int8) (secondsOffset * TWO_TO_THE_32_FLOAT);
 
-/*    printf("* OSCTT_PlusSeconds %llx plus %f seconds (i.e., %lld offset) is %llx\n", original,
+/*    printf("* OSCTT_PlusSeconds %zx plus %f seconds (i.e., %lld offset) is %zx\n", original,
 	      secondsOffset, offset, original + offset);  */
 
     return original + offset;
@@ -58,7 +58,7 @@ OSCTimeTag OSCTT_PlusSeconds(OSCTimeTag original, float secondsOffset) {
 
 int OSCTT_Compare(OSCTimeTag left, OSCTimeTag right) {
 #if 0
-    printf("***** OSCTT_Compare(%llx, %llx): %d\n", left, right,
+    printf("***** OSCTT_Compare(%zx, %zx): %d\n", left, right,
 	   (left<right) ? -1 : ((left == right) ? 0 : 1));
 #endif
     if (left < right) {
@@ -107,7 +107,7 @@ OSCTimeTag OSCTT_CurrentTime(void) {
 
     result += usecOffset;
 
-/*    printf("* OSCTT_CurrentTime is %llx\n", result); */
+/*    printf("* OSCTT_CurrentTime is %zx\n", result); */
     return result;
 }
 

@@ -1,5 +1,5 @@
 #N struct text-help-struct float x float y text z;
-#N canvas 976 92 622 580 12;
+#N canvas 628 105 622 580 12;
 #X obj 131 529 list;
 #X obj 18 6 text;
 #X text 25 528 see also:;
@@ -12,16 +12,16 @@
 #X obj 280 217 text define;
 #X text 81 173 The text object's first argument sets its function:
 , f 30;
-#N canvas 1163 93 631 733 define 0;
+#N canvas 725 103 631 758 define 0;
 #X msg 39 141 clear;
 #X msg 46 167 read text-object-help.txt;
 #X msg 51 196 write text-object-help.txt;
 #X text 32 20 "text define" maintains a text object and can name it
 so that other objects can find it (and later should have some alternative
 \, anonymous way to be found).;
-#X text 91 416 click to open and edit text:;
-#X text 296 404 creation arguments:;
-#X text 306 439 optional name;
+#X text 91 456 click to open and edit text:;
+#X text 296 444 creation arguments:;
+#X text 306 479 optional name;
 #X text 77 263 (optionally you can read or write to/from a file interpreting
 carriage returns as separators \; this should allow reading some text
 file formats - like this:);
@@ -29,33 +29,47 @@ file formats - like this:);
 #X text 257 196 write to a file;
 #X obj 58 228 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X obj 38 531 t b p;
-#X obj 38 580 text get -s text t;
-#X msg 39 555 0;
-#X obj 38 630 print;
-#X obj 38 605 list trim;
+#X obj 38 571 t b p;
+#X obj 38 620 text get -s text t;
+#X msg 39 595 0;
+#X obj 38 670 print;
+#X obj 38 645 list trim;
 #X text 79 222 bang to output a pointer to a scalar (struct) containing
 the text, f 35;
-#X obj 38 440 text define -k text-help-1;
+#X obj 38 480 text define -k text-help-1;
 #A set this is a message \; this is another 1 ... \;;
 #X msg 149 326 write -c /tmp/test-cr.txt;
 #X msg 68 354 send text-help-send;
 #X text 213 354 send pointer to a named receive object;
 #X obj 438 110 r text-help-send;
 #X obj 438 139 print;
-#X obj 217 470 print notify-outlet;
-#X text 215 498 Second outlet notifies you when text changes. As of
+#X obj 217 510 print notify-outlet;
+#X text 215 538 Second outlet notifies you when text changes. As of
 Pd 0.48 this only outputs the message "updated" when text changes \,
 but this might be extended to offer more information in the future.
 , f 42;
-#X text 119 616 First outlet is pointer to a "text" scalar containing
+#X text 119 656 First outlet is pointer to a "text" scalar containing
 the text \, which is output when the object is sent a "bang". For example
 \, here's machinery for printing out first line of text., f 46;
 #X text 107 139 clear the object's state;
-#X msg 105 384 click;
-#X msg 153 384 close;
-#X text 201 384 open and close text window;
-#X text 304 422 optional -k flag to save contents with patch;
+#X msg 105 424 click;
+#X msg 153 424 close;
+#X text 201 424 open and close text window;
+#X text 304 462 optional -k flag to save contents with patch;
+#X msg 90 390 sort;
+#X text 130 391 comment;
+#N canvas 1071 152 647 361 sorting-text 0;
+#X obj 45 126 text define text-help-sorting;
+#X msg 76 89 sort;
+#X msg 44 54 set zz \; yy \; 1 2 \; 1 2 3 \; 1 \; 2 \;;
+#X text 63 168 Numbers come before symbols \, which are sorted alphabetically
+(details such as case sensitivity (does 'b' come before 'A'?) may depend
+on operating system). Shorter lines come before longer ones that match
+the entire shorter lines. As a special case empty lines come before
+anything else.;
+#X connect 1 0 0 0;
+#X connect 2 0 0 0;
+#X restore 402 423 pd sorting-text;
 #X connect 0 0 17 0;
 #X connect 1 0 17 0;
 #X connect 2 0 17 0;
@@ -72,6 +86,7 @@ the text \, which is output when the object is sent a "bang". For example
 #X connect 21 0 22 0;
 #X connect 27 0 17 0;
 #X connect 28 0 17 0;
+#X connect 31 0 17 0;
 #X restore 392 217 pd define;
 #X obj 280 240 text get;
 #N canvas 885 156 859 566 get 0;

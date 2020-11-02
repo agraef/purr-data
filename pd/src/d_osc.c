@@ -396,11 +396,19 @@ static void noise_dsp(t_noise *x, t_signal **sp)
     dsp_add(noise_perform, 3, sp[0]->s_vec, &x->x_val, (t_int)sp[0]->s_n);
 }
 
+static void noise_float(t_noise *x, t_float f)
+{
+        /* set the seed */
+        x->x_val = (int)f;
+}
+
 static void noise_tilde_setup(void)
 {
     noise_class = class_new(gensym("noise~"), (t_newmethod)noise_new, 0,
         sizeof(t_noise), 0, 0);
     class_addmethod(noise_class, (t_method)noise_dsp, gensym("dsp"), A_CANT, 0);
+    class_addmethod(noise_class, (t_method)noise_float,
+        gensym("seed"), A_FLOAT, 0);
 }
 
 /* ----------------------- global setup routine ---------------- */

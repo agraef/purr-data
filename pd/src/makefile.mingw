@@ -62,11 +62,16 @@ WARN_CFLAGS = -Wall -W -Wstrict-prototypes -Wno-unused \
 # next minor version of Windows, 5.2.
 ARCH_CFLAGS = -DPD -DPD_INTERNAL -DMSW -DPA_USE_ASIO -DPA_USE_WMME \
 	-DWINVER=0x0502 -DUSEAPI_MMIO -DUSEAPI_PORTAUDIO -mms-bitfields \
-	-DWISHAPP='"wish85.exe"'
+	-DWISHAPP='"wish85.exe"' -D__USE_MINGW_ANSI_STDIO=1
 
 CFLAGS += $(ARCH_CFLAGS) $(WARN_CFLAGS) $(OPT_CFLAGS) $(MORECFLAGS)
 
+ifeq ($(filter -g -ggdb, $(CFLAGS)),)
 STRIP = strip --strip-unneeded -R .note -R .comment
+else
+# don't strip, we need the debugging symbols
+STRIP = true
+endif
 
 # the sources
 

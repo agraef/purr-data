@@ -1,12 +1,11 @@
 {
-  "hello": "world",
   "iem": {
     "prop": {
       "heading": {
           "size":    "Größe und Verhalten",
           "messages": "Nachrichten",
           "label":   "Etikett",
-          "colors":  "Farben"
+          "colors":  "Erscheinungsbild"
       },
       "size_tt": "Größe des iemgui-Elements",
       "size": "Größe",
@@ -42,6 +41,8 @@
       "log_height_tt":   "the framus intersects with the ramistan approximately at the podernoster",
       "steady":       "stabil beim Klicken",
       "steady_tt":    "verschiebe den Schieberegler nicht beim Klicken. Verschiebe ihn nur beim Ziehen der Maus",
+      "drawstyle":    "Rahmen-Stil",
+      "drawstyle_tt":    "Rahmen-Stil durch Auswahl der Elemente anpassen",
       "send":         "Sende-Symbol",
       "send_tt":      "Symbol zum Senden drahtloser Nachrichten an andere iemgui-Elemente oder Objekte",
       "receive":      "Empfangs-Symbol",
@@ -145,6 +146,8 @@
     "reselect_tt": "Stellt die vorhergehende Selektion wieder her",
     "find": "Finde",
     "find_tt": "Finde Text in Konsole-Ausgabe",
+    "encapsulate": "Zusammenfassen",
+    "encapsulate_tt": "Fasse die aktuelle Auswahl automatisch in einem Subpatch zusammen",
     "tidyup": "Aufräumen",
     "tidyup_tt": "Richte die selektierten Objekte in geraden Zeilen und Spalten aus",
     "clear_console": "Konsole löschen",
@@ -236,6 +239,8 @@
     "visible_ancestor_tt": "Zeige den nächsten aktuell sichtbaren Vorgänger des aktuellen Fensters",
     "pdwin": "Pd-Fenster",
     "pdwin_tt": "Zeige das Pd-Hauptfenster",
+    "abstractions": "Abstraktionen",
+    "abstractions_tt": "Abstraktionen abfragen und verwalten",
 
     "media": "Medien",
 
@@ -271,7 +276,8 @@
   },
   "pd_window": {
     "find": {
-      "placeholder": "Suche in der Konsole"
+      "placeholder": "Suche in der Konsole",
+      "highlight": "Alle hervorheben"
     }
   },
   "canvas": {
@@ -285,6 +291,20 @@
       "cancel": "Abbrechen",
       "cancel_tt": "Kein Speichern der Änderungen und kein Schließen des Patches"
     },
+    "abstract_dialog": {
+      "prompt": "Möchten Sie identische Subpatches in Abstraktionen ändern?\nKandidaten in der Subpatch-Hierarchie, ausgehend vom Stammpatch: ",
+      "note": "Hinweis: diese Änderungen können nicht auf einmal rückgängig gemacht werden – Änderungen in einem Subpatch können in diesem Subpatch rückgängig gemacht werden",
+      "single": "Nur dieser Subpatch",
+      "single_tt": "Ersetze den gerade gespeicherten Subpatch mit der entsprechenden Abstraktion",
+      "all": "Alle Kandidaten",
+      "all_tt": "Ersetze alle Subpatches in der Subpatch-Hierarchie, die mit dem gerade gespeicherten Subpatch identisch sind",
+      "none": "Keinen",
+      "none_tt": "Ersetze keinen der Subpatches"
+    },
+    "warning": {
+      "unsaved_tt": "Es gibt ein ungesichertes Exemplar dieser Abstraktion",
+      "multipleunsaved_tt": "Es gibt ein weiteres ungesichertes Exemplar dieser Abstraktion"
+    },
     "find": {
       "placeholder": "Suche im Patch",
       "search": "Suche",
@@ -294,6 +314,7 @@
     "menu": {
       "props": "Einstellungen",
       "open": "Öffnen",
+      "saveas": "Speichern unter",
       "help": "Hilfe",
       "front": "Nach vorne",
       "back": "Nach hinten"
@@ -308,6 +329,8 @@
       },
       "no_scroll": "Rollbalken verbergen (experimentell)",
       "no_scroll_tt": "Rollbalken verbergen (experimentell)",
+      "no_menu": "Fenstermenü verbergen (experimentell)",
+      "no_menu_tt": "Fenstermenü verbergen (experimentell)",
       "gop": "Anzeige im übergeordneten Patch",
       "gop_tt": "Zeige den Inhalt dieses Patches in einem Rechteck im übergeordneten Patch",
       "hide_name": "Namen und Argumente verbergen",
@@ -408,6 +431,10 @@
         "c64": "C64",
         "footgun": "Fusspistole"
       },
+      "grid": {
+        "show_grid": "Gitter-Hintergrund im Edit-Modus",
+        "show_grid_tt": "Gitter-Hintergrund im Edit-Modus anzeigen"
+      },
       "zoom": {
         "save_zoom": "Speichern/Laden der Vergrößerung im Patch",
         "save_zoom_tt": "Speichere die aktuelle Vergrößerung mit dem Patch und stelle diese beim Laden des Patches wieder her"
@@ -476,9 +503,22 @@
   },
   "search": {
     "browse": "Durchsuche die Dokumentation",
+    "bookmark": "Lesezeichen hinzufügen oder entfernen",
     "search": "Suche",
     "building_index": "Erstelle Index...",
     "no_results": "Keine Resultate gefunden.",
     "search_placeholder": "Suche Pd-Doku"
+  },
+  "abstractions": {
+    "filebased": "Datei-basierte Abstraktionen",
+    "private": "Private Abstraktionen",
+    "global": "Globaler Geltungsbereich",
+    "local": "Lokaler Geltungsbereich",
+    "selectall": "Alles auswählen",
+    "selectall_tt": "Wähle alle uninstanziierten Definitionen aus",
+    "delete": "Löschen",
+    "delete_tt": "Löscht alle ausgewählten Definitionen",
+    "close": "Schließen",
+    "close_tt": "Schließt das Dialog-Fenster"
   }
 }

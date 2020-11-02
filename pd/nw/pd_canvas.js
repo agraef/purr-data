@@ -99,6 +99,22 @@ var canvas_events = (function() {
                 return 0;
             }
         },
+        target_is_canvasobj = function(evt) {
+            function is_canvas_obj(target) {
+                return target.classList.contains("obj") &&
+                    target.classList.contains("canvasobj");
+            };
+            // ag: A bit of (maybe over-)defensive programming here: depending
+            // on where exactly the user clicked, the actual object may be the
+            // parent or the grandparent of the clicked target.
+            if (evt.target.classList.contains("border") ||
+                evt.target.classList.contains("box_text"))
+                return is_canvas_obj(evt.target.parentNode);
+            else if (evt.target.parentNode.classList.contains("box_text"))
+                return is_canvas_obj(evt.target.parentNode.parentNode);
+            else
+                return is_canvas_obj(evt.target);
+        },
         text_to_normalized_svg_path = function(text) {
             text = text.slice(4).trim()  // draw
                        .slice(4).trim()  // path
@@ -383,6 +399,11 @@ var canvas_events = (function() {
                     (pointer_y + svg_view.y),
                     b, mod
                 );
+                // If Alt is pressed on a box_text, fake a keyup to prevent
+                // dangling temp runmode in case the click opens a subpatch.
+                if (evt.altKey && target_is_canvasobj(evt)) {
+                    pdgui.canvas_sendkey(name, 0, evt, "Alt", 0);
+                }
                 //evt.stopPropagation();
                 //evt.preventDefault();
             },
@@ -411,10 +432,9 @@ var canvas_events = (function() {
             },
             keydown: function(evt) {
                 pdgui.keydown(name, evt);
-                // prevent the default behavior of scrolling
-                // on arrow keys in editmode
+                // prevent the default behavior of scrolling using arrow keys
                 if (document.querySelector("#patchsvg")) {
-                    if ([32, 37, 38, 39, 40].indexOf(evt.keyCode) > -1) {
+                    if ([37, 38, 39, 40].indexOf(evt.keyCode) > -1) {
                         evt.preventDefault();
                     }
                 }
@@ -456,6 +476,9 @@ var canvas_events = (function() {
             },
             text_keydown: function(evt) {
                 evt.stopPropagation();
+                setTimeout(function() {
+                    pdgui.gui_message_update_textarea_border(textbox(), 0);
+                }, 0);
                 //evt.preventDefault();
                 return false;
             },
@@ -615,6 +638,8 @@ var canvas_events = (function() {
                 canvas_events[canvas_events.get_previous_state()]();
             },
             hscroll_mouseup: function(evt) {
+                document.getElementById("hscroll").style.setProperty("background-color", "rgba(0, 0, 0, 0.267)");
+                document.getElementById("patchsvg").style.cursor = "default";
                 canvas_events[canvas_events.get_previous_state()]();
             },
             hscroll_mousemove: function(evt) {
@@ -644,6 +669,8 @@ var canvas_events = (function() {
                 }
             },
             vscroll_mouseup: function(evt) {
+                document.getElementById("vscroll").style.setProperty("background-color", "rgba(0, 0, 0, 0.267)");
+                document.getElementById("patchsvg").style.cursor = "default";
                 canvas_events[canvas_events.get_previous_state()]();
             },
             vscroll_mousemove: function(evt) {
@@ -916,11 +943,15 @@ var canvas_events = (function() {
         },
         hscroll_drag: function() {
             canvas_events.none();
+            document.getElementById("hscroll").style.cssText += "background-color: rgba(0, 0, 0, 0.5) !important";
+            document.getElementById("patchsvg").style.cursor = "-webkit-grabbing";
             document.addEventListener("mouseup", events.hscroll_mouseup, false);
             document.addEventListener("mousemove", events.hscroll_mousemove, false);
         },
         vscroll_drag: function() {
             canvas_events.none();
+            document.getElementById("vscroll").style.cssText += "background-color: rgba(0, 0, 0, 0.5) !important";
+            document.getElementById("patchsvg").style.cursor = "-webkit-grabbing";
             document.addEventListener("mouseup", events.vscroll_mouseup, false);
             document.addEventListener("mousemove", events.vscroll_mousemove, false);
         },
@@ -1316,7 +1347,7 @@ function register_window_id(cid, attr_array) {
     // Initialize the zoom level to the value retrieved from the patch, if any.
     nw.Window.get().zoomLevel = attr_array.zoom;
     pdgui.canvas_map(cid); // side-effect: triggers gui_canvas_get_scroll
-    pdgui.canvas_set_editmode(cid, attr_array.editmode);
+    pdgui.canvas_query_editmode(cid);
     // For now, there is no way for the cord inspector to be turned on by
     // default. But if this changes we need to set its menu item checkbox
     // accordingly here
@@ -1329,6 +1360,9 @@ function register_window_id(cid, attr_array) {
     // we check the title_queue to see if our title now contains an asterisk
     // (which is the visual cue for "dirty")
 
+    // Enable/disable the warning for multiple dirty instances
+    pdgui.gui_canvas_warning(cid, attr_array.warid);
+
     // Two possibilities for handling this better:
     // have a representation of canvas attys in pdgui.js (editmode, dirty, etc.)
     // or
@@ -1338,6 +1372,7 @@ function register_window_id(cid, attr_array) {
         nw.Window.get().title = kludge_title;
     }
     pdgui.free_title_queue(cid);
+    document.body.addEventListener("load", update_menu_items(cid), false);
 }
 
 function create_popup_menu(name) {
@@ -1355,6 +1390,12 @@ function create_popup_menu(name) {
         label: l("canvas.menu.open"),
         click: function() {
             pdgui.popup_action(name, 1);
+        }
+    }));
+    popup_menu.append(new gui.MenuItem({
+        label: l("canvas.menu.saveas"),
+        click: function() {
+            pdgui.popup_action(name, 5);
         }
     }));
     popup_menu.append(new gui.MenuItem({
@@ -1438,6 +1479,11 @@ function set_edit_menu_modals(state) {
     canvas_menu.edit.copy.enabled = state;
     canvas_menu.edit.paste.enabled = state;
     canvas_menu.edit.selectall.enabled = state;
+    canvas_menu.edit.font.enabled = state;
+}
+
+function get_editmode_checkbox() {
+    return canvas_menu.edit.editmode.checked;
 }
 
 function set_editmode_checkbox(state) {
@@ -1472,9 +1518,12 @@ function minit(menu_item, options) {
     }
 }
 
+// used, so that we can reference menu later
+var m  = null;
+
 function nw_create_patch_window_menus(gui, w, name) {
     // if we're on GNU/Linux or Windows, create the menus:
-    var m = canvas_menu = pd_menus.create_menu(gui);
+    m = canvas_menu = pd_menus.create_menu(gui);
 
     // File sub-entries
     // We explicitly enable these menu items because on OSX
@@ -1626,13 +1675,89 @@ function nw_create_patch_window_menus(gui, w, name) {
             pdgui.pdsend(name, "reselect");
         }
     });
+    minit(m.edit.encapsulate, {
+        enabled: true,
+        click: function() { pdgui.pdsend(name, "encapsulate"); }
+    });
     minit(m.edit.tidyup, {
         enabled: true,
         click: function() { pdgui.pdsend(name, "tidy"); }
     });
     minit(m.edit.font, {
         enabled: true,
-        click: function () { pdgui.pdsend(name, "menufont"); }
+        /*click: function () { pdgui.pdsend(name, "menufont"); } */
+    });
+    minit(m.font.s8, {
+        enabled: true,
+        click: function () {
+            m.font.s8.checked = true;
+            m.font.s10.checked = false;
+            m.font.s12.checked = false;
+            m.font.s16.checked = false;
+            m.font.s24.checked = false;
+            m.font.s36.checked = false;
+            pdgui.gui_menu_font_change_size(name, 8);
+        }
+    });
+    minit(m.font.s10, {
+        enabled: true,
+        click: function () {
+            m.font.s8.checked = false;
+            m.font.s10.checked = true;
+            m.font.s12.checked = false;
+            m.font.s16.checked = false;
+            m.font.s24.checked = false;
+            m.font.s36.checked = false;
+            pdgui.gui_menu_font_change_size(name, 10);
+        }
+    });
+    minit(m.font.s12, {
+        enabled: true,
+        click: function () {
+            m.font.s8.checked = false;
+            m.font.s10.checked = false;
+            m.font.s12.checked = true;
+            m.font.s16.checked = false;
+            m.font.s24.checked = false;
+            m.font.s36.checked = false;
+            pdgui.gui_menu_font_change_size(name, 12);
+        }
+    });
+    minit(m.font.s16, {
+        enabled: true,
+        click: function () {
+            m.font.s8.checked = false;
+            m.font.s10.checked = false;
+            m.font.s12.checked = false;
+            m.font.s16.checked = true;
+            m.font.s24.checked = false;
+            m.font.s36.checked = false;
+            pdgui.gui_menu_font_change_size(name, 16);
+        }
+    });
+    minit(m.font.s24, {
+        enabled: true,
+        click: function () {
+            m.font.s8.checked = false;
+            m.font.s10.checked = false;
+            m.font.s12.checked = false;
+            m.font.s16.checked = false;
+            m.font.s24.checked = false;
+            m.font.s36.checked = false;
+            pdgui.gui_menu_font_change_size(name, 24);
+        }
+    });
+    minit(m.font.s36, {
+        enabled: true,
+        click: function () {
+            m.font.s8.checked = false;
+            m.font.s10.checked = false;
+            m.font.s12.checked = false;
+            m.font.s16.checked = false;
+            m.font.s24.checked = false;
+            m.font.s36.checked = true;
+            pdgui.gui_menu_font_change_size(name, 36);
+        }
     });
     minit(m.edit.cordinspector, {
         enabled: true,
@@ -1907,6 +2032,12 @@ function nw_create_patch_window_menus(gui, w, name) {
             pdgui.raise_pd_window();
         }
     });
+    minit(m.win.abstractions, {
+        enabled: true,
+        click: function () {
+            pdgui.pdsend(name, "getabstractions");
+        }
+    });
 
     // Media menu
     minit(m.media.audio_on, {
@@ -1974,4 +2105,43 @@ function nw_create_patch_window_menus(gui, w, name) {
             gui.Window.get().showDevTools();
         }
     });
+}
+
+function init_menu_font_size(size) {
+    //pdgui.post("init_menu_font_size " + size);
+    m.font.s8.checked = false;
+    m.font.s10.checked = false;
+    m.font.s12.checked = false;
+    m.font.s16.checked = false;
+    m.font.s24.checked = false;
+    m.font.s36.checked = false;
+
+    switch(size)
+    {
+        case 8:
+            m.font.s8.checked = true;
+            break;
+        case 10:
+            m.font.s10.checked = true;
+            break;
+        case 12:
+            m.font.s12.checked = true;
+            break;
+        case 16:
+            m.font.s16.checked = true;
+            break;
+        case 24:
+            m.font.s24.checked = true;
+            break;
+        case 36:
+            m.font.s36.checked = true;
+            break;
+    } 
+}
+
+// ico@vt.edu 2020-08-24: this is called when the window is finally
+// loaded and then asks libpd to tell us what is the font state
+// LATER: we can use this to also update the undo state appropriately
+function update_menu_items(cid) {
+    pdgui.pdsend(cid, "updatemenu");
 }

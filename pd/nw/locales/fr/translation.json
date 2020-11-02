@@ -1,12 +1,11 @@
 {
-  "hello": "world",
   "iem": {
     "prop": {
       "heading": {
           "size":    "Taille et comportement",
           "messages": "Messages",
           "label":   "Label",
-          "colors":  "Couleurs"
+          "colors":  "Apparence"
       },
       "size":    "Taille",
       "size_tt": "Taille de l'objet IemGui",
@@ -42,6 +41,8 @@
       "log_height_tt": "Le framus se croise avec le ramistan approximativement au paternoster !",
       "steady":       "Fixe au clic",
       "steady_tt":    "Ne bouge pas le curseur quand cliqué. Bouge seulement quand on le fait glisser avec la souris",
+      "drawstyle":    "Style du cadre",
+      "drawstyle_tt":    "Ajuster le style du cadre en choisissant ses éléments",
       "send":         "Envoyer au symbole",
       "send_tt":      "Messages sans-fil à envoyer à travers le Symbole vers d'autres IemGui ou Objets",
       "receive":      "Recevoir du symbole",
@@ -145,6 +146,8 @@
     "reselect_tt": "Rétablir la sélection précédente",
     "find":    "Rechercher",
     "find_tt": "Rechercher un texte dans la sortie de la console",
+    "encapsulate": "Encapsuler",
+    "encapsulate_tt": "Encapsuler automatiquement la sélection actuelle dans un sous-patch",
     "tidyup":    "Arranger",
     "tidyup_tt": "Aligner la sélection d'objets en lignes et colonnes strictes",
     "clear_console":    "Effacer la Console",
@@ -236,6 +239,8 @@
     "visible_ancestor_tt": "Donner le focus à l'ancêtre le plus proche de cette fenêtre qui est actuellement visible",
     "pdwin":    "Fenêtre Console Pd",
     "pdwin_tt": "Donner le focus à la fenêtre principale de Pd",
+    "abstractions": "Abstractions",
+    "abstractions_tt": "Interroger et gérer les abstractions",
 
     "media": "Média",
 
@@ -271,19 +276,34 @@
   },
   "pd_window": {
     "find": {
-      "placeholder": "Chercher dans la Console"
+      "placeholder": "Chercher dans la Console",
+      "highlight": "Surligner toutes les occurrences"
     }
   },
   "canvas": {
     "paste_clipboard_prompt": "Attention: vous êtes sur le point de coller du 'code Pd' provenant de l'extérieur de Pd. Voulez-vous continuer ?",
     "save_dialog": {
-      "prompt": "Voulez-vous enregistrer les modifications apportées à ce patch ?",
+      "prompt": "Voulez-vous enregistrer les modifications apportées à",
       "yes":    "Oui",
       "yes_tt": "Enregistrer les modifications dans le fichier avant de fermer le patch ?",
       "no":    "Non",
       "no_tt": "N'enregistrer aucune modification, fermer simplement le patch",
       "cancel":    "Annuler",
       "cancel_tt": "N'enregistrer aucune modification et ne pas fermer le patch"
+    },
+    "abstract_dialog": {
+      "prompt": "Voudriez-vous transformer tous les sous-patchs identiques en abstractions ?\nCandidats trouvés dans l'arborescence des sous-patchs, depuis le canevas racine : ",
+      "note": "Note : Cela ne peut pas être défait d'un seul coup - Toutes les modifications apportées aux sous-patchs peuvent être annulées à partir de ce sous-patch",
+      "single": "Seulement celui-ci",
+      "single_tt": "Remplacer le sous-patch que vous venez de sauvegarder par l'abstraction correspondante",
+      "all": "Tous les candidats",
+      "all_tt": "Remplacer tous les sous-patchs de l'arborescence des sous-patchs identiques à celui que vous venez d'enregistrer par l'abstraction correspondante",
+      "none": "Aucun",
+      "none_tt": "Ne remplacer aucun sous-patch"
+    },
+    "warning": {
+      "unsaved_tt": "Il existe une instance modifiée non enregistrée de cette abstraction",
+      "multipleunsaved_tt": "Il existe une autre instance modifiée non enregistrée de cette abstraction"
     },
     "find": {
       "placeholder": "Chercher dans le Canevas",
@@ -294,6 +314,7 @@
     "menu": {
       "props": "Propriétés",
       "open":  "Ouvrir",
+      "saveas": "Sauvegarder comme",
       "help":  "Aide",
       "front": "Envoyer au Premier plan",
       "back":  "Envoyer à l'Arrière plan"
@@ -410,6 +431,10 @@
         "c64":       "C64",
         "footgun":   "Footgun"
       },
+      "grid": {
+        "show_grid": "Fond de grille en mode Édition",
+        "show_grid_tt": "Afficher l'arrière-plan de la grille en mode Édition"
+      },
       "zoom": {
         "save_zoom":    "Sauver/Charger niveau zoom avec patch",
         "save_zoom_tt": "Enregistrer le niveau de zoom actuel avec le patch et le restaurer lors du chargement du patch"
@@ -478,9 +503,22 @@
   },
   "search": {
     "browse": "Parcourir la documentation",
+    "bookmark": "Ajouter ou enlever un favori",
     "search": "Chercher",
     "building_index": "Construction de l'index...",
     "no_results": "Aucun résultat trouvé !",
     "search_placeholder": "Chercher dans les Docs Pd"
+  },
+  "abstractions": {
+    "filebased": "Abstractions basées sur des fichiers",
+    "private": "Abstractions privées",
+    "global": "Portée globale",
+    "local": "Portée locale",
+    "selectall": "Tout sélectionner",
+    "selectall_tt": "Sélectionner toutes les définitions avec zéro instance",
+    "delete": "Supprimer",
+    "delete_tt": "Supprimer toutes les définitions sélectionnées",
+    "close": "Fermer",
+    "close_tt": "Fermer la fenêtre de dialogue"
   }
 }

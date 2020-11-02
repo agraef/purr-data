@@ -17,7 +17,93 @@ file format as in the dialog window for data.
 #include "g_canvas.h"
 #include <string.h>
 
+/* object to assist in saving state by abstractions */
+static t_class *savestate_class;
+
+typedef struct _savestate
+{
+    t_object x_obj;
+    t_outlet *x_stateout;
+    t_outlet *x_bangout;
+    t_binbuf *x_savetobuf;
+} t_savestate;
+
+static void *savestate_new(void)
+{
+    t_savestate *x = (t_savestate *)pd_new(savestate_class);
+    x->x_stateout = outlet_new(&x->x_obj, &s_list);
+    x->x_bangout = outlet_new(&x->x_obj, &s_bang);
+    x->x_savetobuf = 0;
+    return (x);
+}
+
+    /* call this when the owning abstraction's parent patch is saved so we
+     *     can add state-restoring messages to binbuf */
+static void savestate_doit(t_savestate *x, t_binbuf *b)
+{
+    x->x_savetobuf = b;
+    outlet_bang(x->x_bangout);
+    x->x_savetobuf = 0;
+}
+
+    /* called by abstraction in response to savestate_doit(); lists received
+       here are added to the parent patch's save buffer after the line that will
+       create the abstraction, addressed to "#A" which will be this patch after
+       it is recreated by reopening the parent patch, pasting, or "undo". */
+static void savestate_list(t_savestate *x, t_symbol *s, int argc, t_atom *argv)
+{
+    if (x->x_savetobuf)
+    {
+        binbuf_addv(x->x_savetobuf, "ss", gensym("#A"), gensym("saved"));
+        binbuf_add(x->x_savetobuf, argc, argv);
+        binbuf_addv(x->x_savetobuf, ";");
+    }
+    else pd_error(x, "savestate: ignoring message sent when not saving parent");
+}
+
+static void savestate_setup(void)
+{
+    savestate_class = class_new(gensym("savestate"),
+        (t_newmethod)savestate_new, 0, sizeof(t_savestate), 0, 0);
+    class_addlist(savestate_class, savestate_list);
+}
+
+void canvas_statesavers_doit(t_glist *x, t_binbuf *b)
+{
+    t_gobj *g;
+    for (g = x->gl_list; g; g = g->g_next)
+    {
+        if (g->g_pd == savestate_class)
+        {
+            savestate_doit((t_savestate *)g, b);
+        }
+        else if (g->g_pd == canvas_class &&
+            !canvas_isabstraction((t_canvas *)g))
+        {
+            canvas_statesavers_doit((t_glist *)g, b);
+        }
+    }
+}
+
+void canvas_saved(t_glist *x, t_symbol *s, int argc, t_atom *argv)
+{
+    t_gobj *g;
+    for (g = x->gl_list; g; g = g->g_next)
+    {
+        if (g->g_pd == savestate_class)
+        {
+            outlet_list(((t_savestate *)g)->x_stateout, 0, argc, argv);
+        }
+        else if (g->g_pd == canvas_class &&
+            !canvas_isabstraction((t_canvas *)g))
+        {
+            canvas_saved((t_glist *)g, s, argc, argv);
+        }
+    }
+}
+
 void canvas_savedeclarationsto(t_canvas *x, t_binbuf *b);
+void canvas_saveabdefinitionsto(t_canvas *x, t_binbuf *b);
 
     /* the following routines read "scalars" from a file into a canvas. */
 
@@ -745,6 +831,9 @@ static void canvas_saveto(t_canvas *x, t_binbuf *b)
         }
         canvas_savedeclarationsto(x, b);
     }
+
+    canvas_saveabdefinitionsto(x, b);
+
     for (y = x->gl_list; y; y = y->g_next)
         gobj_save(y, b);
 
@@ -891,26 +980,55 @@ static void canvas_savetofile(t_canvas *x, t_symbol *filename, t_symbol *dir,
     binbuf_free(b);
 }
 
+void canvas_reload_ab(t_canvas *x);
+
+/* updates the shared ab definition and reloads all instances */
+static void canvas_save_ab(t_canvas *x, t_floatarg fdestroy)
+{
+    if(!x->gl_absource) bug("canvas_save_ab");
+
+    t_binbuf *b = binbuf_new();
+    canvas_savetemplatesto(x, b, 1);
+    canvas_saveto(x, b);
+
+    binbuf_free(x->gl_absource->ad_source);
+    x->gl_absource->ad_source = b;
+
+    canvas_dirty(x, 0);
+    canvas_reload_ab(x);
+
+    if (fdestroy != 0) //necessary?
+        vmess(&x->gl_pd, gensym("menuclose"), "f", 1.);
+}
+
 static void canvas_menusaveas(t_canvas *x, t_floatarg fdestroy)
 {
     t_canvas *x2 = canvas_getrootfor(x);
-    gui_vmess("gui_canvas_saveas", "xssi",
-        x2,
-        (strncmp(x2->gl_name->s_name, "Untitled", 8) ?
-            x2->gl_name->s_name : "title"),
-        canvas_getdir(x2)->s_name,
-        fdestroy != 0);
+    if(!x->gl_isab)
+        gui_vmess("gui_canvas_saveas", "xssi",
+            x2,
+            (strncmp(x2->gl_name->s_name, "Untitled", 8) ?
+                x2->gl_name->s_name : "title"),
+            canvas_getdir(x2)->s_name,
+            fdestroy != 0);
+    else if(x->gl_dirty)
+        canvas_save_ab(x2, fdestroy);
 }
 
 static void canvas_menusave(t_canvas *x, t_floatarg fdestroy)
 {
     t_canvas *x2 = canvas_getrootfor(x);
     char *name = x2->gl_name->s_name;
-    if (*name && strncmp(name, "Untitled", 8)
-            && (strlen(name) < 4 || strcmp(name + strlen(name)-4, ".pat")
-                || strcmp(name + strlen(name)-4, ".mxt")))
-            canvas_savetofile(x2, x2->gl_name, canvas_getdir(x2), fdestroy);
-    else canvas_menusaveas(x2, fdestroy);
+    if(!x->gl_isab)
+    {
+        if (*name && strncmp(name, "Untitled", 8)
+                && (strlen(name) < 4 || strcmp(name + strlen(name)-4, ".pat")
+                    || strcmp(name + strlen(name)-4, ".mxt")))
+                canvas_savetofile(x2, x2->gl_name, canvas_getdir(x2), fdestroy);
+        else canvas_menusaveas(x2, fdestroy);
+    }
+    else if(x->gl_dirty)
+        canvas_save_ab(x2, fdestroy);
 }
 
 static void canvas_menuprint(t_canvas *x)
@@ -921,6 +1039,7 @@ static void canvas_menuprint(t_canvas *x)
 
 void g_readwrite_setup(void)
 {
+    savestate_setup();
     class_addmethod(canvas_class, (t_method)glist_write,
         gensym("write"), A_SYMBOL, A_DEFSYM, A_NULL);
     class_addmethod(canvas_class, (t_method)glist_read,
@@ -931,6 +1050,8 @@ void g_readwrite_setup(void)
         gensym("savetofile"), A_SYMBOL, A_SYMBOL, A_DEFFLOAT, 0);
     class_addmethod(canvas_class, (t_method)canvas_saveto,
         gensym("saveto"), A_CANT, 0);
+    class_addmethod(canvas_class, (t_method)canvas_saved,
+        gensym("saved"), A_GIMME, 0);
 /* ------------------ from the menu ------------------------- */
     class_addmethod(canvas_class, (t_method)canvas_menusave,
         gensym("menusave"), A_DEFFLOAT, 0);

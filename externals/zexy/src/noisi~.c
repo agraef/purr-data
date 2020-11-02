@@ -69,7 +69,7 @@ static void set_noisseed(t_nois *x, t_floatarg seed)
 
 /* ------------------------ noisi~ ----------------------------- */
 
-static t_class *noisi_class;
+static t_class *noisi_class=NULL;
 
 static inline t_sample int2sample(int i)
 {
@@ -95,12 +95,12 @@ static t_int *noisi_perform(t_int *w)
   t_sample all_to_go = x->updater;
   t_sample still_to_go = x->to_go;
 
-  if (all_to_go == 1)	{
+  if (all_to_go == 1) {
     /* this is "pure white" noise, so we have to calculate each sample */
     while (n--) {
       *out++ = int2sample(i_value=update_intNoise(i_value));
     }
-  }  else if (n < still_to_go)   {
+  }  else if (n < still_to_go) {
     /* signal won't change for the next 64 samples */
     still_to_go -= n;
     while (n--) {
@@ -108,7 +108,7 @@ static t_int *noisi_perform(t_int *w)
     }
   }  else if (all_to_go + still_to_go > n) {
     /* only one update calculation necessary for 64 samples !!! */
-    while (still_to_go-- > 0)	{
+    while (still_to_go-- > 0) {
       n--;
       *out++ = (f_value -= decrement);
     }
@@ -117,14 +117,14 @@ static t_int *noisi_perform(t_int *w)
     still_to_go += all_to_go + 1;
     decrement = (f_value - int2sample(i_value))  / all_to_go;
 
-    while (n--)	{
+    while (n--) {
       still_to_go--;
       *out++ = (f_value -= decrement);
     }
   }  else {
     /* anything else */
-    while (n--)	{
-      if (still_to_go-- <= 0) {		/* update only if all time has elapsed */
+    while (n--) {
+      if (still_to_go-- <= 0) {  /* update only if all time has elapsed */
         still_to_go += all_to_go;
         f_value=int2sample(i_value);
         i_value=update_intNoise(i_value);
@@ -150,7 +150,8 @@ static void noisi_dsp(t_nois *x, t_signal **sp)
 
 static void noisi_helper(void)
 {
-  post("\n"HEARTSYMBOL " noisi~\t:: a bandlimited interpolating pseudo-noise generator");
+  post("\n"HEARTSYMBOL
+       " noisi~\t:: a bandlimited interpolating pseudo-noise generator");
   post("<freq>\t : sampling-frequency (in Hz)\n"
        "'help'\t : view this");
   post("creation : \"noisi~ [<freq>]\"\t: ('0'(default) will produce 'white' noise)\n");
@@ -174,18 +175,16 @@ static void *noisi_new(t_floatarg f)
   return (x);
 }
 
-void noisi_tilde_setup(void)
+ZEXY_SETUP void noisi_tilde_setup(void)
 {
-  noisi_class = class_new(gensym("noisi~"), (t_newmethod)noisi_new, 0,
-                          sizeof(t_nois), 0, A_DEFFLOAT, 0);
+  noisi_class = zexy_new("noisi~",
+                         noisi_new, 0, t_nois, 0, "F");
 
   class_addfloat(noisi_class, set_noisfreq);
-  class_addmethod(noisi_class, (t_method)noisi_dsp, gensym("dsp"),
-                  A_CANT, 0);
+  zexy_addmethod(noisi_class, (t_method)noisi_dsp, "dsp", "!");
 
-  class_addmethod(noisi_class, (t_method)set_noisseed, gensym("seed"),
-                  A_FLOAT, 0);
+  zexy_addmethod(noisi_class, (t_method)set_noisseed, "seed", "f");
 
-  class_addmethod(noisi_class, (t_method)noisi_helper, gensym("help"), 0);
+  zexy_addmethod(noisi_class, (t_method)noisi_helper, "help", "");
   zexy_register("noisi~");
 }

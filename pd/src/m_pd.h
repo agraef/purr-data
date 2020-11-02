@@ -14,7 +14,7 @@ extern "C" {
 #define PD_MINOR_VERSION 48
 #define PD_BUGFIX_VERSION 0
 #define PD_TEST_VERSION ""
-#define PD_L2ORK_VERSION "2.12.0"
+#define PD_L2ORK_VERSION "2.15.2"
 #define PDL2ORK
 extern int pd_compatibilitylevel;   /* e.g., 43 for pd 0.43 compatibility */
 
@@ -87,7 +87,18 @@ typedef unsigned __int64  uint64_t;
 
 /* signed and unsigned integer types the size of a pointer:  */
 #if !defined(PD_LONGINTTYPE)
+#if defined(_WIN32) && defined(_WIN64)
+#define PD_LONGINTTYPE long long
+#else
 #define PD_LONGINTTYPE long
+#endif
+#endif
+#if !defined(PD_LONGUINTTYPE)
+#if defined(_WIN32) && defined(_WIN64)
+#define PD_LONGUINTTYPE unsigned long long
+#else
+#define PD_LONGUINTTYPE unsigned long
+#endif
 #endif
 
 #if !defined(PD_FLOATSIZE)
@@ -103,6 +114,7 @@ typedef unsigned __int64  uint64_t;
 #endif
 
 typedef PD_LONGINTTYPE t_int;       /* pointer-size integer */
+typedef PD_LONGUINTTYPE t_uint;     /* pointer-size unsigned integer */
 typedef PD_FLOATTYPE t_float;       /* a float type at most the same size */
 typedef PD_FLOATTYPE t_floatarg;    /* float type for function calls */
 
@@ -305,6 +317,7 @@ EXTERN void pd_forwardmess(t_pd *x, int argc, t_atom *argv);
 EXTERN t_symbol *gensym(const char *s);
 EXTERN t_gotfn getfn(t_pd *x, t_symbol *s);
 EXTERN t_gotfn zgetfn(t_pd *x, t_symbol *s);
+EXTERN t_gotfn zcheckgetfn(t_pd *x, t_symbol *s, t_atomtype arg1, ...);
 EXTERN void nullfn(void);
 EXTERN void pd_vmess(t_pd *x, t_symbol *s, char *fmt, ...);
 #define mess0(x, s) ((*getfn((x), (s)))((x)))
@@ -556,6 +569,7 @@ EXTERN int sys_isreadablefile(const char *name);
 EXTERN int sys_isabsolutepath(const char *dir);
 EXTERN void sys_bashfilename(const char *from, char *to);
 EXTERN void sys_unbashfilename(const char *from, char *to);
+EXTERN int sys_relativizepath(const char *from, const char *to, char *result);
 EXTERN int open_via_path(const char *name, const char *ext, const char *dir,
     char *dirresult, char **nameresult, unsigned int size, int bin);
 EXTERN int sched_geteventno(void);
@@ -691,6 +705,7 @@ EXTERN void garray_setsaveit(t_garray *x, int saveit);
 EXTERN t_glist *garray_getglist(t_garray *x);
 EXTERN t_array *garray_getarray(t_garray *x);
 EXTERN t_class *scalar_class;
+EXTERN t_class *text_class;
 
 EXTERN t_float *value_get(t_symbol *s);
 EXTERN void value_release(t_symbol *s);
@@ -712,7 +727,7 @@ EXTERN void sys_vguid(const char *file, int line, const char *fmt, ...);
 EXTERN void sys_vvguid(const char *file, int line, const char *fmt, va_list);
 #endif
 EXTERN void sys_gui(const char *s);
-#define sys_vgui(args...) sys_vguid(__FILE__,__LINE__,args)
+#define sys_vgui(...) sys_vguid(__FILE__,__LINE__,__VA_ARGS__)
 #define sys_gui(s)        sys_vguid(__FILE__,__LINE__,"%s",s)
 EXTERN void gui_vmess(const char *sel, char *fmt, ...);
 /* some more gui interfaces for building incremental messages */
@@ -721,7 +736,7 @@ EXTERN void gui_start_array(void);
 EXTERN void gui_f(t_float f); /* send a float element in an array */
 EXTERN void gui_i(int i);     /* send an int element in an array */
 EXTERN void gui_s(const char *s); /* send a string element in an array */
-EXTERN void gui_x(long unsigned int i);
+EXTERN void gui_x(t_uint i);
 EXTERN void gui_end_array(void);
 EXTERN void gui_end_vmess(void);
 

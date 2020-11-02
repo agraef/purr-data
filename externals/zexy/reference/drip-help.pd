@@ -48,7 +48,7 @@ be flushed when a new package arrives or not.;
 #X obj 35 335 drip 200 flush;
 #X obj 171 335 drip 200;
 #X text 717 13 part of;
-#X obj 776 13 zexy;
+#X text 776 13 zexy;
 #N canvas 460 154 494 344 META 0;
 #X text 12 145 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
 Wilkes for Pd version 0.42.;

@@ -65,7 +65,7 @@ t_rtext *rtext_new(t_glist *glist, t_text *who)
     // supposed to be there (they don't belong to that canvas). See
     // in pd.tk pdtk_select_all_gop_widgets function and how it affects
     // draw data structures that are displayed via gop (Ico 20140831)
-    sprintf(x->x_tag, ".x%lx.t%lx", (t_int)glist_getcanvas(x->x_glist),
+    sprintf(x->x_tag, ".x%zx.t%zx", (t_uint)glist_getcanvas(x->x_glist),
         (t_int)x);
     return (x);
 }
@@ -361,7 +361,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
         }
         if (action == SEND_FIRST)
         {
-            //fprintf(stderr,"send_first rtext=%lx t_text=%lx\n", x, x->x_text);
+            //fprintf(stderr,"send_first rtext=%zx t_text=%zx\n", x, x->x_text);
             gui_vmess("gui_text_new", "xssiiisi",
                 canvas, x->x_tag, rtext_gettype(x)->s_name,
                 glist_isselected(x->x_glist, ((t_gobj*)x->x_text)),
@@ -394,19 +394,19 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
             {
                 if (selend_b > selstart_b)
                 {
-                    //sys_vgui(".x%lx.c select from %s %d\n", canvas, 
+                    //sys_vgui(".x%zx.c select from %s %d\n", canvas, 
                     //    x->x_tag, u8_charnum(tempbuf, selstart_b));
-                    //sys_vgui(".x%lx.c select to %s %d\n", canvas, 
+                    //sys_vgui(".x%zx.c select to %s %d\n", canvas, 
                     //    x->x_tag, u8_charnum(tempbuf, selend_b)
                     //      + (sys_oldtclversion ? 0 : -1));
-                    //sys_vgui(".x%lx.c focus \"\"\n", canvas);        
+                    //sys_vgui(".x%zx.c focus \"\"\n", canvas);        
                 }
                 else
                 {
-                    //sys_vgui(".x%lx.c select clear\n", canvas);
-                    //sys_vgui(".x%lx.c icursor %s %d\n", canvas, x->x_tag,
+                    //sys_vgui(".x%zx.c select clear\n", canvas);
+                    //sys_vgui(".x%zx.c icursor %s %d\n", canvas, x->x_tag,
                     //    u8_charnum(tempbuf, selstart_b));
-                    //sys_vgui(".x%lx.c focus %s\n", canvas, x->x_tag);        
+                    //sys_vgui(".x%zx.c focus %s\n", canvas, x->x_tag);        
                 }
             }
         }
@@ -524,13 +524,13 @@ void rtext_draw(t_rtext *x)
 void rtext_erase(t_rtext *x)
 {
     //if (x && x->x_glist)
-    //    sys_vgui(".x%lx.c delete %s\n", glist_getcanvas(x->x_glist), x->x_tag);
+    //    sys_vgui(".x%zx.c delete %s\n", glist_getcanvas(x->x_glist), x->x_tag);
 }
 
-/* Not needed since the rtext gets erased along with the parent gobj group */
+/* Not needed since the rtext gets displaced along with the parent gobj group */
 void rtext_displace(t_rtext *x, int dx, int dy)
 {
-    //sys_vgui(".x%lx.c move %s %d %d\n", glist_getcanvas(x->x_glist), 
+    //sys_vgui(".x%zx.c move %s %d %d\n", glist_getcanvas(x->x_glist), 
     //    x->x_tag, dx, dy);
 }
 
@@ -541,15 +541,15 @@ void rtext_select(t_rtext *x, int state)
     //t_glist *glist = x->x_glist;
     //t_canvas *canvas = glist_getcanvas(glist);
     //if (glist_istoplevel(glist))
-    //    sys_vgui(".x%lx.c itemconfigure %s -fill %s\n", canvas, 
+    //    sys_vgui(".x%zx.c itemconfigure %s -fill %s\n", canvas, 
     //        x->x_tag, (state? "$pd_colors(selection)" : "$pd_colors(text)"));
     //if (x->x_text->te_pd->c_wb && x->x_text->te_pd->c_wb->w_displacefnwtag)
     //{
     //    if (state)
-    //        sys_vgui(".x%lx.c addtag selected withtag %s\n",
+    //        sys_vgui(".x%zx.c addtag selected withtag %s\n",
     //               glist_getcanvas(glist), x->x_tag);
     //    else
-    //        sys_vgui(".x%lx.c dtag %s selected\n",
+    //        sys_vgui(".x%zx.c dtag %s selected\n",
     //               glist_getcanvas(glist), x->x_tag);
     //}
     /* Not sure the following is needed anymore either-- commenting it
@@ -560,18 +560,22 @@ void rtext_select(t_rtext *x, int state)
 void rtext_activate(t_rtext *x, int state)
 {
     //fprintf(stderr,"rtext_activate state=%d\n", state);
-    int w = 0, h = 0, widthspec, heightspec, indx, isgop;
+    int w = 0, h = 0, widthspec, heightspec, indx, isgop,
+        selstart = -1, selend = -1;
     char *tmpbuf;
     t_glist *glist = x->x_glist;
     t_canvas *canvas = glist_getcanvas(glist);
-    //if (state && x->x_active) printf("duplicate rtext_activate\n");
+    if (state && x->x_active) {
+        //fprintf(stderr, "duplicate rtext_activate\n");
+        return;
+    }
     // the following prevents from selecting all when inside an
     // object that is already being texted for... please *test*
     // "fixes" before committing them
     //if (state == x->x_active) return; // avoid excess calls
     if (state)
     {
-        //sys_vgui(".x%lx.c focus %s\n", canvas, x->x_tag);
+        //sys_vgui(".x%zx.c focus %s\n", canvas, x->x_tag);
         glist->gl_editor->e_textedfor = x;
         glist->gl_editor->e_textdirty = 0;
         x->x_selstart = 0;
@@ -580,12 +584,16 @@ void rtext_activate(t_rtext *x, int state)
     }
     else
     {
-        //sys_vgui("selection clear .x%lx.c\n", canvas);
-        //sys_vgui(".x%lx.c focus \"\"\n", canvas);
+        //sys_vgui("selection clear .x%zx.c\n", canvas);
+        //sys_vgui(".x%zx.c focus \"\"\n", canvas);
         if (glist->gl_editor->e_textedfor == x)
             glist->gl_editor->e_textedfor = 0;
         x->x_active = 0;
     }
+
+    /* check if it has a window */
+    if(!glist->gl_havewindow) return;
+
     rtext_senditup(x, SEND_UPDATE, &w, &h, &indx);
     /* hack...
        state = 0 no editing
@@ -607,9 +615,21 @@ void rtext_activate(t_rtext *x, int state)
     }
     else
     {
-        widthspec = x->x_text->te_width; // width if any specified
+        int xmin, xmax, tmp;
+        gobj_getrect(&x->x_text->te_g, x->x_glist, &xmin, &tmp, &xmax, &tmp);
+            /* width if specified. If not, we send the bounding width as
+               a negative number */
+        widthspec = (x->x_text->te_width ? x->x_text->te_width : -(xmax-xmin));
+            /* signal with negative number that we don't have a heightspec */
         heightspec = -1; // signal that we don't have a heightspec
         isgop = 0;
+    }
+
+    if(state & (0b1 << 31)) /* arbitray selection */
+    {
+        selstart = (state >> 16) & 0x7FFF;
+        selend = state & 0xFFFF;
+        state = 1; // set to editing state
     }
 
     /* we need to get scroll to make sure we've got the
@@ -619,10 +639,10 @@ void rtext_activate(t_rtext *x, int state)
        null terminated. If this becomes a problem we can revisit
        it later */
     tmpbuf = t_getbytes(x->x_bufsize + 1);
-    sprintf(tmpbuf, "%.*s", x->x_bufsize, x->x_buf);
+    sprintf(tmpbuf, "%.*s", (int)x->x_bufsize, x->x_buf);
     /* in case x_bufsize is 0... */
     tmpbuf[x->x_bufsize] = '\0';
-    gui_vmess("gui_textarea", "xssiiiisiii",
+    gui_vmess("gui_textarea", "xssiiiisiiiiiii",
         canvas,
         x->x_tag,
         (pd_class((t_pd *)x->x_text) == message_class ? "msg" : "obj"),
@@ -632,8 +652,13 @@ void rtext_activate(t_rtext *x, int state)
         heightspec,
         tmpbuf,
         sys_hostfontsize(glist_getfont(glist)),
+        sys_fontwidth(glist_getfont(glist)),
+        sys_fontheight(glist_getfont(glist)),
         isgop,
-        state);
+        state,
+        selstart,
+        selend
+        );
     freebytes(tmpbuf, x->x_bufsize + 1);
 }
 

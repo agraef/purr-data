@@ -3,9 +3,9 @@
     "prop": {
       "heading": {
           "size":    "size and behavior",
-          "messages": "messages",
+          "messages": "messaging",
           "label":   "label",
-          "colors":  "colors"
+          "colors":  "appearance"
       },
       "size_tt": "size of the iemgui",
       "size": "size",
@@ -41,6 +41,8 @@
       "log_height_tt":   "the framus intersects with the ramistan approximately at the podernoster",
       "steady":       "steady on click",
       "steady_tt":    "don't move the slider when clicked. Only move it when dragging the mouse",
+      "drawstyle":    "frame style",
+      "drawstyle_tt":    "adjust number frame style by toggling its elements",
       "send":         "send symbol",
       "send_tt":      "symbol to send wireless messages to other iemguis or objects",
       "receive":      "receive symbol",
@@ -144,6 +146,8 @@
     "reselect_tt": "Restore the previous selection",
     "find": "Find",
     "find_tt": "Find text in the console output",
+    "encapsulate": "Encapsulate",
+    "encapsulate_tt": "Encapsulate automatically the current selection into a subpatch",
     "tidyup": "Tidy Up",
     "tidyup_tt": "Line up the selected objects in straight rows and columns",
     "clear_console": "Clear Console",
@@ -152,8 +156,8 @@
     "tofront_tt": "Bring the selected object visually in front of all other objects",
     "toback": "Send to Back",
     "toback_tt": "Send the selected object visually behind all other objects",
-    "font": "Font",
-    "font_tt": "Font settings for this patch",
+    "font": "Font Size",
+    "font_tt": "Font size settings for this patch",
     "cordinspector": "Cord Inspector",
     "cordinspector_tt": "Move the mouse over cords to inspect the data moving between objects",
     "find": "Find",
@@ -235,6 +239,8 @@
     "visible_ancestor_tt": "give focus to the closest ancestor of this window that is currently visible",
     "pdwin": "Pd Window",
     "pdwin_tt": "Give focus to the main Pd window",
+    "abstractions": "Abstractions",
+    "abstractions_tt": "Query and manage abstractions",
 
     "media": "Media",
 
@@ -270,7 +276,8 @@
   },
   "pd_window": {
     "find": {
-      "placeholder": "Search in Console"
+      "placeholder": "Search in Console",
+      "highlight": "Highlight All"
     }
   },
   "canvas": {
@@ -284,6 +291,20 @@
       "cancel": "Cancel",
       "cancel_tt": "Don't save any changes, and don't close the patch"
     },
+    "abstract_dialog": {
+      "prompt": "Would you like to turn the identical subpatches into abstractions?\nCandidates found in the subpatch tree, from root canvas: ",
+      "note": "Note: this can't be undone all at once – any changes made in subpatches can be undone from that subpatch",
+      "single": "Only this one",
+      "single_tt": "Replace the subpatch you just saved with the corresponding abstraction",
+      "all": "All candidates",
+      "all_tt": "Replace all subpatches in the subpatch tree identical to the one you just saved with the corresponding abstraction",
+      "none": "None",
+      "none_tt": "Do not replace any subpatch"
+    },
+    "warning": {
+      "unsaved_tt": "There is an unsaved edited instance of this abstraction",
+      "multipleunsaved_tt": "There is another unsaved edited instance of this abstraction"
+    },
     "find": {
       "placeholder": "Search in Canvas",
       "search": "Search",
@@ -293,6 +314,7 @@
     "menu": {
       "props": "Properties",
       "open": "Open",
+      "saveas": "Save as",
       "help": "Help",
       "front": "Bring to Front",
       "back": "Send to Back"
@@ -305,9 +327,9 @@
         "viewbox_offsets": "viewbox offsets",
         "arrays": "array options"
       },
-      "no_scroll": "hide scrollbars (experimental)",
+      "no_scroll": "hide scrollbars",
       "no_scroll_tt": "hide window scrollbars",
-      "no_menu": "hide menu (experimental)",
+      "no_menu": "hide menu",
       "no_menu_tt": "hide window menu",
       "gop": "graph on parent",
       "gop_tt": "show the inner contents of this canvas in a rectangle on the containing canvas",
@@ -409,6 +431,10 @@
         "c64": "C64",
         "footgun": "Footgun"
       },
+      "grid": {
+        "show_grid": "grid background in edit mode",
+        "show_grid_tt": "Show the grid background in edit mode"
+      },
       "zoom": {
         "save_zoom": "save/load zoom level with patch",
         "save_zoom_tt": "Save the current zoom level with the patch and restore it when reloading the patch"
@@ -477,9 +503,22 @@
   },
   "search": {
     "browse": "browse the documentation",
+    "bookmark": "add or remove a bookmark",
     "search": "search",
     "building_index": "Building index...",
     "no_results": "No results found.",
     "search_placeholder": "Search Pd Docs"
+  },
+  "abstractions": {
+    "filebased": "File-based abstractions",
+    "private": "Private abstractions",
+    "global": "Global scope",
+    "local": "Local scope",
+    "selectall": "Select all",
+    "selectall_tt": "Select all definitions with zero instances",
+    "delete": "Delete",
+    "delete_tt": "Delete all selected definitions",
+    "close": "Close",
+    "close_tt": "Close the dialog window"
   }
 }

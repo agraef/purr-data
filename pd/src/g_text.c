@@ -44,6 +44,11 @@ extern int we_are_undoing;
 extern void glob_preset_node_list_check_loc_and_update(void);
 extern void glob_preset_node_list_seek_hub(void);
 
+extern int sys_noautopatch;
+extern int glob_autopatch_connectme;
+extern t_gobj *glist_nth(t_glist *x, int n);
+extern int glist_getindex(t_glist *x, t_gobj *y);
+
 /* ----------------- the "text" object.  ------------------ */
 
     /* add a "text" object (comment) to a glist.  While this one goes for any
@@ -78,8 +83,8 @@ void glist_text(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     else
     {
         //int xpix, ypix;
-        int connectme, xpix, ypix, indx, nobj;
-        canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
+        int xpix, ypix, indx, nobj;
+        canvas_howputnew(gl, &glob_autopatch_connectme, &xpix, &ypix, &indx, &nobj);
         pd_vmess((t_pd *)glist_getcanvas(gl), gensym("editmode"), "i", 1);
         SETSYMBOL(&at, gensym("comment"));
         glist_noselect(gl);
@@ -99,7 +104,7 @@ void glist_text(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         if (!we_are_undoing)
             canvas_undo_add(glist_getcanvas(gl), 9, "create",
                 (void *)canvas_undo_set_create(glist_getcanvas(gl)));
-        if (connectme == 0)
+        if (glob_autopatch_connectme == 0)
         {
             canvas_displaceselection(glist_getcanvas(gl), -8, -8);
             canvas_startmotion(glist_getcanvas(gl));
@@ -284,9 +289,6 @@ static int get_autopatch_yoffset(t_canvas *x)
     }
 }
 
-extern int sys_noautopatch;
-extern t_gobj *glist_nth(t_glist *x, int n);
-extern int glist_getindex(t_glist *x, t_gobj *y);
     /* utility routine to figure out where to put a new text box from menu
     and whether to connect to it automatically */
 void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
@@ -304,9 +306,9 @@ void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
         t_object *ob = pd_checkobject(&selected->g_pd);
         connectme = (obj_noutlets(ob) ? 1 : 0);
     }*/
-    int connectme = (x->gl_editor->e_selection &&
+    glob_autopatch_connectme = (x->gl_editor->e_selection &&
         !x->gl_editor->e_selection->sel_next);
-    if (connectme)
+    if (glob_autopatch_connectme)
     {
         t_gobj *g, *selected = x->gl_editor->e_selection->sel_what;
         t_text *t = (t_text *)selected;
@@ -353,10 +355,10 @@ void canvas_howputnew(t_canvas *x, int *connectp, int *xpixp, int *ypixp,
     }
     if (sys_noautopatch)
     {
-        if (connectme == 1) connectme = -1;
-        else connectme = 0;
+        if (glob_autopatch_connectme == 1) glob_autopatch_connectme = -1;
+        else glob_autopatch_connectme = 0;
     }
-    *connectp = connectme;
+    *connectp = glob_autopatch_connectme;
     *indexp = indx;
     *totalp = nobj;
 }
@@ -385,21 +387,21 @@ void canvas_obj(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     {
             /* interactively create new object */
         t_binbuf *b = binbuf_new();
-        int connectme, xpix, ypix, indx, nobj;
-        canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
+        int xpix, ypix, indx, nobj;
+        canvas_howputnew(gl, &glob_autopatch_connectme, &xpix, &ypix, &indx, &nobj);
         pd_vmess(&gl->gl_pd, gensym("editmode"), "i", 1);
         canvas_objtext(gl,
-            connectme ? xpix : xpix - 8,
-            connectme ? ypix : ypix - 8,
-            0, 1, b, connectme);
-        if (connectme == 1)
+            glob_autopatch_connectme ? xpix : xpix - 8,
+            glob_autopatch_connectme ? ypix : ypix - 8,
+            0, 1, b, glob_autopatch_connectme);
+        if (glob_autopatch_connectme == 1)
         {
             //fprintf(stderr,"canvas_obj calls canvas_connect\n");
             connect_exception = 1;
             canvas_connect(gl, indx, 0, nobj, 0);
             connect_exception = 0;
         }
-        else if (connectme == 0)
+        else if (glob_autopatch_connectme == 0)
         {
             //fprintf(stderr,"canvas_obj calls canvas_startmotion\n");
             //canvas_displaceselection(glist_getcanvas(gl), -8, -8);
@@ -426,8 +428,8 @@ void canvas_obj_abstraction_from_menu(t_glist *gl, t_symbol *s,
 
     t_binbuf *b = binbuf_new();
     binbuf_restore(b, 2, argv);
-    int connectme, xpix, ypix, indx, nobj;
-    canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
+    int xpix, ypix, indx, nobj;
+    canvas_howputnew(gl, &glob_autopatch_connectme, &xpix, &ypix, &indx, &nobj);
     pd_vmess(&gl->gl_pd, gensym("editmode"), "i", 1);
 #ifdef PDL2ORK
     if (sys_k12_mode)
@@ -445,11 +447,11 @@ void canvas_obj_abstraction_from_menu(t_glist *gl, t_symbol *s,
         y = y->g_next;
     canvas_loadbang((t_canvas *)y);
 
-    if (connectme == 1)
+    if (glob_autopatch_connectme == 1)
     {
         canvas_connect(gl, indx, 0, nobj, 0);
     }
-    else if (connectme == 0)
+    else if (glob_autopatch_connectme == 0)
     {
         //glist_setlastxy(glist_getcanvas(gl), xpix, ypix);
         canvas_startmotion(glist_getcanvas(gl));
@@ -472,9 +474,9 @@ void canvas_iemguis(t_glist *gl, t_symbol *guiobjname)
     if (!strcmp(guiobjname->s_name, "cnv"))
         glist_noselect(gl);
 
-    int connectme, xpix, ypix, indx, nobj;
+    int xpix, ypix, indx, nobj;
 
-    canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
+    canvas_howputnew(gl, &glob_autopatch_connectme, &xpix, &ypix, &indx, &nobj);
 
     /* NOT NECESSARY ANY MORE: compensate for the iemgui sliders' xyoffset
        in case of autopatch
@@ -496,11 +498,11 @@ void canvas_iemguis(t_glist *gl, t_symbol *guiobjname)
     SETSYMBOL(&at, guiobjname);
     binbuf_restore(b, 1, &at);
     canvas_objtext(gl, xpix, ypix, 0, 1, b, 0);
-    if (connectme == 1)
+    if (glob_autopatch_connectme == 1)
         canvas_connect(gl, indx, 0, nobj, 0);
     //glist_getnextxy(gl, &xpix, &ypix);
     //canvas_objtext(gl, xpix, ypix, 1, b, 0);
-    else if (connectme == 0)
+    else if (glob_autopatch_connectme == 0)
     {
         canvas_displaceselection(glist_getcanvas(gl), -8, -8);
         canvas_startmotion(glist_getcanvas(gl));
@@ -828,8 +830,8 @@ void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         post("unable to create stub message in closed canvas!");
     else
     {
-        int connectme, xpix, ypix, indx, nobj;
-        canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
+        int xpix, ypix, indx, nobj;
+        canvas_howputnew(gl, &glob_autopatch_connectme, &xpix, &ypix, &indx, &nobj);
         
         pd_vmess(&gl->gl_pd, gensym("editmode"), "i", 1);
         x->m_text.te_xpix = xpix;
@@ -838,10 +840,10 @@ void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         glist_noselect(gl);
         glist_select(gl, &x->m_text.te_g);
         gobj_activate(&x->m_text.te_g, gl,
-            connectme ? 1 : 2); // <-- hack to signal we're a new message box
-        if (connectme == 1)
+            glob_autopatch_connectme ? 1 : 2); // <-- hack to signal we're a new message box
+        if (glob_autopatch_connectme == 1)
             canvas_connect(gl, indx, 0, nobj, 0);
-        else if (connectme == 0)
+        else if (glob_autopatch_connectme == 0)
         {
             canvas_displaceselection(glist_getcanvas(gl), -8, -8);
             canvas_startmotion(glist_getcanvas(gl));
@@ -864,18 +866,22 @@ void canvas_msg(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 typedef struct _gatom
 {
     t_text a_text;
-    t_atom a_atom;          /* this holds the value and the type */
-    t_glist *a_glist;       /* owning glist */
-    t_float a_toggle;       /* value to toggle to */
-    t_float a_draghi;       /* high end of drag range */
-    t_float a_draglo;       /* low end of drag range */
-    t_symbol *a_label;      /* symbol to show as label next to box */
-    t_symbol *a_symfrom;    /* "receive" name -- bind ourselvs to this */
-    t_symbol *a_symto;      /* "send" name -- send to this on output */
-    char a_buf[ATOMBUFSIZE];/* string buffer for typing */
-    char a_shift;           /* was shift key down when dragging started? */
-    char a_wherelabel;      /* 0-3 for left, right, above, below */
+    t_atom a_atom;           /* this holds the value and the type */
+    t_atom a_atomold;        /* this holds old value, used to reverting to
+                                when changing the number value using arrows */
+    t_glist *a_glist;        /* owning glist */
+    t_float a_toggle;        /* value to toggle to */
+    t_float a_draghi;        /* high end of drag range */
+    t_float a_draglo;        /* low end of drag range */
+    t_symbol *a_label;       /* symbol to show as label next to box */
+    t_symbol *a_symfrom;     /* "receive" name -- bind ourselvs to this */
+    t_symbol *a_symto;       /* "send" name -- send to this on output */
+    char a_buf[ATOMBUFSIZE]; /* string buffer for typing */
+    char a_shift;            /* was shift key down when dragging started? */
+    char a_wherelabel;       /* 0-3 for left, right, above, below */
     t_symbol *a_expanded_to; /* a_symto after $0, $1, ...  expansion */
+    int a_shift_clicked;	 /* used to keep old text after \n. this is
+    							activated by shift+clicking no the object */
 } t_gatom;
 
     /* prepend "-" as necessary to avoid empty strings, so we can
@@ -911,16 +917,20 @@ static void gatom_redraw(t_gobj *client, t_glist *glist)
     glist_retext(x->a_glist, &x->a_text);
 }
 
-    /* recolor option offers     0 ignore recolor
+    /* recolor option offers    0 ignore recolor
                                 1 recolor */
 static void gatom_retext(t_gatom *x, int senditup, int recolor)
 {
+	//post("gatom_retext senditup=%d recolor=%d", senditup, recolor);
     t_canvas *canvas = glist_getcanvas(x->a_glist);
     t_rtext *y = glist_findrtext(x->a_glist, &x->a_text);
     if (recolor)
     {
+        //post("gatom click off");
         gui_vmess("gui_gatom_activate", "xsi",
             canvas, rtext_gettag(y), 0);
+    	x->a_shift_clicked = 0;
+    	x->a_shift = 0;
     }
     binbuf_clear(x->a_text.te_binbuf);
     binbuf_add(x->a_text.te_binbuf, 1, &x->a_atom);
@@ -945,8 +955,14 @@ static void gatom_set(t_gatom *x, t_symbol *s, int argc, t_atom *argv)
             gatom_retext(x, 1, 1);
         else
             gatom_retext(x, 1, 0);
+        x->a_atomold = x->a_atom;
     }
-    x->a_buf[0] = 0;
+    if (x->a_atom.a_type == A_FLOAT)
+    {
+        x->a_buf[0] = 0;
+    } else {
+        strcpy(x->a_buf, x->a_atom.a_w.w_symbol->s_name);
+    }
 }
 
 static void gatom_bang(t_gatom *x)
@@ -1011,12 +1027,59 @@ static void gatom_symbol(t_gatom *x, t_symbol *s)
     "nofirstin" flag, the standard list behavior gets confused. */
 static void gatom_list(t_gatom *x, t_symbol *s, int argc, t_atom *argv)
 {
+    //post("gatom_list <%s>", s->s_name);
     if (!argc)
         gatom_bang(x);
-    else if (argv->a_type == A_FLOAT)
-        gatom_float(x, argv->a_w.w_float);
-    else if (argv->a_type == A_SYMBOL)
-        gatom_symbol(x, argv->a_w.w_symbol);
+    else if (argc == 1)
+    {
+    	if (argv->a_type == A_FLOAT)
+        	gatom_float(x, argv->a_w.w_float);
+    	else if (argv->a_type == A_SYMBOL)
+        	gatom_symbol(x, argv->a_w.w_symbol);
+    }
+    /* ico@vt.edu 20200904 like g_numbox.c, here we hijack list to capture
+       keyname keypresses, so that we can use shift+backspace to delete
+       entire text */
+    else if (argc == 2 && argv[0].a_type == A_FLOAT && argv[1].a_type == A_SYMBOL)
+    {
+        //post("got keyname %s while grabbed\n", argv[1].a_w.w_symbol->s_name);
+        if (!strcmp("Shift", argv[1].a_w.w_symbol->s_name))
+        {
+            x->a_shift = (int)argv[0].a_w.w_float;
+            //post("...Shift %d", x->a_shift);
+        }
+        if (x->a_atom.a_type == A_FLOAT && argv[0].a_w.w_float == 1)
+        {
+            if (!strcmp("Up", argv[1].a_w.w_symbol->s_name))
+            {
+                //fprintf(stderr,"...Up\n");
+                x->a_atom.a_w.w_float += 1;
+                //sprintf(x->a_buf, "%g", x->a_atom.a_w.w_float);
+                gatom_retext(x, 1, 0);
+            }
+            else if (!strcmp("ShiftUp", argv[1].a_w.w_symbol->s_name))
+            {
+                //fprintf(stderr,"...ShiftUp\n");
+                x->a_atom.a_w.w_float += 0.01;
+                //sprintf(x->a_buf, "%g", x->a_atom.a_w.w_float);
+                gatom_retext(x, 1, 0);
+            }
+            if (!strcmp("Down", argv[1].a_w.w_symbol->s_name))
+            {
+                //fprintf(stderr,"...Down\n");
+                x->a_atom.a_w.w_float -= 1;
+                //sprintf(x->a_buf, "%g", x->a_atom.a_w.w_float);
+                gatom_retext(x, 1, 0);
+            }
+            else if (!strcmp("ShiftDown", argv[1].a_w.w_symbol->s_name))
+            {
+                //fprintf(stderr,"...ShiftDown\n");
+                x->a_atom.a_w.w_float -= 0.01;
+                //sprintf(x->a_buf, "%g", x->a_atom.a_w.w_float);
+                gatom_retext(x, 1, 0);
+            }
+        }
+    }
     else pd_error(x, "gatom_list: need float or symbol");
 }
 
@@ -1047,40 +1110,92 @@ static void gatom_motion(void *z, t_floatarg dx, t_floatarg dy)
 
 static void gatom_key(void *z, t_floatarg f)
 {
-    //fprintf(stderr,"gatom_key %f\n", f);
     t_gatom *x = (t_gatom *)z;
     int c = f;
+    //post("gatom_key %f %d", f, x->a_shift);
     int len = strlen(x->a_buf);
     t_atom at;
     char sbuf[ATOMBUFSIZE + 4];
     if (c == 0)
     {
-        /* we're being notified that no more keys will come for this grab */
-        if (x->a_buf[0])
+        // we're being notified that no more keys will come for this grab
+    	//post("gatom_key end <%s> <%s>", x->a_buf, x->a_atom.a_w.w_symbol->s_name);
+    	pd_unbind(&x->a_text.ob_pd, gensym("#keyname_a"));
+    	//post("unbind <%s>", x->a_buf);
+        if (x->a_atom.a_type == A_FLOAT)
+        {
+            x->a_atom = x->a_atomold;
+            //if (x->a_buf[0]) x->a_atom.a_w.w_float = atof(x->a_buf);
+            //sprintf(x->a_buf, "%f", x->a_atom.a_w.w_float);
+            //post("got float f=<%f> s=<%s>", x->a_atom.a_w.w_float, x->a_buf);
+
+            // ico@vt.edu 20200904:
+            // we reset internal buffer since there is currently no graceful way
+            // to handle conversion from float to string and back without loss
+            // in the value accuracy
+            x->a_buf[0] = 0;
             gatom_retext(x, 1, 1);
-        else
-            gatom_retext(x, 0, 1);
+        }
+        else if (x->a_atom.a_type == A_SYMBOL)
+        {
+            //post("gatom_key release");
+            // ico@vt.edu 20200923: we also check for empty a_buf to ensure that
+            // the ... is deleted. This was created when the object was originally
+            // clicked on below, but only if the current gatom is symbol type and
+            // is empty.
+            if (x->a_buf[0] == 0 || strcmp(x->a_buf, x->a_atom.a_w.w_symbol->s_name))
+            {
+                strcpy(x->a_buf, x->a_atom.a_w.w_symbol->s_name);
+                gatom_retext(x, 1, 1);
+                //post("gatom_key buf=<%s> s_name=<%s>", x->a_buf,
+                //    x->a_atom.a_w.w_symbol->s_name);
+            }
+            else
+                gatom_retext(x, 0, 1);
+        }
         return;
     }
     else if (c == '\b')
     {
         if (len > 0)
-        x->a_buf[len-1] = 0;
+        {
+        	if (x->a_shift)
+        		x->a_buf[0] = 0;
+        	else
+        		x->a_buf[len-1] = 0;
+        }
         goto redraw;
     }
     else if (c == '\n')
     {
-        if (x->a_atom.a_type == A_FLOAT)
-            x->a_atom.a_w.w_float = atof(x->a_buf);
+        if (x->a_atom.a_type == A_FLOAT) {
+            if (x->a_buf[0]) x->a_atom.a_w.w_float = atof(x->a_buf);
+            //sprintf(x->a_buf, "%f", x->a_atom.a_w.w_float);
+            //post("got float f=<%f> s=<%s>", x->a_atom.a_w.w_float, x->a_buf);
+
+            // ico@vt.edu 20200904:
+            // we reset internal buffer since there is currently no graceful way
+            // to handle conversion from float to string and back without loss
+            // in the value accuracy
+            x->a_buf[0] = 0;
+        }
         else if (x->a_atom.a_type == A_SYMBOL)
-            x->a_atom.a_w.w_symbol = gensym(x->a_buf);
+			x->a_atom.a_w.w_symbol = gensym(x->a_buf);
         else bug("gatom_key");
+
+        x->a_atomold = x->a_atom;
         gatom_bang(x);
         gatom_retext(x, 1, 0);
-        x->a_buf[0] = 0;
+        /* ico@vt.edu 20200904: We prevent deleting of internal buffer,
+		   so that we can keep adding to the existing text unless we click
+		   the second time in which case we will always start with an
+		   empty symbol
+		*/
+		if (!x->a_shift_clicked)
+        	x->a_buf[0] = 0;
         /* We want to keep grabbing the keyboard after hitting "Enter", so
            we're commenting the following out */
-        //glist_grab(x->a_glist, 0, 0, 0, 0, 0);
+        //glist_grab(x->a_glist, 0, 0, 0, 0, 0, 0);
     }
     else if (len < (ATOMBUFSIZE-1))
     {
@@ -1122,6 +1237,9 @@ static void gatom_click(t_gatom *x,
     t_floatarg xpos, t_floatarg ypos, t_floatarg shift, t_floatarg ctrl,
     t_floatarg alt)
 {
+	//post("gatom_click %f %f", ctrl, alt);
+    pd_bind(&x->a_text.ob_pd, gensym("#keyname_a"));
+	//post("bind");
     if (x->a_text.te_width == 1)
     {
         if (x->a_atom.a_type == A_FLOAT)
@@ -1142,9 +1260,24 @@ static void gatom_click(t_gatom *x,
             return;
         }
         x->a_shift = shift;
-        x->a_buf[0] = 0;
-        glist_grab(x->a_glist, &x->a_text.te_g, gatom_motion, gatom_key,
-            xpos, ypos);
+        if (x->a_atom.a_type == A_SYMBOL && !strlen(x->a_atom.a_w.w_symbol->s_name))
+        {
+            char sbuf[ATOMBUFSIZE + 4];
+            t_atom at;
+            sprintf(sbuf, "%s...", x->a_buf);
+            SETSYMBOL(&at, gensym(sbuf));
+            binbuf_clear(x->a_text.te_binbuf);
+            binbuf_add(x->a_text.te_binbuf, 1, &at);
+            glist_retext(x->a_glist, &x->a_text);
+        }
+	   	glist_grab(x->a_glist, &x->a_text.te_g, gatom_motion, gatom_key,
+	        gatom_list, xpos, ypos);
+	    //post("a_shift_clicked=%d", x->a_shift_clicked);
+        x->a_shift_clicked = shift;
+	    	// second click wipes prior text
+	    if (!x->a_shift_clicked)
+			x->a_buf[0] = 0;
+	    //post("a_shift_clicked=%d", x->a_shift_clicked);
     }
 }
 
@@ -1250,7 +1383,7 @@ static void gatom_displace(t_gobj *z, t_glist *glist,
 /* for gatom's label */
 static void gatom_vis(t_gobj *z, t_glist *glist, int vis)
 {
-    //fprintf(stderr,"gatom_vis\n");
+    //post("gatom_vis");
     t_gatom *x = (t_gatom*)z;
     text_vis(z, glist, vis);
     if (*x->a_label->s_name)
@@ -1276,7 +1409,7 @@ static void gatom_vis(t_gobj *z, t_glist *glist, int vis)
             /* We're just deleting the parent gobj in the GUI, which takes
                care of removing all the children. So we don't need to send
                a message here */
-            //sys_vgui(".x%lx.c delete %lx.l\n", glist_getcanvas(glist), x);
+            //sys_vgui(".x%zx.c delete %zx.l\n", glist_getcanvas(glist), x);
         }
     }
     if (!vis)
@@ -1303,6 +1436,7 @@ void canvas_atom(t_glist *gl, t_atomtype type,
     x->a_label = &s_;
     x->a_symfrom = &s_;
     x->a_symto = x->a_expanded_to = &s_;
+    x->a_shift_clicked = 0;
     if (type == A_FLOAT)
     {
         x->a_atom.a_w.w_float = 0;
@@ -1315,6 +1449,7 @@ void canvas_atom(t_glist *gl, t_atomtype type,
         x->a_text.te_width = 10;
         SETSYMBOL(&at, &s_symbol);
     }
+    x->a_atomold = x->a_atom;
     binbuf_add(x->a_text.te_binbuf, 1, &at);
     if (argc > 1)
         /* create from file. x, y, width, low-range, high-range, flags,
@@ -1347,8 +1482,8 @@ void canvas_atom(t_glist *gl, t_atomtype type,
     }
     else
     {
-        int connectme, xpix, ypix, indx, nobj;
-        canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
+        int xpix, ypix, indx, nobj;
+        canvas_howputnew(gl, &glob_autopatch_connectme, &xpix, &ypix, &indx, &nobj);
         outlet_new(&x->a_text,
             x->a_atom.a_type == A_FLOAT ? &s_float: &s_symbol);
         inlet_new(&x->a_text, &x->a_text.te_pd, 0, 0);
@@ -1358,9 +1493,9 @@ void canvas_atom(t_glist *gl, t_atomtype type,
         glist_add(gl, &x->a_text.te_g);
         glist_noselect(gl);
         glist_select(gl, &x->a_text.te_g);
-        if (connectme == 1)
+        if (glob_autopatch_connectme == 1)
             canvas_connect(gl, indx, 0, nobj, 0);
-        else if (connectme == 0)
+        else if (glob_autopatch_connectme == 0)
         {
             canvas_displaceselection(glist_getcanvas(gl), -8, -8);
             canvas_startmotion(glist_getcanvas(gl));
@@ -1734,7 +1869,7 @@ static void dropdown_vis(t_gobj *z, t_glist *glist, int vis)
             /* We're just deleting the parent gobj in the GUI, which takes
                care of removing all the children. So we don't need to send
                a message here */
-            //sys_vgui(".x%lx.c delete %lx.l\n", glist_getcanvas(glist), x);
+            //sys_vgui(".x%zx.c delete %zx.l\n", glist_getcanvas(glist), x);
         }
     }
     if (!vis)
@@ -1767,7 +1902,7 @@ void canvas_dropdown(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     x->a_text.te_width = 6;
 
     /* bind symbol for sending index updates from the GUI */
-    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    sprintf(tagbuf, "x%zx", (t_uint)x);
     pd_bind(&x->a_text.te_pd, gensym(tagbuf));
 
     binbuf_add(x->a_text.te_binbuf, 1, binbuf_getvec(x->a_names));
@@ -1801,8 +1936,8 @@ void canvas_dropdown(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
     }
     else
     {
-        int connectme, xpix, ypix, indx, nobj;
-        canvas_howputnew(gl, &connectme, &xpix, &ypix, &indx, &nobj);
+        int xpix, ypix, indx, nobj;
+        canvas_howputnew(gl, &glob_autopatch_connectme, &xpix, &ypix, &indx, &nobj);
         outlet_new(&x->a_text, &s_float);
         inlet_new(&x->a_text, &x->a_text.te_pd, 0, 0);
         pd_vmess(&gl->gl_pd, gensym("editmode"), "i", 1);
@@ -1811,9 +1946,9 @@ void canvas_dropdown(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         glist_add(gl, &x->a_text.te_g);
         glist_noselect(gl);
         glist_select(gl, &x->a_text.te_g);
-        if (connectme == 1)
+        if (glob_autopatch_connectme == 1)
             canvas_connect(gl, indx, 0, nobj, 0);
-        else if (connectme == 0)
+        else if (glob_autopatch_connectme == 0)
         {
             canvas_displaceselection(glist_getcanvas(gl), -8, -8);
             canvas_startmotion(glist_getcanvas(gl));
@@ -1830,7 +1965,7 @@ void canvas_dropdown(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
 static void dropdown_free(t_dropdown *x)
 {
     char tagbuf[MAXPDSTRING];
-    sprintf(tagbuf, "x%lx", (long unsigned int)x);
+    sprintf(tagbuf, "x%zx", (t_uint)x);
     pd_unbind(&x->a_text.te_pd, gensym(tagbuf));
 
     if (*x->a_symfrom->s_name)
@@ -2109,18 +2244,29 @@ static void text_vis(t_gobj *z, t_glist *glist, int vis)
                 t_rtext *y = glist_findrtext(glist, x);
                 // make a group
                 text_getrect(&x->te_g, glist, &x1, &y1, &x2, &y2);
-                gui_vmess("gui_gobj_new", "xssiii",
+                gui_vmess("gui_gobj_new", "xssiiii",
                     glist_getcanvas(glist),
                     rtext_gettag(y),
                     type,
                     x1,
                     y1,
-                    glist_istoplevel(glist));
+                    glist_istoplevel(glist),
+                    pd_class(&x->te_pd) == canvas_class);
                 if (x->te_type == T_ATOM)
                     glist_retext(glist, x);
                 text_drawborder(x, glist, rtext_gettag(y),
                     rtext_width(y), rtext_height(y), 1);
                 rtext_draw(y);
+
+                /* check whether we have to tell the gui to mark
+                    (border color) the gobj as dirty or not */
+                if(pd_class(&x->te_pd) == canvas_class)
+                {
+                    if (((t_canvas *)x)->gl_dirty)
+                        gobj_dirty(&x->te_g, glist, 1);
+                    else if (((t_canvas *)x)->gl_subdirties)
+                        gobj_dirty(&x->te_g, glist, 2);
+                }
             }
         }
         else
@@ -2128,7 +2274,7 @@ static void text_vis(t_gobj *z, t_glist *glist, int vis)
             t_rtext *y = glist_findrtext(glist, x);
             if (gobj_shouldvis(&x->te_g, glist))
             {
-                //fprintf(stderr,"    erase it %lx %lx\n", x, glist);
+                //fprintf(stderr,"    erase it %zx %zx\n", x, glist);
                 text_erase_gobj(x, glist, rtext_gettag(y));
                 //text_eraseborder(x, glist, rtext_gettag(y));
                 //rtext_erase(y);
@@ -2163,8 +2309,8 @@ static int text_click(t_gobj *z, struct _glist *glist,
         t_rtext *y = glist_findrtext(glist, x);
         if (doit)
         {
-            //fprintf(stderr,"atom click\n");
-            /* Change the gatom blue when it's clicked? Need to test... */
+            //post("gatom click on");
+            /* Change the gatom text color when it's clicked? Need to test... */
             gui_vmess("gui_gatom_activate", "xsi",
                 canvas, rtext_gettag(y), 1);
             gatom_click((t_gatom *)x, (t_floatarg)xpix, (t_floatarg)ypix,
@@ -2182,6 +2328,7 @@ static int text_click(t_gobj *z, struct _glist *glist,
     else return (0);
 }
 
+void canvas_statesavers_doit(t_glist *x, t_binbuf *b);
 void text_save(t_gobj *z, t_binbuf *b)
 {
     //fprintf(stderr, "text_save\n");
@@ -2211,6 +2358,7 @@ void text_save(t_gobj *z, t_binbuf *b)
         //fprintf(stderr, "this must be it\n");
         binbuf_addbinbuf(b, x->te_binbuf);
         //fprintf(stderr, "DONE this must be it\n");
+
     }
     else if (x->te_type == T_MESSAGE)
     {
@@ -2292,6 +2440,13 @@ void text_save(t_gobj *z, t_binbuf *b)
             binbuf_addv(b, ",si", gensym("f"), (int)x->te_width);
     }
     binbuf_addv(b, ";");
+
+        /* if an abstraction, give it a chance to save state */
+    if (pd_class(&x->te_pd) == canvas_class &&
+        canvas_isabstraction((t_canvas *)x))
+    {
+        canvas_statesavers_doit((t_glist *)x, b);
+    }
 }
 
     /* this one is for everyone but "gatoms"; it's imposed in m_class.c */
@@ -2469,7 +2624,7 @@ void text_drawborder(t_text *x, t_glist *glist,
         }
         else
         {
-            //fprintf(stderr, "redrawing rectangle? .x%lx.c %sR\n",
+            //fprintf(stderr, "redrawing rectangle? .x%zx.c %sR\n",
             //    (t_int)glist_getcanvas(glist), tag);
             gui_vmess("gui_text_redraw_border", "xsii",
                 glist_getcanvas(glist),
@@ -2571,13 +2726,13 @@ void glist_eraseiofor(t_glist *glist, t_object *ob, char *tag)
     n = obj_noutlets(ob);
     for (i = 0; i < n; i++)
     {
-        //sys_vgui(".x%lx.c delete %so%d\n",
+        //sys_vgui(".x%zx.c delete %so%d\n",
         //    glist_getcanvas(glist), tag, i);
     }
     n = obj_ninlets(ob);
     for (i = 0; i < n; i++)
     {
-        //sys_vgui(".x%lx.c delete %si%d\n",
+        //sys_vgui(".x%zx.c delete %si%d\n",
         //    glist_getcanvas(glist), tag, i);
     }
 }

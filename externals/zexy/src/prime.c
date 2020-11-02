@@ -20,7 +20,7 @@
 #include "zexy.h"
 
 
-static t_class *prime_class;
+static t_class *prime_class=NULL;
 
 typedef struct _prime {
   t_object  x_obj;
@@ -64,20 +64,18 @@ static void *prime_new(void)
   return (x);
 }
 
-static void prime_help(t_prime*x)
+static void prime_help(t_prime*UNUSED(x))
 {
   post("\n"HEARTSYMBOL " prime\t\t:: test whether a given number is prime");
 }
 
 
-void prime_setup(void)
+ZEXY_SETUP void prime_setup(void)
 {
-  prime_class = class_new(gensym("prime"),
-                          (t_newmethod)prime_new,
-                          0, sizeof(t_prime),
-                          CLASS_DEFAULT, 0);
+  prime_class = zexy_new("prime",
+                         prime_new, 0, t_prime, CLASS_DEFAULT, "");
 
   class_addfloat(prime_class, prime_float);
-  class_addmethod(prime_class, (t_method)prime_help, gensym("help"), A_NULL);
+  zexy_addmethod(prime_class, (t_method)prime_help, "help", "");
   zexy_register("prime");
 }

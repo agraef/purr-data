@@ -19,7 +19,7 @@
 
 #include "zexy.h"
 
-static t_class *sigpack_class;
+static t_class *sigpack_class=NULL;
 
 typedef struct _sigpack {
   t_object x_obj;
@@ -90,16 +90,14 @@ static void sigpack_help(void)
   post("pack~\t:: outputs the signal-vectors as float-packages");
 }
 
-void pack_tilde_setup(void)
+ZEXY_SETUP void pack_tilde_setup(void)
 {
-  sigpack_class = class_new(gensym("pack~"), (t_newmethod)sigpack_new,
-                            (t_method)sigpack_free,
-                            sizeof(t_sigpack), 0, A_DEFFLOAT, 0);
-  class_addmethod(sigpack_class, nullfn, gensym("signal"), 0);
-  class_addmethod(sigpack_class, (t_method)sigpack_dsp, gensym("dsp"),
-                  A_CANT, 0);
+  sigpack_class = zexy_new("pack~",
+                           sigpack_new, sigpack_free, t_sigpack, 0, "");
+  zexy_addmethod(sigpack_class, (t_method)nullfn, "signal", "");
+  zexy_addmethod(sigpack_class, (t_method)sigpack_dsp, "dsp", "!");
 
-  class_addmethod(sigpack_class, (t_method)sigpack_help, gensym("help"), 0);
+  zexy_addmethod(sigpack_class, (t_method)sigpack_help, "help", "");
 
   zexy_register("pack~");
 }

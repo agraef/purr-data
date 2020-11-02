@@ -80,7 +80,7 @@ static void *colorpanel_new( void)
 {
     char buf[MAXPDSTRING];
     t_colorpanel *x = (t_colorpanel *)pd_new(colorpanel_class);
-    sprintf(buf, "#%lx", (t_int)x);
+    sprintf(buf, "#%zx", (t_uint)x);
     x->x_s = gensym(buf);
     pd_bind(&x->x_obj.ob_pd, x->x_s);
     outlet_new(&x->x_obj, &s_list);

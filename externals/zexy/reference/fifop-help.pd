@@ -27,7 +27,7 @@ eat your memory.;
 #X msg 201 159 info;
 #X text 247 158 query the number of arguments in the LIFO;
 #X obj 156 209 print info;
-#X obj 533 30 zexy;
+#X text 533 30 zexy;
 #N canvas 593 163 494 344 META 0;
 #X text 12 165 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
 Wilkes for Pd version 0.42.;

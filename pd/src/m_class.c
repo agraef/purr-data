@@ -99,18 +99,29 @@ char *type_hint(t_symbol *s, int argc, t_atom *argv, int dostof)
     {
         if (symbol_can_float(atom_getsymbolarg(0, argc, argv), &f))
         {
-            sprintf(hint, " (Note: this symbol message has a floatlike payload "
-                "which cannot be saved properly. Did you mean 'float %s'?)",
-                argv->a_w.w_symbol->s_name);
+            if (s == &s_symbol)
+                sprintf(hint, " (Warning: symbol message with numeric payload "
+                "detected. This data cannot be saved properly in a patch.");
+            else
+                sprintf(hint, " (Note: '%s' is actually a symbol atom, not "
+                    "a float)",
+                    argv->a_w.w_symbol->s_name);
             return hint;
         }
         else if (f == -1 || f == 1)
         {
                 /* For values which would overflow, give a hint but don't
                    suggest float type */
-            sprintf(hint, " (Note: this symbol message has an %s floatlike "
-                "payload which cannot be saved properly.",
-                f == 1 ? "overflowing" : "underflowing");
+            if (s == &s_symbol)
+                sprintf(hint, " (Note: this symbol message has an %s floatlike "
+                    "payload which cannot be saved properly.",
+                    f == 1 ? "overflowing" : "underflowing");
+            else
+                sprintf(hint, " (Note: '%s' is actually a symbol atom. If you "
+                    "save it Pd will parse it as a float and cause an %s "
+                    "error.",
+                    argv->a_w.w_symbol->s_name,
+                    f == 1 ? "overflow" : "underflow");
             return hint;
         }
     }
@@ -129,11 +140,31 @@ char *type_hint(t_symbol *s, int argc, t_atom *argv, int dostof)
         {
                 /* For values which would overflow, give a hint but don't
                    suggest float type */
-            sprintf(hint, " (Note: this symbol atom has an %s floatlike "
+            sprintf(hint, " (Note: the symbol atom '%s' has an %s floatlike "
                 "payload which cannot be saved properly.",
+                s->s_name,
                 f == 1 ? "overflowing" : "underflowing");
             return hint;
         }
+    }
+
+        /* Now that we've checked for symbols that could be floats, let's
+           catch the generic case where a user entered a symbol payload for a
+           "float" message. This can be typed into a messsage box, for
+           example. We also check for empty symbol payload here, and other
+           odd atom types */
+    if (s && s == &s_float && argc && argv->a_type != A_FLOAT)
+    {
+        if (argv->a_type == A_SYMBOL && argv->a_w.w_symbol == &s_)
+            sprintf(hint, " (Expected a float argument but got empty symbol)");
+        else if (argv->a_type == A_SYMBOL)
+            sprintf(hint, " (Expected a float argument but got '%s')",
+                argv->a_w.w_symbol->s_name);
+        else if (argv->a_type == A_POINTER)
+            sprintf(hint, " (Expected a float argument but got a gpointer)");
+        else
+            sprintf(hint, " (Note: got an argument that's not a float)");
+        return hint;
     }
 
     hint[0] = '\0';
@@ -150,7 +181,7 @@ static void pd_defaultanything(t_pd *x, t_symbol *s, int argc, t_atom *argv)
 static void pd_defaultbang(t_pd *x)
 {
     if (*(*x)->c_listmethod != pd_defaultlist)
-        (*(*x)->c_listmethod)(x, 0, 0, 0);
+        (*(*x)->c_listmethod)(x, &s_bang, 0, 0);
     else (*(*x)->c_anymethod)(x, &s_bang, 0, 0);
 }
 
@@ -165,7 +196,7 @@ static void pd_defaultpointer(t_pd *x, t_gpointer *gp)
     {
         t_atom at;
         SETPOINTER(&at, gp);
-        (*(*x)->c_listmethod)(x, 0, 1, &at);
+        (*(*x)->c_listmethod)(x, &s_pointer, 1, &at);
     }
     else
     {
@@ -181,7 +212,7 @@ static void pd_defaultfloat(t_pd *x, t_float f)
     {
         t_atom at;
         SETFLOAT(&at, f);
-        (*(*x)->c_listmethod)(x, 0, 1, &at);
+        (*(*x)->c_listmethod)(x, &s_float, 1, &at);
     }
     else
     {
@@ -197,7 +228,7 @@ static void pd_defaultsymbol(t_pd *x, t_symbol *s)
     {
         t_atom at;
         SETSYMBOL(&at, s);
-        (*(*x)->c_listmethod)(x, 0, 1, &at);
+        (*(*x)->c_listmethod)(x, &s_symbol, 1, &at);
     }
     else
     {
@@ -439,6 +470,11 @@ void class_addmethod(t_class *c, t_method fn, t_symbol *sel,
     t_atomtype argtype = arg1;
     int nargs;
     
+    if (!c)
+    {
+        bug("class_addmethod");
+        return;
+    }
     va_start(ap, arg1);
         /* "signal" method specifies that we take audio signals but
         that we don't want automatic float to signal conversion.  This
@@ -527,61 +563,121 @@ phooey:
     /* Instead of these, see the "class_addfloat", etc.,  macros in m_pd.h */
 void class_addbang(t_class *c, t_method fn)
 {
+    if (!c)
+    {
+        bug("class_addbang");
+        return;
+    }
     c->c_bangmethod = (t_bangmethod)fn;
 }
 
 void class_addpointer(t_class *c, t_method fn)
 {
+    if (!c)
+    {
+        bug("class_addpointer");
+        return;
+    }
     c->c_pointermethod = (t_pointermethod)fn;
 }
 
 void class_doaddfloat(t_class *c, t_method fn)
 {
+    if (!c)
+    {
+        bug("class_doaddfloat");
+        return;
+    }
     c->c_floatmethod = (t_floatmethod)fn;
 }
 
 void class_addsymbol(t_class *c, t_method fn)
 {
+    if (!c)
+    {
+        bug("class_addsymbol");
+        return;
+    }
     c->c_symbolmethod = (t_symbolmethod)fn;
 }
 
 void class_addblob(t_class *c, t_method fn) /* MP 20061226 blob type */
 {
+    if (!c)
+    {
+        bug("class_addblob");
+        return;
+    }
     c->c_blobmethod = (t_blobmethod)fn;
 }
 
 void class_addlist(t_class *c, t_method fn)
 {
+    if (!c)
+    {
+        bug("class_addlist");
+        return;
+    }
     c->c_listmethod = (t_listmethod)fn;
 }
 
 void class_addanything(t_class *c, t_method fn)
 {
+    if (!c)
+    {
+        bug("class_addanything");
+        return;
+    }
     c->c_anymethod = (t_anymethod)fn;
 }
 
 void class_setwidget(t_class *c, t_widgetbehavior *w)
 {
+    if (!c)
+    {
+        bug("class_setwidget");
+        return;
+    }
     c->c_wb = w;
 }
 
 void class_setparentwidget(t_class *c, t_parentwidgetbehavior *pw)
 {
+    if (!c)
+    {
+        bug("class_setparentwidget");
+        return;
+    }
     c->c_pwb = pw;
 }
 
 char *class_getname(t_class *c)
 {
+    if (!c)
+    {
+        bug("class_getname");
+        return 0;
+    }
     return (c->c_name->s_name);
 }
 
 char *class_gethelpname(t_class *c)
 {
+    if (!c)
+    {
+        bug("class_gethelpname");
+        return 0;
+    }
     return (c->c_helpname->s_name);
 }
 
 void class_sethelpsymbol(t_class *c, t_symbol *s)
 {
+    if (!c)
+    {
+        bug("class_sethelpsymbol");
+        return;
+    }
     c->c_helpname = s;
 }
 
@@ -592,11 +688,21 @@ t_parentwidgetbehavior *pd_getparentwidget(t_pd *x)
 
 void class_setdrawcommand(t_class *c)
 {
+    if (!c)
+    {
+        bug("class_setdrawcommand");
+        return;
+    }
     c->c_drawcommand = 1;
 }
 
 int class_isdrawcommand(t_class *c)
 {
+    if (!c)
+    {
+        bug("class_isdrawcommand");
+        return 0;
+    }
     return (c->c_drawcommand);
 }
 
@@ -612,6 +718,11 @@ static void pd_floatforsignal(t_pd *x, t_float f)
 
 void class_domainsignalin(t_class *c, int onset)
 {
+    if (!c)
+    {
+        bug("class_domainsignalin");
+        return;
+    }
     if (onset <= 0) onset = -1;
     else
     {
@@ -629,6 +740,11 @@ void class_set_extern_dir(t_symbol *s)
 
 char *class_gethelpdir(t_class *c)
 {
+    if (!c)
+    {
+        bug("class_gethelpdir");
+        return 0;
+    }
     return (c->c_externdir->s_name);
 }
 
@@ -639,21 +755,41 @@ static void class_nosavefn(t_gobj *z, t_binbuf *b)
 
 void class_setsavefn(t_class *c, t_savefn f)
 {
+    if (!c)
+    {
+        bug("class_setsavefn");
+        return;
+    }
     c->c_savefn = f;
 }
 
 t_savefn class_getsavefn(t_class *c)
 {
+    if (!c)
+    {
+        bug("class_getsavefn");
+        return 0;
+    }
     return (c->c_savefn);
 }
 
 void class_setpropertiesfn(t_class *c, t_propertiesfn f)
 {
+    if (!c)
+    {
+        bug("class_setpropertiesfn");
+        return;
+    }
     c->c_propertiesfn = f;
 }
 
 t_propertiesfn class_getpropertiesfn(t_class *c)
 {
+    if (!c)
+    {
+        bug("class_getpropertiesfn");
+        return 0;
+    }
     return (c->c_propertiesfn);
 }
 
@@ -986,8 +1122,10 @@ badarg:
        message that contains it (so it can be selected when 'Find
        Error' is used). */
     x = pd_mess_from_responder(x);
-    pd_error(x, "Bad arguments for message '%s' to object '%s'",
-        s->s_name, c->c_name->s_name);
+    pd_error(x, "Bad arguments for message '%s' to object '%s'%s",
+        s->s_name,
+        c->c_name->s_name,
+        type_hint(s, argc, argv, 1));
 lastmess:
     last_typedmess = s;    
     last_typedmess_pd = x;
@@ -1063,7 +1201,10 @@ t_gotfn getfn(t_pd *x, t_symbol *s)
 
     for (i = c->c_nmethod, m = c->c_methods; i--; m++)
         if (m->me_name == s) return(m->me_fun);
-    pd_error(x, "%s: no method for message '%s'", c->c_name->s_name, s->s_name);
+    pd_error(x, "%s: no method for message '%s'%s",
+            c->c_name->s_name,
+            s->s_name,
+            type_hint(s, 0, 0, 1));
     return((t_gotfn)nullfn);
 }
 
@@ -1075,5 +1216,39 @@ t_gotfn zgetfn(t_pd *x, t_symbol *s)
 
     for (i = c->c_nmethod, m = c->c_methods; i--; m++)
         if (m->me_name == s) return(m->me_fun);
+    return(0);
+}
+
+t_gotfn zcheckgetfn(t_pd *x, t_symbol *s, t_atomtype arg1, ...)
+{
+    t_class *c = *x;
+    t_methodentry *m;
+    int i, j;
+
+    /* get arg types */
+    va_list ap;
+    int nargs = 0;
+    t_atomtype args[MAXPDARG+1], curr = arg1;
+    va_start(ap, arg1);
+    while (curr != A_NULL && nargs < MAXPDARG)
+    {
+        args[nargs++] = curr;
+        curr = va_arg(ap, t_atomtype);
+    }
+    if (curr != A_NULL) error("zcheckgetfn: only 5 arguments are typecheckable");
+    args[nargs] = A_NULL;
+    va_end(ap);
+
+    for (i = c->c_nmethod, m = c->c_methods; i--; m++)
+    {
+        if (m->me_name == s)
+        {
+            j = 0;
+            /* both argtype lists are valid, dont need to check whether j < MAXDPARG */
+            while(m->me_arg[j] != A_NULL && args[j] != A_NULL
+                    && m->me_arg[j] == args[j]) j++;
+            if(m->me_arg[j] == A_NULL && args[j] == A_NULL) return(m->me_fun);
+        }
+    }
     return(0);
 }

@@ -133,32 +133,32 @@ static void set_tk_widget_ids(t_entry *x, t_canvas *canvas)
     x->x_canvas = canvas;
 
     /* Tk ID for the current canvas that this object is drawn in */
-    sprintf(buf,".x%lx.c", (long unsigned int) canvas);
+    sprintf(buf,".x%zx.c", (t_uint) canvas);
     x->canvas_id = getbytes(strlen(buf) + 1);
     strcpy(x->canvas_id, buf);
 
     /* Tk ID for the "frame" the other things are drawn in */
-    sprintf(buf,"%s.frame%lx", x->canvas_id, (long unsigned int)x);
+    sprintf(buf,"%s.frame%zx", x->canvas_id, (t_uint)x);
     x->frame_id = getbytes(strlen(buf) + 1);
     strcpy(x->frame_id, buf);
 
-    sprintf(buf,"%s.text%lx", x->frame_id, (long unsigned int)x);
+    sprintf(buf,"%s.text%zx", x->frame_id, (t_uint)x);
     x->text_id = getbytes(strlen(buf) + 1);
     strcpy(x->text_id, buf);    /* Tk ID for the "text", the meat! */
 
-    sprintf(buf,"%s.window%lx", x->canvas_id, (long unsigned int)x);
+    sprintf(buf,"%s.window%zx", x->canvas_id, (t_uint)x);
     x->window_tag = getbytes(strlen(buf) + 1);
     strcpy(x->window_tag, buf);    /* Tk ID for the resizing "window" */
 
-    sprintf(buf,"%s.handle%lx", x->canvas_id, (long unsigned int)x);
+    sprintf(buf,"%s.handle%zx", x->canvas_id, (t_uint)x);
     x->handle_id = getbytes(strlen(buf) + 1);
     strcpy(x->handle_id, buf);    /* Tk ID for the resizing "handle" */
 
-    sprintf(buf,"%s.scrollbar%lx", x->frame_id, (long unsigned int)x);
+    sprintf(buf,"%s.scrollbar%zx", x->frame_id, (t_uint)x);
     x->scrollbar_id = getbytes(strlen(buf) + 1);
     strcpy(x->scrollbar_id, buf);    /* Tk ID for the optional "scrollbar" */
 
-    sprintf(buf,"all%lx", (long unsigned int)x);
+    sprintf(buf,"all%zx", (t_uint)x);
     x->all_tag = getbytes(strlen(buf) + 1);
     strcpy(x->all_tag, buf);    /* Tk ID for the optional "scrollbar" */
 }
@@ -273,7 +273,7 @@ static void create_widget(t_entry *x)
     DEBUG(post("create_widget"););
     /* I guess this is for fine-tuning of the rect size based on width and height? */
 
-    sys_vgui("namespace eval entry%lx {} \n", x);
+    sys_vgui("namespace eval entry%zx {} \n", x);
     
     /* Seems we have to delete the widget in case it already exists (Provided by Guenter)*/
     sys_vgui("destroy %s\n", x->frame_id);
@@ -298,7 +298,7 @@ static void create_widget(t_entry *x)
 
 static void entry_drawme(t_entry *x, t_glist *glist, int firsttime)
 {
-    DEBUG(post("entry_drawme: firsttime %d canvas %lx glist %lx", firsttime, x->x_canvas, glist););
+    DEBUG(post("entry_drawme: firsttime %d canvas %zx glist %zx", firsttime, x->x_canvas, glist););
     set_tk_widget_ids(x,glist_getcanvas(glist));	
     if (firsttime) 
     {
@@ -321,7 +321,7 @@ static void entry_drawme(t_entry *x, t_glist *glist, int firsttime)
 
 static void entry_erase(t_entry* x,t_glist* glist)
 {
-    DEBUG(post("entry_erase: canvas %lx glist %lx", x->x_canvas, glist););
+    DEBUG(post("entry_erase: canvas %zx glist %zx", x->x_canvas, glist););
 
     set_tk_widget_ids(x,glist_getcanvas(glist));
     erase_inlets(x);
@@ -348,7 +348,7 @@ static void entry_getrect(t_gobj *z, t_glist *owner,
 static void entry_displace(t_gobj *z, t_glist *glist, int dx, int dy)
 {
     t_entry *x = (t_entry *)z;
-    DEBUG(post("entry_displace: canvas %lx glist %lx", x->x_canvas, glist););
+    DEBUG(post("entry_displace: canvas %zx glist %zx", x->x_canvas, glist););
     x->x_obj.te_xpix += dx;
     x->x_obj.te_ypix += dy;
     if (glist_isvisible(glist))
@@ -369,7 +369,7 @@ static void entry_displace(t_gobj *z, t_glist *glist, int dx, int dy)
 static void entry_select(t_gobj *z, t_glist *glist, int state)
 {
     t_entry *x = (t_entry *)z;
-    DEBUG(post("entry_select: canvas %lx glist %lx state %d", x->x_canvas, glist, state););
+    DEBUG(post("entry_select: canvas %zx glist %zx state %d", x->x_canvas, glist, state););
     
     if( (state) && (!x->x_selected))
     {
@@ -422,7 +422,7 @@ static void entry_activate(t_gobj *z, t_glist *glist, int state)
 
 static void entry_delete(t_gobj *z, t_glist *glist)
 {
-    DEBUG(post("entry_delete: glist %lx", glist););    
+    DEBUG(post("entry_delete: glist %zx", glist););    
     t_text *x = (t_text *)z;
     canvas_deletelinesfor(glist, x);
 }
@@ -431,7 +431,7 @@ static void entry_delete(t_gobj *z, t_glist *glist)
 static void entry_vis(t_gobj *z, t_glist *glist, int vis)
 {
     t_entry *x = (t_entry*)z;
-    DEBUG(post("entry_vis: vis %d canvas %lx glist %lx", vis, x->x_canvas, glist););
+    DEBUG(post("entry_vis: vis %d canvas %zx glist %zx", vis, x->x_canvas, glist););
     if (vis) {
         entry_drawme(x, glist, 1);
     }
@@ -760,7 +760,7 @@ static void *entry_new(t_symbol *s, int argc, t_atom *argv)
     x->x_data_outlet = outlet_new(&x->x_obj, &s_float);
     x->x_status_outlet = outlet_new(&x->x_obj, &s_symbol);
 
-    sprintf(buf,"entry%lx",(long unsigned int)x);
+    sprintf(buf,"entry%zx",(t_uint)x);
     x->tcl_namespace = getbytes(strlen(buf) + 1);
     strcpy(x->tcl_namespace, buf);    
 

@@ -3,8 +3,41 @@
   <head>
     <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
   </head>
-  <body class="dialog_body prefs_body">
+  <style>
+td {
+  padding-right: 0px;
+}
+
+select {
+  height: 1.6em;
+}
+
+#in1, #in2, #in3, #in4, #out1, #out2, #out3, #out4 {
+  width: 100%;
+}
+
+#inchans1, #inchans2, #inchans3, #inchans4, #outchans1, #outchans2, #outchans3, #outchans4 {
+  margin-left: 3px;
+}
+
+#midilabel {
+  vertical-align: bottom;
+}
+  </style>
+  <body class="dialog_body prefs_body" style="overflow: hidden;">
     <div class="container noselect prefs_container">
+      <table id="titlebar">
+        <tr>
+          <td style="width: 100%;">
+            <div id="titlebar_title">Pd-L2Ork Properties</div>
+          </td>
+          <td id="titlebar_buttons_td">
+            <div class="titlebar_buttons">
+              <div id="titlebar_close_button" onclick="cancel(false);">&#215</div>
+            </div>
+          </td>
+        </tr>
+      </table>
       <div class="prefs_tab_group">
         <input type="radio"
                name="prefs_radio_group"
@@ -116,7 +149,7 @@
               </td>
             </tr>
             <tr>
-              <td>
+              <td style="width: 80%">
                 <select id="in1" onchange="dev_change(this);"></select>
               </td>
               <td>
@@ -129,7 +162,7 @@
               </td>
             </tr>
             <tr>
-              <td>
+              <td style="width: 80%">
                 <select id="in2" onchange="dev_change(this);"></select>
               </td>
               <td>
@@ -142,7 +175,7 @@
               </td>
             </tr>
             <tr>
-              <td>
+              <td style="width: 80%">
                 <select id="in3" onchange="dev_change(this);"></select>
               </td>
               <td>
@@ -155,7 +188,7 @@
               </td>
             </tr>
             <tr>
-              <td>
+              <td style="width: 80%">
                 <select id="in4" onchange="dev_change(this);"></select>
               </td>
               <td>
@@ -168,15 +201,15 @@
               </td>
             </tr>
             <tr>
-              <td data-i18n="[title]prefs.audio.output_title_tt">
+              <td data-i18n="[title]prefs.audio.output_title_tt" style="padding-top: 10px;">
                 <span data-i18n="prefs.audio.output_title"></span>
               </td>
-              <td>
+              <td style="padding-top: 10px;">
                 <span data-i18n="prefs.audio.channels"></span>
               </td>
             </tr>
             <tr>
-              <td>
+              <td style="width: 80%">
                 <select id="out1" onchange="dev_change(this);"></select>
               </td>
               <td>
@@ -189,7 +222,7 @@
               </td>
             </tr>
             <tr>
-              <td>
+              <td style="width: 80%">
                 <select id="out2" onchange="dev_change(this);"></select>
               </td>
               <td>
@@ -202,7 +235,7 @@
               </td>
             </tr>
             <tr>
-              <td>
+              <td style="width: 80%">
                 <select id="out3" onchange="dev_change(this);"></select>
               </td>
               <td>
@@ -215,7 +248,7 @@
               </td>
             </tr>
             <tr>
-              <td>
+              <td style="width: 80%">
                 <select id="out4" onchange="dev_change(this);"></select>
               </td>
               <td>
@@ -259,44 +292,44 @@
             <span data-i18n="[title]prefs.midi.input_title_tt">
               <span data-i18n="prefs.midi.input_title"></span>
             </span>
-            <table class="tab_settings">
+            <table class="tab_settings" style="width: 100%;">
               <tr>
-                <td>1</td><td>
+                <td id="midilabel">1</td><td>
                   <select id="midi_in1" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">6</td><td>
+                <td align="right" id="midilabel">6</td><td>
                   <select id="midi_in6" onchange="dev_change(this);"></select>
                 </td>
               </tr>
               <tr>
-                <td>2</td><td>
+                <td id="midilabel">2</td><td>
                   <select id="midi_in2" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">7</td><td>
+                <td align="right" id="midilabel">7</td><td>
                   <select id="midi_in7" onchange="dev_change(this);"></select>
                 </td>
               </tr>
               <tr>
-                <td>3</td><td>
+                <td id="midilabel">3</td><td>
                   <select id="midi_in3" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">8</td><td>
+                <td align="right" id="midilabel">8</td><td>
                   <select id="midi_in8" onchange="dev_change(this);"></select>
                 </td>
               </tr>
               <tr>
-                <td>4</td><td>
+                <td id="midilabel">4</td><td>
                   <select id="midi_in4" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">9</td><td>
+                <td align="right" id="midilabel">9</td><td>
                   <select id="midi_in9" onchange="dev_change(this);"></select>
                 </td>
               </tr>
               <tr>
-                <td>5</td><td>
+                <td id="midilabel">5</td><td>
                   <select id="midi_in5" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">10</td><td>
+                <td align="right" id="midilabel">10</td><td>
                   <select id="midi_in10" onchange="dev_change(this);"></select>
                 </td>
               </tr>
@@ -307,42 +340,42 @@
             </span>
             <table class="tab_settings">
               <tr>
-                <td>1</td><td>
+                <td id="midilabel">1</td><td>
                   <select id="midi_out1" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">6</td><td>
+                <td align="right" id="midilabel">6</td><td>
                   <select id="midi_out6" onchange="dev_change(this);"></select>
                 </td>
               </tr>
               <tr>
-                <td>2</td><td>
+                <td id="midilabel">2</td><td>
                   <select id="midi_out2" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">7</td><td>
+                <td align="right" id="midilabel">7</td><td>
                   <select id="midi_out7" onchange="dev_change(this);"></select>
                 </td>
               </tr>
               <tr>
-                <td>3</td><td>
+                <td id="midilabel">3</td><td>
                   <select id="midi_out3" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">8</td><td>
+                <td align="right" id="midilabel">8</td><td>
                   <select id="midi_out8" onchange="dev_change(this);"></select>
                 </td>
               </tr>
               <tr>
-                <td>4</td><td>
+                <td id="midilabel">4</td><td>
                   <select id="midi_out4" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">9</td><td>
+                <td align="right" id="midilabel">9</td><td>
                   <select id="midi_out9" onchange="dev_change(this);"></select>
                 </td>
               </tr>
               <tr>
-                <td>5</td><td>
+                <td id="midilabel">5</td><td>
                   <select id="midi_out5" onchange="dev_change(this);"></select>
                 </td>
-                <td align="right">10</td><td>
+                <td align="right" id="midilabel">10</td><td>
                   <select id="midi_out10" onchange="dev_change(this);"></select>
                 </td>
               </tr>
@@ -380,6 +413,11 @@
               <option data-i18n="prefs.gui.presets.footgun" value="footgun">
               </option>
             </select>
+            <br/>
+            <label data-i18n="[title]prefs.gui.grid.show_grid_tt">
+              <input type="checkbox" id="show_grid" name="show_grid">
+              <span data-i18n="prefs.gui.grid.show_grid"></span>
+            </label>
             <br/>
             <label data-i18n="[title]prefs.gui.zoom.save_zoom_tt">
               <input type="checkbox" id="save_zoom" name="save_zoom">
@@ -421,11 +459,12 @@
             <label data-i18n="[title]prefs.startup.paths_tt">
               <span data-i18n="prefs.startup.paths"></span>
             </label>
-            <div style="height:24vh; width:89vw; background:white; border: 1px solid #bbb; overflow-y:auto; overflow-x:auto; padding:0px;">
+            <div style="height:24vh; background:white; border: 1px solid #bbb; width: 96.5vw;
+                overflow-y:auto; overflow-x:auto; padding:0px;">
               <table id="startup_paths" style="width:100%; background:white;">
               </table>
             </div>
-            <div class="submit_buttons">
+            <div class="submit_buttons" style="width: 93%;">
               <button type="button" onClick="startup_path_new()" data-i18n="[title]prefs.startup.new_tt">
                 <span data-i18n="prefs.startup.new"></span>
               </button>
@@ -439,11 +478,12 @@
             <label data-i18n="[title]prefs.startup.libs_tt">
               <span data-i18n="prefs.startup.libs"></span>
             </label>
-            <div style="height:24vh; width:89vw; background:white; border: 1px solid #bbb; overflow-y:auto; overflow-x:auto; padding:0px;">
+            <div style="height:24vh; background:white; border: 1px solid #bbb; width: 96.5vw;
+                overflow-y:auto; overflow-x:auto; padding:0px;">
               <table id="startup_libs" style="width:100%; background:white;">
               </table>
             </div>
-            <div class="submit_buttons">
+            <div class="submit_buttons" style="width: 93%;">
               <button type="button" onClick="startup_lib_new()" data-i18n="[title]prefs.startup.new_tt">
                 <span data-i18n="prefs.startup.new"></span>
               </button>
@@ -460,7 +500,7 @@
               <input type="text"
                      id="startup_flags"
                      name="startup_flags"
-                     style="width:89vw">
+                     style="width: 96%">
             </label>
           </div>
         </div>
@@ -738,16 +778,25 @@ function apply(save_prefs) {
     );
 
     // Send the gui prefs (currently just the name of the gui preset, the
-    // status of the save-zoom toggle and various options related to the help
-    // browser) to Pd
+    // status of the show_grid and save_zoom toggles and various options
+    // related to the help browser) to Pd
     pdgui.pdsend("pd gui-prefs",
         get_gui_preset(),
+        get_bool_elem("show_grid"),
         get_bool_elem("save_zoom"),
         get_bool_elem("browser_doc"),
         get_bool_elem("browser_path"),
         get_bool_elem("browser_init"),
         get_autopatch_yoffset()
     );
+    // Also send the browser config to the GUI, so that it will update the
+    // help browser accordingly.
+    pdgui.update_browser(
+        get_bool_elem("browser_doc"),
+        get_bool_elem("browser_path")
+    );
+    // Update the grid on all open windows.
+    pdgui.update_grid(get_bool_elem("show_grid"));
 
     // Send the startup config data to Pd
     pdgui.pdsend.apply(null, ["pd path-dialog", startup_use_stdpath, startup_verbose].concat(get_path_array()));
@@ -991,16 +1040,37 @@ function autopatch_yoffset_toggle(checked) {
     document.getElementById("autopatch_yoffset").checked = checked;
 }
 
-function gui_prefs_callback(name, save_zoom, browser_doc, browser_path,
+function gui_prefs_callback(name, show_grid, save_zoom, browser_doc, browser_path,
     browser_init, autopatch_yoffset) {
-    var s = document.getElementById("gui_preset"),
-        i;
-    for (i = 0; i < s.options.length; i++) {
+    var s = document.getElementById("gui_preset");
+
+    // ag: scan the css subdir for user-defined styles
+    var predefined = // built-in styles
+        [ "c64.css", "default.css", "dejavu.css", "extended.css",
+          "footgun.css", "inverted.css", "solarized.css",
+          "solarized_inverted.css", "strongbad.css", "subdued.css",
+          "vanilla.css", "vanilla_inverted.css"];
+    var fs = require('fs');
+    var base = process.platform === "darwin" ? pdgui.get_lib_dir() : ".";
+    var files = fs.readdirSync(base + "/css/");
+    files.forEach(file => {
+        var pos = file.lastIndexOf('.');
+        var ext = file.substr(pos);
+        if (ext === ".css" && predefined.indexOf(file) === -1) {
+            var base = file.substr(0, pos);
+            var option = document.createElement("option");
+            option.text = base;
+            s.add(option);
+        }
+    });
+
+    for (var i = 0; i < s.options.length; i++) {
         if (s.options[i].value.toLowerCase() === name.toLowerCase()) {
             s.selectedIndex = i;
             break;
         }
     }
+    document.getElementById("show_grid").checked = !!show_grid;
     document.getElementById("save_zoom").checked = !!save_zoom;
     document.getElementById("browser_doc").checked = !!browser_doc;
     document.getElementById("browser_path").checked = !!browser_path;
@@ -1240,6 +1310,7 @@ function startup_path_delete() {
 function register_window_id(gfxstub, attr_arrays) {
     pd_object_callback = gfxstub;
     add_events(gfxstub);
+    pdgui.gui_check_for_dialog_appearance_inconsistencies(gfxstub);
     translate_form();
 
     // We don't turn on rendering of the "container" div until

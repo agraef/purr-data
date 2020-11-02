@@ -20441,7 +20441,7 @@ echo "${ECHO_T}linux" >&6; }
      { echo "$as_me:$LINENO: result: darwin" >&5
 echo "${ECHO_T}darwin" >&6; }
      ;;
-   MINGW32_NT-*)
+   MINGW*_NT-*)
      ##-- build farm: `uname -s` = MINGW32_NT-5.1
      { echo "$as_me:$LINENO: result: win32" >&5
 echo "${ECHO_T}win32" >&6; }

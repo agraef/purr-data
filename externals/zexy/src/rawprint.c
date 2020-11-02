@@ -30,7 +30,7 @@
 # endif
 #endif
 
-static t_class *rawprint_class;
+static t_class *rawprint_class=NULL;
 
 typedef struct _rawprint {
   t_object  x_obj;
@@ -43,11 +43,12 @@ static void rawprint_any(t_rawprint *x, t_symbol*s, int argc, t_atom*argv)
   if(x->label) {
     startpost("%s: ", x->label->s_name);
   }
-  
-  if(s)
+
+  if(s) {
     startpost("\"%s\"", s->s_name);
-  else // this shouldn't happen, but sometimes does...
+  } else { // this shouldn't happen, but sometimes does...
     startpost("NULL");
+  }
 
   while(argc--) {
     switch(argv->a_type) {
@@ -108,12 +109,10 @@ static void *rawprint_new(t_symbol*s)
   return (x);
 }
 
-void rawprint_setup(void)
+ZEXY_SETUP void rawprint_setup(void)
 {
-  rawprint_class = class_new(gensym("rawprint"),
-                             (t_newmethod)rawprint_new,
-                             0, sizeof(t_rawprint),
-                             CLASS_DEFAULT, A_DEFSYMBOL, 0);
+  rawprint_class = zexy_new("rawprint",
+                            rawprint_new, 0, t_rawprint, CLASS_DEFAULT, "S");
 
   class_addanything(rawprint_class, rawprint_any);
   zexy_register("rawprint");

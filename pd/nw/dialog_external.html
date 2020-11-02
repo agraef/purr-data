@@ -3,13 +3,66 @@
   <head>
     <link id="page_style" rel="stylesheet" type="text/css" href="css/default.css">
   </head>
-  <body class="dialog_body">
+  <style>
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0); 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.267); 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+input[type=checkbox] {
+    margin: 2px 0px 8px 0px;
+}
+
+input[type="text"] {
+    margin-bottom: 3px;
+}
+
+label {
+	margin-left: 5px;
+}
+  </style>
+  <body class="dialog_body" style="overflow: hidden;">
     <div class="container">
+      <table id="titlebar">
+        <tr>
+          <td style="width: 100%; margin: 7px;">
+            <div id="titlebar_title">External Object Properties</div>
+          </td>
+          <td id="titlebar_buttons_td">
+            <div class="titlebar_buttons">
+              <div id="titlebar_close_button" onclick="cancel(false);">&#215</div>
+            </div>
+          </td>
+        </tr>
+      </table>
+
     <form> 
-      <fieldset> 
-        <legend></legend> 
+      <fieldset id="data_container" style="height: 267px;"> 
+        <legend></legend>
+      	  <div id="scrollable_data" style="overflow: auto; height: 250px;">
+      	  	<table id="pairs">
+      	  	</table>
+      	  </div>
       </fieldset> 
-    <div class="submit_buttons">
+    <div class="submit_buttons" style="
+   		text-align: center;
+    	padding: 8px 0px 8px 0px;"
+    >
       <button type="button"
               onClick="ok();"
               id="ok_button"
@@ -34,6 +87,8 @@
 "use strict";
 var gui = require("nw.gui");
 var pdgui = require("./pdgui.js");
+
+//gui.Window.get().setResizable(false);
 
 // For translations
 var l = pdgui.get_local_string;
@@ -94,7 +149,8 @@ function parse_attrs(attrs) {
             if (token.length > 1) {
                 elem.type = token[token.length - 1];
                 if (elem.type !== "symbol" &&
-                    elem.type !== "toggle") {
+                    elem.type !== "toggle" &&
+                    elem.type !== "hidden") {
                     // no suffix defaults to "number"
                     elem.type = "number";
                 } else {
@@ -122,6 +178,7 @@ function register_window_id(gfxstub, args) {
     var external_name = args.name,
         array_of_objects;
     pd_object_callback = gfxstub;
+    pdgui.gui_check_for_dialog_appearance_inconsistencies(gfxstub);
     array_of_objects = parse_attrs(args.attributes);
     // Store our array for later use
     new_properties = array_of_objects;
@@ -162,11 +219,12 @@ function get_input_type(t) {
     return t === "symbol" ? "text" :
            t === "number" ? "text" : 
            t === "toggle" ? "checkbox":
+           t === "hidden" ? "hidden":
                             "text";
 }
 
 function build_form(external_name, array_of_objects) {
-    var fieldset = document.querySelector("fieldset");
+    var fieldset = document.getElementById("pairs");
     document.querySelector("legend").textContent = external_name;
     array_of_objects.forEach(function(elem) {
         var input_elem = document.createElement("input"),
@@ -184,11 +242,15 @@ function build_form(external_name, array_of_objects) {
             }
         }
         label.textContent = elem.label;
-        label.appendChild(input_elem);
-        fieldset.appendChild(label);
+        fieldset.appendChild(input_elem);       
+        fieldset.appendChild(label); 
         // stop-gap until we make this prettier through css: insert a break
         fieldset.appendChild(document.createElement("br"));
     });
+    // update scrollbars
+    var parent_fieldset = document.getElementById("data_container");
+    fieldset.style.setProperty("height", (parseInt(parent_fieldset.style.getPropertyValue("height")) - 10) + "px");
+
 }
 
 function add_events(name) {

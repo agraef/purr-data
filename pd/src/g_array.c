@@ -545,8 +545,8 @@ void canvas_menuarray(t_glist *canvas)
     gui_vmess("gui_array_new", "si",
         gfxstub_new2(&x->gl_pd, x),
         gcount);
-    //sprintf(cmdbuf, "pdtk_array_dialog %%s array%d 100 3 1 .x%lx black black\n",
-    //    ++gcount, (long unsigned int)canvas);
+    //sprintf(cmdbuf, "pdtk_array_dialog %%s array%d 100 3 1 .x%zx black black\n",
+    //    ++gcount, (t_int)canvas);
     //gfxstub_new(&x->gl_pd, x, cmdbuf);
 }
 
@@ -583,12 +583,12 @@ int garray_properties(t_garray *x, t_symbol **gfxstubp, t_symbol **namep,
     *fillp = x->x_fillcolor;
     *outlinep = x->x_outlinecolor;
     //sprintf(cmdbuf, ((x->x_name->s_name[0] == '$') ?
-    //    "pdtk_array_dialog %%s \\%s %d %d 0 .x%lx %s %s\n" :
-    //    "pdtk_array_dialog %%s %s %d %d 0 .x%lx %s %s\n"),
+    //    "pdtk_array_dialog %%s \\%s %d %d 0 .x%zx %s %s\n" :
+    //    "pdtk_array_dialog %%s %s %d %d 0 .x%zx %s %s\n"),
     //        x->x_name->s_name,
     //        a->a_n,
     //        x->x_saveit +  2 * filestyle + 8 * x->x_hidename + 16 * x->x_joc,
-    //        (long unsigned int)glist_getcanvas(canvas),
+    //        (t_int)glist_getcanvas(canvas),
     //        x->x_fillcolor->s_name,
     //        x->x_outlinecolor->s_name);
     //gfxstub_new(&x->x_gobj.g_pd, x, cmdbuf);
@@ -1265,7 +1265,7 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                 array_motion_ycumulative = 0;
             }
             //fprintf(stderr,"    glist_grab %d %d\n", xpix, ypix);
-            glist_grab(glist, 0, array_motion, 0, xpix, ypix);
+            glist_grab(glist, 0, array_motion, 0, 0, xpix, ypix);
         }
         if (alt)
         {
@@ -1348,7 +1348,7 @@ static void garray_select(t_gobj *z, t_glist *glist, int state)
     t_garray *x = (t_garray *)z;
     /* There's no replacement for the following command in the
        new GUI, but it looks like it's not needed anymore. */
-    //sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
+    //sys_vgui("pdtk_select_all_gop_widgets .x%zx %zx %d\n",
     //    glist_getcanvas(glist), x->x_glist, state);
 
     extern void scalar_select(t_gobj *z, t_glist *owner, int state);
@@ -1502,7 +1502,7 @@ static void garray_doredraw(t_gobj *client, t_glist *glist)
             canvas_restore_original_position(glist_getcanvas(glist),
                 (t_gobj *)glist, 0, -1);
         }
-        //fprintf(stderr,"check if we need to reselect %lx %lx %lx\n",
+        //fprintf(stderr,"check if we need to reselect %zx %zx %zx\n",
         //    glist_getcanvas(glist), (t_gobj *)glist, glist->gl_owner);
         int selected = 0;
         /* Unfortunately I forget to comment this. I can't remember why I
@@ -1525,13 +1525,13 @@ static void garray_doredraw(t_gobj *client, t_glist *glist)
                perhaps with nested GOPs or something? Anyhow if there's
                a regression this commented-out call might be a place
                to investigate... */
-            //sys_vgui("pdtk_select_all_gop_widgets .x%lx %lx %d\n",
+            //sys_vgui("pdtk_select_all_gop_widgets .x%zx %zx %d\n",
             //    glist_getcanvas(glist), glist, 1);
             // a giant kludge-- we really just need gop items
             // to be children of their gop <group>
             t_scalar *sc = x->x_scalar;
             char tagbuf[MAXPDSTRING];
-            sprintf(tagbuf, "scalar%lx", (long unsigned int)sc->sc_vec);
+            sprintf(tagbuf, "scalar%zx", (t_int)sc->sc_vec);
             gui_vmess("gui_gobj_select", "xs",
                 glist_getcanvas(glist), tagbuf);
         }

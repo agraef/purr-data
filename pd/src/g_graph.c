@@ -60,9 +60,82 @@ int canvas_isgroup(t_canvas *x)
 extern t_template *canvas_findtemplate(t_canvas *c);
 extern t_canvas *canvas_templatecanvas_forgroup(t_canvas *c);
 
+
+/* ico@vt.edu 2020-08-24:
+check if canvas consists of only scalars and returns 2. if the canvas only
+has the last object as a non-scalar (e.g. a new object has just been created,
+then we return 1, otherwise return 0. this is used to prevent creation of new
+objects in an GOP window that only has scalars inside it or scalars with one
+newly created object that is yet to be typed into and therefore properly
+instantiated */
+int canvas_has_scalars_only(t_canvas *x)
+{
+    t_gobj *g = x->gl_list;
+    int hasonlyscalars = 2;
+    while (g)
+    {
+        //post("g...");
+        if (pd_class(&g->g_pd) != scalar_class)
+        {
+            /*
+            post("...scalar=NO %s %s", 
+                (pd_class(&g->g_pd) == text_class ? "text_class" : "NOT_text_class"),
+                (((t_text *)g)->te_type == T_TEXT) ? "T_TEXT" : "NOT_T_TEXT");
+            */
+
+            /* ico@vt.edu 2020-08-24:
+            if we have one more object or the last object is not newly
+            instantiated text object
+            to distinguish between a comment and a text object that is 
+            yet to be instantiated we use:
+               1) comment is text_class and its te_type is T_TEXT
+               2) blank object one is typing into is text_class but is NOT T_TEXT
+               3) instantiated object is something other than text_class (unless)
+                  it is a comment
+               4) object that has failed to create is same as blank object
+            */
+            if (g->g_next || (pd_class(&g->g_pd) != text_class || ((t_text *)g)->te_type == T_TEXT))
+                hasonlyscalars = 0;
+            else
+                hasonlyscalars = 1;
+            break;
+        }
+        //post("...scalar, comment, or uninitialized object=yes");
+        g = g->g_next;
+    }
+    //post("has scalars only=%d", hasonlyscalars);
+    return(hasonlyscalars);
+}
+
+/* ico@vt.edu 2020-08-24: this draws or erases redrect on a gop window
+   and is being refactored due to complex logic involving subpatches with
+   scalars only that should not have a redrect until a non-scalar object
+   has been instantiated (this does not include empty objects that are
+   yet to be typed into, as this is one way how one can instantiate new
+   scalar inside a subpatch)
+*/
+void glist_update_redrect(t_glist *x)
+{
+    t_gobj *y = x->gl_list;
+    while(y->g_next) y = y->g_next;
+
+    if (x->gl_editor && x->gl_isgraph && !x->gl_goprect
+        && pd_checkobject(&y->g_pd) && !canvas_has_scalars_only(x))
+    {
+        //post("glist_add drawredrect %d", canvas_has_scalars_only(x));
+        x->gl_goprect = 1;
+        canvas_drawredrect(x, 1);
+    }
+    else if (canvas_has_scalars_only(x) && x->gl_goprect)
+    {
+         x->gl_goprect = 0;
+        canvas_drawredrect(x, 0);       
+    }
+}
+
 void glist_add(t_glist *x, t_gobj *y)
 {
-    //fprintf(stderr,"glist_add %lx %d\n", (t_int)x, (x->gl_editor ? 1 : 0));    
+    //fprintf(stderr,"glist_add %zx %d\n", (t_uint)x, (x->gl_editor ? 1 : 0));    
     t_object *ob;
     y->g_next = 0;
     int index = 0;
@@ -84,12 +157,7 @@ void glist_add(t_glist *x, t_gobj *y)
         //    canvas_undo_set_create(x, index), "create");
         //glist_noselect(x);
     }
-    if (x->gl_editor && x->gl_isgraph && !x->gl_goprect
-        && pd_checkobject(&y->g_pd))
-    {
-        x->gl_goprect = 1;
-        canvas_drawredrect(x, 1);
-    }
+    glist_update_redrect(x);
     if (glist_isvisible(x))
         gobj_vis(y, x, 1);
     if (class_isdrawcommand(y->g_pd)) 
@@ -134,10 +202,12 @@ int canvas_hasarray(t_canvas *x)
 /* JMZ: emit a closebang message */
 void canvas_closebang(t_canvas *x);
 
+void canvas_dirtyclimb(t_canvas *x, int n);
+
     /* delete an object from a glist and free it */
 void glist_delete(t_glist *x, t_gobj *y)
 {
-    //fprintf(stderr,"glist_delete y=%lx x=%lx glist_getcanvas=%lx\n", y, x, glist_getcanvas(x));
+    //fprintf(stderr,"glist_delete y=%zx x=%zx glist_getcanvas=%zx\n", y, x, glist_getcanvas(x));
     if (x->gl_list)
     {
         //fprintf(stderr,"glist_delete YES\n");
@@ -162,6 +232,9 @@ void glist_delete(t_glist *x, t_gobj *y)
           /* if we are a group, let's call ourselves a drawcommand */
           if (((t_canvas *)y)->gl_svg)
               drawcommand = 1;
+
+            if(((t_canvas *)y)->gl_dirty)
+                canvas_dirtyclimb((t_canvas *)y, 0);
         }
      
         wasdeleting = canvas_setdeleting(canvas, 1);
@@ -184,7 +257,7 @@ void glist_delete(t_glist *x, t_gobj *y)
                     if (gl->gl_isgraph)
                     {
                         char tag[80];
-                        //sprintf(tag, "graph%lx", (t_int)gl);
+                        //sprintf(tag, "graph%zx", (t_uint)gl);
                         //t_glist *yy = (t_glist *)y;
                         sprintf(tag, "%s",
                             rtext_gettag(glist_findrtext(x, &gl->gl_obj)));
@@ -213,7 +286,7 @@ void glist_delete(t_glist *x, t_gobj *y)
         }
         if (glist_isvisible(canvas))
         {
-            //fprintf(stderr,"...deleting %lx %lx\n", x, glist_getcanvas(x));
+            //fprintf(stderr,"...deleting %zx %zx\n", x, glist_getcanvas(x));
             gobj_vis(y, x, 0);
         }
         if (x->gl_editor && (ob = pd_checkobject(&y->g_pd)))
@@ -257,6 +330,8 @@ void glist_delete(t_glist *x, t_gobj *y)
             //fprintf(stderr,"glist_delete late_rtext_free\n");
             rtext_free(rt);
         }
+
+        if (x->gl_list) glist_update_redrect(x);
     }
 }
 
@@ -293,8 +368,8 @@ void glist_retext(t_glist *glist, t_text *y)
     }
 }
 
-void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn,
-    t_glistkeyfn keyfn, int xpos, int ypos)
+void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn, t_glistkeyfn keyfn,
+    t_glistkeynameafn keynameafn, int xpos, int ypos)
 {
     //fprintf(stderr,"glist_grab\n");
     t_glist *x2 = glist_getcanvas(x);
@@ -304,6 +379,7 @@ void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn,
     x2->gl_editor->e_grab = y;
     x2->gl_editor->e_motionfn = motionfn;
     x2->gl_editor->e_keyfn = keyfn;
+    x2->gl_editor->e_keynameafn = keynameafn;
     x2->gl_editor->e_xwas = xpos;
     x2->gl_editor->e_ywas = ypos;
 }
@@ -313,7 +389,7 @@ t_canvas *glist_getcanvas(t_glist *x)
     //fprintf(stderr,"glist_getcanvas\n");
     while (x->gl_owner && !x->gl_havewindow && x->gl_isgraph)
     {
-            //fprintf(stderr,"x=%lx x->gl_owner=%d x->gl_havewindow=%d "
+            //fprintf(stderr,"x=%zx x->gl_owner=%d x->gl_havewindow=%d "
             //               "x->gl_isgraph=%d gobj_shouldvis=%d\n", 
             //    x, (x->gl_owner ? 1:0), x->gl_havewindow, x->gl_isgraph,
             //    gobj_shouldvis(&x->gl_gobj, x->gl_owner));
@@ -418,7 +494,7 @@ void glist_sort(t_glist *x)
 
 t_inlet *canvas_addinlet(t_canvas *x, t_pd *who, t_symbol *s)
 {
-    //fprintf(stderr,"canvas_addinlet %d %lx %d\n", x->gl_loading, x->gl_owner, glist_isvisible(x->gl_owner));
+    //fprintf(stderr,"canvas_addinlet %d %zx %d\n", x->gl_loading, x->gl_owner, glist_isvisible(x->gl_owner));
     t_inlet *ip = inlet_new(&x->gl_obj, who, s, 0);
     if (!x->gl_loading && x->gl_owner && glist_isvisible(x->gl_owner))
     {
@@ -490,7 +566,7 @@ void canvas_resortinlets(t_canvas *x)
     {
         canvas_fixlinesfor(x->gl_owner, &x->gl_obj);
         //fprintf(stderr,"good place to fix redrawing of inlets "
-        //               ".x%lx owner=.x%lx %d (parent)%d\n",
+        //               ".x%zx owner=.x%zx %d (parent)%d\n",
         //    x, x->gl_owner, x->gl_loading, x->gl_owner->gl_loading);
 
         /*
@@ -907,7 +983,7 @@ void glist_redraw(t_glist *x)
             linetraverser_start(&t, x);
             while (oc = linetraverser_next(&t))
                 canvas_updateconnection(glist_getcanvas(x), t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2, (t_int)oc);
-                //sys_vgui(".x%lx.c coords l%lx %d %d %d %d\n",
+                //sys_vgui(".x%zx.c coords l%zx %d %d %d %d\n",
                 //    glist_getcanvas(x), oc,
                 //        t.tr_lx1, t.tr_ly1, t.tr_lx2, t.tr_ly2);
             canvas_drawredrect(x, 0);
@@ -944,10 +1020,10 @@ t_symbol *garray_getlabelcolor(t_garray *x);
 static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
 {
     t_glist *x = (t_glist *)gr;
-    //fprintf(stderr,"graph vis canvas=%lx gobj=%lx %d\n",
+    //fprintf(stderr,"graph vis canvas=%zx gobj=%zx %d\n",
     //    (t_int)parent_glist, (t_int)gr, vis);
-    //fprintf(stderr, "graph_vis gr=.x%lx parent_glist=.x%lx "
-    //                "glist_getcanvas(x->gl_owner)=.x%lx vis=%d\n",
+    //fprintf(stderr, "graph_vis gr=.x%zx parent_glist=.x%zx "
+    //                "glist_getcanvas(x->gl_owner)=.x%zx vis=%d\n",
     //    (t_int)gr, (t_int)parent_glist,
     //    (t_int)glist_getcanvas(x->gl_owner), vis);  
     char tag[50];
@@ -962,6 +1038,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     }
 
         /* Sanity check */
+    //post("parent_glist=%lx x->gl_obj=%lx", parent_glist, &x->gl_obj);
     rtext = glist_findrtext(parent_glist, &x->gl_obj);
     if (!rtext)
     {
@@ -977,17 +1054,17 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     //    tgt = parent_glist;
     //    exception = 1;
     //}
-    //fprintf(stderr,"tgt=.x%lx %d\n", (t_int)tgt, exception);
+    //fprintf(stderr,"tgt=.x%zx %d\n", (t_uint)tgt, exception);
 
     if (vis & gobj_shouldvis(gr, parent_glist))
     {
         int xpix, ypix;
         xpix = text_xpix(&x->gl_obj, parent_glist);
         ypix = text_ypix(&x->gl_obj, parent_glist);
-        gui_vmess("gui_gobj_new", "xssiii",
+        gui_vmess("gui_gobj_new", "xssiiii",
             glist_getcanvas(x->gl_owner),
             tag, "graph", xpix, ypix,
-            parent_glist == glist_getcanvas(x->gl_owner) ? 1 : 0);
+            parent_glist == glist_getcanvas(x->gl_owner) ? 1 : 0, 0);
         if (canvas_showtext(x))
             rtext_draw(glist_findrtext(parent_glist, &x->gl_obj));
     }
@@ -1008,8 +1085,8 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     if (!vis)
         rtext_erase(glist_findrtext(parent_glist, &x->gl_obj));
 
-    //sprintf(tag, "graph%lx", (t_int)x);
-    //fprintf(stderr, "gettag=%s, tag=graph%lx\n",
+    //sprintf(tag, "graph%zx", (t_uint)x);
+    //fprintf(stderr, "gettag=%s, tag=graph%zx\n",
     //    rtext_gettag(glist_findrtext(parent_glist, &x->gl_obj)),(t_int)x);
     /* if we look like a graph but have been moved to a toplevel,
        just show the bounding rectangle */
@@ -1028,6 +1105,16 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             gui_vmess("gui_graph_fill_border", "xsi",
                 glist_getcanvas(x->gl_owner),
                 tag);
+			/* ico@vt.edu: do we need to redraw scalars here? */
+			for (g = x->gl_list; g; g = g->g_next)
+			{
+				gop_redraw = 1;
+				//fprintf(stderr,"drawing gop objects\n");
+				if (g->g_pd == scalar_class)
+					gobj_vis(g, x, 1);
+				//fprintf(stderr,"done\n");
+				gop_redraw = 0;
+			}
         }
         else if (gobj_shouldvis(gr, parent_glist))
         {
@@ -1089,7 +1176,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
                 gui_end_array();
             }
         }
-            /* Finally, end the final array as wel as the call to the GUI */
+            /* Finally, end the final array as well as the call to the GUI */
         gui_end_array();
         gui_end_vmess();
 
@@ -1434,9 +1521,9 @@ static void graph_displace(t_gobj *z, t_glist *glist, int dx, int dy)
         sprintf(tag, "%s",
             rtext_gettag(
                 glist_findrtext((x->gl_owner ? x->gl_owner: x), &x->gl_obj)));
-        sys_vgui(".x%lx.c move %s %d %d\n",
+        sys_vgui(".x%zx.c move %s %d %d\n",
             glist_getcanvas(x->gl_owner), tag, dx, dy);
-        sys_vgui(".x%lx.c move %sR %d %d\n",
+        sys_vgui(".x%zx.c move %sR %d %d\n",
             glist_getcanvas(x->gl_owner), tag, dx, dy);*/
         if (!do_not_redraw)
         {
@@ -1508,7 +1595,7 @@ static void graph_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
 
 static void graph_select(t_gobj *z, t_glist *glist, int state)
 {
-    //fprintf(stderr,"graph_select .x%lx .x%lx %d...\n",
+    //fprintf(stderr,"graph_select .x%zx .x%zx %d...\n",
     //    (t_int)z, (t_int)glist, state);
     t_glist *x = (t_glist *)z;
     if (!x->gl_isgraph)
@@ -1516,7 +1603,7 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
     else //if(glist_istoplevel(glist))
     {
         //fprintf(stderr,"...yes\n");
-        //fprintf(stderr,"%lx %lx %lx\n", glist_getcanvas(glist), glist, x);
+        //fprintf(stderr,"%zx %zx %zx\n", glist_getcanvas(glist), glist, x);
         t_rtext *y = glist_findrtext(glist, &x->gl_obj);
         if (canvas_showtext(x))
         {
@@ -1561,7 +1648,7 @@ static void graph_select(t_gobj *z, t_glist *glist, int state)
         }
         // Don't yet understand the purpose of this call, so not deleting
         // it just yet...
-        //sys_vgui("pdtk_select_all_gop_widgets .x%lx %s %d\n",
+        //sys_vgui("pdtk_select_all_gop_widgets .x%zx %s %d\n",
         //    canvas, rtext_gettag(glist_findrtext(glist, &x->gl_obj)), state);
     }
 }
@@ -1585,7 +1672,7 @@ static void graph_delete(t_gobj *z, t_glist *glist)
         while (y = x->gl_list) glist_delete(x, y);
 #if 0       /* I think this was just wrong. */
         if (glist_isvisible(x))
-            sys_vgui(".x%lx.c delete graph%lx\n", glist_getcanvas(glist), x);
+            sys_vgui(".x%zx.c delete graph%zx\n", glist_getcanvas(glist), x);
 #endif
     }
 }
@@ -1656,7 +1743,7 @@ static int graph_click(t_gobj *z, struct _glist *glist,
         }
         if (!doit)
         {
-            //fprintf(stderr,"    not clicking %lx %d\n",
+            //fprintf(stderr,"    not clicking %zx %d\n",
             //    (t_int)clickme, clickreturned);
             if (clickme != NULL)
             {

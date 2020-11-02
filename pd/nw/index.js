@@ -381,39 +381,36 @@ function nw_close_window(window) {
     window.close(true);
 }
 
-function check_nwjs_version(version) {
-    // aggraef: check that process.versions["nw"] is at least the given version
-    // NOTE: We assume that "0.x.y" > "0.x", and just ignore any -beta
-    // suffixes if present.
-    var nwjs_array = process.versions["nw"].split("-")[0].
-        split(".").map(Number);
-    var vers_array = version.split("-")[0].
-        split(".").map(Number);
-    // lexicographic comparison
-    for (var i = 0; i < vers_array.length; ++i) {
-        if (nwjs_array.length <= i || vers_array[i] > nwjs_array[i])
-            return false;
-        else if (vers_array[i] < nwjs_array[i])
-            return true;
-    }
-    return vers_array.length <= nwjs_array.length;
-}
-
 // 0.46+ seems to be required for "null" to work. TODO: Bisect to get the
 // actual minimum required version for this.
-var null_pos = check_nwjs_version("0.46") ? "null" : "center";
+var null_pos = pdgui.check_nw_version("0.46") ? "null" : "center";
 
 function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
-        // todo: make a separate way to format the title for OSX
+    // todo: make a separate way to format the title for OSX
     var my_title;
+    var win_frame = true;
+    var win_transparent = false;
     if (type === "pd_canvas") {
         my_title = pdgui.format_window_title(
             attr_array.name,
             attr_array.dirty,
             attr_array.args,
             attr_array.dir);
+
+	    // ico@vt.edu 2020-08-13:
+	    // why does Windows have different innerWidth and innerHeight from other OSs?
+	    // See pdgui.js' canvas_params for the explanation...
+	    // ico@vt.edu 2020-08-21: this should only apply to patch windows
+        // 2020-10-01: this is not needed anymore since it was a bug specific to 0.14.7
+        // and Windows is now using 0.24.4
+	    //width -= 16 * pdgui.nw_os_is_windows;
+	    //height -= 8 * pdgui.nw_os_is_windows;
     } else {
         my_title = type;
+        if (type !== "search" && type !== "text") {
+            win_frame = false;
+            win_transparent = true;
+        }
     }
     var my_file =
         type === "pd_canvas" ? "pd_canvas.html" : "dialog_" + type + ".html";
@@ -427,7 +424,32 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
         pos = "center";
     } else {
         pos = null_pos;
+        //pdgui.post("check_os=" + pdgui.check_os("win32"));
+        if (pdgui.nw_os_is_linux == 1) {
+            ypos = ypos - pdgui.nw_menu_offset - 3;
+        }
     }
+
+    //pdgui.post("nw_create_window w=" + width + " h=" + height);
+
+    /*
+    // ico@vt.edu: instantiate default options for the window behavior
+    // the first two vars (transparent is currently disabled) are options
+    // to be passed to the window at creation time, while second two are
+    // activated via a function call after the window has been created
+    var frame_val = true,
+        //transparent_val = true,
+        resize_val = true,
+        topmost_val = false,
+        menu_val = true;
+
+    if (frame_option !== undefined) {
+        pdgui.post("window_options have content");
+        process_window_options(window_options,
+            frame_val, transparent_val,
+            resize_val, topmost_val);
+        // TODO: do stuff here
+    }*/
     gui.Window.open(my_file, {
         title: my_title,
         // ico@vt.edu: position in 0.46.2 overrides x and y below
@@ -439,9 +461,11 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
         // altogether to simplify things. But we'd have to add some kind of
         // widget for the "Put" menu.
         // ico@vt.edu: on 0.46.2 this is now 25, go figure...
-        height: height + 25,
+        height: height + (pdgui.nw_menu_offset * !pdgui.nw_os_is_osx),
         x: xpos,
-        y: ypos
+        y: ypos,
+        frame: win_frame,
+        transparent: win_transparent
     }, function (new_win) {
         if (type === "pd_canvas") {
             pdgui.set_patchwin(cid, new_win);
@@ -602,6 +626,7 @@ function nw_create_pd_window_menus(gui, w) {
         minit(m.edit.reselect, { enabled: false });
     }
     if (osx) {
+        minit(m.edit.encapsulate, { enabled: false });
         minit(m.edit.tidyup, { enabled: false });
         minit(m.edit.font, { enabled: false });
         minit(m.edit.cordinspector, { enabled: false });
@@ -615,7 +640,7 @@ function nw_create_pd_window_menus(gui, w) {
             if (state === "none") {
                 text_container.style.setProperty("bottom", "1.6em");
                 find_bar.style.setProperty("display", "inline");
-                find_bar.style.setProperty("height", "1.2em");
+                //find_bar.style.setProperty("height", "1.2em");
                 // Don't do the following in logical time so that the
                 // console_find keypress event won't receive this shortcut key
                 window.setTimeout(function() {

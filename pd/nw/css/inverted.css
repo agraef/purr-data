@@ -12,6 +12,17 @@ body {
     font-family: "DejaVu Sans Mono";
 }
 
+#hscroll:hover, #vscroll:hover {
+    background-color: rgba(0, 0, 0, 0.39) !important;
+}
+#hscroll, #vscroll {
+  background-color: rgba(0, 0, 0, 0.267);
+}
+
+#hscroll, #vscroll {
+    cursor: -webkit-grabbing;
+}
+
 .noselect {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -176,7 +187,7 @@ mark.console_find_highlighted {
     min-width: 3ch;
     position: absolute;
     display: table-cell;
-    padding: 3px 2px 3px 2px;
+    padding: 1px 0px 3px 1.5px;
     /* box-shadow: inset 1px 0px 0px 1px #000; */
     color: white; /* text color */
     background-color: transparent;
@@ -208,6 +219,12 @@ p.msg::after {
 text {
     // fill: red;
     //cursor: default;
+}
+
+/* used for numbox2 to highlight contents when clicked on in runmode */
+text.activated {
+    fill: red;
+    cursor: default;
 }
 
 /* not sure if this is still needed */
@@ -247,7 +264,7 @@ text {
 }
 
 /* gatom "activated" text (i.e., when it has the keyboard focus) */
-.atom.activated text {
+.atom.activated .data {
     fill: red;
 }
 
@@ -281,6 +298,14 @@ text {
 .obj .border {
     fill: #090707;
     stroke: #3e3e3e;
+}
+
+.obj .border.dirty {
+    stroke: #ff0000;
+}
+
+.obj .border.subdirty {
+    stroke: #ff8800;
 }
 
 .comment .border {
@@ -384,15 +409,29 @@ text {
 
 /* can't remember why this was tagged !important */
 .xlet_selected {
-    stroke: blue !important;
-    fill: blue;
-    -webkit-animation: fizzle 0.5s linear 1;
+    stroke: #e87216;
+    fill: #e87216;
+    -webkit-animation: fizzle 0.1s ease-in 1;
+}
+
+#console_find {
+    width: 100%;
+    height: 1em;
+    padding-top: 2px;
+    padding-left: 3px;
+    padding-bottom: 9px;
+    background: silver;
+    position: fixed;
+    bottom: 0;
+    left: 0;
 }
 
 #canvas_find {
     width: 100%;
     height: 1em;
-    padding: 3px;
+    padding-top: 2px;
+    padding-left: 3px;
+    padding-bottom: 9px;
     background: #444;
     color: #ccc;
     position: fixed;
@@ -406,8 +445,12 @@ text {
     background-color: #222;
     border:1px solid #eee;
     padding: 12px;
-    margin: 12px;
-    box-shadow: 7px 7px 5px #444;
+    /* margin: 12px; */
+    /*box-shadow: 7px 7px 5px #444;*/
+    width: 70%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 #canvas_find_text {
@@ -415,6 +458,19 @@ text {
     border-style: solid;
     border-color: #555;
     color: white;
+}
+
+/* Dialog to ask to save the patch before quitting */
+#save_before_quit {
+    background-color: #f3f3f3;
+    border:1px solid #f3f3f3;
+    padding: 12px;
+    /* margin: 12px; */
+    /*box-shadow: 7px 7px 5px grey;*/
+    width: 70%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 /* Search dialog */
@@ -430,7 +486,7 @@ text {
 .dialog_body {
     font-family: "DejaVu Sans", sans-serif;
     font-size: 10pt;
-    background-color: #f3f3f3;
+    background: rgba(243, 243, 243, 0.941); /* #f3f3f3f0; */
 }
 
 .submit_buttons {
@@ -438,13 +494,23 @@ text {
     padding: 8px;
 }
 
+form {
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
 fieldset {
-    background-color:#eeeeee;
+/*    font-family:Georgia; */
+    background-color: rgba(243, 243, 243, 0.627); /* #f3f3f3a0; */
     border-radius:3px;
-    border:2px solid black;
+    border:1px solid #ddd;
     margin-left:auto;
     margin-right:auto;
-    padding: 10px;
+    padding: 8px;
+}
+
+legend {
+    font-size: 1.2em;
 }
 
 .hidden {
@@ -501,7 +567,7 @@ input[name="receive_symbol"] {
 }
 
 input[name="label"] {
-    width: 8em;
+    width: 9em;
 }
 
 input[name="font_size"] {
@@ -510,6 +576,18 @@ input[name="font_size"] {
 
 input[name="startup_flags"] {
     width: 16em;
+}
+
+/* All radios */
+input[type="radio"] {
+    position: relative;
+    top: 2px;
+}
+
+/* All checkboxes */
+input[type=checkbox] {
+    position: relative;
+    top: 2px;
 }
 
 /* Canvas dialog */
@@ -568,13 +646,13 @@ div.y2 {
    without becoming an order of magnitude more complex, do feel free... */
 .prefs_tab_group {
     display: table;
-    width: 90%;
+    width: 100%;
 }
 
 /* Configure the radio buttons to hide off-screen */
 .prefs_tab {
     position: absolute;
-    left:-100px;
+    left:-500px;
     top:-100px;
 }
 
@@ -629,6 +707,13 @@ div.y2 {
     height: 78vh;
 }
 
+#midi_in1, #midi_in2, #midi_in3, #midi_in4, #midi_in5, 
+    #midi_in6, #midi_in7, #midi_in8, #midi_in9, #midi_in10,
+    #midi_out1, #midi_out2, #midi_out3, #midi_out4, #midi_out5, 
+    #midi_out6, #midi_out7, #midi_out8, #midi_out9, #midi_out10 {
+    width: 205px;
+}
+
 .tab_settings {
     padding-top: 8px;
 }
@@ -646,4 +731,66 @@ input[name="rate"] {
     margin-top: -10px;
     margin-bottom: -10px;
     padding: 30px;
+}
+
+/* used for the custom dialog titlebar */
+#titlebar {
+    width: 100%;
+    height: 20px;
+    margin-bottom: 4px;
+    -webkit-app-region: drag;
+    background-color: gray;
+    cursor: grab;
+}
+
+#titlebar_buttons_td {
+    padding-right: 1px;
+}
+
+#titlebar_title {
+    color: white;
+    position: relative;
+    left: 1px;
+    top: 1px;
+    background-color: gray;
+}
+
+#titlebar_close_button {
+    width: 16px;
+    height: 16px;
+    background: #a2a2a2;
+    -webkit-app-region: no-drag;
+    color: #FFF;
+    font-size: 18px;
+    text-align: center;
+    line-height: 16px;
+    cursor: default;
+}
+
+/*#titlebar_close_button:after {
+    position: absolute;
+    right: 6px;
+    top: 1px;
+    content: "\d7";
+    font-size: 20px;
+    color: #FFF;
+}*/
+
+#titlebar_close_button:hover {
+    background: #b2b2b2;
+}
+
+#titlebar_close_button:active {
+    background: #e2e2e2;
+}
+
+input[type="color"] {
+    margin-bottom: 2px;
+}
+
+.foreground_color span, 
+.background_color span,
+.label_color span {
+    position: relative;
+    bottom: 2px;
 }

@@ -111,6 +111,19 @@ static void scalar_define_send(t_glist *x, t_symbol *s)
     else bug("scalar_define_send");
 }
 
+static void scalar_define_bang(t_glist *x)
+{
+    if (x->gl_list && pd_class(&x->gl_list->g_pd) == scalar_class)
+    {
+        t_gpointer gp;
+        gpointer_init(&gp);
+        gpointer_setglist(&gp, x, (t_gobj *)&x->gl_list->g_pd);
+        outlet_pointer(x->gl_obj.ob_outlet, &gp);
+        gpointer_unset(&gp);
+    }
+    else bug("scalar_define_bang");
+}
+
     /* set to a list, used to restore from scalar_define_save()s below */
 static void scalar_define_set(t_glist *x, t_symbol *s, int argc, t_atom *argv)
 {
@@ -180,6 +193,7 @@ void x_scalar_setup(void )
     canvas_add_for_class(scalar_define_class);
     class_addmethod(scalar_define_class, (t_method)scalar_define_send,
         gensym("send"), A_SYMBOL, 0);
+    class_addbang(scalar_define_class, (t_method)scalar_define_bang);
     class_addmethod(scalar_define_class, (t_method)scalar_define_set,
         gensym("set"), A_GIMME, 0);
     class_sethelpsymbol(scalar_define_class, gensym("scalar-object"));

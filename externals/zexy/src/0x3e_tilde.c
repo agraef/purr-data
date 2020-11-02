@@ -1,5 +1,5 @@
 /*
- * >~: signal comparision
+ * >~: signal comparison
  *
  * (c) 1999-2011 IOhannes m zmölnig, forum::für::umläute, institute of electronic music and acoustics (iem)
  *
@@ -23,7 +23,7 @@
 /* ------------------------ relational~ ----------------------------- */
 
 /* ----------------------------- gt_tilde ----------------------------- */
-static t_class *gt_tilde_class, *scalargt_tilde_class;
+static t_class *gt_tilde_class=NULL, *scalargt_tilde_class=NULL;
 
 typedef struct _gt_tilde {
   t_object x_obj;
@@ -33,7 +33,7 @@ typedef struct _gt_tilde {
 typedef struct _scalargt_tilde {
   t_object x_obj;
   t_float x_f;
-  t_float x_g;    	    /* inlet value */
+  t_float x_g;              /* inlet value */
 } t_scalargt_tilde;
 
 static void *gt_tilde_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
@@ -139,16 +139,16 @@ static t_int *gt_tilde_performSSE(t_int *w)
   while (n--) {
     __m128 xmm0, xmm1;
     xmm0   = _mm_cmpgt_ps(in1[0], in2[0]);
-    out[0] = _mm_and_ps  (xmm0 , one);
+    out[0] = _mm_and_ps  (xmm0, one);
 
     xmm1   = _mm_cmpgt_ps(in1[1], in2[1]);
-    out[1] = _mm_and_ps  (xmm1 , one);
+    out[1] = _mm_and_ps  (xmm1, one);
 
     xmm0   = _mm_cmpgt_ps(in1[2], in2[2]);
-    out[2] = _mm_and_ps  (xmm0 , one);
+    out[2] = _mm_and_ps  (xmm0, one);
 
     xmm1   = _mm_cmpgt_ps(in1[3], in2[3]);
-    out[3] = _mm_and_ps  (xmm1 , one);
+    out[3] = _mm_and_ps  (xmm1, one);
 
     in1+=4;
     in2+=4;
@@ -237,30 +237,26 @@ static void scalargt_tilde_dsp(t_scalargt_tilde *x, t_signal **sp)
     }
 }
 
-static void gt_tilde_help(t_object*x)
+static void gt_tilde_help(t_object* UNUSED(x))
 {
   post("\n"HEARTSYMBOL " >~\t\t:: compare 2 signals");
 }
 
-void setup_0x3e_tilde(void)
+ZEXY_SETUP void setup_0x3e_tilde(void)
 {
-  gt_tilde_class = class_new(gensym(">~"), (t_newmethod)gt_tilde_new, 0,
-                             sizeof(t_gt_tilde), 0, A_GIMME, 0);
-  class_addmethod(gt_tilde_class, (t_method)gt_tilde_dsp, gensym("dsp"),
-                  A_CANT, 0);
+  gt_tilde_class = zexy_new(">~",
+                            gt_tilde_new, 0, t_gt_tilde, 0, "*");
+  zexy_addmethod(gt_tilde_class, (t_method)gt_tilde_dsp, "dsp", "!");
   CLASS_MAINSIGNALIN(gt_tilde_class, t_gt_tilde, x_f);
-  class_addmethod  (gt_tilde_class, (t_method)gt_tilde_help, gensym("help"),
-                    A_NULL);
+  zexy_addmethod(gt_tilde_class, (t_method)gt_tilde_help, "help", "");
   class_sethelpsymbol(gt_tilde_class, gensym("zigbinops"));
 
-  scalargt_tilde_class = class_new(gensym(">~"), 0, 0,
-                                   sizeof(t_scalargt_tilde), 0, 0);
+  scalargt_tilde_class = zexy_new(">~",
+                                  0, 0, t_scalargt_tilde, 0, "");
   CLASS_MAINSIGNALIN(scalargt_tilde_class, t_scalargt_tilde, x_f);
-  class_addmethod(scalargt_tilde_class, (t_method)scalargt_tilde_dsp,
-                  gensym("dsp"),
-                  A_CANT, 0);
-  class_addmethod  (scalargt_tilde_class, (t_method)gt_tilde_help,
-                    gensym("help"), A_NULL);
+  zexy_addmethod(scalargt_tilde_class, (t_method)scalargt_tilde_dsp, "dsp",
+                 "!");
+  zexy_addmethod(scalargt_tilde_class, (t_method)gt_tilde_help, "help", "");
   class_sethelpsymbol(scalargt_tilde_class, gensym("zigbinops"));
 
   zexy_register(">~");

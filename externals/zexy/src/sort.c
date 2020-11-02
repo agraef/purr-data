@@ -25,7 +25,7 @@
   SHELL SORT: simple and easy
 */
 
-static t_class *sort_class;
+static t_class *sort_class=NULL;
 
 typedef struct _sort {
   t_object x_obj;
@@ -71,7 +71,8 @@ static void sort_buffer(t_sort *x, int argc, t_atom *argv)
   }
 }
 
-static void sort_list(t_sort *x, t_symbol *s, int argc, t_atom *argv)
+static void sort_list(t_sort *x, t_symbol *UNUSED(s), int argc,
+                      t_atom *argv)
 {
   int step = argc, n;
   t_atom *atombuf = (t_atom *)getbytes(sizeof(t_atom) * argc);
@@ -107,19 +108,17 @@ static void sort_list(t_sort *x, t_symbol *s, int argc, t_atom *argv)
   if (x->ascending)
     for (n = 0; n < argc; n++) {
       SETFLOAT(&atombuf[n], idx[n]);
-    }
-  else
+    } else
     for (n = 0, i=argc-1; n < argc; n++, i--) {
       SETFLOAT(&atombuf[n], idx[i]);
     }
 
-  outlet_list(x->indexOut , gensym("list"), n, atombuf);
+  outlet_list(x->indexOut, gensym("list"), n, atombuf);
 
   if (x->ascending)
     for (n = 0; n < argc; n++) {
       SETFLOAT(&atombuf[n], buf[n]);
-    }
-  else
+    } else
     for (n = 0, i=argc-1; n < argc; n++, i--) {
       SETFLOAT(&atombuf[n], buf[i]);
     }
@@ -146,19 +145,29 @@ static void *sort_new(t_floatarg f)
   return (x);
 }
 
-static void sort_help(t_sort*x)
+static void sort_help(t_sort*UNUSED(x))
 {
   post("\n"HEARTSYMBOL " sort\t\t:: sort a list of numbers");
 }
-void sort_setup(void)
+
+ZEXY_SETUP void zexy_sort_setup(void)
 {
-  sort_class = class_new(gensym("sort"), (t_newmethod)sort_new,
-                         0, sizeof(t_sort), 0, A_DEFFLOAT,  0);
+  sort_class = zexy_new("sort",
+                        sort_new, 0, t_sort, 0, "F");
 
   class_addlist    (sort_class, sort_list);
-  class_addmethod   (sort_class, (t_method)sort_dir, gensym("direction"),
-                     A_DEFFLOAT, 0);
-  class_addmethod(sort_class, (t_method)sort_help, gensym("help"), A_NULL);
+  zexy_addmethod(sort_class, (t_method)sort_dir, "direction", "F");
+  zexy_addmethod(sort_class, (t_method)sort_help, "help", "");
 
   zexy_register("sort");
 }
+
+#ifndef ZEXY_LIBRARY
+/* only use sort_setup() when building as standalone objects
+ * see https://git.iem.at/pd/zexy/issues/5
+ */
+void sort_setup(void)
+{
+  zexy_sort_setup();
+}
+#endif

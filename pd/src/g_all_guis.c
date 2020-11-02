@@ -133,6 +133,45 @@ static void iemgui_init_sym2dollararg(t_iemgui *x, t_symbol **symp,
     }
 }
 
+int color_format_warned;
+static t_symbol *color2symbol(int col)
+{
+    const int compat = (pd_compatibilitylevel < 48) ? 1 : 0;
+    char colname[MAXPDSTRING];
+    colname[0] = colname[MAXPDSTRING-1] = 0;
+
+    if (compat)
+    {       
+        /* compatibility with Pd<=0.47: saves colors as numbers with limited
+           resolution */
+        int col2 = -1 - (((0xfc0000 & col) >> 6)
+                      | ((0xfc00 & col) >> 4)
+                      | ((0xfc & col) >> 2));
+        snprintf(colname, MAXPDSTRING-1, "%d", col2);
+    }
+    else
+    {
+        if (!color_format_warned)
+        {
+            post("warning: saving iemgui colors as hex symbol. These colors "
+                 "are readable in Pd Vanilla since 0.47, but they are not "
+                 "readable in Purr Data version 2.12.0 or earlier. "
+                 "If you need to remain compatible with older versions of Purr "
+                 "Data please run in compatibility mode with Vanilla version "
+                 "0.47 like this:");
+            post("");
+            post("[compatibility 0.47(");
+            post("|");
+            post("[send pd]");
+            post("");
+            color_format_warned = 1;    
+        }
+        snprintf(colname, MAXPDSTRING-1, "#%06x", col);
+    }
+    return gensym(colname);
+}
+
+
 /* get the unexpanded versions of the symbols; initialize them if necessary. */
 void iemgui_all_sym2dollararg(t_iemgui *x, t_symbol **srlsym)
 {
@@ -144,15 +183,100 @@ void iemgui_all_sym2dollararg(t_iemgui *x, t_symbol **srlsym)
     srlsym[2] = x->x_lab_unexpanded;
 }
 
-static int col2save(int col) {
-    return -1-(((0xfc0000 & col) >> 6)|((0xfc00 & col) >> 4)|((0xfc & col) >> 2));
-}
-void iemgui_all_col2save(t_iemgui *x, int *bflcol)
+void iemgui_all_col2save(t_iemgui *x, t_symbol **bflcol)
 {
-    bflcol[0] = col2save(x->x_bcol);
-    bflcol[1] = col2save(x->x_fcol);
-    bflcol[2] = col2save(x->x_lcol);
+    bflcol[0] = color2symbol(x->x_bcol);
+    bflcol[1] = color2symbol(x->x_fcol);
+    bflcol[2] = color2symbol(x->x_lcol);
 }
+
+static int iemgui_getcolorarg(t_iemgui *x, int index, int argc, t_atom *argv)
+{
+    char *classname;
+    if (index < 0 || index >= argc || !argc)
+        return 0;
+
+    if (IS_A_FLOAT(argv, index))
+        return atom_getfloatarg(index, argc, argv);
+
+    classname = class_getname(pd_class(&x->x_obj.te_pd));
+    if (IS_A_SYMBOL(argv, index))
+    {
+        t_symbol *s = atom_getsymbolarg(index, argc, argv);
+        if ('#' == s->s_name[0])
+        {
+            char *start = s->s_name + 1, *end;
+            char expanded[7];
+            int len = strlen(start);
+            if (len == 3)
+            {
+                sprintf(expanded, "%c%c%c%c%c%c",
+                    start[0], start[0],
+                    start[1], start[1],
+                    start[2], start[2]);
+                start = expanded;
+                len = 6;
+            }
+            if (len == 6)
+            {
+                int col = (int)strtol(start, &end, 16);
+                if (end != start)
+                    return col;
+            }
+        }
+        if (s == &s_)
+            pd_error(x, "%s: empty symbol detected in hex color argument. "
+                "Falling back to black. (Hit the sack.:)",
+                classname);
+        else
+            pd_error(x, "%s: expected '#fff' or '#ffffff' hex color format "
+                "but got '%s'. Falling back to black.",
+                classname, s->s_name);
+        return 0;
+    }
+    pd_error(x, "%s: color method only accepts symbol or float arguments. "
+        "Falling back to black.",
+        classname);
+    return 0;
+}
+
+static int colfromatomload(t_iemgui *x, t_atom *colatom)
+{
+    int color;
+    /* old-fashioned color argument, either a number or symbol
+       evaluating to an integer */
+    if (colatom->a_type == A_FLOAT)
+        color = atom_getfloat(colatom);
+    else if (colatom->a_type == A_SYMBOL &&
+        (isdigit(colatom->a_w.w_symbol->s_name[0]) ||
+         colatom->a_w.w_symbol->s_name[0] == '-'))
+            color = atoi(colatom->a_w.w_symbol->s_name);
+
+    /* symbolic color */
+    else return (iemgui_getcolorarg(x, 0, 1, colatom));
+
+    if (color < 0)
+    {
+        color = -1 - color;
+        color = ((color & 0x3f000) << 6)|((color & 0xfc0) << 4)|
+        ((color & 0x3f) << 2);
+    }
+    else
+    {
+        color = iemgui_modulo_color(color);
+        color = iemgui_color_hex[color];
+    }
+    return (color);
+}
+
+void iemgui_all_loadcolors(t_iemgui *x, t_atom *bcol, t_atom *fcol,
+    t_atom *lcol)
+{
+    if (bcol) x->x_bcol = colfromatomload(x, bcol);
+    if (fcol) x->x_fcol = colfromatomload(x, fcol);
+    if (lcol) x->x_lcol = colfromatomload(x, lcol);
+}
+
 
 static int colfromload(int col) {
     if(col)
@@ -170,12 +294,25 @@ void iemgui_all_colfromload(t_iemgui *x, int *bflcol)
     x->x_lcol = colfromload(bflcol[2]);
 }
 
-static int iemgui_compatible_col(int i)
+int iemgui_compatible_colorarg(t_iemgui *x, int index, int argc, t_atom* argv)
 {
-    if(i >= 0)
-        return(iemgui_color_hex[(iemgui_modulo_color(i))]);
-    return((-1-i)&0xffffff);
+    if (index < 0 || index >= argc || !argc)
+        return 0;
+        /* old style, lossy int values */
+    if (IS_A_FLOAT(argv, index))
+    {
+        int col = atom_getfloatarg(index, argc, argv);
+        if (col >= 0)
+        {
+            int idx = iemgui_modulo_color(col);
+            return(iemgui_color_hex[(idx)]);
+        }
+        else
+            return((-1 - col) & 0xffffff);
+    }
+    return iemgui_getcolorarg(x, index, argc, argv);
 }
+
 
 void iemgui_all_raute2dollar(t_symbol **srlsym)
 {
@@ -352,8 +489,8 @@ void iemgui_label_getrect(t_iemgui x_gui, t_glist *x,
             // new interface, but we haven't had a need to do it yet
             //fprintf(stderr,"%f %d %d\n", width_multiplier,
             //    label_length, x_gui.x_font_style);
-            //sys_vgui(".x%lx.c delete iemguiDEBUG\n", x);
-            //sys_vgui(".x%lx.c create rectangle %d %d %d %d "
+            //sys_vgui(".x%zx.c delete iemguiDEBUG\n", x);
+            //sys_vgui(".x%zx.c create rectangle %d %d %d %d "
             //    "-tags iemguiDEBUG\n",
             //    x, label_x1, label_y1, label_x2, label_y2);
             if (label_x1 < *xp1) *xp1 = label_x1;
@@ -361,8 +498,8 @@ void iemgui_label_getrect(t_iemgui x_gui, t_glist *x,
             if (label_y1 < *yp1) *yp1 = label_y1;
             if (label_y2 > *yp2) *yp2 = label_y2;
             //DEBUG
-            //sys_vgui(".x%lx.c delete iemguiDEBUG\n", x);
-            //sys_vgui(".x%lx.c create rectangle %d %d %d %d "
+            //sys_vgui(".x%zx.c delete iemguiDEBUG\n", x);
+            //sys_vgui(".x%zx.c create rectangle %d %d %d %d "
             //    "-tags iemguiDEBUG\n", x, *xp1, *yp1, *xp2, *yp2);
         }
     }
@@ -388,8 +525,8 @@ void iemgui_label_getrect(t_iemgui x_gui, t_glist *x,
         if (yr)
         {
             fprintf(stderr,"lower\n");
-            sys_vgui(".x%lx.c lower selected %s\n", canvas, rtext_gettag(yr));
-            sys_vgui(".x%lx.c raise selected %s\n", canvas, rtext_gettag(yr));
+            sys_vgui(".x%zx.c lower selected %s\n", canvas, rtext_gettag(yr));
+            sys_vgui(".x%zx.c raise selected %s\n", canvas, rtext_gettag(yr));
             //canvas_raise_all_cords(canvas);
         }
         else
@@ -405,7 +542,7 @@ void iemgui_label_getrect(t_iemgui x_gui, t_glist *x,
         // we get here if we are supposed to go
         //   all the way to the bottom
         fprintf(stderr,"lower to the bottom\n");
-        sys_vgui(".x%lx.c lower selected\n", canvas);
+        sys_vgui(".x%zx.c lower selected\n", canvas);
     }
     glist_noselect(canvas);
 */
@@ -478,20 +615,51 @@ void iemgui_pos(t_iemgui *x, t_symbol *s, int ac, t_atom *av)
         iemgui_shouldvis(x, IEM_GUI_DRAW_MODE_MOVE);
 }
 
+int iemgui_old_color_args(int argc, t_atom *argv)
+{
+    int gotsym = 0, gotfloat = 0;
+    gotsym += atom_getsymbolarg(0, argc, argv) != &s_;
+    gotsym += atom_getsymbolarg(1, argc, argv) != &s_;
+    gotsym += atom_getsymbolarg(2, argc, argv) != &s_;
+    
+    gotfloat += argc >=1 && argv[0].a_type == A_FLOAT;
+    gotfloat += argc >=2 && argv[1].a_type == A_FLOAT;
+    gotfloat += argc >=2 && argv[2].a_type == A_FLOAT;
+
+    if (gotfloat && gotsym)
+    {
+        post("warning: unexpected mixing of symbol args with deprecated "
+             "float color syntax.");
+        return 1;
+    }
+    else if (gotfloat) return 1;
+    else return 0;
+}
+
 void iemgui_color(t_iemgui *x, t_symbol *s, int ac, t_atom *av)
 {
-    x->x_bcol = iemgui_compatible_col(atom_getintarg(0, ac, av));
-    if(ac > 2)
+    if (ac)
     {
-        x->x_fcol = iemgui_compatible_col(atom_getintarg(1, ac, av));
-        x->x_lcol = iemgui_compatible_col(atom_getintarg(2, ac, av));
-    }
-    else
-        x->x_lcol = iemgui_compatible_col(atom_getintarg(1, ac, av));
-    if (glist_isvisible(x->x_glist))
-    {
-        x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_CONFIG);
-        iemgui_label_draw_config(x);
+        if (ac >= 1)
+            x->x_bcol = iemgui_compatible_colorarg(x, 0, ac, av);
+        if (ac >= 2)
+        {
+                /* if there are only two args, the old style was to make
+                   the 2nd argument the label color. So here we check for the
+                   old-style float args and use that format if they are
+                   present. */
+            if (ac == 2 && iemgui_old_color_args(ac, av))
+                x->x_lcol = iemgui_compatible_colorarg(x, 1, ac, av);
+            else
+                x->x_fcol = iemgui_compatible_colorarg(x, 1, ac, av);
+        }
+        if (ac >= 3)
+            x->x_lcol = iemgui_compatible_colorarg(x, 2, ac, av);
+        if (glist_isvisible(x->x_glist))
+        {
+            x->x_draw(x, x->x_glist, IEM_GUI_DRAW_MODE_CONFIG);
+            iemgui_label_draw_config(x);
+        }
     }
 }
 
@@ -561,7 +729,7 @@ void iemgui_vis(t_gobj *z, t_glist *glist, int vis)
     }
 }
 
-void iemgui_save(t_iemgui *x, t_symbol **srl, int *bflcol)
+void iemgui_save(t_iemgui *x, t_symbol **srl, t_symbol **bflcol)
 {
     if (srl) {
        srl[0] = x->x_snd;
@@ -771,20 +939,20 @@ t_scalehandle *scalehandle_new(t_object *x, t_glist *glist, int scale,
     t_clickhandlefn chf, t_motionhandlefn mhf)
 {
     t_scalehandle *h = (t_scalehandle *)pd_new(scalehandle_class);
-    char buf[19]; // 3 + max size of %lx
+    char buf[19]; // 3 + max size of %zx
     h->h_master = x;
     h->h_glist = glist;
     if (!scale) /* Only bind for labels-- scaling uses pd_vmess in g_editor.c */
     {
-        sprintf(buf, "_l%lx", (long unsigned int)x);
+        sprintf(buf, "_l%zx", (t_uint)x);
         pd_bind((t_pd *)h, h->h_bindsym = gensym(buf));
     }
     else if (scale && pd_class((t_pd *)x) == my_canvas_class)
     {
-        sprintf(buf, "_s%lx", (long unsigned int)x);
+        sprintf(buf, "_s%zx", (t_uint)x);
         pd_bind((t_pd *)h, h->h_bindsym = gensym(buf));
     }
-    sprintf(h->h_outlinetag, "h%lx", (t_int)h);
+    sprintf(h->h_outlinetag, "h%zux", (t_uint)h);
     h->h_dragon = 0;
     h->h_scale = scale;
     h->h_offset_x = 0;
@@ -793,7 +961,7 @@ t_scalehandle *scalehandle_new(t_object *x, t_glist *glist, int scale,
     h->h_adjust_y = 0;
     h->h_vis = 0;
     h->h_constrain = 0;
-    sprintf(h->h_pathname, ".x%lx.h%lx", (t_int)h->h_glist, (t_int)h);
+    sprintf(h->h_pathname, ".x%zx.h%zx", (t_uint)h->h_glist, (t_uint)h);
     h->h_clickfn = chf;
     h->h_motionfn = mhf;
     return h;
@@ -808,10 +976,10 @@ void scalehandle_free(t_scalehandle *h)
     pd_free((t_pd *)h);
 }
 
-void properties_set_field_int(long props, const char *gui_field, int value)
+void properties_set_field_int(t_int props, const char *gui_field, int value)
 {
     char tagbuf[MAXPDSTRING];
-    sprintf(tagbuf, ".gfxstub%lx", props);
+    sprintf(tagbuf, ".gfxstub%zx", props);
     gui_vmess("gui_dialog_set_field", "ssi",
         tagbuf,
         gui_field,
@@ -868,7 +1036,7 @@ void scalehandle_click_label(t_scalehandle *h)
     {
         //sys_vgui("lower %s\n", h->h_pathname);
         //t_scalehandle *othersh = x->x_handle;
-        //sys_vgui("lower .x%lx.h%lx\n",
+        //sys_vgui("lower .x%zx.h%zx\n",
         //    (t_int)glist_getcanvas(x->x_glist), (t_int)othersh);
     }
     h->h_dragx = 0;
@@ -1009,7 +1177,7 @@ void iemgui_label_draw_move(t_iemgui *x)
     //int x1=text_xpix(&x->x_obj, x->x_glist)+x->legacy_x;
     //int y1=text_ypix(&x->x_obj, x->x_glist)+x->legacy_y;
     //iemgui_getrect_legacy_label(x, &x1, &y1);
-    //sys_vgui(".x%lx.c coords %lxLABEL %d %d\n",
+    //sys_vgui(".x%zx.c coords %zxLABEL %d %d\n",
     //    canvas, x, x1+x->x_ldx, y1+x->x_ldy);
 
     /* Note-- since we're not using x1/y1 above in the new GUI call,
@@ -1100,7 +1268,7 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
     t_canvas *canvas=glist_getcanvas(x->x_glist);
     if (x->x_glist != canvas) return; // is gop
     t_class *c = pd_class((t_pd *)x);
-    if (c == my_numbox_class && ((t_my_numbox *)x)->x_hide_frame > 1)
+    if (c == my_numbox_class && ((t_my_numbox *)x)->x_drawstyle > 1)
         return; //sigh
     if (!(old_sr_flags&4) && !glist_isvisible(canvas))
     {
@@ -1118,7 +1286,7 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
         n = 0;
     int a=old_sr_flags&IEM_GUI_OLD_SND_FLAG;
     int b=x->x_snd!=s_empty;
-    //fprintf(stderr, "%lx SND: old_sr_flags=%d SND_FLAG=%d || "
+    //fprintf(stderr, "%zx SND: old_sr_flags=%d SND_FLAG=%d || "
     //                "OUTCOME: OLD_SND_FLAG=%d not_empty=%d\n",
     //  (t_int)x, old_sr_flags, IEM_GUI_OLD_SND_FLAG, a, b);
     
@@ -1144,7 +1312,7 @@ void iemgui_draw_io(t_iemgui *x, int old_sr_flags)
     }
     a = old_sr_flags & IEM_GUI_OLD_RCV_FLAG;
     b = x->x_rcv != s_empty;
-    //fprintf(stderr, "%lx RCV: old_sr_flags=%d RCV_FLAG=%d || "
+    //fprintf(stderr, "%zx RCV: old_sr_flags=%d RCV_FLAG=%d || "
     //                  "OUTCOME: OLD_RCV_FLAG=%d not_empty=%d\n",
     //    (t_int)x, old_sr_flags, IEM_GUI_OLD_RCV_FLAG, a, b);
     if (a && !b)
@@ -1225,8 +1393,8 @@ void iemgui_base_draw_new(t_iemgui *x)
     gop_redraw = gr;
     char colorbuf[MAXPDSTRING];
     sprintf(colorbuf, "#%6.6x", x->x_bcol);
-    gui_vmess("gui_gobj_new", "xxsiii", canvas, x,
-        "iemgui", x1, y1, glist_istoplevel(x->x_glist));
+    gui_vmess("gui_gobj_new", "xxsiiii", canvas, x,
+        "iemgui", x1, y1, glist_istoplevel(x->x_glist), 0);
     gui_vmess("gui_text_draw_border", "xxsiii",
         canvas,
         x,
@@ -1257,7 +1425,7 @@ void iemgui_base_draw_config(t_iemgui *x)
     char fcol[8]; sprintf(fcol,"#%6.6x", x->x_fcol);
     char tagbuf[MAXPDSTRING];
     char bcol[8]; sprintf(bcol, "#%6.6x", x->x_bcol);
-    sprintf(tagbuf, "x%lxborder", (long unsigned int)x);
+    sprintf(tagbuf, "x%zxborder", (t_int)x);
     gui_vmess("gui_iemgui_base_color", "xxs",
         canvas, x, bcol); 
 }
@@ -1304,6 +1472,17 @@ void scrollbar_update(t_glist *glist)
     //exceeds window size
     t_canvas *canvas=(t_canvas *)glist_getcanvas(glist);
     canvas_getscroll(canvas);
+}
+
+/* ico@vt.edu 20200920: introduced for situation where getscroll
+needs to occur before the next command, e.g. automate. */
+void scrollbar_synchronous_update(t_glist *glist)
+{
+    // glist_getcanvas is probably not needed but not before we make
+    // sure that there are unneded calls of this kind being made by
+    // non-toplevel objects...
+    gui_vmess("gui_canvas_get_immediate_scroll",
+        "x", glist_getcanvas(glist));
 }
 
 void wb_init(t_widgetbehavior *wb, t_getrectfn gr, t_clickfn cl)

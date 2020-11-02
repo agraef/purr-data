@@ -20,7 +20,7 @@
 #include "zexy.h"
 #include <string.h>
 
-static t_class *glue_class;
+static t_class *glue_class=NULL;
 
 typedef struct _zglue {
   t_object x_obj;
@@ -105,19 +105,20 @@ static void *glue_new(t_symbol* UNUSED(s), int argc, t_atom *argv)
   return (x);
 }
 
-static void glue_help(t_glue*x)
+static void glue_help(t_glue* UNUSED(x))
 {
-  post("\n"HEARTSYMBOL " glue\t\t:: glue together 2 lists (like [list append])");
+  post("\n"HEARTSYMBOL
+       " glue\t\t:: glue together 2 lists (like [list append])");
 }
 
-void glue_setup(void)
+ZEXY_SETUP void glue_setup(void)
 {
-  glue_class = class_new(gensym("glue"), (t_newmethod)glue_new,
-                         (t_method)glue_free, sizeof(t_glue), 0, A_GIMME, 0);
+  glue_class = zexy_new("glue",
+                        glue_new, glue_free, t_glue, 0, "*");
   class_addlist(glue_class, glue_lst);
-  class_addmethod  (glue_class, (t_method)glue_lst2, gensym(""), A_GIMME, 0);
+  zexy_addmethod(glue_class, (t_method)glue_lst2, "", "*");
   class_addbang(glue_class, glue_bang);
-  class_addmethod  (glue_class, (t_method)glue_help, gensym("help"), 0);
+  zexy_addmethod(glue_class, (t_method)glue_help, "help", "");
 
   zexy_register("glue");
 }

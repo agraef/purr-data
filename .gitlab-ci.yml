@@ -1,18 +1,54 @@
+# This file creates automated tests on GitLab CI for Purr Data.
+# See https://docs.gitlab.com/ee/ci/yaml/README.html for details of the format.
+
+# These are script snippets used in the jobs defined below.
+.debian_image_preparation: &debian_image_preparation
+  - echo "" | sudo -S apt-get -qq purge -y pd-l2ork > /dev/null || echo "couldn't purge..."
+  - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive apt-get -qq -y update > /dev/null
+  - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive apt-get -qq -y upgrade > /dev/null
+
+.build_all: &build_all
+  - echo -e "section_start:`date +%s`:build_all\r\e[0KBuilding Purr Data"
+  - cd l2ork_addons
+  - export V=0
+  - ./tar_em_up.sh $BUILD_TYPE_FLAG
+  - cd ..
+  - echo -e "section_end:`date +%s`:build_all\r\e[0K"
+
+.test_linux: &test_linux
+  - echo -e "section_start:`date +%s`:test_linux\r\e[0KTesting Purr Data for Linux"
+  - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
+  - valgrind pd-l2ork -noprefs -nogui -nrt -noaudio -send "init dollarzero \$0" scripts/regression_tests.pd
+  - valgrind pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio scripts/external-tests.pd
+  - echo -e "section_end:`date +%s`:text_linux\r\e[0K"
+
+.test_osx: &test_osx
+  - echo -e "section_start:`date +%s`:test_osx\r\e[0KTesting Purr Data for Mac OSX"
+  - cd scripts
+  - ../packages/darwin_app/build/*.app/Contents/Resources/app.nw/bin/pd-l2ork -noprefs -nogui -noaudio -send "init dollarzero \$0" regression_tests.pd
+  - ../packages/darwin_app/build/*.app/Contents/Resources/app.nw/bin/pd-l2ork -noprefs -nostdpath -nogui -noaudio external-tests.pd
+  - echo -e "section_end:`date +%s`:text_osx\r\e[0K"
+
+.test_windows: &test_windows
+  - echo -e "section_start:`date +%s`:test_windows\r\e[0KTesting Purr Data for Windows"
+  - cd scripts
+  - ../packages/win32_inno/build/bin/pd.com -noprefs -nogui -noaudio -send "init dollarzero \$0" regression_tests.pd
+  - ../packages/win32_inno/build/bin/pd.com -noprefs -nostdpath -nogui -noaudio external-tests.pd
+  - echo -e "section_end:`date +%s`:text_windows\r\e[0K"
+
+
 debian_stretch_x86_64_deb:
    tags:
      - debian
      - stretch
      - x86_64
+   variables:
+     BUILD_TYPE_FLAG: -B
+   before_script:
+     - *debian_image_preparation
    script:
-     - echo "" | sudo -S apt-get -qq purge -y pd-l2ork > /dev/null || echo "couldn't purge..."
-     - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive apt-get -qq -y update > /dev/null
-     - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive apt-get -qq -y upgrade > /dev/null
-     - cd l2ork_addons
-     - ./tar_em_up.sh -B
-     - cd ..
-     - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
-     - valgrind pd-l2ork -noprefs -nogui -nrt -noaudio -send "init dollarzero \$0" scripts/regression_tests.pd
-     - valgrind pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio scripts/external-tests.pd
+     - *build_all
+     - *test_linux
    artifacts:
      name: "$CI_RUNNER_DESCRIPTION"
      expire_in: 1 day
@@ -24,17 +60,13 @@ ubuntu_16.04_x86_64_deb:
      - ubuntu
      - v16.04
      - x86_64
+   variables:
+     BUILD_TYPE_FLAG: -B
+   before_script:
+     - *debian_image_preparation
    script:
-     - echo "" | sudo -S apt-get -qq purge -y pd-l2ork > /dev/null || echo "couldn't purge..."
-     - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive apt-get -qq -y update > /dev/null
-     - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive apt-get -qq -y upgrade > /dev/null
-     - cd l2ork_addons
-     - ./tar_em_up.sh -B
-     - cd ..
-     - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
-     - cd scripts
-     - valgrind pd-l2ork -noprefs -nogui -nrt -noaudio -send "init dollarzero \$0" regression_tests.pd
-     - valgrind pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio external-tests.pd
+     - *build_all
+     - *test_linux
    artifacts:
      name: "$CI_RUNNER_DESCRIPTION"
      expire_in: 1 day
@@ -46,13 +78,12 @@ osx_10.11_x86_64_dmg:
      - osx
      - v10.11
      - dmg
+   variables:
+     BUILD_TYPE_FLAG: -X
    script:
      - echo `pwd`
-     - cd l2ork_addons
-     - ./tar_em_up.sh -X
-     - cd ../scripts
-     - ../packages/darwin_app/build/*.app/Contents/Resources/app.nw/bin/pd-l2ork -noprefs -nogui -noaudio -send "init dollarzero \$0" regression_tests.pd
-     - ../packages/darwin_app/build/*.app/Contents/Resources/app.nw/bin/pd-l2ork -noprefs -nostdpath -nogui -noaudio external-tests.pd
+     - *build_all
+     - *test_osx
    artifacts:
      name: "$CI_RUNNER_DESCRIPTION"
      expire_in: 1 day
@@ -64,13 +95,13 @@ osx_10.8_x86_64_dmg:
      - osx
      - v10.8
      - dmg
+   variables:
+     BUILD_TYPE_FLAG: -X
+     osx_version: "10.8"
    script:
      - echo `pwd`
-     - cd l2ork_addons
-     - osx_version=10.8 ./tar_em_up.sh -X
-     - cd ../scripts
-     - ../packages/darwin_app/build/*.app/Contents/Resources/app.nw/bin/pd-l2ork -noprefs -nogui -noaudio -send "init dollarzero \$0" regression_tests.pd
-     - ../packages/darwin_app/build/*.app/Contents/Resources/app.nw/bin/pd-l2ork -noprefs -nostdpath -nogui -noaudio external-tests.pd
+     - *build_all
+     - *test_osx
    artifacts:
      name: "$CI_RUNNER_DESCRIPTION"
      expire_in: 1 day
@@ -81,13 +112,12 @@ windows_i386_innosetup:
   tags:
     - windows
     - i386
+  variables:
+    BUILD_TYPE_FLAG: -Z
   script:
     - echo `pwd`
-    - cd l2ork_addons
-    - ./tar_em_up.sh -Z
-    - cd ../scripts
-    - ../packages/win32_inno/build/bin/pd.com -noprefs -nogui -noaudio -send "init dollarzero \$0" regression_tests.pd
-    - ../packages/win32_inno/build/bin/pd.com -noprefs -nostdpath -nogui -noaudio external-tests.pd
+    - *build_all
+    - *test_windows
   artifacts:
     name: "$CI_RUNNER_DESCRIPTION"
     expire_in: 1 day
@@ -99,17 +129,14 @@ raspbian_stretch_armv7l_deb:
      - raspbian
      - arm 
      - stretch
+   variables:
+     BUILD_TYPE_FLAG: -r
+   before_script:
+     - *debian_image_preparation
    script:
-     - echo "" | sudo -S apt-get -qq purge -y pd-l2ork > /dev/null || echo "couldn't purge..."
-     - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive apt-get -qq -y update > /dev/null
-     - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive apt-get -qq -y upgrade > /dev/null
      - echo `pwd`
-     - cd l2ork_addons
-     - ./tar_em_up.sh -r
-     - cd ..
-     - echo "" | sudo -S DEBIAN_FRONTEND=noninteractive dpkg --force-all -i pd-l2ork*.deb > /dev/null
-     - valgrind pd-l2ork -noprefs -nogui -nrt -noaudio -send "init dollarzero \$0" scripts/regression_tests.pd
-     - valgrind pd-l2ork -noprefs -nostdpath -nogui -nrt -noaudio scripts/external-tests.pd
+     - *build_all
+     - *test_linux
    artifacts:
      name: "$CI_RUNNER_DESCRIPTION"
      expire_in: 1 day

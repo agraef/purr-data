@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static t_class *atoi_class;
+static t_class *atoi_class=NULL;
 
 typedef struct _atoi {
   t_object x_obj;
@@ -95,11 +95,10 @@ static void *atoi_new(void)
   return (x);
 }
 
-void atoi_setup(void)
+ZEXY_SETUP void atoi_setup(void)
 {
-  atoi_class = class_new(gensym("atoi"), (t_newmethod)atoi_new,
-                         (t_method)atoi_free,
-                         sizeof(t_atoi), 0, A_DEFFLOAT, 0);
+  atoi_class = zexy_new("atoi",
+                        atoi_new, atoi_free, t_atoi, 0, "");
 
   class_addbang(atoi_class, (t_method)atoi_bang);
   class_addfloat(atoi_class, (t_method)atoi_float);

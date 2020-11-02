@@ -23,12 +23,12 @@
 /******************** tabread4~~ ***********************/
 
 
-static t_class *tabread4_tilde_class;
+static t_class *tabread4_tilde_class=NULL;
 
 typedef struct _tabread4_tilde {
   t_object x_obj;
   int x_npoints;
-  zarray_t *x_vec;
+  t_word *x_vec;
   t_symbol *x_arrayname;
   t_float x_f;
 } t_tabread4_tilde;
@@ -54,7 +54,7 @@ static t_int *tabread4_tilde_perform(t_int *w)
   t_sample *out = (t_sample *)(w[4]);
   int n = (int)(w[5]);
   int maxindex;
-  zarray_t *buf = x->x_vec, *wp;
+  t_word *buf = x->x_vec, *wp;
   int i;
 
   maxindex = x->x_npoints - 3;
@@ -81,10 +81,10 @@ static t_int *tabread4_tilde_perform(t_int *w)
 
     wp = buf + index;
 
-    a = zarray_getfloat(wp,-1);
-    b = zarray_getfloat(wp, 0);
-    c = zarray_getfloat(wp, 1);
-    d = zarray_getfloat(wp, 2);
+    a = wp[-1].w_float;
+    b = wp[ 0].w_float;
+    c = wp[ 1].w_float;
+    d = wp[ 2].w_float;
 
     cminusb = c-b;
     *out++ = b + frac * (
@@ -106,7 +106,7 @@ static void tabread4_tilde_set(t_tabread4_tilde *x, t_symbol *s)
       pd_error(x, "tabread4~~: %s: no such array", x->x_arrayname->s_name);
     }
     x->x_vec = 0;
-  } else if (!zarray_getarray(a, &x->x_npoints, &x->x_vec)) {
+  } else if (!garray_getfloatwords(a, &x->x_npoints, &x->x_vec)) {
     pd_error(x, "%s: bad template for tabread4~~", x->x_arrayname->s_name);
     x->x_vec = 0;
   } else {
@@ -123,20 +123,19 @@ static void tabread4_tilde_dsp(t_tabread4_tilde *x, t_signal **sp)
 
 }
 
-static void tabread4_tilde_free(t_tabread4_tilde *x)
+static void tabread4_tilde_free(t_tabread4_tilde *UNUSED(x))
 {
 }
 
-void tabread4_tilde_tilde_setup(void)
+ZEXY_SETUP void tabread4_tilde_tilde_setup(void)
 {
-  tabread4_tilde_class = class_new(gensym("tabread4~~"),
-                                   (t_newmethod)tabread4_tilde_new, (t_method)tabread4_tilde_free,
-                                   sizeof(t_tabread4_tilde), 0, A_DEFSYM, 0);
+  tabread4_tilde_class = zexy_new("tabread4~~",
+                                  tabread4_tilde_new, tabread4_tilde_free, t_tabread4_tilde, 0, "S");
   CLASS_MAINSIGNALIN(tabread4_tilde_class, t_tabread4_tilde, x_f);
-  class_addmethod(tabread4_tilde_class, (t_method)tabread4_tilde_dsp,
-                  gensym("dsp"), A_CANT, 0);
-  class_addmethod(tabread4_tilde_class, (t_method)tabread4_tilde_set,
-                  gensym("set"), A_SYMBOL, 0);
+  zexy_addmethod(tabread4_tilde_class, (t_method)tabread4_tilde_dsp, "dsp",
+                 "!");
+  zexy_addmethod(tabread4_tilde_class, (t_method)tabread4_tilde_set, "set",
+                 "s");
 
   zexy_register("tabread4~~");
 }

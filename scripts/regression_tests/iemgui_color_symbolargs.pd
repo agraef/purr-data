@@ -1,0 +1,100 @@
+#N canvas 1 24 1329 701 12;
+#X obj 877 305 bng 15 250 50 0 empty empty empty 17 7 0 10 #ff66ff
+#000000 #fcccfc;
+#X msg 812 124 color #ff66ff;
+#X text 782 82 accept the common 6-digit hex syntas;
+#X obj 838 209 unpost;
+#X obj 812 163 trigger bang anything bang;
+#X obj 813 268 list;
+#X obj 607 305 bng 15 250 50 0 empty empty empty 17 7 0 10 #ff66ff
+#000000 #fcccfc;
+#X obj 568 209 unpost;
+#X obj 542 163 trigger bang anything bang;
+#X obj 543 268 list;
+#X msg 542 124 color #f6f;
+#X obj 107 365 bng 15 250 50 0 empty empty empty 17 7 0 10 #000000
+#000000 #fcccfc;
+#X obj 68 269 unpost;
+#X obj 42 223 trigger bang anything bang;
+#X obj 43 328 list;
+#X text 53 122 reject any non-standard symbols;
+#X msg 42 154 symbol;
+#X obj 43 387 list length;
+#X obj 813 327 list length;
+#X obj 813 422 list append iemgui color method should accept 6-digit
+hex format;
+#X msg 42 184 color \$1 \, color # \, color #a \, color #ffffff0 \,
+color foo \, color ffff99, f 34;
+#X obj 43 585 list append iemgui color method should reject empty symbol
+and non-standard hex notation arguments;
+#X obj 543 327 list length;
+#X obj 543 469 list append iemgui color method should accept short
+3-digit hex notation;
+#X obj 43 630 outlet;
+#X obj 42 34 inlet;
+#X obj 42 63 trigger bang bang bang bang;
+#X obj 302 181 canvasinfo;
+#X msg 302 149 pointer;
+#X obj 367 385 bng 15 250 50 0 empty empty empty 17 7 0 10 #000000
+#000000 #fcccfc;
+#X obj 328 289 unpost;
+#X obj 302 243 trigger bang anything bang;
+#X obj 303 348 list;
+#X obj 303 407 list length;
+#X text 302 115 reject gpointer;
+#X obj 303 536 list append iemgui color method should only accept symbol
+and float arguments;
+#X msg 302 210 color \$1;
+#X text 503 75 accept the "short" hex notation;
+#X obj 813 356 == 0;
+#X obj 543 356 == 0;
+#X obj 303 436 != 0;
+#X obj 43 416 != 0;
+#X connect 1 0 4 0;
+#X connect 3 0 5 1;
+#X connect 3 1 0 0;
+#X connect 4 0 5 0;
+#X connect 4 1 3 0;
+#X connect 4 2 5 1;
+#X connect 5 0 18 0;
+#X connect 7 0 9 1;
+#X connect 7 1 6 0;
+#X connect 8 0 9 0;
+#X connect 8 1 7 0;
+#X connect 8 2 9 1;
+#X connect 9 0 22 0;
+#X connect 10 0 8 0;
+#X connect 12 0 14 1;
+#X connect 12 1 11 0;
+#X connect 13 0 14 0;
+#X connect 13 1 12 0;
+#X connect 13 2 14 1;
+#X connect 14 0 17 0;
+#X connect 16 0 20 0;
+#X connect 17 0 41 0;
+#X connect 18 0 38 0;
+#X connect 19 0 24 0;
+#X connect 20 0 13 0;
+#X connect 21 0 24 0;
+#X connect 22 0 39 0;
+#X connect 23 0 24 0;
+#X connect 25 0 26 0;
+#X connect 26 0 16 0;
+#X connect 26 1 28 0;
+#X connect 26 2 10 0;
+#X connect 26 3 1 0;
+#X connect 27 0 36 0;
+#X connect 28 0 27 0;
+#X connect 30 0 32 1;
+#X connect 30 1 29 0;
+#X connect 31 0 32 0;
+#X connect 31 1 30 0;
+#X connect 31 2 32 1;
+#X connect 32 0 33 0;
+#X connect 33 0 40 0;
+#X connect 35 0 24 0;
+#X connect 36 0 31 0;
+#X connect 38 0 19 0;
+#X connect 39 0 23 0;
+#X connect 40 0 35 0;
+#X connect 41 0 21 0;

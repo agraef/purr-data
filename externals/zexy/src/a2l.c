@@ -20,7 +20,7 @@
 #include "zexy.h"
 #include <string.h>
 
-static t_class *a2l_class;
+static t_class *a2l_class=NULL;
 
 typedef struct _a2l {
   t_object x_obj;
@@ -74,26 +74,29 @@ static void *a2l_new(void)
   outlet_new(&x->x_obj, 0);
   return (x);
 }
-
-void a2l_setup(void)
+static t_class* zclass_setup(const char*name)
 {
-
-  a2l_class = class_new(gensym("a2l"), (t_newmethod)a2l_new,
-                        0, sizeof(t_a2l), 0, 0);
-  class_addcreator((t_newmethod)a2l_new, gensym("any2list"), 0);
-
-
-  class_addbang    (a2l_class, a2l_bang);
-  class_addfloat   (a2l_class, a2l_float);
-  class_addsymbol  (a2l_class, a2l_symbol);
-  class_addpointer (a2l_class, a2l_pointer);
-  class_addlist    (a2l_class, a2l_list);
-  class_addanything(a2l_class, a2l_anything);
-
-  zexy_register("any2list");
+  t_class *c = zexy_new(name,
+                        a2l_new, 0, t_a2l, 0, "");
+  class_addbang    (c, a2l_bang);
+  class_addfloat   (c, a2l_float);
+  class_addsymbol  (c, a2l_symbol);
+  class_addpointer (c, a2l_pointer);
+  class_addlist    (c, a2l_list);
+  class_addanything(c, a2l_anything);
+  return c;
 }
-
+static void dosetup()
+{
+  zexy_register("any2list");
+  a2l_class=zclass_setup("any2list");
+  zclass_setup("a2l");
+}
 void any2list_setup(void)
 {
-  a2l_setup();
+  dosetup();
+}
+ZEXY_SETUP void a2l_setup(void)
+{
+  dosetup();
 }

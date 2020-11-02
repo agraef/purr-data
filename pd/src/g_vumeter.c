@@ -159,7 +159,7 @@ static void vu_draw_new(t_vu *x, t_glist *glist)
             gui_vmess("gui_vumeter_draw_text", "xxsiisiiiis",
                 canvas, x,
                 cbuf, end+1, yyy+k3+2, iemgui_vu_scale_str[i/4],
-                i, x1, y1,
+                i, x1, y1 - 3,
                 x->x_gui.x_fontsize,
                 sys_fontweight);
         }
@@ -428,10 +428,10 @@ static void vu_getrect(t_gobj *z, t_glist *glist,
 static void vu_save(t_gobj *z, t_binbuf *b)
 {
     t_vu *x = (t_vu *)z;
-    int bflcol[3];
+    t_symbol *bflcol[3];
     t_symbol *srl[3];
     iemgui_save(&x->x_gui, srl, bflcol);
-    binbuf_addv(b, "ssiisiissiiiiiiii;", gensym("#X"),gensym("obj"),
+    binbuf_addv(b, "ssiisiissiiiissii;", gensym("#X"),gensym("obj"),
         (int)x->x_gui.x_obj.te_xpix, (int)x->x_gui.x_obj.te_ypix,
         gensym("vu"), x->x_gui.x_w, x->x_gui.x_h,
         srl[1], srl[2], x->x_gui.x_ldx, x->x_gui.x_ldy,
@@ -648,19 +648,22 @@ static void vu_bang(t_vu *x)
 static void *vu_new(t_symbol *s, int argc, t_atom *argv)
 {
     t_vu *x = (t_vu *)pd_new(vu_class);
-    int bflcol[] = {-66577, -1, -1};
     int w = IEM_GUI_DEFAULTSIZE, h = IEM_VU_STEPS*IEM_VU_DEFAULTSIZE;
     int ldx = -1, ldy = -8, fs = 10, scale = 1;
 
     iem_inttosymargs(&x->x_gui, 0);
     iem_inttofstyle(&x->x_gui, 0);
 
+    x->x_gui.x_bcol = 0x404040;
+    x->x_gui.x_fcol = 0x00;
+    x->x_gui.x_lcol = 0x00;
+
     if((argc >= 11)&&IS_A_FLOAT(argv,0)&&IS_A_FLOAT(argv,1)
        &&(IS_A_SYMBOL(argv,2)||IS_A_FLOAT(argv,2))
        &&(IS_A_SYMBOL(argv,3)||IS_A_FLOAT(argv,3))
        &&IS_A_FLOAT(argv,4)&&IS_A_FLOAT(argv,5)
        &&IS_A_FLOAT(argv,6)&&IS_A_FLOAT(argv,7)
-       &&IS_A_FLOAT(argv,8)&&IS_A_FLOAT(argv,9)&&IS_A_FLOAT(argv,10))
+       &&IS_A_FLOAT(argv,10))
     {
         w = atom_getintarg(0, argc, argv);
         h = atom_getintarg(1, argc, argv);
@@ -669,8 +672,7 @@ static void *vu_new(t_symbol *s, int argc, t_atom *argv)
         ldy = atom_getintarg(5, argc, argv);
         iem_inttofstyle(&x->x_gui, atom_getintarg(6, argc, argv));
         fs = maxi(atom_getintarg(7, argc, argv),4);
-        bflcol[0] = atom_getintarg(8, argc, argv);
-        bflcol[2] = atom_getintarg(9, argc, argv);
+        iemgui_all_loadcolors(&x->x_gui, argv+8, NULL, argv+9);
         scale = !!atom_getintarg(10, argc, argv);
     }
     else iemgui_new_getnames(&x->x_gui, 1, 0);
@@ -688,7 +690,6 @@ static void *vu_new(t_symbol *s, int argc, t_atom *argv)
     x->x_gui.x_fontsize = fs;
     x->x_gui.x_w = iemgui_clip_size(w);
     vu_check_height(x, h);
-    iemgui_all_colfromload(&x->x_gui, bflcol);
     x->x_scale = scale;
     x->x_peak = 0;
     x->x_rms = 0;

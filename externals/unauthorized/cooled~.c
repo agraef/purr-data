@@ -238,7 +238,7 @@ static void cooled_update_block(t_cooled *x, t_glist *glist, int bnumber)
 
     for ( i=0; i<x->x_zoom; i++ )
     {
-        sprintf( x->x_guicommand, "COOLEDIMAGE%lx put {%s} -to %d 0\n", (long unsigned int)x, x->x_gifdata, (bnumber*x->x_zoom)+i );
+        sprintf( x->x_guicommand, "COOLEDIMAGE%zx put {%s} -to %d 0\n", (t_uint)x, x->x_gifdata, (bnumber*x->x_zoom)+i );
         if ( glist_isvisible( x->x_glist ) )
             sys_gui( x->x_guicommand );
     }
@@ -880,7 +880,7 @@ static int cooled_click(t_gobj *z, struct _glist *glist,
             x->x_alted = alt;
             // activate motion callback
             glist_grab( glist, &x->x_obj.te_g, (t_glistmotionfn)cooled_motion,
-                        0, xpix, ypix );
+                        0, 0, xpix, ypix );
 
             // draw insertion line
             if ( glist_isvisible( x->x_glist ) )

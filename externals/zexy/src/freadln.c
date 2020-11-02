@@ -42,14 +42,14 @@
  * into the RAM of your system
  */
 
-static t_class *freadln_class;
+static t_class *freadln_class=NULL;
 
 typedef struct freadln {
   t_object x_ob;
   FILE *x_file;
   char *x_filename;
   char *x_textbuf;
-  int  x_textbuf_length;
+  size_t  x_textbuf_length;
   t_outlet *x_message_outlet;
   t_outlet *x_readybang_outlet;
 
@@ -62,7 +62,7 @@ typedef struct freadln {
 static void freadln_close (t_freadln *x)
 {
   if(x->x_file) {
-    z_fclose(x->x_file);
+    sys_fclose(x->x_file);
   }
   x->x_file=0;
   if(x->x_filename) {
@@ -79,7 +79,7 @@ static void freadln_close (t_freadln *x)
 static void freadln_open (t_freadln *x, t_symbol *s, t_symbol*type)
 {
   char filenamebuf[MAXPDSTRING], *filenamebufptr;
-  char*dirname=canvas_getdir(x->x_canvas)->s_name;
+  const char*dirname=canvas_getdir(x->x_canvas)->s_name;
   int fd, len;
   post("open: %s", s->s_name);
 
@@ -109,7 +109,7 @@ static void freadln_open (t_freadln *x, t_symbol *s, t_symbol*type)
     pd_error(x, "%s: failed to open %s", s->s_name, filenamebuf);
     return;
   }
-  z_close(fd);
+  sys_close(fd);
   len=strlen(filenamebuf);
   if (!(x->x_filename=(char*)getbytes(sizeof(char)*(len+strlen(
                                         s->s_name)+2)))) {
@@ -120,7 +120,7 @@ static void freadln_open (t_freadln *x, t_symbol *s, t_symbol*type)
   strcpy(x->x_filename,filenamebuf);
   strcpy(x->x_filename+len,"/");
   strcpy(x->x_filename+len+1,filenamebufptr);
-  if (!(x->x_file=z_fopen(x->x_filename, "r"))) {
+  if (!(x->x_file=sys_fopen(x->x_filename, "r"))) {
     pd_error(x, "freadln: failed to fopen %s",x->x_filename);
     return;
   }
@@ -133,29 +133,32 @@ static void freadln_open (t_freadln *x, t_symbol *s, t_symbol*type)
   x->x_textbuf_length=MIN_FREADLN_LENGTH;
 }
 
-static int enlarge_cstr_if_required(const char **c_str, int *len,
-                                    const int desired_min_length)
+static size_t enlarge_cstr_if_required(const char **c_str, size_t *len,
+                                       const size_t desired_min_length)
 {
+  size_t L;
   if ((!(*c_str))||*len==0) {
     *c_str = (char*) calloc (1,sizeof(char));
     return 1;
   }
-  if (len[0]<desired_min_length) {
+  L=*len;
+  if (L<desired_min_length) {
     do {
-      len[0]<<=1;
-    } while ((len[0]<desired_min_length)&&(len[0]!=0));
-    freebytes((char*)*c_str, sizeof(char)*len[0]);
-    if (!(*c_str=(char*)calloc(len[0],sizeof(char)))) {
-      len[0]=0;
+      L<<=1;
+    } while ((L<desired_min_length)&&(L!=0));
+    freebytes((char*)*c_str, sizeof(char)*L);
+    if (!(*c_str=(char*)calloc(L,sizeof(char)))) {
+      L=0;
     }
   }
-  return len[0];
+  *len = L;
+  return L;
 }
 
 static int cstr_char_pos(const char *c_str, const char c)
 {
-  int cnt=1;
   if (c_str) {
+    int cnt=1;
     do {
       if (*c_str==c) {
         return cnt;
@@ -175,11 +178,10 @@ static void freadln_readline (t_freadln *x)
 {
   int min_length=(x->x_textbuf_length < 1)?1:x->x_textbuf_length;
   int linebreak_pos=0;
-  int items_read;
+  size_t items_read;
   t_binbuf *bbuf;
   t_atom *abuf;
   int abuf_length;
-  int rewind_after;
 
   if (!x->x_file) {
     pd_error(x, "no file opened for reading");
@@ -211,8 +213,8 @@ static void freadln_readline (t_freadln *x)
                                          x->linebreak_chr[0]))==-1) &&
            !(items_read < x->x_textbuf_length));
 
-  if (linebreak_pos-1  < items_read - strlen(x->linebreak_chr)) {
-    rewind_after=items_read-linebreak_pos;
+  if (linebreak_pos + strlen(x->linebreak_chr) < items_read + 1 ) {
+    int rewind_after=items_read-linebreak_pos;
     fseek(x->x_file,-(long)(rewind_after),SEEK_CUR);
   }
   if (linebreak_pos==-1) {
@@ -263,16 +265,13 @@ static void *freadln_new(void)
   return (void *)x;
 }
 
-void freadln_setup(void)
+ZEXY_SETUP void freadln_setup(void)
 {
-  freadln_class = class_new(gensym("freadln"), (t_newmethod)freadln_new,
-                            (t_method) freadln_free, sizeof(t_freadln), 0, 0);
-  class_addmethod(freadln_class, (t_method)freadln_open, gensym("open"),
-                  A_SYMBOL, A_DEFSYM, 0);
-  class_addmethod(freadln_class, (t_method)freadln_close, gensym("close"),
-                  A_NULL, 0);
+  freadln_class = zexy_new("freadln",
+                           freadln_new,  freadln_free, t_freadln, 0, "");
+  zexy_addmethod(freadln_class, (t_method)freadln_open, "open", "sS");
+  zexy_addmethod(freadln_class, (t_method)freadln_close, "close", "");
   class_addbang(freadln_class, (t_method)freadln_readline);
 
   zexy_register("freadln");
 }
-

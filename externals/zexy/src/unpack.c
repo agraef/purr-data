@@ -32,7 +32,7 @@
 
 /* like pack, but does no type-checking */
 
-static t_class *zunpack_class;
+static t_class *zunpack_class=NULL;
 
 typedef struct _zunpack {
   t_object x_obj;
@@ -54,7 +54,8 @@ static void zunpack_any(t_zunpack *x, t_symbol *s, int argc, t_atom *argv)
   }
 }
 
-static void zunpack_list(t_zunpack *x, t_symbol *s, int argc, t_atom *argv)
+static void zunpack_list(t_zunpack *x, t_symbol *UNUSED(s), int argc,
+                         t_atom *argv)
 {
   zunpack_any(x, 0, argc, argv);
 }
@@ -76,7 +77,7 @@ static void zunpack_free(t_zunpack *x)
   x->x_out=0;
 }
 
-static void *zunpack_new(t_symbol*s, int argc, t_atom*argv)
+static void *zunpack_new(t_symbol*UNUSED(s), int argc, t_atom*UNUSED(argv))
 {
   t_zunpack *x = (t_zunpack *)pd_new(zunpack_class);
   int count=(argc>0)?argc:2;
@@ -92,12 +93,11 @@ static void *zunpack_new(t_symbol*s, int argc, t_atom*argv)
   return (x);
 }
 
-void zunpack_setup(void)
+ZEXY_SETUP void zunpack_setup(void)
 {
 
-  zunpack_class = class_new(gensym("zexy/unpack"),
-                            (t_newmethod)zunpack_new, (t_method)zunpack_free, sizeof(t_zunpack),
-                            0,  A_GIMME, 0);
+  zunpack_class = zexy_new("zexy/unpack",
+                           zunpack_new, zunpack_free, t_zunpack, 0, "*");
 #if 0
   /* oops Pd-0.42 allows us to override built-ins
    * this is bad as long as the 2 objects are not compatible */

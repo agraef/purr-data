@@ -26,7 +26,7 @@
 #X obj 382 341 env~;
 #X floatatom 382 359 4 0 0 0 - - -;
 #X text 30 299 to learn more about this object \, try these;
-#X text 48 371 http://iem.kug.ac.at/~zmoelnig;
+#X text 48 371 http://users.iem.at/zmoelnig;
 #N canvas 59 76 600 400 generator~ 0;
 #X obj 86 49 inlet;
 #X obj 252 54 inlet;

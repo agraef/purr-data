@@ -26,21 +26,46 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist);
 t_widgetbehavior my_numbox_widgetbehavior;
 /*static*/ t_class *my_numbox_class;
 
+// forward declarations
+static void my_numbox_set_change(t_my_numbox *x, t_floatarg f);
+static void my_numbox_ftoa(t_my_numbox *x , int append);
+static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av);
+
+static t_symbol *numbox_keyname_sym_a;
+
 static void my_numbox_tick_reset(t_my_numbox *x)
 {
-    //printf("tick_reset\n");
+    //post("tick_reset\n");
     if(x->x_gui.x_change && x->x_gui.x_glist)
     {
-        //printf("    success\n");
-        x->x_gui.x_change = 0;
+        //post("    success\n");
+        my_numbox_set_change(x, 0);
+        my_numbox_ftoa(x, 0);
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
     }
+    glist_grab(x->x_gui.x_glist, 0, 0, 0, 0, 0, 0);
+    x->x_focused = 0;
 }
 
 static void my_numbox_tick_wait(t_my_numbox *x)
 {
-    //printf("tick_wait\n");
+    //post("tick_wait\n");
     sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
+}
+
+// to enable ability to change values using arrow keys (only when focused)
+static void my_numbox_set_change(t_my_numbox *x, t_floatarg f)
+{
+    if (f == 0 && x->x_gui.x_change != 0)
+    {
+        x->x_gui.x_change = 0;
+        pd_unbind(&x->x_gui.x_obj.ob_pd, numbox_keyname_sym_a);
+    }
+    else if (f == 1 && x->x_gui.x_change != 1)
+    {
+        x->x_gui.x_change = 1;
+        pd_bind(&x->x_gui.x_obj.ob_pd, numbox_keyname_sym_a);        
+    }
 }
 
 void my_numbox_clip(t_my_numbox *x)
@@ -53,19 +78,21 @@ void my_numbox_clip(t_my_numbox *x)
 
 int my_numbox_calc_fontwidth2(t_my_numbox *x, int w, int h, int fontsize)
 {
-    int f=31;
-    if     (x->x_gui.x_font_style == 1) f = 27;
-    else if(x->x_gui.x_font_style == 2) f = 25;
+    int f=25;
+    // ico@vt.edu 20200917: below options are disabled for the value
+    // inside the numbox since we ignore those in 2.x
+    //if     (x->x_gui.x_font_style == 1) f = 27;
+    //else if(x->x_gui.x_font_style == 2) f = 25;
     return (fontsize * f * w) / 36 + (h / 2) + 4;
 }
 
 int my_numbox_calc_fontwidth(t_my_numbox *x)
 {
     return my_numbox_calc_fontwidth2(x,x->x_gui.x_w,x->x_gui.x_h,
-        x->x_gui.x_fontsize);
+        x->x_num_fontsize);
 }
 
-void my_numbox_ftoa(t_my_numbox *x)
+static void my_numbox_ftoa(t_my_numbox *x, int append)
 {
     double f=x->x_val;
     int bufsize, is_exp=0, i, idecimal;
@@ -82,7 +109,7 @@ void my_numbox_ftoa(t_my_numbox *x)
     {
         if(is_exp)
         {
-            if(x->x_gui.x_w <= 5)
+            if(!append && x->x_gui.x_w <= 5)
             {
                 x->x_buf[0] = (f < 0.0 ? '-' : '+');
                 x->x_buf[1] = 0;
@@ -91,7 +118,7 @@ void my_numbox_ftoa(t_my_numbox *x)
             for(idecimal=0; idecimal < i; idecimal++)
                 if(x->x_buf[idecimal] == '.')
                     break;
-            if(idecimal > (x->x_gui.x_w - 4))
+            if(!append && idecimal > (x->x_gui.x_w - 4))
             {
                 x->x_buf[0] = (f < 0.0 ? '-' : '+');
                 x->x_buf[1] = 0;
@@ -111,12 +138,12 @@ void my_numbox_ftoa(t_my_numbox *x)
             for(idecimal=0; idecimal < bufsize; idecimal++)
                 if(x->x_buf[idecimal] == '.')
                     break;
-            if(idecimal > x->x_gui.x_w)
+            if(!append && idecimal > x->x_gui.x_w)
             {
                 x->x_buf[0] = (f < 0.0 ? '-' : '+');
                 x->x_buf[1] = 0;
             }
-            else
+            else if (!append)
                 x->x_buf[x->x_gui.x_w] = 0;
         }
     }
@@ -136,26 +163,51 @@ static void my_numbox_draw_update(t_gobj *client, t_glist *glist)
     if (!glist_isvisible(glist)) return;
     if(x->x_gui.x_change && x->x_buf[0])
     {
-        //printf("draw_update 1\n");
+        //post("draw_update 1 : focused=%d", x->x_focused);
         char *cp=x->x_buf;
         int sl = strlen(x->x_buf);
-        x->x_buf[sl] = '>';
-        x->x_buf[sl+1] = 0;
+        if (x->x_focused == 1)
+        {
+            x->x_buf[sl] = '>';
+            x->x_buf[sl+1] = 0;
+        } else if (x->x_focused == 2) {
+            // this is triggered when one presses return while retaining the focus of the number
+            // so, we make sure to subtract the '>' that has disappeared and adjust visible digits
+            // accordingly below
+            x->x_buf[sl] = 0;
+            sl--;
+        }
         if(sl >= x->x_gui.x_w)
             cp += sl - x->x_gui.x_w + 1;
-        gui_vmess("gui_text_set", "xxs",
+        gui_vmess("gui_text_set_mynumbox", "xxsi",
             glist_getcanvas(glist),
             x,
-            cp);
-        x->x_buf[sl] = 0;
+            cp,
+            1);
+        // here we check that we are not in the focused mode 2 that has this already taken care of above
+        if (x->x_focused != 2)
+            x->x_buf[sl] = 0;
     }
     else
     {
-        my_numbox_ftoa(x); /* mmm... side-effects */
-        gui_vmess("gui_text_set", "xxs",
+        //if (!x->x_focused || x->x_focused == 2)
+        //post("draw_update 2: x->x_buf=<%s> focused=%d change=%d", x->x_buf, x->x_focused, x->x_gui.x_change);
+        if (!x->x_buf[0] && x->x_focused == 1 && x->x_gui.x_change == 1)
+        {
+            x->x_buf[0] = '>';
+            x->x_buf[1] = 0;
+        }
+        else
+        {
+            my_numbox_ftoa(x, 0); /* mmm... side-effects */
+        }
+        gui_vmess("gui_text_set_mynumbox", "xxsi",
             glist_getcanvas(glist),
             x,
-            x->x_buf);
+            x->x_buf,
+            x->x_gui.x_selected == glist_getcanvas(glist) && 
+                !x->x_gui.x_change && x->x_gui.x_glist == glist_getcanvas(glist) ?
+                2 : (x->x_gui.x_change ? 1 : 0));
         x->x_buf[0] = 0; /* mmm... more side-effects... no clue why we'd need
                             to mutate a struct member in order to draw stuff */
     }
@@ -166,11 +218,12 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
     t_canvas *canvas=glist_getcanvas(glist);
     char cbuf[8];
     sprintf(cbuf, "#%6.6x", x->x_gui.x_bcol);
-    int half=x->x_gui.x_h/2, d=1+x->x_gui.x_h/34;
+    int half=x->x_gui.x_h/2;
+    t_float d=1+x->x_gui.x_h/34.0;
     int x1=text_xpix(&x->x_gui.x_obj, glist), x2=x1+x->x_numwidth;
     int y1=text_ypix(&x->x_gui.x_obj, glist), y2=y1+x->x_gui.x_h;
 
-    gui_vmess("gui_numbox_new", "xxsiiiii",
+    gui_vmess("gui_numbox_new", "xxsiiiiii",
         canvas,
         x,
         cbuf,
@@ -178,23 +231,16 @@ static void my_numbox_draw_new(t_my_numbox *x, t_glist *glist)
         y1,
         x2 - x1,
         y2 - y1,
+        x->x_drawstyle,
         glist_istoplevel(glist));
-    /* Not sure when it is necessary to hide the frame... perhaps for
-       k12? */
-    if (!x->x_hide_frame || x->x_hide_frame == 2)
-    {
-        //sys_vgui(".x%lx.c create polyline %d %d %d %d %d %d -stroke #%6.6x "
-        //    "-tags {%lxBASE2 x%lx text iemgui}\n",
-        //    canvas, x1, y1, x1 + half, y1 + half, x1, y2,
-        //    x->x_gui.x_fcol, x, x);
-    }
-    my_numbox_ftoa(x);
+
+    my_numbox_ftoa(x, 0);
     sprintf(cbuf, "#%6.6x", x->x_gui.x_fcol);
-    gui_vmess("gui_numbox_draw_text", "xxsisiiii",
+    gui_vmess("gui_numbox_draw_text", "xxsisifii",
         canvas,
         x,
         x->x_buf,
-        x->x_gui.x_fontsize,
+        x->x_num_fontsize,
         cbuf,
         x1+half+2, y1+half+d, x1, y1);
 }
@@ -210,11 +256,11 @@ static void my_numbox_draw_move(t_my_numbox *x, t_glist *glist)
 
     iemgui_base_draw_move(&x->x_gui);
 
-    if (x->x_hide_frame <= 1)
+    if (x->x_drawstyle <= 1)
         iemgui_io_draw_move(&x->x_gui);
-    if (!x->x_hide_frame || x->x_hide_frame == 2)
+    if (!x->x_drawstyle || x->x_drawstyle == 2)
     {
-        //sys_vgui(".x%lx.c coords %lxBASE2 %d %d %d %d %d %d\n",
+        //sys_vgui(".x%zx.c coords %zxBASE2 %d %d %d %d %d %d\n",
         //    canvas, x, x1, y1, x1 + half, y1 + half, x1, y2);
     }
 
@@ -237,11 +283,12 @@ static void my_numbox_draw_config(t_my_numbox* x,t_glist* glist)
     char fg[8], bg[8];
     sprintf(fg, "#%6.6x",  x->x_gui.x_fcol);
     sprintf(bg, "#%6.6x",  x->x_gui.x_bcol);
-    gui_vmess("gui_numbox_update", "xxsssii",
+    gui_vmess("gui_numbox_update", "xxssisii",
         canvas,
         x,
         fg,
         bg,
+        x->x_num_fontsize,
         iemgui_typeface((t_iemgui *)x),
         x->x_gui.x_fontsize,
         sys_fontweight);
@@ -253,7 +300,7 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
     int issel = x->x_gui.x_selected == canvas && x->x_gui.x_glist == canvas;
     if(x->x_gui.x_selected && x->x_gui.x_change)
     {
-        x->x_gui.x_change = 0;
+        my_numbox_set_change(x, 0);
         clock_unset(x->x_clock_reset);
         x->x_buf[0] = 0;
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
@@ -262,11 +309,11 @@ static void my_numbox_draw_select(t_my_numbox *x, t_glist *glist)
     char bcol[8]; sprintf(bcol, "#%6.6x", x->x_gui.x_bcol);
     // The logic in these sys_vgui calls is being taken care
     // of in the gui now...
-    //sys_vgui(".x%lx.c itemconfigure %lxBASE1 -stroke %s\n", canvas, x,
+    //sys_vgui(".x%zx.c itemconfigure %zxBASE1 -stroke %s\n", canvas, x,
     //    issel ? selection_color : x->x_hide_frame <= 1 ? "$pd_colors(iemgui_border)" : bcol);
-    //sys_vgui(".x%lx.c itemconfigure %lxBASE2 -stroke %s\n", canvas, x,
+    //sys_vgui(".x%zx.c itemconfigure %zxBASE2 -stroke %s\n", canvas, x,
     //    issel ? selection_color : fcol);
-    //sys_vgui(".x%lx.c itemconfigure %lxNUMBER -fill %s\n", canvas, x,
+    //sys_vgui(".x%zx.c itemconfigure %zxNUMBER -fill %s\n", canvas, x,
     //    issel ? selection_color : fcol);
     if(issel) 
         scalehandle_draw_select2(&x->x_gui);
@@ -282,6 +329,7 @@ static void my_numbox__clickhook(t_scalehandle *sh, int newstate)
         canvas_apply_setundo(x->x_gui.x_glist, (t_gobj *)x);
         if (!sh->h_scale)
             scalehandle_click_label(sh);
+        x->x_yresize_x = 0;
     }
     /* not sure if we need this */
     sh->h_dragon = newstate;
@@ -293,24 +341,34 @@ static void my_numbox__motionhook(t_scalehandle *sh,
     if (sh->h_scale)
     {
         t_my_numbox *x = (t_my_numbox *)(sh->h_master);
+        x->x_focused = 2;
         //int dx = (int)mouse_x - sh->h_offset_x;
-        int dy = (int)mouse_y - sh->h_offset_y;
+        int dy = (sh->h_constrain == CURSOR_EDITMODE_RESIZE_X) ? 0 : 
+            (int)mouse_y - sh->h_offset_y;
+
+        if (sh->h_constrain == CURSOR_EDITMODE_RESIZE_Y && x->x_yresize_x == 0)
+        {
+            x->x_yresize_x = mouse_x;
+        }
 
         /* first calculate y */
         int newy = maxi(x->x_gui.x_obj.te_ypix + x->x_gui.x_h +
             dy, x->x_gui.x_obj.te_ypix + SCALE_NUM_MINHEIGHT);
 
         /* then readjust fontsize */
-        x->x_tmpfontsize = maxi((newy - x->x_gui.x_obj.te_ypix) * 0.8,
+        x->x_tmpfontsize = maxi((newy - x->x_gui.x_obj.te_ypix) * 0.9,
             IEM_FONT_MINSIZE);
 
-        int f = 31;
-        if     (x->x_gui.x_font_style == 1) f = 27;
-        else if(x->x_gui.x_font_style == 2) f = 25;
+        int f = 25;
+        // ico@vt.edu 20200917: below options are disabled for the value
+        // inside the numbox since we ignore those in 2.x
+        //if     (x->x_gui.x_font_style == 1) f = 27;
+        //else if(x->x_gui.x_font_style == 2) f = 25;
         int char_w = (x->x_tmpfontsize * f) / 36;
 
         /* get the new total width */
-        int new_total_width = x->x_numwidth + (int)mouse_x -
+        int new_total_width = x->x_numwidth + 
+            (sh->h_constrain == CURSOR_EDITMODE_RESIZE_Y ? x->x_yresize_x : (int)mouse_x) -
             (text_xpix(&x->x_gui.x_obj, x->x_gui.x_glist) + x->x_numwidth);
 
         /* now figure out what does this translate into in terms of
@@ -331,7 +389,7 @@ static void my_numbox__motionhook(t_scalehandle *sh,
         //    dx,dy,x->x_scalewidth,x->x_scaleheight,numwidth,sh->h_dragx);
         scalehandle_drag_scale(sh);
 
-        x->x_gui.x_fontsize = x->x_tmpfontsize;
+        x->x_num_fontsize = x->x_tmpfontsize;
         x->x_gui.x_w = new_char_len;
         x->x_gui.x_h = x->x_scaleheight;
         x->x_numwidth = my_numbox_calc_fontwidth(x);
@@ -354,7 +412,7 @@ static void my_numbox__motionhook(t_scalehandle *sh,
         {
             properties_set_field_int(properties,"width",x->x_scalewidth);
             properties_set_field_int(properties,"height",x->x_scaleheight);
-            properties_set_field_int(properties,"font_size",x->x_tmpfontsize);
+            //properties_set_field_int(properties,"font_size",x->x_tmpfontsize);
         }
     }
     scalehandle_dragon_label(sh,mouse_x, mouse_y);
@@ -387,18 +445,18 @@ static void my_numbox_getrect(t_gobj *z, t_glist *glist,
 static void my_numbox_save(t_gobj *z, t_binbuf *b)
 {
     t_my_numbox *x = (t_my_numbox *)z;
-    int bflcol[3];
+    t_symbol *bflcol[3];
     t_symbol *srl[3];
 
     iemgui_save(&x->x_gui, srl, bflcol);
     if(x->x_gui.x_change)
     {
-        x->x_gui.x_change = 0;
+        my_numbox_set_change(x, 0);
         clock_unset(x->x_clock_reset);
         x->x_gui.x_changed = 1;
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
     }
-    binbuf_addv(b, "ssiisiiffiisssiiiiiiifii;", gensym("#X"),gensym("obj"),
+    binbuf_addv(b, "ssiisiiffiisssiiiisssfii;", gensym("#X"),gensym("obj"),
         (int)x->x_gui.x_obj.te_xpix, (int)x->x_gui.x_obj.te_ypix,
         gensym("nbx"), x->x_gui.x_w, x->x_gui.x_h,
         (t_float)x->x_min, (t_float)x->x_max,
@@ -406,7 +464,7 @@ static void my_numbox_save(t_gobj *z, t_binbuf *b)
         srl[0], srl[1], srl[2], x->x_gui.x_ldx, x->x_gui.x_ldy,
         iem_fstyletoint(&x->x_gui), x->x_gui.x_fontsize,
         bflcol[0], bflcol[1], bflcol[2],
-        x->x_val, x->x_log_height, x->x_hide_frame);
+        x->x_val, x->x_log_height, x->x_drawstyle);
 }
 
 int my_numbox_check_minmax(t_my_numbox *x, double min, double max)
@@ -456,7 +514,7 @@ static void my_numbox_properties(t_gobj *z, t_glist *owner)
     iemgui_properties(&x->x_gui, srl);
     if(x->x_gui.x_change)
     {
-        x->x_gui.x_change = 0;
+        my_numbox_set_change(x, 0);
         clock_unset(x->x_clock_reset);
         x->x_gui.x_changed = 1;
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
@@ -467,7 +525,7 @@ static void my_numbox_properties(t_gobj *z, t_glist *owner)
         -----------output-range:----------- %g min: %g max: %d \
         %d lin log %d %d log-height: %d {%s} {%s} {%s} %d %d %d %d %d %d %d\n",
         x->x_gui.x_w, 1, x->x_gui.x_h, 8, x->x_min, x->x_max,
-        x->x_hide_frame, /*EXCEPTION: x_hide_frame instead of schedule*/
+        x->x_drawstyle, /*EXCEPTION: x_drawstyle instead of schedule*/
         x->x_lin0_log1, x->x_gui.x_loadinit, -1,
         x->x_log_height, /*no multi, but iem-characteristic*/
         srl[0]->s_name, srl[1]->s_name, srl[2]->s_name,
@@ -498,7 +556,7 @@ static void my_numbox_properties(t_gobj *z, t_glist *owner)
     gui_s("background_color"); gui_i(0xffffff & x->x_gui.x_bcol);
     gui_s("foreground_color"); gui_i(0xffffff & x->x_gui.x_fcol);
     gui_s("label_color");      gui_i(0xffffff & x->x_gui.x_lcol);
-    gui_s("hide_frame");       gui_i(x->x_hide_frame);
+    gui_s("draw_style");       gui_i(x->x_drawstyle);
     gui_end_array();
     gui_end_vmess();
 }
@@ -519,14 +577,15 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     double max = atom_getfloatarg(3, argc, argv);
     x->x_lin0_log1 = !!atom_getintarg(4, argc, argv);
     x->x_log_height = maxi(atom_getintarg(6, argc, argv),10);
-    if (argc > 17)
-        x->x_hide_frame = (int)atom_getintarg(18, argc, argv);
+    x->x_drawstyle = (int)atom_getintarg(18, argc, argv);
     iemgui_dialog(&x->x_gui, argc, argv);
     x->x_numwidth = my_numbox_calc_fontwidth(x);
 
     my_numbox_check_minmax(x, min, max);
+    // automatically adjust the number font size
+    x->x_num_fontsize = maxi(x->x_gui.x_h * 0.9, IEM_FONT_MINSIZE);
     // normally, you'd do move+config, but here you have to do erase+new
-    // because iemgui_draw_io does not support changes to x_hide_frame.
+    // because iemgui_draw_io does not support changes to x_drawstyle.
     iemgui_draw_erase(&x->x_gui);
     iemgui_draw_new(&x->x_gui);
     //iemgui_draw_move(&x->x_gui);
@@ -540,6 +599,7 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
 
 static void my_numbox_motion(t_my_numbox *x, t_floatarg dx, t_floatarg dy)
 {
+    x->x_focused = 2;
     double k2=1.0;
     int old = x->x_val;
 
@@ -553,51 +613,61 @@ static void my_numbox_motion(t_my_numbox *x, t_floatarg dx, t_floatarg dy)
     if (old != x->x_val)
     {
         x->x_gui.x_changed = 1;
+        my_numbox_ftoa(x, 0);
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
         my_numbox_bang(x);
     }
     clock_unset(x->x_clock_reset);
+    clock_delay(x->x_clock_reset, 3000);
 }
 
 static void my_numbox_click(t_my_numbox *x, t_floatarg xpos, t_floatarg ypos,
                             t_floatarg shift, t_floatarg ctrl, t_floatarg alt)
 {
     glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g,
-        (t_glistmotionfn)my_numbox_motion, my_numbox_key, xpos, ypos);
+        (t_glistmotionfn)my_numbox_motion, my_numbox_key, my_numbox_list, xpos, ypos);
 }
 
 static int my_numbox_newclick(t_gobj *z, struct _glist *glist,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
     t_my_numbox* x = (t_my_numbox *)z;
-
     if(doit)
     {
         //printf("newclick doit\n");
         my_numbox_click( x, (t_floatarg)xpix, (t_floatarg)ypix,
             (t_floatarg)shift, 0, (t_floatarg)alt);
         if(shift)
+        {
             x->x_gui.x_finemoved = 1;
+        }
         else
             x->x_gui.x_finemoved = 0;
         if(!x->x_gui.x_change)
         {
-            //printf("    change=0\n");
             clock_delay(x->x_clock_wait, 50);
-            x->x_gui.x_change = 1;
+            my_numbox_set_change(x, 1);
             clock_delay(x->x_clock_reset, 3000);
 
-            x->x_buf[0] = 0;
+            if (shift)
+                my_numbox_ftoa(x, 1);
+            else
+                x->x_buf[0] = 0;
+            x->x_focused = 2;
+            sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
         }
         else
         {
-            //printf("    change=1\n");
-            x->x_gui.x_change = 0;
+            my_numbox_set_change(x, 0);
             clock_unset(x->x_clock_reset);
             x->x_buf[0] = 0;
             x->x_gui.x_changed = 1;
             sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
         }
+    }
+    else
+    {
+        //x->x_focused = 1;
     }
     return (1);
 }
@@ -624,13 +694,13 @@ static void my_numbox_log_height(t_my_numbox *x, t_floatarg lh)
         x->x_k = 1.0;
 }
 
-static void my_numbox_hide_frame(t_my_numbox *x, t_floatarg lh)
+static void my_numbox_drawstyle(t_my_numbox *x, t_floatarg lh)
 {
     if(lh < 0.0)
         lh = 0.0;
     if (lh > 3.0)
         lh = 3.0;
-    x->x_hide_frame = (int)lh;
+    x->x_drawstyle = (int)lh;
     my_numbox_draw(x, x->x_gui.x_glist, 4);
     my_numbox_draw(x, x->x_gui.x_glist, 2);  
 }
@@ -700,15 +770,31 @@ static void my_numbox_loadbang(t_my_numbox *x, t_floatarg action)
 static void my_numbox_key(void *z, t_floatarg fkey)
 {
     t_my_numbox *x = z;
+    if (fkey != 0)
+        x->x_focused = 1;
+
+    // this is used for arrow up and down
+    if (fkey == -1)
+    {
+        clock_unset(x->x_clock_reset);
+        x->x_gui.x_changed = 1;
+        sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
+        clock_delay(x->x_clock_reset, 3000);
+        return;
+    }
+
     char c=fkey;
     char buf[3];
     buf[1] = 0;
 
+    // this is what is triggered when one clicks outside the numbox
+    // and therefore loses focus
     if (c == 0)
     {
-        x->x_gui.x_change = 0;
+        my_numbox_set_change(x, 0);
         clock_unset(x->x_clock_reset);
         x->x_gui.x_changed = 1;
+        clock_delay(x->x_clock_reset, 0);
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
         return;
     }
@@ -725,7 +811,11 @@ static void my_numbox_key(void *z, t_floatarg fkey)
     }
     else if((c=='\b')||(c==127))
     {
-        int sl=strlen(x->x_buf)-1;
+        int sl;
+        if (x->x_gui.x_finemoved)
+            sl = 0;
+        else
+            sl=strlen(x->x_buf)-1;
 
         if(sl < 0)
             sl = 0;
@@ -736,35 +826,106 @@ static void my_numbox_key(void *z, t_floatarg fkey)
     else if((c=='\n')||(c==13))
     {
         x->x_val = atof(x->x_buf);
-        x->x_buf[0] = 0;
-        x->x_gui.x_change = 0;
+        //x->x_buf[0] = 0;
+        my_numbox_set_change(x, 1);
         clock_unset(x->x_clock_reset);
         my_numbox_clip(x);
         my_numbox_bang(x);
         x->x_gui.x_changed = 1;
+        x->x_focused = 2;
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
     }
-    clock_delay(x->x_clock_reset, 3000);
+
+    if(c==27)
+    {
+        clock_unset(x->x_clock_reset);
+        my_numbox_tick_reset(x);
+    }
+    else
+        clock_delay(x->x_clock_reset, 3000);
 }
 
 static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
 {
-    if (IS_A_FLOAT(av,0))
+    int i;
+    int isKey = 0;
+    t_floatarg val;
+
+    for (i=0; i < ac; i++)
+    {
+        if (!IS_A_FLOAT(av,i))
+        {
+            isKey = 1;
+            break;
+        }
+    }
+    if (!isKey)
     {
         my_numbox_set(x, atom_getfloatarg(0, ac, av));
         my_numbox_bang(x);
+    }
+    else if (ac == 2 && x->x_gui.x_change == 1 && IS_A_FLOAT(av,0) && IS_A_SYMBOL(av,1))
+    {
+        //fprintf(stderr,"got keyname %s while grabbed\n", av[1].a_w.w_symbol->s_name);
+        if (!strcmp("Shift", av[1].a_w.w_symbol->s_name))
+        {
+            x->x_gui.x_finemoved = (int)av[0].a_w.w_float;
+            //post("...Shift %d", x->a_shift);
+        }
+        if (av[0].a_w.w_float == 1)
+        {
+            if (!strcmp("Up", av[1].a_w.w_symbol->s_name))
+            {
+                //fprintf(stderr,"...Up\n");
+                if((x->x_buf[0] == 0 || x->x_buf == '>') && x->x_val != 0)
+                    sprintf(x->x_buf, "%g", x->x_val+1);
+                else
+                    sprintf(x->x_buf, "%g", atof(x->x_buf) + 1);
+                my_numbox_key((void *)x, -1);
+            }
+            else if (!strcmp("ShiftUp", av[1].a_w.w_symbol->s_name))
+            {
+                //fprintf(stderr,"...ShiftUp\n");
+                if((x->x_buf[0] == 0 || x->x_buf == '>') && x->x_val != 0)
+                    sprintf(x->x_buf, "%g", x->x_val+0.01);
+                else
+                    sprintf(x->x_buf, "%g", atof(x->x_buf) + 0.01);
+                my_numbox_key((void *)x, -1);
+            }
+            else if (!strcmp("Down", av[1].a_w.w_symbol->s_name))
+            {
+                //fprintf(stderr,"...Down\n");
+                if((x->x_buf[0] == 0 || x->x_buf == '>') && x->x_val != 0)
+                    sprintf(x->x_buf, "%g", x->x_val-1);
+                else
+                    sprintf(x->x_buf, "%g", atof(x->x_buf) - 1);
+                my_numbox_key((void *)x, -1);
+            }
+            else if (!strcmp("ShiftDown", av[1].a_w.w_symbol->s_name))
+            {
+                //fprintf(stderr,"...ShiftDown\n");
+                if((x->x_buf[0] == 0 || x->x_buf == '>') && x->x_val != 0)
+                    sprintf(x->x_buf, "%g", x->x_val-0.01);
+                else
+                    sprintf(x->x_buf, "%g", atof(x->x_buf) - 0.01);
+                my_numbox_key((void *)x, -1);
+            }
+        }
     }
 }
 
 static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
 {
     t_my_numbox *x = (t_my_numbox *)pd_new(my_numbox_class);
-    int bflcol[]={-262144, -1, -1};
     int w=5, h=14;
     int lilo=0, ldx=0, ldy=-8;
     int fs=10;
     int log_height=256;
     double min=-1.0e+37, max=1.0e+37,v=0.0;
+
+    x->x_gui.x_bcol = 0xFCFCFC;
+    x->x_gui.x_fcol = 0x00;
+    x->x_gui.x_lcol = 0x00;
 
     if((argc >= 17)&&IS_A_FLOAT(argv,0)&&IS_A_FLOAT(argv,1)
        &&IS_A_FLOAT(argv,2)&&IS_A_FLOAT(argv,3)
@@ -773,8 +934,7 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
        &&(IS_A_SYMBOL(argv,7)||IS_A_FLOAT(argv,7))
        &&(IS_A_SYMBOL(argv,8)||IS_A_FLOAT(argv,8))
        &&IS_A_FLOAT(argv,9)&&IS_A_FLOAT(argv,10)
-       &&IS_A_FLOAT(argv,11)&&IS_A_FLOAT(argv,12)&&IS_A_FLOAT(argv,13)
-       &&IS_A_FLOAT(argv,14)&&IS_A_FLOAT(argv,15)&&IS_A_FLOAT(argv,16))
+       &&IS_A_FLOAT(argv,11)&&IS_A_FLOAT(argv,12)&&IS_A_FLOAT(argv,16))
     {
         w = maxi(atom_getintarg(0, argc, argv),1);
         h = maxi(atom_getintarg(1, argc, argv),8);
@@ -787,17 +947,15 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
         ldy = atom_getintarg(10, argc, argv);
         iem_inttofstyle(&x->x_gui, atom_getintarg(11, argc, argv));
         fs = maxi(atom_getintarg(12, argc, argv),4);
-        bflcol[0] = atom_getintarg(13, argc, argv);
-        bflcol[1] = atom_getintarg(14, argc, argv);
-        bflcol[2] = atom_getintarg(15, argc, argv);
+        iemgui_all_loadcolors(&x->x_gui, argv+13, argv+14, argv+15);
         v = atom_getfloatarg(16, argc, argv);
     }
     else iemgui_new_getnames(&x->x_gui, 6, 0);
     if((argc == 18)&&IS_A_FLOAT(argv,17))
         log_height = maxi(atom_getintarg(17, argc, argv),10);
-    x->x_hide_frame = 0; // default behavior
+    x->x_drawstyle = 0; // default behavior
     if((argc == 19)&&IS_A_FLOAT(argv,18))
-        x->x_hide_frame = (int)atom_getintarg(18, argc, argv);
+        x->x_drawstyle = (int)atom_getintarg(18, argc, argv);
     x->x_gui.x_draw = (t_iemfunptr)my_numbox_draw;
     x->x_gui.x_glist = (t_glist *)canvas_getcurrent();
     x->x_val = x->x_gui.x_loadinit ? v : 0.0;
@@ -812,9 +970,11 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
     x->x_gui.x_w = w;
     x->x_gui.x_h = h;
     x->x_buf[0] = 0;
+    // default font size that will then automatically adjust
+    // based on width and height
+    x->x_num_fontsize = maxi(x->x_gui.x_h * 0.9, IEM_FONT_MINSIZE);
     x->x_numwidth = my_numbox_calc_fontwidth(x);
     my_numbox_check_minmax(x, min, max);
-    iemgui_all_colfromload(&x->x_gui, bflcol);
     iemgui_verify_snd_ne_rcv(&x->x_gui);
     x->x_clock_reset = clock_new(x, (t_method)my_numbox_tick_reset);
     x->x_clock_wait = clock_new(x, (t_method)my_numbox_tick_wait);
@@ -826,11 +986,15 @@ static void *my_numbox_new(t_symbol *s, int argc, t_atom *argv)
     x->x_scalewidth = 0;
     x->x_scaleheight = 0;
     x->x_tmpfontsize = 0;
+
     x->x_gui.x_obj.te_iemgui = 1;
     x->x_gui.x_changed = 0;
 
     x->x_gui.legacy_x = 0;
     x->x_gui.legacy_y = 1;
+
+    x->x_focused = 0;
+    x->x_yresize_x = 0;
 
     return (x);
 }
@@ -839,6 +1003,7 @@ static void my_numbox_free(t_my_numbox *x)
 {
     if(iemgui_has_rcv(&x->x_gui))
         pd_unbind(&x->x_gui.x_obj.ob_pd, x->x_gui.x_rcv);
+    my_numbox_set_change(x, 0);
     clock_free(x->x_clock_reset);
     clock_free(x->x_clock_wait);
     gfxstub_deleteforkey(x);
@@ -879,8 +1044,10 @@ void g_numbox_setup(void)
         gensym("init"), A_FLOAT, 0);
     class_addmethod(my_numbox_class, (t_method)my_numbox_log_height,
         gensym("log_height"), A_FLOAT, 0);
-    class_addmethod(my_numbox_class, (t_method)my_numbox_hide_frame,
-        gensym("hide_frame"), A_FLOAT, 0);
+    class_addmethod(my_numbox_class, (t_method)my_numbox_drawstyle,
+        gensym("drawstyle"), A_FLOAT, 0);
+
+    numbox_keyname_sym_a = gensym("#keyname_a");
 
     wb_init(&my_numbox_widgetbehavior,my_numbox_getrect,my_numbox_newclick);
     class_setwidget(my_numbox_class, &my_numbox_widgetbehavior);
