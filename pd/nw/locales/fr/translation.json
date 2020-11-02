@@ -432,8 +432,8 @@
         "footgun":   "Footgun"
       },
       "grid": {
-        "show_grid": "Fond de grille en mode Édition",
-        "show_grid_tt": "Afficher l'arrière-plan de la grille en mode Édition"
+        "show_grid": "Aligner sur la grille (expérimental)",
+        "show_grid_tt": "Accrocher à la grille en mode Édition"
       },
       "zoom": {
         "save_zoom":    "Sauver/Charger niveau zoom avec patch",
