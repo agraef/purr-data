@@ -287,6 +287,7 @@ function make_index() {
             finish_index();
         }
     }
+    pdsend("pd gui-busy 1");
     index_started = true;
     index_start_time = new Date().getTime() / 1000;
     var idx, manif;
@@ -329,6 +330,7 @@ function make_index() {
 	post("building help index in " + doc_path);
 	dive(doc_path, read_file, browser_path?make_index_cont:finish_index);
     }
+    pdsend("pd gui-busy 0");
 }
 
 // AG: This is called from dialog_search.html with a callback that expects to
@@ -1160,51 +1162,16 @@ function menu_saveas(name) {
 exports.menu_saveas = menu_saveas;
 
 function gui_canvas_print(name, initfile, initdir) {
-    // AG: This works mostly like gui_canvas_saveas above, except that we
-    // create a pdf file and use a different input element and callback.
-    var input, chooser,
-        span = patchwin[name].window.document.querySelector("#printDialogSpan");
-    if (!fs.existsSync(initdir)) {
-        initdir = pwd;
-    }
-    // If we don't have a ".pd" file extension (e.g., "Untitled-1", add one)
-    if (initfile.slice(-3) !== ".pd") {
-        initfile += ".pd";
-    }
-    // Adding an "f" now gives .pdf which is what we want.
-    initfile += "f";
-    input = build_file_dialog_string({
-        style: "display: none;",
-        type: "file",
-        id: "printDialog",
-        nwsaveas: path.join(initdir, initfile),
-        nwworkingdir: initdir,
-        accept: ".pdf"
-    });
-    span.innerHTML = input;
-    chooser = patchwin[name].window.document.querySelector("#printDialog");
-    chooser.onchange = function() {
-        print_callback(name, this.value);
-        // reset value so that we can open the same file twice
-        this.value = null;
-        console.log("tried to print something");
-    }
-    chooser.click();
+    // AG: The print dialog presents its own file picker anyway if PDF
+    // output is chosen, and just ignores the settings for pdf_path. So
+    // initfile and initdir are only used here to provide a useful default
+    // for the header and footer information -- otherwise the print() method
+    // uses some random internal document URL which isn't helpful.
+    pdsend("pd gui-busy 1");
+    patchwin[name].print({ autoprint: false, headerString: initfile, footerString: path.join(initdir, initfile) });
+    pdsend("pd gui-busy 0");
+    post("printed "+initfile);
 }
-
-function print_callback(cid, file) {
-    var filename = defunkify_windows_path(file);
-    // It probably isn't possible to arrive at the callback with an
-    // empty string.  But I've only tested on Debian so far...
-    if (filename === null) {
-        return;
-    }
-    // Let nw.js do the rest (requires nw.js 0.14.6+)
-    patchwin[cid].print({ pdf_path: filename, headerFooterEnabled: false });
-    post("printed to: " + filename);
-}
-
-exports.print_callback = print_callback;
 
 function menu_print(name) {
     pdsend(name + " menuprint");
@@ -1398,7 +1365,9 @@ function gui_quit_dialog() {
 function menu_send(name) {
     var message,
         win = name ? patchwin[name] : pd_window;
+    pdsend("pd gui-busy 1");
     message = win.window.prompt("Type a message to send to Pd", name);
+    pdsend("pd gui-busy 0");
     if (message != undefined && message.length) {
         post("Sending message to Pd: " + message + ";");
         pdsend(message);

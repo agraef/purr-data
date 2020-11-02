@@ -107,6 +107,12 @@ static void glob_gui_properties(t_pd *dummy)
         sys_autopatch_yoffset);
 }
 
+int sys_gui_busy;
+static void glob_gui_busy(void *dummy, t_float f)
+{
+  sys_gui_busy = f != 0;
+}
+
 // ths one lives inside g_editor so that it can access the clipboard
 extern void glob_clipboard_text(t_pd *dummy, float f);
 
@@ -201,6 +207,8 @@ void glob_init(void)
         gensym("add-recent-file"), A_SYMBOL, 0);
     class_addmethod(glob_pdobject, (t_method)glob_clear_recent_files,
         gensym("clear-recent-files"), 0);
+    class_addmethod(glob_pdobject, (t_method)glob_gui_busy, gensym("gui-busy"),
+        A_DEFFLOAT, 0);
 #ifdef UNIX
     class_addmethod(glob_pdobject, (t_method)glob_watchdog,
         gensym("watchdog"), 0);

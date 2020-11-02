@@ -195,6 +195,7 @@ double sys_getrealtime(void)
 }
 
 extern int sys_nosleep;
+static int fdschanged;
 
 static int sys_domicrosleep(int microsec, int pollem)
 {
@@ -203,7 +204,7 @@ static int sys_domicrosleep(int microsec, int pollem)
     t_fdpoll *fp;
     timout.tv_sec = 0;
     timout.tv_usec = (sys_nosleep ? 0 : microsec);
-    if (pollem)
+    if (pollem && sys_nfdpoll)
     {
         fd_set readset, writeset, exceptset;
         FD_ZERO(&writeset);
@@ -216,8 +217,10 @@ static int sys_domicrosleep(int microsec, int pollem)
                 Sleep(microsec/1000);
         else
 #endif
-        select(sys_maxfd+1, &readset, &writeset, &exceptset, &timout);
-        for (i = 0; i < sys_nfdpoll; i++)
+        if (select(sys_maxfd+1, &readset, &writeset, &exceptset, &timout) < 0)
+          perror("microsleep select");
+        fdschanged = 0;
+        for (i = 0; i < sys_nfdpoll && !fdschanged; i++)
             if (FD_ISSET(sys_fdpoll[i].fdp_fd, &readset))
         {
 #ifdef THREAD_LOCKING
@@ -229,18 +232,23 @@ static int sys_domicrosleep(int microsec, int pollem)
 #endif
             didsomething = 1;
         }
-        return (didsomething);
+        if (didsomething) return (1);
     }
-    else
+    if (microsec)
     {
-#ifdef MSW
-        if (sys_maxfd == 0)
-              Sleep(microsec/1000);
-        else
+#ifdef THREAD_LOCKING
+        sys_unlock();
 #endif
-        select(0, 0, 0, 0, &timout);
-        return (0);
+#ifdef MSW
+        Sleep(microsec/1000);
+#else
+        usleep(microsec);
+#endif
+#ifdef THREAD_LOCKING
+        sys_lock();
+#endif
     }
+    return (0);
 }
 
 void sys_microsleep(int microsec)
@@ -438,6 +446,7 @@ void sys_addpollfn(int fd, t_fdpollfn fn, void *ptr)
     fp->fdp_ptr = ptr;
     sys_nfdpoll = nfd + 1;
     if (fd >= sys_maxfd) sys_maxfd = fd + 1;
+    fdschanged = 1;
 }
 
 void sys_rmpollfn(int fd)
@@ -445,6 +454,7 @@ void sys_rmpollfn(int fd)
     int nfd = sys_nfdpoll;
     int i, size = nfd * sizeof(t_fdpoll);
     t_fdpoll *fp;
+    fdschanged = 1;
     for (i = nfd, fp = sys_fdpoll; i--; fp++)
     {
         if (fp->fdp_fd == fd)
@@ -624,6 +634,7 @@ void socketreceiver_read(t_socketreceiver *x, int fd)
 void sys_closesocket(int fd)
 {
 #ifdef HAVE_UNISTD_H
+    if (fd<0) return;
     close(fd);
 #endif
 #ifdef MSW
