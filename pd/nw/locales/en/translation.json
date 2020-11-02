@@ -432,7 +432,7 @@
         "footgun": "Footgun"
       },
       "grid": {
-        "show_grid": "snap to grid",
+        "show_grid": "snap to grid (experimental)",
         "show_grid_tt": "Snap to the grid in edit mode"
       },
       "zoom": {

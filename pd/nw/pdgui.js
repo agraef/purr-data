@@ -1442,8 +1442,6 @@ function get_grid_coords(cid, svg_elem) {
 // the same grid with a lower opacity. That way the edit mode is always
 // visually distinct from run mode.
 var create_editmode_bg = function(cid, svg_elem) {
-
-    return "linear-gradient(transparent 9px, rgba(220,220,200,.8) 10px, transparent 10px), linear-gradient(90deg, transparent 9px, rgba(220,220,200,.8) 10px, transparent 10px)";
     var head, body, tail, cell_data_str, opacity_str, grid, size, pos;
     grid = showgrid[cid];
     size = gridsize[cid];
@@ -1479,16 +1477,9 @@ var create_editmode_bg = function(cid, svg_elem) {
 
 function set_editmode_bg(cid, svg_elem, state)
 {
-    // If we're setting the bg, figure out the correct offset first
-//    if (state) {
-//        set_grid_position(cid, svg_elem);
-//    }
     patchwin[cid].window.document.body.style.setProperty("background-image",
         state ?
             create_editmode_bg(cid, svg_elem) : "none");
-
-    patchwin[cid].window.document.body.style.setProperty("background-size",
-	    "100% 10px, 10px 100%");
 }
 
 function update_svg_background(cid, svg_elem) {
@@ -6826,7 +6817,10 @@ function do_getscroll(cid, checkgeom) {
             width: width,
             height: height
         });
-        // Now update the svg's background if we're in edit mode
+        // Now update the svg's background if we're in edit mode. This adds
+        // a new background image to the body of the document each time.
+        // So if there is a performance regression with do_getscroll when
+        // in editmode, this could be the culprit.
         update_svg_background(cid, svg_elem);
     });
 }
