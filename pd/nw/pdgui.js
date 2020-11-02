@@ -1449,7 +1449,7 @@ var create_editmode_bg = function(cid, svg_elem) {
     // if snap-to-grid isn't turned on, just use cell size of 10 and make the
     // grid partially transparent
     size = grid ? size : 10;
-    opacity_str = '"' + (grid ? 1 : 0.25) + '"';
+    opacity_str = '"' + (grid ? 1 : 0.4) + '"';
     cell_data_str = ['"', "M", size, 0, "L", 0, 0, 0, size, '"'].join(" ");
 
     head = ['<svg xmlns="http://www.w3.org/2000/svg" ',
