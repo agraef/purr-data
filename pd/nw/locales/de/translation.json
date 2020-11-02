@@ -432,7 +432,7 @@
         "footgun": "Fusspistole"
       },
       "grid": {
-        "show_grid": "Am Gitter ausrichten",
+        "show_grid": "Am Gitter ausrichten (experimentell)",
         "show_grid_tt": "Ausrichten am Gitter im Edit-Modus"
       },
       "zoom": {
