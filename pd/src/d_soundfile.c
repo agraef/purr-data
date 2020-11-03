@@ -675,201 +675,293 @@ static void soundfile_xferin_float(int sfchannels, int nvecs, t_float **vecs,
     */
 
 
-static void argerror(void *obj, const char *fmt, ...)
+static void argerror(void *obj, t_symbol *s, int argc, t_atom *argv,
+    const char *fmt, ...)
 {
-    char msg[MAXPDSTRING];
+    char error_str[MAXPDSTRING];
+    char *user_msg; /* message from user that triggered the error */
+    int len;
     char *classname = class_getname(pd_class((t_pd *)obj));
     va_list ap;
+    t_binbuf *b = binbuf_new();
     va_start(ap, fmt);
-    vsnprintf(msg, MAXPDSTRING-1, fmt, ap);
+    vsnprintf(error_str, MAXPDSTRING-1, fmt, ap);
     va_end(ap);
-    pd_error(obj, "%s: %s", classname, msg);
+
+    binbuf_addv(b, "s", s);
+    binbuf_add(b, argc, argv);
+    binbuf_gettext(b, &user_msg, &len); /* not null-terminated! */
+    
+    pd_error(obj, "%s: '%.*s': %s",
+        classname,
+        len < MAXPDSTRING ? len : MAXPDSTRING,
+        user_msg,
+        error_str);
 }
 
-static int verify_flag(void *obj, char *flag)
+static int flag_missing_floatarg(void *obj, t_symbol *s, int argc,
+    t_atom *argv, char *flag, int flagc, t_atom *flagv)
 {
-    if (!flag)
+        /* First check if our flag has an arg at all. If not, error out.
+           (flagc includes the flag itself.) */
+    if (flagc < 2)
     {
-        argerror(obj, "empty symbol detected");
-        return 0;
+        argerror(obj, s, argc, argv,
+            "'%s' flag expects a float argument", flag);
+        return 1;
     }
-    if (flag[0] != '-')
+    if (flagv[1].a_type != A_FLOAT)
     {
-        argerror(obj, "expected '-%s' flag but got '%s'", flag, flag);
-        return 0;
-    }
-    return 1;
-}
-
-static int flag_and_floatarg(void *obj, char *flag, int argc, t_atom *argv)
-{
-    if (!verify_flag(obj, flag))
-        return 0;
-    if (argc < 2)
-    {
-        argerror(obj, "need a float argument for '-%s' flag", flag);
-        return 0;
-    }
-    if (argv[1].a_type != A_FLOAT)
-    {
-        argerror(obj, "'-%s' flag expects float but got '%s'",
+        argerror(obj, s, argc, argv, "'%s' flag expects a float but got '%s'",
            flag,
-           argv[1].a_type == A_SYMBOL ?
-           argv[1].a_w.w_symbol->s_name :
+           flagv[1].a_type == A_SYMBOL ?
+           flagv[1].a_w.w_symbol->s_name :
            "unexpected arg type");
-        return 0;
+        return 1;
     }
-    return 1;
+    return 0;
 }
 
-static int matchstring(char *str, char *flag)
+static int flag_has_unexpected_floatarg(void *obj, t_symbol *s,
+    int argc, t_atom *argv, char *flag, int flagc, t_atom *flagv)
 {
-    return (!strcmp(str, flag) || !strcmp(str+1, flag));
+    if (flagc < 2) return 0;
+    if (flagv[1].a_type == A_FLOAT)
+    {
+        argerror(obj, s, argc, argv,
+            "'%s' flag does not accept a float argument", flag);
+        return 1;
+    }
+    return 0;
+}
+
+    /* catch filenames that are flags, with and without pre-fixed '-' */
+static int file_is_a_flag_name(t_symbol *sym, int *nodash)
+{
+    char *s = sym->s_name;
+    if (s[0] == '-')
+    {
+        s++;
+        *nodash = 1;
+    }
+    else
+        *nodash = 0;
+
+    if (!strcmp(s, "skip")
+        || !strcmp(s, "nframes")
+        || !strcmp(s, "bytes")
+        || !strcmp(s, "normalize")
+        || !strcmp(s, "wave")
+        || !strcmp(s, "nextstep")
+        || !strcmp(s, "aiff")
+        || !strcmp(s, "big")
+        || !strcmp(s, "little")
+        || !strcmp(s, "r")
+        || !strcmp(s, "rate"))
+    {
+        return 1;
+    }
+    else
+        return 0;
 }
 
     /* the routine which actually does the work should LATER also be called
     from garray_write16. */
 
     /* Parse arguments for writing.  The "obj" argument is only for flagging
-    errors.  For streaming to a file the "normalize", "onset" and "nframes"
+    errors.  For streaming to a file the "normalize", "skip" and "nframes"
     arguments shouldn't be set but the calling routine flags this. */
 
-static int soundfiler_writeargparse(void *obj, int *p_argc, t_atom **p_argv,
+    /* Also note that streaming objects like writesf~ don't take args after
+       the filename, while soundfiler does to specify the source tables */
+static int soundfiler_writeargparse(void *obj, t_symbol *s,
+    int *p_argc, t_atom **p_argv,
     t_symbol **p_filesym,
     int *p_filetype, int *p_bytespersamp, int *p_swap, int *p_bigendian,
     int *p_normalize, long *p_onset, long *p_nframes, t_float *p_rate)
 {
+    /* copies for convenience, and for the ruthless mutation below. :) */
     int argc = *p_argc;
+    int ac = argc;
     t_atom *argv = *p_argv;
+    t_atom *av = argv;
     int bytespersamp = 2, bigendian = 0,
         endianness = -1, swap, filetype = -1, normalize = 0;
     long onset = 0, nframes = 0x7fffffff;
     t_symbol *filesym;
     t_float rate = -1;
     
-    while (argc > 0 && argv->a_type == A_SYMBOL)
+    while (ac > 0 && atom_getsymbol(av)->s_name[0] == '-')
     {
-        char *flag = argv->a_w.w_symbol->s_name;
-        if (matchstring(flag, "skip"))
+        char *flag = av->a_w.w_symbol->s_name;
+        if (!strcmp(flag, "-skip"))
         {
-            if (!flag_and_floatarg(obj, flag, argc, argv))
+            if (flag_missing_floatarg(obj, s, argc, argv, flag, ac, av))
                 goto usage;
-            if ((onset = argv[1].a_w.w_float) < 0)
+            if ((onset = av[1].a_w.w_float) < 0)
             {
-                argerror(obj, "'-skip' flag does not allow a negative number");
+                argerror(obj, s, argc, argv,
+                    "'-skip' flag does not allow a negative number");
                 goto usage;
             }
-            argc -= 2; argv += 2;
+            ac -= 2; av += 2;
         }
-        else if (matchstring(flag, "nframes"))
+        else if (!strcmp(flag, "-nframes"))
         {
-            if (!flag_and_floatarg(obj, flag, argc, argv))
+            if (flag_missing_floatarg(obj, s, argc, argv, flag, ac, av))
                 goto usage;
-            if ((nframes = argv[1].a_w.w_float) < 0)
+            if ((nframes = av[1].a_w.w_float) < 0)
             {
-                argerror(obj, "'-nframes' flag does not allow a negative "
-                    "number");
+                argerror(obj, s, argc, argv,
+                    "'-nframes' flag does not allow a negative number");
                 goto usage;
             }
-            argc -= 2; argv += 2;
+            ac -= 2; av += 2;
         }
-        else if (matchstring(flag, "bytes"))
+        else if (!strcmp(flag, "-bytes"))
         {
-            if (!flag_and_floatarg(obj, flag, argc, argv))
+            if (flag_missing_floatarg(obj, s, argc, argv, flag, ac, av))
                 goto usage;
-            if ((bytespersamp = argv[1].a_w.w_float) < 2 ||
+            if ((bytespersamp = av[1].a_w.w_float) < 2 ||
                    bytespersamp > 4)
             {
-                argerror(obj, "'-bytes' flag requires a number "
-                    "between 2 and 4");
+                argerror(obj, s, argc, argv,
+                    "'-bytes' flag requires a number between 2 and 4");
                 goto usage;
             }
-            argc -= 2; argv += 2;
+            ac -= 2; av += 2;
         }
-        else if (matchstring(flag, "normalize"))
+        else if (!strcmp(flag, "-normalize"))
         {
-            if (!verify_flag(obj, flag))
-                goto usage;
-            normalize = 1;
-            argc -= 1; argv += 1;
-        }
-        else if (matchstring(flag, "wave"))
-        {
-            if (!verify_flag(obj, flag))
-                goto usage;
-            filetype = FORMAT_WAVE;
-            argc -= 1; argv += 1;
-        }
-        else if (matchstring(flag, "nextstep"))
-        {
-            if (!verify_flag(obj, flag))
-                goto usage;
-            filetype = FORMAT_NEXT;
-            argc -= 1; argv += 1;
-        }
-        else if (matchstring(flag, "aiff"))
-        {
-            if (!verify_flag(obj, flag))
-               goto usage;
-            filetype = FORMAT_AIFF;
-            argc -= 1; argv += 1;
-        }
-        else if (matchstring(flag, "big"))
-        {
-            if (!verify_flag(obj, flag))
-               goto usage;
-
-            endianness = 1;
-            argc -= 1; argv += 1;
-        }
-        else if (matchstring(flag, "little"))
-        {
-            if (!verify_flag(obj, flag))
-                goto usage;
-            endianness = 0;
-            argc -= 1; argv += 1;
-        }
-        else if (matchstring(flag, "r") || matchstring(flag, "rate"))
-        {
-            if (!flag_and_floatarg(obj, flag, argc, argv))
-                goto usage;
-            if ((rate = argv[1].a_w.w_float) <= 0)
+            if (flag_has_unexpected_floatarg(obj, s, argc, argv,
+                flag, ac, av))
             {
-                argerror(obj, "'%s' flag must have a float arg greater than "
-                    "zero", flag);
                 goto usage;
             }
-            argc -= 2; argv += 2;
+            normalize = 1;
+            ac -= 1; av += 1;
+        }
+        else if (!strcmp(flag, "-wave"))
+        {
+            if (flag_has_unexpected_floatarg(obj, s, argc, argv,
+                flag, ac, av))
+            {
+                goto usage;
+            }
+            filetype = FORMAT_WAVE;
+            ac -= 1; av += 1;
+        }
+        else if (!strcmp(flag, "-nextstep"))
+        {
+            if (flag_has_unexpected_floatarg(obj, s, argc, argv,
+                flag, ac, av))
+            {
+                goto usage;
+            }
+            filetype = FORMAT_NEXT;
+            ac -= 1; av += 1;
+        }
+        else if (!strcmp(flag, "-aiff"))
+        {
+            if (flag_has_unexpected_floatarg(obj, s, argc, argv,
+                flag, ac, av))
+            {
+                goto usage;
+            }
+            filetype = FORMAT_AIFF;
+            ac -= 1; av += 1;
+        }
+        else if (!strcmp(flag, "-big"))
+        {
+            if (flag_has_unexpected_floatarg(obj, s, argc, argv,
+                flag, ac, av))
+            {
+                goto usage;
+            }
+            endianness = 1;
+            ac -= 1; av += 1;
+        }
+        else if (!strcmp(flag, "-little"))
+        {
+            if (flag_has_unexpected_floatarg(obj, s, argc, argv,
+                flag, ac, av))
+            {
+                goto usage;
+            }
+            endianness = 0;
+            ac -= 1; av += 1;
+        }
+        else if (!strcmp(flag, "-r") || !strcmp(flag, "-rate"))
+        {
+            if (flag_missing_floatarg(obj, s, argc, argv,
+                flag, ac, av))
+            {
+                goto usage;
+            }
+            if ((rate = av[1].a_w.w_float) <= 0)
+            {
+                argerror(obj, s, argc, argv,
+                    "'%s' flag must have a float arg greater than zero", flag);
+                goto usage;
+            }
+            ac -= 2; av += 2;
         }
         else
         {
-            argerror(obj, "unknown flag '%s'", flag);
+            argerror(obj, s, argc, argv, "unknown flag '%s'", flag);
             goto usage;
         }
     }
-    if (!argc || argv->a_type != A_SYMBOL)
+    if (ac < 1)
+    {
+            /* a bit tricky-- writesf~ "open" method doesn't need table args */
+        argerror(obj, s, argc, argv, "%s",
+            s == gensym("open") ? "need a filename" :
+            "need a filename and table argument(s)");
         goto usage;
-    filesym = argv->a_w.w_symbol;
-    
+    }
+        /* Now that we know we have at least one arg, let's make sure it's
+           a symbol. */
+    if (av->a_type != A_SYMBOL)
+    {
+        argerror(obj, s, argc, argv, "filename must be a symbol");
+        goto usage;
+    }
+    filesym = av->a_w.w_symbol;
+        /* check if filesym is a flag name, and warn if so. */
+    int nodash;
+    if (file_is_a_flag_name(filesym, &nodash))
+    {
+        post("warning: filename '%s' looks like a flag%s",
+            filesym->s_name, nodash ? " name" : "");
+    }
         /* check if format not specified and fill in */
     if (filetype < 0) 
     {
         if (strlen(filesym->s_name) >= 5 &&
-                        (!strcmp(filesym->s_name + strlen(filesym->s_name) - 4, ".aif") ||
-                        !strcmp(filesym->s_name + strlen(filesym->s_name) - 4, ".AIF")))
-                filetype = FORMAT_AIFF;
+             (!strcmp(filesym->s_name + strlen(filesym->s_name) - 4, ".aif") ||
+              !strcmp(filesym->s_name + strlen(filesym->s_name) - 4, ".AIF")))
+        {
+            filetype = FORMAT_AIFF;
+        }
         if (strlen(filesym->s_name) >= 6 &&
-                        (!strcmp(filesym->s_name + strlen(filesym->s_name) - 5, ".aiff") ||
-                        !strcmp(filesym->s_name + strlen(filesym->s_name) - 5, ".AIFF")))
-                filetype = FORMAT_AIFF;
+             (!strcmp(filesym->s_name + strlen(filesym->s_name) - 5, ".aiff") ||
+              !strcmp(filesym->s_name + strlen(filesym->s_name) - 5, ".AIFF")))
+        {
+            filetype = FORMAT_AIFF;
+        }
         if (strlen(filesym->s_name) >= 5 &&
-                        (!strcmp(filesym->s_name + strlen(filesym->s_name) - 4, ".snd") ||
-                        !strcmp(filesym->s_name + strlen(filesym->s_name) - 4, ".SND")))
-                filetype = FORMAT_NEXT;
+             (!strcmp(filesym->s_name + strlen(filesym->s_name) - 4, ".snd") ||
+              !strcmp(filesym->s_name + strlen(filesym->s_name) - 4, ".SND")))
+        {
+            filetype = FORMAT_NEXT;
+        }
         if (strlen(filesym->s_name) >= 4 &&
-                        (!strcmp(filesym->s_name + strlen(filesym->s_name) - 3, ".au") ||
-                        !strcmp(filesym->s_name + strlen(filesym->s_name) - 3, ".AU")))
-                filetype = FORMAT_NEXT;
+             (!strcmp(filesym->s_name + strlen(filesym->s_name) - 3, ".au") ||
+              !strcmp(filesym->s_name + strlen(filesym->s_name) - 3, ".AU")))
+        {
+            filetype = FORMAT_NEXT;
+        }
         if (filetype < 0)
             filetype = FORMAT_WAVE;
     }
@@ -878,7 +970,8 @@ static int soundfiler_writeargparse(void *obj, int *p_argc, t_atom **p_argv,
     {
         if (filetype == FORMAT_AIFF)
         {
-            pd_error(obj, "AIFF floating-point file format unavailable");
+            argerror(obj, s, argc, argv,
+                "AIFF floating-point file format unavailable");
             goto usage;
         }
     }
@@ -902,10 +995,10 @@ static int soundfiler_writeargparse(void *obj, int *p_argc, t_atom **p_argv,
     else bigendian = endianness;
     swap = (bigendian != garray_ambigendian());
     
-    argc--; argv++;
+    ac--; av++;
     
-    *p_argc = argc;
-    *p_argv = argv;
+    *p_argc = ac;
+    *p_argv = av;
     *p_filesym = filesym;
     *p_filetype = filetype;
     *p_bytespersamp = bytespersamp;
@@ -941,8 +1034,8 @@ static int create_soundfile(t_canvas *canvas, const char *filename,
         if (strcmp(filenamebuf + strlen(filenamebuf)-4, ".snd"))
             strcat(filenamebuf, ".snd");
         if (bigendian)
-            strncpy(nexthdr->ns_fileid, ".snd", 4);
-        else strncpy(nexthdr->ns_fileid, "dns.", 4);
+            memcpy(nexthdr->ns_fileid, ".snd", 4);
+        else memcpy(nexthdr->ns_fileid, "dns.", 4);
         nexthdr->ns_onset = swap4(sizeof(*nexthdr), swap);
         nexthdr->ns_length = 0;
         nexthdr->ns_format = swap4((bytespersamp == 3 ? NS_FORMAT_LINEAR_24 :
@@ -960,18 +1053,18 @@ static int create_soundfile(t_canvas *canvas, const char *filename,
         if (strcmp(filenamebuf + strlen(filenamebuf)-4, ".aif") &&
             strcmp(filenamebuf + strlen(filenamebuf)-5, ".aiff"))
                 strcat(filenamebuf, ".aif");
-        strncpy(aiffhdr->a_fileid, "FORM", 4);
+        memcpy(aiffhdr->a_fileid, "FORM", 4);
         aiffhdr->a_chunksize = swap4((uint32_t)(datasize +
             sizeof(*aiffhdr) + 4), swap);
-        strncpy(aiffhdr->a_aiffid, "AIFF", 4);
-        strncpy(aiffhdr->a_fmtid, "COMM", 4);
+        memcpy(aiffhdr->a_aiffid, "AIFF", 4);
+        memcpy(aiffhdr->a_fmtid, "COMM", 4);
         aiffhdr->a_fmtchunksize = swap4(18, swap);
         aiffhdr->a_nchannels = swap2(nchannels, swap);
         longtmp = swap4((uint32_t)nframes, swap);
         memcpy(&aiffhdr->a_nframeshi, &longtmp, 4);
         aiffhdr->a_bitspersamp = swap2(8 * bytespersamp, swap);
         makeaiffsamprate(samplerate, aiffhdr->a_samprate);
-        strncpy(((char *)(&aiffhdr->a_samprate))+10, "SSND", 4);
+        memcpy(((char *)(&aiffhdr->a_samprate))+10, "SSND", 4);
         longtmp = swap4((uint32_t)(datasize + 8), swap);
         memcpy(((char *)(&aiffhdr->a_samprate))+14, &longtmp, 4);
         memset(((char *)(&aiffhdr->a_samprate))+18, 0, 8);
@@ -982,11 +1075,11 @@ static int create_soundfile(t_canvas *canvas, const char *filename,
         long datasize = nframes * nchannels * bytespersamp;
         if (strcmp(filenamebuf + strlen(filenamebuf)-4, ".wav"))
             strcat(filenamebuf, ".wav");
-        strncpy(wavehdr->w_fileid, "RIFF", 4);
+        memcpy(wavehdr->w_fileid, "RIFF", 4);
         wavehdr->w_chunksize = swap4((uint32_t)(datasize +
             sizeof(*wavehdr) - 8), swap);
-        strncpy(wavehdr->w_waveid, "WAVE", 4);
-        strncpy(wavehdr->w_fmtid, "fmt ", 4);
+        memcpy(wavehdr->w_waveid, "WAVE", 4);
+        memcpy(wavehdr->w_fmtid, "fmt ", 4);
         wavehdr->w_fmtchunksize = swap4(16, swap);
         wavehdr->w_fmttag =
             swap2((bytespersamp == 4 ? WAV_FLOAT : WAV_INT), swap);
@@ -996,11 +1089,10 @@ static int create_soundfile(t_canvas *canvas, const char *filename,
             swap4((int)(samplerate * nchannels * bytespersamp), swap);
         wavehdr->w_nblockalign = swap2(nchannels * bytespersamp, swap);
         wavehdr->w_nbitspersample = swap2(8 * bytespersamp, swap);
-        strncpy(wavehdr->w_datachunkid, "data", 4);
+        memcpy(wavehdr->w_datachunkid, "data", 4);
         wavehdr->w_datachunksize = swap4((uint32_t)datasize, swap);
         headersize = sizeof(t_wave);
     }
-
     canvas_makefilename(canvas, filenamebuf, buf2, FILENAME_MAX);
     sys_bashfilename(buf2, buf2);
     if ((fd = sys_open(buf2, BINCREATE, 0666)) < 0)
@@ -1383,9 +1475,17 @@ static void soundfiler_readascii(t_soundfiler *x, char *filename,
         -maxsize <max-size>
     */
 
+#define RAWSYNTAX "'-raw' flag syntax: " \
+                  "<headersize> <channels> <bytespersample> " \
+                  "<endianness: 'b' for big, 'l' for little, 'n' for auto>"
+
 static void soundfiler_read(t_soundfiler *x, t_symbol *s,
     int argc, t_atom *argv)
 {
+    /* copies of argc, argv so we can iterate without mutating
+       the originals (needed for error reporting below) */
+    int ac = argc;
+    t_atom *av = argv;
     t_soundfile_info info;
     int resize = 0, i, j;
     long skipframes = 0, finalsize = 0,
@@ -1404,48 +1504,100 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
     info.headersize = -1;
     info.bigendian = 0;
     info.bytelimit = 0x7fffffff;
-    while (argc > 0 && argv->a_type == A_SYMBOL)
+    while (ac > 0 && atom_getsymbol(av)->s_name[0] == '-')
     {
-        char *flag = argv->a_w.w_symbol->s_name;
-        if (matchstring(flag, "skip"))
+        char *flag = av->a_w.w_symbol->s_name;
+        if (!strcmp(flag, "-skip"))
         {
-            if (!flag_and_floatarg(x, flag, argc, argv))
-                goto usage;
-            if ((skipframes = argv[1].a_w.w_float) < 0)
+            if (flag_missing_floatarg(x, s, argc, argv, flag, ac, av))
+                goto done;
+            if ((skipframes = av[1].a_w.w_float) < 0)
             {
-                argerror(x, "'-skip' flag does not allow a negative number");
-                goto usage;
+                argerror(x, s, argc, argv,
+                    "'-skip' flag does not allow a negative number");
+                goto done;
             }
-            argc -= 2; argv += 2;
+            ac -= 2; av += 2;
         }
-        else if (matchstring(flag, "ascii"))
+        else if (!strcmp(flag, "-ascii"))
         {
-            if (!verify_flag(x, flag))
-                goto usage;
             if (info.headersize >= 0)
                 post("soundfiler_read: '-raw' overidden by '-ascii'");
             ascii = 1;
-            argc--; argv++;
+            ac--; av++;
         }
-        else if (matchstring(flag, "raw"))
+        else if (!strcmp(flag, "-raw"))
         {
-            if (!verify_flag(x, flag))
-                goto usage;
             if (ascii)
                 post("soundfiler_read: '-raw' overridden by '-ascii'");
-            if (argc < 5 ||
-                argv[1].a_type != A_FLOAT ||
-                ((info.headersize = argv[1].a_w.w_float) < 0) ||
-                argv[2].a_type != A_FLOAT ||
-                ((info.channels = argv[2].a_w.w_float) < 1) ||
-                (info.channels > MAXSFCHANS) || 
-                argv[3].a_type != A_FLOAT ||
-                ((info.bytespersample = argv[3].a_w.w_float) < 2) || 
-                    (info.bytespersample > 4) ||
-                argv[4].a_type != A_SYMBOL ||
-                    ((endianness = argv[4].a_w.w_symbol->s_name[0]) != 'b'
-                    && endianness != 'l' && endianness != 'n'))
-                        goto usage;
+            if (ac < 5)
+            {
+                argerror(x, s, argc, argv,
+                    "'-raw' flag needs four arguments\n" RAWSYNTAX);
+                goto done;
+            }
+            if (av[1].a_type != A_FLOAT)
+            {
+                argerror(x, s, argc, argv,
+                  "'-raw' flag needs a float for the headersize\n" RAWSYNTAX);
+                goto done;
+            }
+            info.headersize = av[1].a_w.w_float;
+            if (info.headersize < 0)
+            {
+                argerror(x, s, argc, argv,
+                    "'-raw' headersize cannot be less than zero\n"RAWSYNTAX);
+                goto done;
+            }
+            if (av[2].a_type != A_FLOAT)
+            {
+                argerror(x, s, argc, argv,
+                  "'-raw' flag needs a float to specify channels\n"RAWSYNTAX);
+                goto done;
+            }
+            info.channels = av[2].a_w.w_float;
+            if (info.channels < 1)
+            {
+                argerror(x, s, argc, argv,
+                    "'-raw' flag needs at least one channel\n" RAWSYNTAX);
+                goto done;
+            }
+            if (info.channels > MAXSFCHANS)
+            {
+                argerror(x, s, argc, argv,
+                  "'-raw' channels value %d exceeds "
+                  "maximum of %d channels\n" RAWSYNTAX,
+                    info.channels, MAXSFCHANS);
+                goto done;
+            }
+            if (av[3].a_type != A_FLOAT)
+            {
+                argerror(x, s, argc, argv,
+                    "'-raw' flag needs a float to specify "
+                    "bytes per sample\n" RAWSYNTAX);
+                goto done;
+            }
+            info.bytespersample = av[3].a_w.w_float;
+            if (info.bytespersample < 2)
+            {
+                argerror(x, s, argc, argv,
+                    "'-raw' bytes per sample must be at least 2\n" RAWSYNTAX);
+                goto done;
+            }
+            if (info.bytespersample > 4)
+            {
+                argerror(x, s, argc, argv,
+                   "'-raw' bytes per sample must be less than 4\n" RAWSYNTAX);
+                goto done;
+            }
+            if (av[4].a_type != A_SYMBOL ||
+                ((endianness = av[4].a_w.w_symbol->s_name[0]) != 'b'
+                  && endianness != 'l' && endianness != 'n'))
+            {
+                argerror(x, s, argc, argv,
+                   "'-raw' endianness must be 'l' or 'b' or 'n'\n" RAWSYNTAX);
+                goto done;
+            }
             if (endianness == 'b')
                 info.bigendian = 1;
             else if (endianness == 'l')
@@ -1453,61 +1605,85 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
             else
                 info.bigendian = garray_ambigendian();
             info.samplerate = sys_getsr();
-            argc -= 5; argv += 5;
+            ac -= 5; av += 5;
         }
-        else if (matchstring(flag, "resize"))
+        else if (!strcmp(flag, "-resize"))
         {
-            if (!verify_flag(x, flag))
-                goto usage;
-            resize = 1;
-            argc -= 1; argv += 1;
-        }
-        else if (matchstring(flag, "maxsize"))
-        {
-            if (!flag_and_floatarg(x, flag, argc, argv))
-                goto usage;
-            maxsize = argv[1].a_w.w_float;
-            if (maxsize > LONG_MAX)
+            if (flag_has_unexpected_floatarg(x, s, argc, argv,
+                flag, ac, av))
             {
-                argerror(x, "'-maxsize' flag cannot be greater than %d. "
-                    "Setting '-maxsize' to %d and continuing", LONG_MAX,
-                    LONG_MAX);
+                goto done;
+            }
+            resize = 1;
+            ac -= 1; av += 1;
+        }
+        else if (!strcmp(flag, "-maxsize"))
+        {
+            if (flag_missing_floatarg(x, s, argc, argv, flag, ac, av))
+                goto done;
+            t_float fmax = av[1].a_w.w_float;
+            if (fmax > (t_float)LONG_MAX)
+            {
+                argerror(x, s, argc, argv,
+                    "'-maxsize' overflow detected. "
+                    "Setting '-maxsize' to maximum legal value (%g) and "
+                    "continuing...", (t_float)LONG_MAX);
                 maxsize = LONG_MAX;
             }
-            if (maxsize < 0)
+            else if (fmax < 0.)
             {
-                argerror(x, "'-maxsize' flag cannot be less than zero");
-                goto usage;
+                argerror(x, s, argc, argv,
+                    "'-maxsize' flag cannot be less than zero");
+                goto done;
+            }
+            else
+            {
+                maxsize = (long)fmax;
             }
             resize = 1;     /* maxsize implies resize. */
-            argc -= 2; argv += 2;
+            ac -= 2; av += 2;
         }
         else
         {
-            argerror(x, "unknown flag '%s'", flag);
-            goto usage;
+            argerror(x, s, argc, argv, "unknown flag '%s'", flag);
+            goto done;
         }
     }
-    if (argc < 1 || argc > MAXSFCHANS + 1 || argv[0].a_type != A_SYMBOL)
-        goto usage;
-    filename = argv[0].a_w.w_symbol->s_name;
-    argc--; argv++;
+    if (ac < 1)
+    {
+        argerror(x, s, argc, argv, "need filename and table argument(s)");
+        goto done;
+    }
+    if (ac > MAXSFCHANS + 1)
+    {
+        argerror(x, s, argc, argv,
+            "cannot write more than %d channels", MAXSFCHANS);
+        goto done;
+    }
+    if (av->a_type != A_SYMBOL)
+    {
+        argerror(x, s, argc, argv, "filename must be a symbol");
+        goto done;
+    }
+    filename = av[0].a_w.w_symbol->s_name;
+    ac--; av++;
     
-    for (i = 0; i < argc; i++)
+    for (i = 0; i < ac; i++)
     {
         int vecsize;
-        if (argv[i].a_type != A_SYMBOL)
-            goto usage;
+        if (av[i].a_type != A_SYMBOL)
+            goto done;
         if (!(garrays[i] =
-            (t_garray *)pd_findbyclass(argv[i].a_w.w_symbol, garray_class)))
+            (t_garray *)pd_findbyclass(av[i].a_w.w_symbol, garray_class)))
         {
-            pd_error(x, "%s: no such table", argv[i].a_w.w_symbol->s_name);
+            argerror(x, s, argc, argv, "%s: no such table",
+                av[i].a_w.w_symbol->s_name);
             goto done;
         }
         else if (!garray_getfloatwords(garrays[i], &vecsize, 
                 &vecs[i]))
             error("%s: bad template for tabwrite",
-                argv[i].a_w.w_symbol->s_name);
+                av[i].a_w.w_symbol->s_name);
         if (finalsize && finalsize != vecsize && !resize)
         {
             post("soundfiler_read: arrays have different lengths; resizing...");
@@ -1517,7 +1693,7 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
     }
     if (ascii)
     {
-        soundfiler_readascii(x, filename, argc, garrays, vecs, resize,
+        soundfiler_readascii(x, filename, ac, garrays, vecs, resize,
             finalsize);
         return;
     }
@@ -1525,21 +1701,33 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
     
     if (fd < 0)
     {
-        pd_error(x, "soundfiler_read: %s: %s", filename, (errno == EIO ?
+        argerror(x, s, argc, argv, "%s: %s", filename, (errno == EIO ?
             "unknown or bad header format" : strerror(errno)));
-        goto done;
+        /* don't bail yet so we can potentially give a warning below */
     }
+
+    /* check if the filename looks like a flag; if so, post a warning */
+    int nodash;
+    if (file_is_a_flag_name(gensym(filename), &nodash))
+    {
+        post("warning: filename '%s' looks like a flag%s",
+            filename, nodash ? " name" : "");
+    }
+
+    /* Now that we've posted our warning, bail if we couldn't open the file */
+    if (fd < 0)
+        goto done;
 
     if (resize)
     {
             /* figure out what to resize to */
         long poswas, eofis, framesinfile;
-        
+
         poswas = lseek(fd, 0, SEEK_CUR);
         eofis = lseek(fd, 0, SEEK_END);
         if (poswas < 0 || eofis < 0 || eofis < poswas)
         {
-            pd_error(x, "soundfiler_read: lseek failed: %ld..%ld", poswas,
+            argerror(x, s, argc, argv, "lseek failed: %ld..%ld", poswas,
                 eofis);
             goto done;
         }
@@ -1547,7 +1735,7 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
         framesinfile = (eofis - poswas) / (info.channels * info.bytespersample);
         if (framesinfile > maxsize)
         {
-            pd_error(x, "soundfiler_read: truncated to %ld elements", maxsize);
+            argerror(x, s, argc, argv, "truncated to %ld elements", maxsize);
             framesinfile = maxsize;
         }
         if (framesinfile > info.bytelimit /
@@ -1557,18 +1745,19 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
                 (info.channels * info.bytespersample);
         }
         finalsize = framesinfile;
-        for (i = 0; i < argc; i++)
+        for (i = 0; i < ac; i++)
         {
             int vecsize;
 
             garray_resize_long(garrays[i], finalsize);
-                /* for sanity's sake let's clear the save-in-patch flag here */
+
+            /* for sanity's sake let's clear the save-in-patch flag here */
             garray_setsaveit(garrays[i], 0);
             if (!garray_getfloatwords(garrays[i], &vecsize, &vecs[i])
                 || (vecsize != framesinfile))
             {
                 /* if the resize failed, garray_resize reported the error */
-                pd_error(x, "resize failed");
+                argerror(x, s, argc, argv, "resize failed");
                 goto done;
             }
         }
@@ -1586,14 +1775,14 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
         nitems = fread(sampbuf, info.channels * info.bytespersample, thisread,
             fp);
         if (nitems <= 0) break;
-        soundfile_xferin_float(info.channels, argc, (t_float **)vecs, itemsread,
+        soundfile_xferin_float(info.channels, ac, (t_float **)vecs, itemsread,
             (unsigned char *)sampbuf, nitems, info.bytespersample,
             info.bigendian, sizeof(t_word)/sizeof(t_sample));
         itemsread += nitems;
     }
         /* zero out remaining elements of vectors */
         
-    for (i = 0; i < argc; i++)
+    for (i = 0; i < ac; i++)
     {
         int vecsize;
         if (garray_getfloatwords(garrays[i], &vecsize, &vecs[i]))
@@ -1601,7 +1790,7 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
                 vecs[i][j].w_float = 0;
     }
         /* zero out vectors in excess of number of channels */
-    for (i = info.channels; i < argc; i++)
+    for (i = info.channels; i < ac; i++)
     {
         int vecsize;
         t_word *foo;
@@ -1610,15 +1799,10 @@ static void soundfiler_read(t_soundfiler *x, t_symbol *s,
                 foo[j].w_float = 0;
     }
         /* do all graphics updates */
-    for (i = 0; i < argc; i++)
+    for (i = 0; i < ac; i++)
         garray_redraw(garrays[i]);
     fclose(fp);
     fd = -1;
-    goto done;
-usage:
-    post("usage: read [flags] filename tablename...");
-    post("flags: -skip <n> -resize -maxsize <n> ...");
-    post("-raw <headerbytes> <channels> <bytespersamp> <endian (b, l, or n)>.");
 done:
     if (fd >= 0)
         sys_close(fd);
@@ -1632,6 +1816,9 @@ done:
 long soundfiler_dowrite(void *obj, t_canvas *canvas,
     int argc, t_atom *argv, t_soundfile_info *info)
 {
+    /* workaround for ruthless argc/argv mutation in writeargparse... */
+    int original_argc = argc;
+    t_atom *original_argv = argv;
     int swap, filetype, normalize, i;
     long onset, nframes, itemswritten = 0, j;
     t_garray *garrays[MAXSFCHANS];
@@ -1643,13 +1830,26 @@ long soundfiler_dowrite(void *obj, t_canvas *canvas,
     t_float samplerate;
     t_symbol *filesym;
 
-    if (soundfiler_writeargparse(obj, &argc, &argv, &filesym, &filetype,
+    if (soundfiler_writeargparse(obj, gensym("write"), &argc, &argv,
+        &filesym, &filetype,
         &info->bytespersample, &swap, &info->bigendian, &normalize, &onset,
         &nframes, &samplerate))
                 goto usage;
     info->channels = argc;
-    if (info->channels < 1 || info->channels > MAXSFCHANS)
+        /* Need at least one table name for a channel to write... */
+    if (info->channels < 1)
+    {
+        argerror(obj, gensym("write"), original_argc, original_argv,
+            "argument for table name missing");
         goto usage;
+    }
+        /* Can't have more than max number of channels to write */
+    if (info->channels > MAXSFCHANS)
+    {
+        argerror(obj, gensym("write"), original_argc, original_argv,
+            "cannot have more than %d channels", MAXSFCHANS);
+        goto usage;
+    }
     if (samplerate < 0)
         info->samplerate = sys_getsr();
     else
@@ -1658,13 +1858,19 @@ long soundfiler_dowrite(void *obj, t_canvas *canvas,
     {
         int vecsize;
         if (argv[i].a_type != A_SYMBOL)
+        {
+            argerror(obj, gensym("write"), original_argc, original_argv,
+                "table name must be a symbol");
             goto usage;
+        }
         if (!(garrays[i] =
             (t_garray *)pd_findbyclass(argv[i].a_w.w_symbol, garray_class)))
         {
-            pd_error(obj, "%s: no such table", argv[i].a_w.w_symbol->s_name);
+            argerror(obj, gensym("write"), original_argc, original_argv,
+                "%s: no such table", argv[i].a_w.w_symbol->s_name);
             goto fail;
         }
+            /* need to check this one-- */
         else if (!garray_getfloatwords(garrays[i], &vecsize, &vecs[i]))
             error("%s: bad template for tabwrite",
                 argv[i].a_w.w_symbol->s_name);
@@ -1673,7 +1879,8 @@ long soundfiler_dowrite(void *obj, t_canvas *canvas,
     }
     if (nframes <= 0)
     {
-        pd_error(obj, "soundfiler_write: no samples at onset %ld", onset);
+        argerror(obj, gensym("write"), original_argc, original_argv,
+            "no samples at onset %ld", onset);
         goto fail;
     }
         /* find biggest sample for normalizing */
@@ -1738,10 +1945,6 @@ long soundfiler_dowrite(void *obj, t_canvas *canvas,
     }
     return ((float)itemswritten); 
 usage:
-    post("usage: write [flags] filename tablename...");
-    post("flags: -skip <n> -nframes <n> -bytes <n> -wave -aiff -nextstep ...");
-    post("-big -little -normalize");
-    post("(defaults to a 16-bit wave file).");
 fail:
     if (fd >= 0)
         sys_close(fd);
@@ -2800,17 +3003,15 @@ static void writesf_open(t_writesf *x, t_symbol *s, int argc, t_atom *argv)
     {
         writesf_stop(x);
     }
-    if (soundfiler_writeargparse(x, &argc,
+    if (soundfiler_writeargparse(x, gensym("open"), &argc,
         &argv, &filesym, &filetype, &bytespersamp, &swap, &bigendian,
         &normalize, &onset, &nframes, &samplerate))
     {
-        pd_error(x,
-            "writesf~: usage: open [-bytes [234]] [-wave,-nextstep,-aiff] ...");
-        post("... [-big,-little] [-rate ####] filename");
+            /* errors handled above in soundfiler_writeargparse */
         return;
     }
     if (normalize || onset || (nframes != 0x7fffffff))
-        pd_error(x, "normalize/onset/nframes argument to writesf~: ignored");
+        pd_error(x, "normalize/skip/nframes argument to writesf~: ignored");
     if (argc)
         pd_error(x, "extra argument(s) to writesf~: ignored");
     pthread_mutex_lock(&x->x_mutex);
