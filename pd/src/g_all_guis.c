@@ -897,9 +897,20 @@ void scalehandle_draw_select2(t_iemgui *x)
        the one for the label. Special case for [cnv] which for some reason
        allows a smaller selection area than its painted rectangle. */
     if (c == my_canvas_class)
+    {
+        /* We're drawing the anchor rectangle by abusing the <line> svg elem
+           with a width equal to SCALEHANDLE_WIDTH.
+
+           This simplifies the CSS, but unfortunately makes the positioning
+           a little wonky:
+
+           For example-- a vertical line from sy to sy+10 with a width of 10
+           will straddle the horizontal point sx. So to get the leftmost part
+           of our rect at sx, we multiply the width by 0.5 and add that to sx.
+        */
         scalehandle_draw_select(x->x_handle,
-            (int)(sx + SCALEHANDLE_WIDTH * 1.5) + 1,
-            sy + SCALEHANDLE_HEIGHT);
+            (int)(sx + SCALEHANDLE_WIDTH * 0.5), sy);
+    }
     if (x->x_lab != s_empty)
         scalehandle_draw_select(x->x_lhandle, x->x_ldx + 5, x->x_ldy + 10);
 }
