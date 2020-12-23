@@ -53,6 +53,24 @@ var canvas_events = (function() {
         textbox = function () {
             return document.getElementById("new_object_textentry");
         },
+        add_events = function(context, events) {
+            // convenience routine for adding a bunch of events at once
+            var e;
+            for (e in events) {
+                if (events.hasOwnProperty(e)) {
+                    context["addEventListener"](e, events[e], false);
+                }
+            }
+	},
+        remove_events = function(context, events) {
+            // convenience routine for removing a bunch of events at once
+            var e;
+            for (e in events) {
+                if (events.hasOwnProperty(e)) {
+                    context["addEventListener"](e, events[e], false);
+                }
+            }
+	},
         find_scalar_draggable = function (elem) {
             var ret = elem;
             while (ret) {
@@ -638,7 +656,8 @@ var canvas_events = (function() {
                 canvas_events[canvas_events.get_previous_state()]();
             },
             hscroll_mouseup: function(evt) {
-                document.getElementById("hscroll").style.setProperty("background-color", "rgba(0, 0, 0, 0.267)");
+                document.getElementById("hscroll").style
+                    .setProperty("background-color", "rgba(0, 0, 0, 0.267)");
                 document.getElementById("patchsvg").style.cursor = "default";
                 canvas_events[canvas_events.get_previous_state()]();
             },
@@ -669,7 +688,8 @@ var canvas_events = (function() {
                 }
             },
             vscroll_mouseup: function(evt) {
-                document.getElementById("vscroll").style.setProperty("background-color", "rgba(0, 0, 0, 0.267)");
+                document.getElementById("vscroll").style
+                    .setProperty("background-color", "rgba(0, 0, 0, 0.267)");
                 document.getElementById("patchsvg").style.cursor = "default";
                 canvas_events[canvas_events.get_previous_state()]();
             },
@@ -900,16 +920,17 @@ var canvas_events = (function() {
         },
         normal: function() {
             canvas_events.none();
-
-            document.addEventListener("mousemove", events.mousemove, false);
-            document.addEventListener("touchmove", events.mousemove, false);
-            document.addEventListener("keydown", events.keydown, false);
-            document.addEventListener("keypress", events.keypress, false);
-            document.addEventListener("keyup", events.keyup, false);
-            document.addEventListener("mousedown", events.mousedown, false);
-            document.addEventListener("touchstart", events.mousedown, false);
-            document.addEventListener("mouseup", events.mouseup, false);
-            document.addEventListener("touchend", events.mouseup, false);
+            add_events(document, {
+                "mousemove": events.mousemove,
+                "touchmove": events.mousemove,
+                "keydown": events.keydown,
+                "keypress": events.keypress,
+                "keyup": events.keyup,
+                "mousedown": events.mousedown,
+                "touchstart": events.mousedown,
+                "mouseup": events.mouseup,
+                "touchend": events.mouseup
+            });
             state = "normal";
             set_edit_menu_modals(true);
         },
@@ -919,10 +940,12 @@ var canvas_events = (function() {
             // the other "normal" events live, since behavior like editmode
             // selection still happens from the Pd engine.
             //this.none();
-            document.addEventListener("mousemove", events.scalar_draggable_mousemove, false);
-            document.addEventListener("touchmove", events.scalar_draggable_mousemove, false);
-            document.addEventListener("mouseup", events.scalar_draggable_mouseup, false);
-            document.addEventListener("touchend", events.scalar_draggable_mouseup, false);
+            add_events(document, {
+                "mousemove": events.scalar_draggable_mousemove,
+                "touchmove": events.scalar_draggable_mousemove,
+                "mouseup": events.scalar_draggable_mouseup,
+                "touchend": events.scalar_draggable_mouseup
+            });
         },
         iemgui_label_drag: function() {
             // This is a workaround for dragging iemgui labels. Resizing iemguis
@@ -932,77 +955,86 @@ var canvas_events = (function() {
             // rectangle extends past the bbox that it reports to Pd.
             // Unfortunately that means a lot of work to treat it separately.
             canvas_events.none();
-            document.addEventListener("mousemove",
-                events.iemgui_label_mousemove, false);
-            document.addEventListener("touchmove",
-                events.iemgui_label_mousemove, false);
-            document.addEventListener("mouseup",
-                events.iemgui_label_mouseup, false);
-            document.addEventListener("touchend",
-                events.iemgui_label_mouseup, false);
+            add_events(document, {
+                "mousemove": events.iemgui_label_mousemove,
+                "touchmove": events.iemgui_label_mousemove,
+                "mouseup": events.iemgui_label_mouseup,
+                "touchend": events.iemgui_label_mouseup
+	    });
         },
         hscroll_drag: function() {
             canvas_events.none();
-            document.getElementById("hscroll").style.cssText += "background-color: rgba(0, 0, 0, 0.5) !important";
-            document.getElementById("patchsvg").style.cursor = "-webkit-grabbing";
-            document.addEventListener("mouseup", events.hscroll_mouseup, false);
-            document.addEventListener("mousemove", events.hscroll_mousemove, false);
+            document.getElementById("hscroll").style
+                .cssText += "background-color: rgba(0, 0, 0, 0.5) !important";
+            document.getElementById("patchsvg").style.cursor =
+                "-webkit-grabbing";
+            add_events(document, {
+                "mouseup": events.hscroll_mouseup,
+                "mousemove": events.hscroll_mousemove
+            });
         },
         vscroll_drag: function() {
             canvas_events.none();
-            document.getElementById("vscroll").style.cssText += "background-color: rgba(0, 0, 0, 0.5) !important";
-            document.getElementById("patchsvg").style.cursor = "-webkit-grabbing";
-            document.addEventListener("mouseup", events.vscroll_mouseup, false);
-            document.addEventListener("mousemove", events.vscroll_mousemove, false);
+            document.getElementById("vscroll").style
+                .cssText += "background-color: rgba(0, 0, 0, 0.5) !important";
+            document.getElementById("patchsvg").style.cursor =
+                "-webkit-grabbing";
+            add_events(document, {
+                "mouseup": events.vscroll_mouseup,
+                "mousemove": events.vscroll_mousemove
+	    });
         },
         text: function() {
             canvas_events.none();
-
-            document.addEventListener("mousemove", events.text_mousemove, false);
-            document.addEventListener("keydown", events.text_keydown, false);
-            document.addEventListener("keypress", events.text_keypress, false);
-            document.addEventListener("keyup", events.text_keyup, false);
-            document.addEventListener("paste", events.text_paste, false);
-            document.addEventListener("mousedown", events.text_mousedown, false);
-            document.addEventListener("mouseup", events.text_mouseup, false);
+            add_events(document, {
+                "mousemove": events.text_mousemove,
+                "keydown": events.text_keydown,
+                "keypress": events.text_keypress,
+                "keyup": events.text_keyup,
+                "paste": events.text_paste,
+                "mousedown": events.text_mousedown,
+                "mouseup": events.text_mouseup
+            });
             state = "text";
             set_edit_menu_modals(false);
         },
         floating_text: function() {
             canvas_events.none();
             canvas_events.text();
-            document.removeEventListener("mousedown", events.text_mousedown, false);
-            document.removeEventListener("mouseup", events.text_mouseup, false);
-            document.removeEventListener("keypress", events.text_keypress, false);
-            document.removeEventListener("mousemove", events.text_mousemove, false);
-            document.addEventListener("click", events.floating_text_click, false);
-            document.addEventListener("keypress", events.floating_text_keypress, false);
-            document.addEventListener("mousemove", events.mousemove, false);
+            remove_events({
+                "mousedown": events.text_mousedown,
+                "mouseup": events.text_mouseup,
+                "keypress": events.text_keypress,
+                "mousemove": events.text_mousemove
+            });
+            add_events(document, {
+                "click": events.floating_text_click,
+                "keypress": events.floating_text_keypress,
+                "mousemove": events.mousemove
+            });
             state = "floating_text";
             set_edit_menu_modals(false);
         },
         dropdown_menu: function() {
             canvas_events.none();
-          
-            document.addEventListener("mousedown", events.dropdown_menu_mousedown, false);
-            document.addEventListener("touchstart", events.dropdown_menu_mousedown, false);
-            
-            document.addEventListener("mouseup", events.dropdown_menu_mouseup, false);
-            document.addEventListener("touchend", events.dropdown_menu_mouseup, false);
-            
-            document.addEventListener("mousemove", events.dropdown_menu_mousemove, false);
-            document.addEventListener("touchmove", events.dropdown_menu_mousemove, false);
-            
-            document.addEventListener("keydown", events.dropdown_menu_keydown, false);
-            
-            document.addEventListener("keypress", events.dropdown_menu_keypress, false);
-            
+            add_events(document, { 
+                "mousedown": events.dropdown_menu_mousedown,
+                "touchstart": events.dropdown_menu_mousedown,
+                "mouseup": events.dropdown_menu_mouseup,
+                "touchend": events.dropdown_menu_mouseup,
+                "mousemove": events.dropdown_menu_mousemove,
+                "touchmove": events.dropdown_menu_mousemove,
+                "keydown": events.dropdown_menu_keydown,
+                "keypress": events.dropdown_menu_keypress
+            });
             document.querySelector("#dropdown_list")
                 .addEventListener("wheel", events.dropdown_menu_wheel, false);
         },
         search: function() {
             canvas_events.none();
-            document.addEventListener("keydown", events.find_keydown, false);
+            add_events(document, {
+                "keydown": events.find_keydown
+            });
             state = "search";
         },
         update_scrollbars: function() {
@@ -1132,85 +1164,95 @@ var canvas_events = (function() {
             document.getElementById("vscroll").
                 addEventListener("mousedown", canvas_events.vscroll_drag, false);
             
-            // Whoa-- huge workaround! Right now we're getting
-            // the popup menu the way Pd Vanilla does it:
-            // 1) send a mouse(down) message to Pd
-            // 2) Pd checks whether it wants to send us a popup
-            // 3) Pd checks what popup menu items are available for obj/canvas
-            // 4) Pd sends GUI back a message with this info
-            // 5) GUI finally displays the popup
-            // 6) GUI keeps a _global_ _variable_ to remember the popup coords
-            // 7) User clicks an option in the popup
-            // 8) GUI sends a message back to Pd with the popup index and coords
-            // 9) Pd walks the linked list of objects to look up the object
-            // 10) Pd asks the object if it reacts to popups, and if it reacts
-            //     to the selected item in the popup
-            // 11) Pd sends a message to the relevant object for the item in
-            //     question
-            // nw.js has a nice little "contextmenu" event handler, but it's too
-            // difficult to use when passing between GUI and Pd (twice). In the
-            // future we should do all popup menu event handling in the GUI,
-            // and only pass a message to Pd when the user has clicked an item.
-            // For now, however, we just turn off its default behavior and
-            // control it with a bunch of complicated callbacks.
-            document.addEventListener("contextmenu", function(evt) {
-                console.log("got a context menu evt...");
-                evt.stopPropagation()
-                evt.preventDefault();
-            });
+            add_events(document, {
+                "contextmenu": function(evt) {
+                    // Whoa-- huge workaround! Right now we're getting
+                    // the popup menu the way Pd Vanilla does it:
+                    // 1) send a mouse(down) message to Pd
+                    // 2) Pd checks whether it wants to send us a popup
+                    // 3) Pd checks what popup menu items are available for
+                    //    obj/canvas
+                    // 4) Pd sends GUI back a message with this info
+                    // 5) GUI finally displays the popup
+                    // 6) GUI keeps a _global_ _variable_ to remember the popup
+                    //    coords
+                    // 7) User clicks an option in the popup
+                    // 8) GUI sends a message back to Pd with the popup index
+                    //    and coords
+                    // 9) Pd walks the linked list of objects to look up the
+                    //    object
+                    // 10) Pd asks the object if it reacts to popups, and if it
+                    //     reacts to the selected item in the popup
+                    // 11) Pd sends a message to the relevant object for the
+                    //     item in question
+                    // nw.js has a nice little "contextmenu" event handler, but
+                    // it's too difficult to use when passing between GUI and
+                    // Pd (twice). In the future we should do all popup menu
+                    // event handling in the GUI, and only pass a message to Pd
+                    // when the user has clicked an item.
+                    // For now, however, we just turn off its default behavior
+                    // and control it with a bunch of complicated callbacks.
 
-            // Cut event
-            document.addEventListener("cut", function(evt) {
-                // This event doesn't currently get called because the
-                // nw menubar receives the event and doesn't propagate
-                // to the DOM. But if we add the ability to toggle menubar
-                // display, we might need to rely on this listener.
-                pdgui.pdsend(name, "cut");
-            });
-
-            // Copy event
-            document.addEventListener("copy", function(evt) {
-                // On OSX, this event gets triggered when we're editing
-                // inside an object/message box. So we only forward the
-                // copy message to Pd if we're in a "normal" canvas state
-                if (canvas_events.get_state() === "normal") {
-                    pdgui.pdsend(name, "copy");
-                }
-            });
-
-            // Listen to paste event
-            // XXXTODO: Not sure whether this is even needed any more, as the
-            // paste-from-clipboard functionality has been moved to its own menu
-            // option. So this code may possibly be removed in the future. -ag
-            document.addEventListener("paste", function(evt) {
-                if (canvas_events.get_state() !== "normal") {
-                    return;
-                }
-                // Send a canvas "paste" message to Pd
-                pdgui.pdsend(name, "paste");
-            });
-
-            // MouseWheel event for zooming
-            document.addEventListener("wheel", function(evt) {
-                var d = { deltaX: 0, deltaY: 0, deltaZ: 0 };
-                Object.keys(d).forEach(function(key) {
-                    if (evt[key] < 0) {
-                        d[key] = -1;
-                    } else if (evt[key] > 0) {
-                        d[key] = 1;
-                    } else {
-                        d[key] = 0;
+                    console.log("got a context menu evt...");
+                    evt.stopPropagation()
+                    evt.preventDefault();
+                },
+                "scroll": function() {
+                    // map onscroll event
+                    pdgui.gui_update_scrollbars(name);
+                },
+                "cut": function(evt) {
+                    // Cut event
+                    // This event doesn't currently get called because the
+                    // nw menubar receives the event and doesn't propagate
+                    // to the DOM. But if we add the ability to toggle menubar
+                    // display, we might need to rely on this listener.
+                    pdgui.pdsend(name, "cut");
+                },
+                "copy": function(evt) {
+                    // Copy event
+                    // On OSX, this event gets triggered when we're editing
+                    // inside an object/message box. So we only forward the
+                    // copy message to Pd if we're in a "normal" canvas state
+                    if (canvas_events.get_state() === "normal") {
+                        pdgui.pdsend(name, "copy");
                     }
-                });
-                if (pdgui.cmd_or_ctrl_key(evt)) {
-                    // scroll up for zoom-in, down for zoom-out
-                    nw_window_zoom(name, -d.deltaY);
+		},
+                "paste": function(evt) {
+                    // Listen to paste event
+                    // XXXTODO: Not sure whether this is even needed any more,
+                    // as the paste-from-clipboard functionality has been moved
+                    // to its own menu option. So this code may possibly be
+                    // removed in the future. -ag
+                    if (canvas_events.get_state() !== "normal") {
+                        return;
+                    }
+                    // Send a canvas "paste" message to Pd
+                    pdgui.pdsend(name, "paste");
+                },
+                "wheel": function(evt) {
+                    // MouseWheel event for zooming
+                    var d = { deltaX: 0, deltaY: 0, deltaZ: 0 };
+                    Object.keys(d).forEach(function(key) {
+                        if (evt[key] < 0) {
+                            d[key] = -1;
+                        } else if (evt[key] > 0) {
+                            d[key] = 1;
+                        } else {
+                            d[key] = 0;
+                        }
+                    });
+                    if (pdgui.cmd_or_ctrl_key(evt)) {
+                        // scroll up for zoom-in, down for zoom-out
+                        nw_window_zoom(name, -d.deltaY);
+                    }
+                    // Send a message on to Pd for the [mousewheel] legacy
+                    // object (in the future we can refcount to prevent
+                    // forwarding these messages when there's no extant
+                    // receiver)
+                    pdgui.pdsend(name, "legacy_mousewheel",
+                        d.deltaX, d.deltaY, d.deltaZ);
                 }
-                // Send a message on to Pd for the [mousewheel] legacy object
-                // (in the future we can refcount to prevent forwarding
-                // these messages when there's no extant receiver)
-                pdgui.pdsend(name, "legacy_mousewheel",
-                    d.deltaX, d.deltaY, d.deltaZ);
             });
 
             // The following is commented out because we have to set the
@@ -1249,12 +1291,14 @@ var canvas_events = (function() {
             );
 
             // disable drag and drop for the time being
-            window.addEventListener("dragover", function (evt) {
-                evt.preventDefault();
-            }, false);
-            window.addEventListener("drop", function (evt) {
-                evt.preventDefault();
-            }, false);
+            add_events(window, {
+                "dragover": function (evt) {
+                    evt.preventDefault();
+                },
+                "drop": function (evt) {
+                    evt.preventDefault();
+                }
+            });
 
             // Add placeholder text... this all needs to be collected into an 
             // add_events function similiar to the one in index.js
@@ -1293,12 +1337,7 @@ var canvas_events = (function() {
                 pdgui.pdsend(name, "setbounds", x, y,
                     x + w.width, y + w.height);
             });
-            
-            // map onscroll event
-            document.addEventListener("scroll", function() {
-                pdgui.gui_update_scrollbars(name);
-            });
-            
+
             // set minimum window size
             gui.Window.get().setMinimumSize(150, 100);
         }

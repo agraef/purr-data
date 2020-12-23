@@ -122,10 +122,10 @@ var index_manif = new Set();
 
 function index_entry_esc(s) {
     if (s) {
-	var t = s.replace(/\\/g, "\\\\").replace(/:/g, "\\:");
-	return t.replace(/(?:\r\n|\r|\n)/g, "\\n");
+        var t = s.replace(/\\/g, "\\\\").replace(/:/g, "\\:");
+        return t.replace(/(?:\r\n|\r|\n)/g, "\\n");
     } else {
-	return "";
+        return "";
     }
 }
 
@@ -151,7 +151,7 @@ function add_doc_to_index(filename, data) {
         title = title.slice(0, -5);
     }
     index_cache[index_cache.length] = [filename, title, keywords, desc]
-	.map(index_entry_esc).join(":");
+        .map(index_entry_esc).join(":");
     var d = path.dirname(filename);
     index_manif.add(d);
     // Also add the parent directory to catch additions of siblings.
@@ -200,32 +200,32 @@ function finish_index() {
     index_done = true;
     var have_cache = index_cache.length > 0;
     try {
-	// write the index cache if we have one
-	if (have_cache) {
-	    var a = new Array();
-	    index_manif.forEach(function(x) {
-		var st = fs.statSync(x);
-		a[a.length] = index_entry_esc(x) + ":" + st.mtimeMs;
-	    });
-	    a.sort();
-	    // Make sure that the target dir exists:
-	    try {
-		fs.mkdirSync(expand_tilde(path.dirname(cache_name)));
-	    } catch (err) {
-		//console.log(err);
-	    }
-	    fs.writeFileSync(expand_tilde(cache_name),
-			     index_cache.join("\n"), {mode: 0o644});
-	    // also write a manifest with the timestamps of all directories:
-	    fs.writeFileSync(expand_tilde(stamps_name),
-			     a.join("\n"), {mode: 0o644});
-	}
+        // write the index cache if we have one
+        if (have_cache) {
+            var a = new Array();
+            index_manif.forEach(function(x) {
+            var st = fs.statSync(x);
+                a[a.length] = index_entry_esc(x) + ":" + st.mtimeMs;
+            });
+            a.sort();
+            // Make sure that the target dir exists:
+            try {
+                fs.mkdirSync(expand_tilde(path.dirname(cache_name)));
+            } catch (err) {
+                //console.log(err);
+            }
+            fs.writeFileSync(expand_tilde(cache_name),
+                index_cache.join("\n"), {mode: 0o644});
+            // also write a manifest with the timestamps of all directories:
+            fs.writeFileSync(expand_tilde(stamps_name),
+                a.join("\n"), {mode: 0o644});
+        }
     } catch (err) {
-	console.log(err);
+        console.log(err);
     }
     var t = new Date().getTime() / 1000;
     post("finished " + (have_cache?"building":"loading") + " help index (" +
-	 (t-index_start_time).toFixed(2) + " secs)");
+        (t-index_start_time).toFixed(2) + " secs)");
 }
 
 // AG: pilfered from https://stackoverflow.com/questions/21077670
@@ -241,23 +241,23 @@ function check_timestamps(manif)
 {
     manif = manif.split('\n');
     for (var j = 0, l = manif.length; j < l; j++) {
-	if (manif[j]) {
-	    var e = manif[j].replace(/\\:/g, "\x1c").split(':')
-		.map(x => x
-		     .replace(/\x1c/g, ":")
-		     .replace(/\\n/g, "\n")
-		     .replace(/\\\\/g, "\\"));
-	    var dirname = e[0] ? e[0] : null;
-	    var stamp = e[1] ? parseFloat(e[1]) : 0.0;
-	    try {
-		var st = fs.statSync(dirname);
-		if (st.mtimeMs > stamp) {
-		    return false;
-		}
-	    } catch (err) {
-		return false;
-	    }
-	}
+        if (manif[j]) {
+            var e = manif[j].replace(/\\:/g, "\x1c").split(':')
+                .map(x => x
+                    .replace(/\x1c/g, ":")
+                    .replace(/\\n/g, "\n")
+                    .replace(/\\\\/g, "\\"));
+            var dirname = e[0] ? e[0] : null;
+            var stamp = e[1] ? parseFloat(e[1]) : 0.0;
+            try {
+                var st = fs.statSync(dirname);
+                if (st.mtimeMs > stamp) {
+                    return false;
+                }
+            } catch (err) {
+                return false;
+            }
+        }
     }
     return true;
 }
@@ -292,43 +292,43 @@ function make_index() {
     index_start_time = new Date().getTime() / 1000;
     var idx, manif;
     try {
-	// test for index cache and manifest
-	idx = fs.readFileSync
-	(expand_tilde(cache_name), 'utf8');
-	manif = fs.readFileSync
-	(expand_tilde(stamps_name), 'utf8');
+        // test for index cache and manifest
+        idx = fs.readFileSync
+        (expand_tilde(cache_name), 'utf8');
+        manif = fs.readFileSync
+        (expand_tilde(stamps_name), 'utf8');
     } catch (err) {
-	//console.log(err);
+        //console.log(err);
     }
     if (idx && manif && check_timestamps(manif)) {
-	// index cache is present and up-to-date, load it
-	post("loading cached help index from " + cache_name);
-	idx = idx.split('\n');
-	for (var j = 0, l = idx.length; j < l; j++) {
-	    if (idx[j]) {
-		var e = idx[j].replace(/\\:/g, "\x1c").split(':')
-		    .map(x => x
-			 .replace(/\x1c/g, ":")
-			 .replace(/\\n/g, "\n")
-			 .replace(/\\\\/g, "\\"));
-		var filename = e[0] ? e[0] : null;
-		var title = e[1] ? e[1] : null;
-		var keywords = e[2] ? e[2] : null;
-		var descr = e[3] ? e[3] : null;
-		index.addDoc({
-		    "id": filename,
-		    "title": title,
-		    "keywords": keywords,
-		    "description": descr
-		});
-	    }
-	}
+        // index cache is present and up-to-date, load it
+        post("loading cached help index from " + cache_name);
+        idx = idx.split('\n');
+        for (var j = 0, l = idx.length; j < l; j++) {
+            if (idx[j]) {
+                var e = idx[j].replace(/\\:/g, "\x1c").split(':')
+                    .map(x => x
+                        .replace(/\x1c/g, ":")
+                        .replace(/\\n/g, "\n")
+                        .replace(/\\\\/g, "\\"));
+                var filename = e[0] ? e[0] : null;
+                var title = e[1] ? e[1] : null;
+                var keywords = e[2] ? e[2] : null;
+                var descr = e[3] ? e[3] : null;
+                index.addDoc({
+                    "id": filename,
+                    "title": title,
+                    "keywords": keywords,
+                    "description": descr
+                });
+            }
+        }
         finish_index();
     } else {
-	// no index cache, or it is out of date, so (re)build it now, and
-	// save the new cache along the way
-	post("building help index in " + doc_path);
-	dive(doc_path, read_file, browser_path?make_index_cont:finish_index);
+        // no index cache, or it is out of date, so (re)build it now, and
+        // save the new cache along the way
+        post("building help index in " + doc_path);
+        dive(doc_path, read_file, browser_path?make_index_cont:finish_index);
     }
     pdsend("pd gui-busy 0");
 }
@@ -361,10 +361,10 @@ function rebuild_index()
     index = init_elasticlunr();
     index_started = index_done = false;
     try {
-	fs.unlink(expand_tilde(cache_name));
-	fs.unlink(expand_tilde(stamps_name));
+        fs.unlink(expand_tilde(cache_name));
+        fs.unlink(expand_tilde(stamps_name));
     } catch (err) {
-	//console.log(err);
+        //console.log(err);
     }
 }
 
@@ -375,15 +375,15 @@ function update_browser(doc_flag, path_flag)
     doc_flag = doc_flag?1:0;
     path_flag = path_flag?1:0;
     if (browser_doc !== doc_flag) {
-	browser_doc = doc_flag;
-	changed = true;
+        browser_doc = doc_flag;
+        changed = true;
     }
     if (browser_path !== path_flag) {
-	browser_path = path_flag;
-	changed = true;
+        browser_path = path_flag;
+        changed = true;
     }
     if (changed) {
-	rebuild_index();
+        rebuild_index();
     }
 }
 
@@ -1442,13 +1442,13 @@ function update_grid(grid) {
     // option in the gui prefs changes.
     var bg = grid != 0 ? gui_editmode_svg_background : "none";
     for (var cid in patchwin) {
-	gui(cid).get_elem("patchsvg", function(patchsvg, w) {
+        gui(cid).get_elem("patchsvg", function(patchsvg, w) {
             var editmode = patchsvg.classList.contains("editmode");
             if (editmode) {
                 patchwin[cid].window.document.body.style.setProperty
                 ("background-image", bg);
             }
-	});
+        });
     }
     // Also update the showgrid flags.
     set_showgrid(grid);
@@ -1725,7 +1725,7 @@ var scroll = {},
 
 var set_showgrid = function(grid) {
     for (var cid in showgrid) {
-	showgrid[cid] = grid;
+        showgrid[cid] = grid;
     }
 }
 
@@ -1828,7 +1828,7 @@ function canvas_sendkey(cid, state, evt, char_code, repeat) {
     var shift = evt.shiftKey ? 1 : 0,
         repeat_number = repeat ? 1 : 0;
     //post("canvas_sendkey state=" + state + " evt=" + evt +
-    //	" char_code=<" + char_code + "> repeat=" + repeat);
+    // " char_code=<" + char_code + "> repeat=" + repeat);
     pdsend(cid, "key", state, char_code, shift, 1, repeat_number);
 }
 
@@ -2576,29 +2576,32 @@ function message_border_points(width, height) {
 // called from pd_canvas.js text events to deal with 
 // the drawing of the msg box
 function gui_message_update_textarea_border(elem, init_width) {
-	if (elem.classList.contains("msg")) {
-		if (init_width) {
-			var i, ncols = 0,
-			    text = elem.innerHTML,
-			    textByLine = text.split(/\r*\n/);
-			for (i = 0; i < textByLine.length; i++) {
-				if (textByLine[i].length > ncols) {
-					ncols = textByLine[i].length;
-				}
-			}
-			configure_item(elem, {
-	            cols: ncols
-        	});
-        	gui_gobj_erase_io(elem.getAttribute("cid"), elem.getAttribute("tag"));
-		}
+    if (elem.classList.contains("msg")) {
+        if (init_width) {
+            var i, ncols = 0,
+                text = elem.innerHTML,
+                textByLine = text.split(/\r*\n/);
+            for (i = 0; i < textByLine.length; i++) {
+                if (textByLine[i].length > ncols) {
+                    ncols = textByLine[i].length;
+                }
+            }
+            configure_item(elem, {
+                cols: ncols
+            });
+            gui_gobj_erase_io(elem.getAttribute("cid"),
+                elem.getAttribute("tag"));
+        }
 
-		gui_message_redraw_border(
-			elem.getAttribute("cid"),
-			elem.getAttribute("tag"),
-			parseInt(elem.offsetWidth / elem.getAttribute("font_width")) * elem.getAttribute("font_width") + 4,
-			parseInt(elem.offsetHeight / elem.getAttribute("font_height")) * elem.getAttribute("font_height") + 4
-			);
-	}
+        gui_message_redraw_border(
+            elem.getAttribute("cid"),
+            elem.getAttribute("tag"),
+            parseInt(elem.offsetWidth / elem.getAttribute("font_width"))
+                * elem.getAttribute("font_width") + 4,
+            parseInt(elem.offsetHeight / elem.getAttribute("font_height"))
+                * elem.getAttribute("font_height") + 4
+        );
+    }
 }
 
 exports.gui_message_update_textarea_border = gui_message_update_textarea_border;
@@ -3331,8 +3334,8 @@ function gui_numbox_draw_text(cid,tag,text,font_size,color,xpos,ypos,basex,basey
     // below. But it works for most font sizes.
     gui(cid).get_gobj(tag)
     .append(function(frag, w) {
-    	//post("ypos=" + ypos + " int=" + Math.floor(ypos));
-    	//ypos = Math.floor(ypos);
+        //post("ypos=" + ypos + " int=" + Math.floor(ypos));
+        //ypos = Math.floor(ypos);
         var svg_text = create_item(cid, "text", {
             transform: "translate(" +
                         (xpos - basex) + "," +
@@ -5890,23 +5893,23 @@ function gui_font_dialog_change_size(did, font_size) {
 
 function gui_menu_font_change_size(canvas, newsize) {
     pdsend(canvas, "menufont", newsize);
-    	// ico@vt.edu 2020-08-24: changed to use submenu
-    	// this was the following
-        /*+document.querySelector('input[name="font_size"]:checked').value,
-        current_size,
-        100,
-        0 // "$noundo" from pd.tk-- not sure what it does*/
+    // ico@vt.edu 2020-08-24: changed to use submenu
+    // this was the following
+    //+document.querySelector('input[name="font_size"]:checked').value,
+    //current_size,
+    //100,
+    //0
 }
 
 exports.gui_menu_font_change_size = gui_menu_font_change_size;
 
 function gui_menu_font_set_initial_size(cid, size) {
-	//post("gui_menu_font_set_initial_size " + cid + " " + size);
-	gui(cid).get_nw_window(function(nw_win) {
-		if (cid !== "nobody") {
-    		nw_win.window.init_menu_font_size(size);
-    		//post("this should work");
-    	}
+    //post("gui_menu_font_set_initial_size " + cid + " " + size);
+    gui(cid).get_nw_window(function(nw_win) {
+        if (cid !== "nobody") {
+            nw_win.window.init_menu_font_size(size);
+            //post("this should work");
+        }
     });
 }
 
@@ -5926,7 +5929,7 @@ function gui_array_new(did, count) {
 }
 
 function gui_canvas_dialog(did, attr_arrays) {
-	//post("gui_canvas_dialog");
+    //post("gui_canvas_dialog");
     var i, j, inner_array, prop;
     // Convert array of arrays to an array of objects
     for (i = 0; i < attr_arrays.length; i++) {
@@ -5940,8 +5943,8 @@ function gui_canvas_dialog(did, attr_arrays) {
     var has_array = (attr_arrays.length > 1 ? 1 : 0);
     /*
     post("array.length=" + attr_arrays.length + " has_array=" + has_array +" width=" +
-    	(230 - (8 * has_array)) + " height=" +
-    	(attr_arrays.length > 1 ? 494-25+(attr_arrays.length > 2 ? 38 : 0) : 392-25));
+    (230 - (8 * has_array)) + " height=" +
+    (attr_arrays.length > 1 ? 494-25+(attr_arrays.length > 2 ? 38 : 0) : 392-25));
     */
     dialogwin[did] = create_window(did, "canvas",
         // ico@vt.edu: property dialog size is larger when one has
@@ -6308,7 +6311,7 @@ function textarea_font_size_to_index(font_size) {
 }
 
 function textarea_line_height_kludge(font_size, zoom) {
-	return textarea_font_height_array_kludge
+    return textarea_font_height_array_kludge
         [textarea_font_size_to_index(font_size)][zoom+7]+"%";
 }
 
@@ -6318,11 +6321,11 @@ function textarea_y_offset_kludge(font_size, zoom) {
 }
 
 function textarea_x_offset_kludge(font_size, zoom) {
-	if (font_size === 36) {
-		return -2;
-	} else {
-		return -0.5;
-	}
+    if (font_size === 36) {
+        return -2;
+    } else {
+        return -0.5;
+    }
 }
 
 function textarea_msg_y_offset_kludge(zoom) {
@@ -6365,17 +6368,17 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         //     2) extend this to adjust patch cords as things are being edited, and
         //     3) extend this to all text objects.
         if (type === "msg") {
-        	// Message approach
-	        var i, nlets = patchwin[cid].window.document
-	        	.getElementById(tag+"gobj").querySelectorAll(".xlet_control");
-	        for (i = 0; i < nlets.length; i++) {
-	        	nlets[i].style.setProperty("visibility", "hidden");        	
-	        }
-	        gui(cid).get_gobj(tag).q(".box_text", { visibility: "hidden" });
-	    } else {
-	    	// Anything else but message
-			configure_item(gobj, { visibility: "hidden" });
-	    }
+            // Message approach
+            var i, nlets = patchwin[cid].window.document
+                .getElementById(tag+"gobj").querySelectorAll(".xlet_control");
+            for (i = 0; i < nlets.length; i++) {
+                nlets[i].style.setProperty("visibility", "hidden");
+            }
+            gui(cid).get_gobj(tag).q(".box_text", { visibility: "hidden" });
+        } else {
+        // Anything else but message
+            configure_item(gobj, { visibility: "hidden" });
+        }
 
         p = patchwin[cid].window.document.createElement("p");
         configure_item(p, {
@@ -6413,7 +6416,7 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         p.style.setProperty("font-size",
             pd_fontsize_to_gui_fontsize(font_size) + "px");
         p.style.setProperty("line-height",
-        	textarea_line_height_kludge(font_size, zoom));
+            textarea_line_height_kludge(font_size, zoom));
             //pd_fontsize_to_gui_fontsize(font_size) + 1 + "px");
         p.style.setProperty("transform", "translate(0px, " + 
             (zoom > 0 ? 0.5 : 0) + "px)");
@@ -6450,7 +6453,7 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
             //shove_svg_background_data_into_css(patchwin[cid].window,
             //    parseInt(get_gobj(cid, tag).getBoundingClientRect().height /
             //        (parseInt(p.style.lineHeight) / 100 * font_size)));
-        	gui_message_update_textarea_border(p,1);
+            gui_message_update_textarea_border(p,1);
         }
         p.focus();
         select_text(cid, p, sel_start, sel_end);
@@ -6475,9 +6478,9 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
 
         // MSG approach
         var i, nlets = patchwin[cid].window.document
-        	.getElementById(tag+"gobj").querySelectorAll(".xlet_control");
+            .getElementById(tag+"gobj").querySelectorAll(".xlet_control");
         for (i = 0; i < nlets.length; i++) {
-        	nlets[i].style.setProperty("visibility", "visible");        	
+            nlets[i].style.setProperty("visibility", "visible");
         }
         gui(cid).get_gobj(tag).q(".box_text", { visibility: "visible" });
 
