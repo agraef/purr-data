@@ -61,7 +61,7 @@ var canvas_events = (function() {
                     context["addEventListener"](e, events[e], false);
                 }
             }
-	},
+        },
         remove_events = function(context, events) {
             // convenience routine for removing a bunch of events at once
             var e;
@@ -70,7 +70,7 @@ var canvas_events = (function() {
                     context["addEventListener"](e, events[e], false);
                 }
             }
-	},
+        },
         find_scalar_draggable = function (elem) {
             var ret = elem;
             while (ret) {
@@ -324,7 +324,7 @@ var canvas_events = (function() {
                 /*if (evt.which == 2)
                 {
                     evt.stopPropagation();
-                    evt.preventDefault();                
+                    evt.preventDefault();
                 }*/
                 if (evt.type === "touchstart") {
                     if (target_is_popup(evt)) {
@@ -664,16 +664,16 @@ var canvas_events = (function() {
             hscroll_mousemove: function(evt) {
                 if (evt.movementX != 0) {
                     //console.log("move: " + e.movementX);
-                    
+
                     var hscroll = document.getElementById("hscroll");
                     var svg_elem = document.getElementById("patchsvg");
-                    
+
                     var min_width = document.body.clientWidth + 3;
                     var width = svg_elem.getAttribute('width');
                     var xScrollSize;
-                    
+
                     xScrollSize = hscroll.offsetWidth;
-                  
+
                     var xTranslate = evt.movementX *
                         ((width - min_width)/(min_width - xScrollSize)) *
                         (evt.movementX > 0 ? 1 : 0.75);
@@ -696,16 +696,16 @@ var canvas_events = (function() {
             vscroll_mousemove: function(evt) {
                 if (evt.movementY != 0) {
                     //console.log("move: " + e.movementY);
-                    
+
                     var vscroll = document.getElementById("vscroll");
                     var svg_elem = document.getElementById("patchsvg");
-                    
+
                     var min_height = document.body.clientHeight + 3;
                     var height = svg_elem.getAttribute('height');
                     var yScrollSize;
-                    
+
                     yScrollSize = vscroll.offsetHeight;
-                  
+
                     var yTranslate = evt.movementY *
                         ((height - min_height)/(min_height - yScrollSize)) *
                         (evt.movementY > 0 ? 2 : 1.5);
@@ -960,7 +960,7 @@ var canvas_events = (function() {
                 "touchmove": events.iemgui_label_mousemove,
                 "mouseup": events.iemgui_label_mouseup,
                 "touchend": events.iemgui_label_mouseup
-	    });
+            });
         },
         hscroll_drag: function() {
             canvas_events.none();
@@ -982,7 +982,7 @@ var canvas_events = (function() {
             add_events(document, {
                 "mouseup": events.vscroll_mouseup,
                 "mousemove": events.vscroll_mousemove
-	    });
+            });
         },
         text: function() {
             canvas_events.none();
@@ -1001,7 +1001,7 @@ var canvas_events = (function() {
         floating_text: function() {
             canvas_events.none();
             canvas_events.text();
-            remove_events({
+            remove_events(document, {
                 "mousedown": events.text_mousedown,
                 "mouseup": events.text_mouseup,
                 "keypress": events.text_keypress,
@@ -1017,7 +1017,7 @@ var canvas_events = (function() {
         },
         dropdown_menu: function() {
             canvas_events.none();
-            add_events(document, { 
+            add_events(document, {
                 "mousedown": events.dropdown_menu_mousedown,
                 "touchstart": events.dropdown_menu_mousedown,
                 "mouseup": events.dropdown_menu_mouseup,
@@ -1157,13 +1157,13 @@ var canvas_events = (function() {
                     console.log("tried to save something");
                 }, false
             );
-                       
+
             // add listener for the scrollbars
             document.getElementById("hscroll").
                 addEventListener("mousedown", canvas_events.hscroll_drag, false);
             document.getElementById("vscroll").
                 addEventListener("mousedown", canvas_events.vscroll_drag, false);
-            
+
             add_events(document, {
                 "contextmenu": function(evt) {
                     // Whoa-- huge workaround! Right now we're getting
@@ -1217,7 +1217,7 @@ var canvas_events = (function() {
                     if (canvas_events.get_state() === "normal") {
                         pdgui.pdsend(name, "copy");
                     }
-		},
+                },
                 "paste": function(evt) {
                     // Listen to paste event
                     // XXXTODO: Not sure whether this is even needed any more,
@@ -1300,7 +1300,7 @@ var canvas_events = (function() {
                 }
             });
 
-            // Add placeholder text... this all needs to be collected into an 
+            // Add placeholder text... this all needs to be collected into an
             // add_events function similiar to the one in index.js
             document.querySelector("#canvas_find_text").placeholder =
                 l("canvas.find.placeholder");
@@ -1328,7 +1328,7 @@ var canvas_events = (function() {
             });
             gui.Window.get().on("focus", function() {
                 nw_window_focus_callback(name);
-            });            
+            });
             gui.Window.get().on("blur", function() {
                 nw_window_blur_callback(name);
             });
@@ -1667,11 +1667,11 @@ function nw_create_patch_window_menus(gui, w, name) {
     minit(m.edit.paste_clipboard, {
         enabled: true,
         click: function () {
-	    var clipboard = nw.Clipboard.get();
-	    var text = clipboard.get('text');
-	    //pdgui.post("** paste from clipboard: "+text);
-	    canvas_events.paste_from_pd_file(name, text);
-	}
+            var clipboard = nw.Clipboard.get();
+            var text = clipboard.get('text');
+            //pdgui.post("** paste from clipboard: "+text);
+            canvas_events.paste_from_pd_file(name, text);
+        }
     });
     minit(m.edit.duplicate, {
         enabled: true,
@@ -2175,7 +2175,7 @@ function init_menu_font_size(size) {
         case 36:
             m.font.s36.checked = true;
             break;
-    } 
+    }
 }
 
 // ico@vt.edu 2020-08-24: this is called when the window is finally
