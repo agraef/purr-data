@@ -1437,12 +1437,42 @@ function get_grid_coords(cid, svg_elem) {
     return { x: dx, y: dy };
 }
 
+function create_svg_lock() {
+    return "url('data:image/svg+xml;utf8," +
+        encodeURIComponent(['<svg xmlns="http://www.w3.org/2000/svg"',
+                 'width="24px"',
+                 'height="24px"',
+                 'viewBox="0 0 486.866 486.866"',
+            '>',
+              '<path fill="#bbb" d="',
+                'M393.904,214.852h-8.891v-72.198c0-76.962-61.075-141.253',
+                '-137.411-142.625c-2.084-0.038-6.254-0.038-8.338,0',
+                'C162.927,1.4,101.853,65.691,101.853,142.653v1.603c0,16.182,',
+                '13.118,29.3,29.3,29.3c16.182,0,29.299-13.118,29.299-29.3',
+                'v-1.603',
+                'c0-45.845,37.257-83.752,82.98-83.752s82.981,37.907,82.981,',
+                '83.752v72.198H92.963c-13.702,0-24.878,14.139-24.878,',
+                '31.602v208.701',
+                'c0,17.44,11.176,31.712,24.878,31.712h300.941c13.703,0,',
+                '24.878-14.271,24.878-31.712V246.452',
+                'C418.783,228.989,407.607,214.852,393.904,214.852z M271.627,',
+                '350.591v63.062c0,7.222-6.046,13.332-13.273,13.332h-29.841',
+                'c-7.228,0-13.273-6.11-13.273-13.332v-63.062c-7.009-6.9-11.09',
+                '-16.44-11.09-26.993c0-19.999,15.459-37.185,35.115-37.977',
+                'c2.083-0.085,6.255-0.085,8.337,0c19.656,0.792,35.115,17.978,',
+                '35.115,37.977C282.717,334.149,278.637,343.69,271.627,350.591z',
+              '"/>',
+            '</svg>',
+        "')",
+    ].join(" "));
+}
+
 // Background for edit mode. Currently, we use a grid if snap-to-grid
 // functionality is turned on in the GUI preferences. If not, we just use
 // the same grid with a lower opacity. That way the edit mode is always
 // visually distinct from run mode.
 var create_editmode_bg = function(cid, svg_elem) {
-    var head, body, tail, cell_data_str, opacity_str, grid, size, pos;
+    var data, cell_data_str, opacity_str, grid, size, pos;
     grid = showgrid[cid];
     size = gridsize[cid];
     pos = get_grid_coords(cid, svg_elem);
@@ -1452,34 +1482,47 @@ var create_editmode_bg = function(cid, svg_elem) {
     opacity_str = '"' + (grid ? 1 : 0.4) + '"';
     cell_data_str = ['"', "M", size, 0, "L", 0, 0, 0, size, '"'].join(" ");
 
-    head = ['<svg xmlns="http://www.w3.org/2000/svg" ',
+    data = ['<svg xmlns="http://www.w3.org/2000/svg" ',
                 'width="1000" height="1000" ',
-                'opacity=', opacity_str, '>']
-           .join("");
-    body = ['<defs>',
-              '<pattern id="cell" patternUnits="userSpaceOnUse" ',
-                       'width="', size, '" height="', size, '">',
-                '<path fill="none" stroke="#ddd" stroke-width="1" ',
-                      'd=', cell_data_str,'/>',
-              '</pattern>',
-              '<pattern id="grid" patternUnits="userSpaceOnUse" ',
-                   'width="100" height="100" x="', pos.x, '" y="', pos.y, '">',
-                '<rect width="500" height="500" fill="url(#cell)" />',
-                '<path fill="none" stroke="#bbb" stroke-width="1" ',
-                      'd="M 500 0 L 0 0 0 500"/>',
-              '</pattern>',
-            '</defs>',
-            '<rect width="1000" height="1000" fill="url(#grid)" />'
-        ].join("");
-    tail = '</svg>';
-    return "url('data:image/svg+xml;utf8," + head + body + tail + "')";
+                'opacity=', opacity_str, '>',
+              '<defs>',
+                '<pattern id="cell" patternUnits="userSpaceOnUse" ',
+                         'width="', size, '" height="', size, '">',
+                  '<path fill="none" stroke="#ddd" stroke-width="1" ',
+                        'd=', cell_data_str,'/>',
+                '</pattern>',
+                '<pattern id="grid" patternUnits="userSpaceOnUse" ',
+                    'width="100" height="100" x="', pos.x, '" y="', pos.y, '">',
+                  '<rect width="500" height="500" fill="url(#cell)" />',
+                  '<path fill="none" stroke="#bbb" stroke-width="1" ',
+                        'd="M 500 0 L 0 0 0 500"/>',
+                '</pattern>',
+              '</defs>',
+              '<rect width="1000" height="1000" fill="url(#grid)" />',
+            '</svg>'
+        ].join(" ");
+    // make sure to encode the data so we obey all the rules with our data URL
+    return "url('data:image/svg+xml;utf8," + encodeURIComponent(data) + "')";
+}
+
+function set_bg(cid, data_url, bg_pos, repeat) {
+    var style = patchwin[cid].window.document.body.style;
+    style.setProperty("background-image", data_url);
+    style.setProperty("background-position", bg_pos);
+    style.setProperty("background-repeat", repeat);
 }
 
 function set_editmode_bg(cid, svg_elem, state)
 {
-    patchwin[cid].window.document.body.style.setProperty("background-image",
-        state ?
-            create_editmode_bg(cid, svg_elem) : "none");
+    if (!state) {
+        set_bg(cid, "none", "0% 0%", "repeat");
+    } else if (showgrid[cid]) {
+        // Show a grid in editmode if we're snapping to grid
+        set_bg(cid, create_editmode_bg(cid, svg_elem), "0% 0%", "repeat");
+    } else {
+        // Otherwise show a little lock in the top right corner of the patch
+        set_bg(cid, create_svg_lock(), "right 5px top 5px", "no-repeat");
+    }
 }
 
 function update_svg_background(cid, svg_elem) {
