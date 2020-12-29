@@ -1437,11 +1437,15 @@ function get_grid_coords(cid, svg_elem) {
     return { x: dx, y: dy };
 }
 
-function create_svg_lock() {
+function create_svg_lock(cid) {
+    var zoom = patchwin[cid].zoomLevel,
+        size;
+    // adjust for zoom level
+    size = 1 / Math.pow(1.2, zoom) * 24;
     return "url('data:image/svg+xml;utf8," +
         encodeURIComponent(['<svg xmlns="http://www.w3.org/2000/svg"',
-                 'width="24px"',
-                 'height="24px"',
+                 ['width="', size, 'px"'].join(""),
+                 ['height="', size, 'px"'].join(""),
                  'viewBox="0 0 486.866 486.866"',
             '>',
               '<path fill="#bbb" d="',
@@ -1514,6 +1518,7 @@ function set_bg(cid, data_url, bg_pos, repeat) {
 
 function set_editmode_bg(cid, svg_elem, state)
 {
+    var offset, zoom;
     if (!state) {
         set_bg(cid, "none", "0% 0%", "repeat");
     } else if (showgrid[cid]) {
@@ -1521,7 +1526,13 @@ function set_editmode_bg(cid, svg_elem, state)
         set_bg(cid, create_editmode_bg(cid, svg_elem), "0% 0%", "repeat");
     } else {
         // Otherwise show a little lock in the top right corner of the patch
-        set_bg(cid, create_svg_lock(), "right 5px top 5px", "no-repeat");
+        // adjusting for zoom level
+        zoom = patchwin[cid].zoomLevel;
+        offset = 1 / Math.pow(1.2, zoom) * 5;
+        offset = offset + "px";
+        set_bg(cid, create_svg_lock(cid),
+            ["right", offset, "top", offset].join(" "),
+            "no-repeat");
     }
 }
 
@@ -1571,12 +1582,12 @@ function update_grid(grid, grid_size_value) {
     for (var cid in patchwin) {
         showgrid[cid] = grid !== 0;
         gridsize[cid] = grid_size_value;
-	gui(cid).get_elem("patchsvg", function(patchsvg, w) {
+        gui(cid).get_elem("patchsvg", function(patchsvg, w) {
             var editmode = patchsvg.classList.contains("editmode");
             if (editmode) {
                 set_editmode_bg(cid, patchsvg, true);
             }
-	});
+        });
     }
 }
 
