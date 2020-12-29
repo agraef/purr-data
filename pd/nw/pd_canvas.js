@@ -53,23 +53,39 @@ var canvas_events = (function() {
         textbox = function () {
             return document.getElementById("new_object_textentry");
         },
-        add_events = function(context, events) {
-            // convenience routine for adding a bunch of events at once
+        current_events = {}, // keep track of our current listeners
+        edit_events = function(elem, events, action, init) {
+            // convenience routine for adding an object full of
+            // event: callback pairs
             var e;
             for (e in events) {
                 if (events.hasOwnProperty(e)) {
-                    context["addEventListener"](e, events[e], false);
+                    elem[action + "EventListener"](e, events[e], false);
+                    if (action === "remove") {
+                        // remove the key
+                        delete current_events[e];
+                    }
+                    else if (!init) {
+                        // We shouldn't ever be overwriting an existing
+                        // event. So send a warning if we already exist
+                        if (current_events[e]) {
+                            pdgui.post("Consistency check failed for " +
+                                "event " + e + " of element " + elem);
+                        }
+                        current_events[e] = events[e];
+                    }
                 }
             }
         },
-        remove_events = function(context, events) {
-            // convenience routine for removing a bunch of events at once
-            var e;
-            for (e in events) {
-                if (events.hasOwnProperty(e)) {
-                    context["addEventListener"](e, events[e], false);
-                }
-            }
+        init_events = function(elem, events) {
+            edit_events(elem, events, "add", true);
+        },
+        add_events = function(elem, events) {
+            // add 
+            edit_events(elem, events, "add", false);
+        },
+        remove_events = function(elem, events) {
+            edit_events(elem, events, "remove", false);
         },
         find_scalar_draggable = function (elem) {
             var ret = elem;
@@ -655,70 +671,6 @@ var canvas_events = (function() {
                 }
                 canvas_events[canvas_events.get_previous_state()]();
             },
-            hscroll_mouseup: function(evt) {
-                document.getElementById("hscroll").style
-                    .setProperty("background-color", "rgba(0, 0, 0, 0.267)");
-                document.getElementById("patchsvg").style.cursor = "default";
-                canvas_events[canvas_events.get_previous_state()]();
-            },
-            hscroll_mousemove: function(evt) {
-                if (evt.movementX != 0) {
-                    //console.log("move: " + e.movementX);
-
-                    var hscroll = document.getElementById("hscroll");
-                    var svg_elem = document.getElementById("patchsvg");
-
-                    var min_width = document.body.clientWidth + 3;
-                    var width = svg_elem.getAttribute('width');
-                    var xScrollSize;
-
-                    xScrollSize = hscroll.offsetWidth;
-
-                    var xTranslate = evt.movementX *
-                        ((width - min_width)/(min_width - xScrollSize)) *
-                        (evt.movementX > 0 ? 1 : 0.75);
-                    if (xTranslate > 0 && xTranslate < 1) {
-                        xTranslate = 1;
-                    }
-                    if (xTranslate < 0 && xTranslate > -1) {
-                        xTranslate = -1;
-                    }
-                    //console.log(xTranslate);
-                    window.scrollBy(xTranslate, 0);
-                }
-            },
-            vscroll_mouseup: function(evt) {
-                document.getElementById("vscroll").style
-                    .setProperty("background-color", "rgba(0, 0, 0, 0.267)");
-                document.getElementById("patchsvg").style.cursor = "default";
-                canvas_events[canvas_events.get_previous_state()]();
-            },
-            vscroll_mousemove: function(evt) {
-                if (evt.movementY != 0) {
-                    //console.log("move: " + e.movementY);
-
-                    var vscroll = document.getElementById("vscroll");
-                    var svg_elem = document.getElementById("patchsvg");
-
-                    var min_height = document.body.clientHeight + 3;
-                    var height = svg_elem.getAttribute('height');
-                    var yScrollSize;
-
-                    yScrollSize = vscroll.offsetHeight;
-
-                    var yTranslate = evt.movementY *
-                        ((height - min_height)/(min_height - yScrollSize)) *
-                        (evt.movementY > 0 ? 2 : 1.5);
-                    if (yTranslate > 0 && yTranslate < 1) {
-                        yTranslate = 1;
-                    }
-                    if (yTranslate < 0 && yTranslate > -1) {
-                        yTranslate = -1;
-                    }
-                    //console.log(yTranslate);
-                    window.scrollBy(0, yTranslate);
-                }
-            },
             dropdown_menu_keydown: function(evt) {
                 var select_elem = document.querySelector("#dropdown_list"),
                     li;
@@ -897,26 +849,8 @@ var canvas_events = (function() {
                 previous_state = state;
             }
             state = "none";
-            for (prop in events) {
-                if (events.hasOwnProperty(prop)) {
-                    evt_name = prop.split("_");
-                    evt_name = evt_name[evt_name.length - 1];
-                    document.removeEventListener(evt_name, events[prop], false);
-                    // ag: Also get rid of the touch event handlers, which are
-                    // bound to the same handlers as the corresponding mouse
-                    // events.
-                    if (evt_name == "mousemove") {
-                        document.removeEventListener("touchmove",
-                                                     events[prop], false);
-                    } else if (evt_name == "mousedown") {
-                        document.removeEventListener("touchstart",
-                                                     events[prop], false);
-                    } else if (evt_name == "mouseup") {
-                        document.removeEventListener("touchend",
-                                                     events[prop], false);
-                    }
-                }
-            }
+            // remove whatever we currently have bound in current_events object
+            remove_events(document, current_events);
         },
         normal: function() {
             canvas_events.none();
@@ -962,26 +896,82 @@ var canvas_events = (function() {
                 "touchend": events.iemgui_label_mouseup
             });
         },
-        hscroll_drag: function() {
+        hscroll_drag: function(e) {
+            e.preventDefault(); // prevent drag-and-drop- events
             canvas_events.none();
             document.getElementById("hscroll").style
                 .cssText += "background-color: rgba(0, 0, 0, 0.5) !important";
             document.getElementById("patchsvg").style.cursor =
                 "-webkit-grabbing";
             add_events(document, {
-                "mouseup": events.hscroll_mouseup,
-                "mousemove": events.hscroll_mousemove
+                "mouseup": function(evt) {
+                    document.getElementById("hscroll").style
+                        .setProperty("background-color", "rgba(0, 0, 0, 0.267)");
+                    document.getElementById("patchsvg").style.cursor = "default";
+                    canvas_events[canvas_events.get_previous_state()]();
+                },
+                "mousemove": function(evt) {
+			pdgui.post("moving the thingy");
+                    if (evt.movementX != 0) {
+                        //console.log("move: " + e.movementX);
+                        var hscroll = document.getElementById("hscroll");
+                        var svg_elem = document.getElementById("patchsvg");
+                        var min_width = document.body.clientWidth + 3;
+                        var width = svg_elem.getAttribute('width');
+                        var xScrollSize;
+                        xScrollSize = hscroll.offsetWidth;
+                        var xTranslate = evt.movementX *
+                            ((width - min_width)/(min_width - xScrollSize)) *
+                            (evt.movementX > 0 ? 1 : 0.75);
+                        if (xTranslate > 0 && xTranslate < 1) {
+                            xTranslate = 1;
+                        }
+                        if (xTranslate < 0 && xTranslate > -1) {
+                            xTranslate = -1;
+                        }
+                        //console.log(xTranslate);
+                        window.scrollBy(xTranslate, 0);
+                    }
+                }
             });
         },
-        vscroll_drag: function() {
+        vscroll_drag: function(e) {
+            e.preventDefault(); // prevent drag-and-drop events
             canvas_events.none();
             document.getElementById("vscroll").style
                 .cssText += "background-color: rgba(0, 0, 0, 0.5) !important";
             document.getElementById("patchsvg").style.cursor =
                 "-webkit-grabbing";
             add_events(document, {
-                "mouseup": events.vscroll_mouseup,
-                "mousemove": events.vscroll_mousemove
+                "mouseup": function(evt) {
+                    document.getElementById("vscroll").style
+                        .setProperty("background-color", "rgba(0, 0, 0, 0.267)");
+                    document.getElementById("patchsvg").style.cursor = "default";
+                    canvas_events[canvas_events.get_previous_state()]();
+                },
+                "mousemove": function(evt) {
+			pdgui.post("hello");
+                    if (evt.movementY != 0) {
+                        //console.log("move: " + e.movementY);
+                        var vscroll = document.getElementById("vscroll");
+                        var svg_elem = document.getElementById("patchsvg");
+                        var min_height = document.body.clientHeight + 3;
+                        var height = svg_elem.getAttribute('height');
+                        var yScrollSize;
+                        yScrollSize = vscroll.offsetHeight;
+                        var yTranslate = evt.movementY *
+                            ((height - min_height)/(min_height - yScrollSize)) *
+                            (evt.movementY > 0 ? 2 : 1.5);
+                        if (yTranslate > 0 && yTranslate < 1) {
+                            yTranslate = 1;
+                        }
+                        if (yTranslate < 0 && yTranslate > -1) {
+                            yTranslate = -1;
+                        }
+                        //console.log(yTranslate);
+                        window.scrollBy(0, yTranslate);
+                    }
+                }
             });
         },
         text: function() {
@@ -1164,7 +1154,7 @@ var canvas_events = (function() {
             document.getElementById("vscroll").
                 addEventListener("mousedown", canvas_events.vscroll_drag, false);
 
-            add_events(document, {
+            init_events(document, {
                 "contextmenu": function(evt) {
                     // Whoa-- huge workaround! Right now we're getting
                     // the popup menu the way Pd Vanilla does it:
@@ -1291,7 +1281,7 @@ var canvas_events = (function() {
             );
 
             // disable drag and drop for the time being
-            add_events(window, {
+            init_events(window, {
                 "dragover": function (evt) {
                     evt.preventDefault();
                 },
