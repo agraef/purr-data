@@ -225,7 +225,11 @@ static int tcpmakeoutput(t_fdpoll *x, char *inbuf, int len)
                         putchar(outbuf[j]);
                 }
 #else
-                write(1, outbuf, outlen);
+                if (write(1, outbuf, outlen) < 0)
+                {
+                    perror("write");
+                    exit(1);
+                }
 #endif
             } /* if (!x->fdp_discard) */
 

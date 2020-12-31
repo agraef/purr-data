@@ -800,15 +800,14 @@ void canvas_args_to_string(char *namebuf, t_canvas *x)
     {
         namebuf[0] = 0;
         t_gobj *g = NULL;
-        t_garray *a = NULL;
         t_symbol *arrayname;
-        int found = 0, res;
+        int found = 0;
         for (g = x->gl_list; g; g = g->g_next)
         {
 
             if (pd_class(&g->g_pd) == garray_class)
             {
-                res = garray_getname((t_garray *)g, &arrayname);
+                garray_getname((t_garray *)g, &arrayname);
                 if (found)
                 {
                     strcat(namebuf, " ");
@@ -889,13 +888,14 @@ typedef struct _dirty_broadcast_data
     int *res;   /* return value */
 } t_dirty_broadcast_data;
 
-static void canvas_dirty_deliver_packed(t_canvas *x, t_dirty_broadcast_data *data)
+static void canvas_dirty_deliver_packed(t_canvas *x, void *z)
 {
+    t_dirty_broadcast_data *data = (t_dirty_broadcast_data *)z;
     *data->res += (x->gl_dirty > 0);
     canvas_dirty_common(x, data->mess);
 }
 
-static void canvas_dirty_broadcast_packed(t_canvas *x, t_dirty_broadcast_data *data);
+static void canvas_dirty_broadcast_packed(t_canvas *x, void *z);
 
 static int canvas_dirty_broadcast(t_canvas *x, t_symbol *name, t_symbol *dir, int mess)
 {
@@ -922,7 +922,7 @@ static int canvas_dirty_broadcast(t_canvas *x, t_symbol *name, t_symbol *dir, in
             int cres = 0;
             t_dirty_broadcast_data data;
             data.name = name; data.dir = dir; data.mess = mess; data.res = &cres;
-            if(clone_match(&g->g_pd, name, dir))
+            if (clone_match(&g->g_pd, name, dir))
             {
                 clone_iterate(&g->g_pd, canvas_dirty_deliver_packed, &data);
             }
@@ -936,8 +936,9 @@ static int canvas_dirty_broadcast(t_canvas *x, t_symbol *name, t_symbol *dir, in
     return (res);
 }
 
-static void canvas_dirty_broadcast_packed(t_canvas *x, t_dirty_broadcast_data *data)
+static void canvas_dirty_broadcast_packed(t_canvas *x, void *z)
 {
+    t_dirty_broadcast_data *data = (t_dirty_broadcast_data *)z;
     *data->res = canvas_dirty_broadcast(x, data->name, data->dir, data->mess);
 }
 
@@ -959,13 +960,14 @@ typedef struct _dirty_broadcast_ab_data
     int *res;
 } t_dirty_broadcast_ab_data;
 
-static void canvas_dirty_deliver_ab_packed(t_canvas *x, t_dirty_broadcast_ab_data *data)
+static void canvas_dirty_deliver_ab_packed(t_canvas *x, void *z)
 {
+    t_dirty_broadcast_ab_data *data = (t_dirty_broadcast_ab_data *)z;
     *data->res += (x->gl_dirty > 0);
     canvas_dirty_common(x, data->mess);
 }
 
-static void canvas_dirty_broadcast_ab_packed(t_canvas *x, t_dirty_broadcast_ab_data *data);
+static void canvas_dirty_broadcast_ab_packed(t_canvas *x, void *z);
 
 int canvas_dirty_broadcast_ab(t_canvas *x, t_ab_definition *abdef, int mess)
 {
@@ -973,29 +975,29 @@ int canvas_dirty_broadcast_ab(t_canvas *x, t_ab_definition *abdef, int mess)
     t_gobj *g;
     for (g = x->gl_list; g; g = g->g_next)
     {
-        if(pd_class(&g->g_pd) == canvas_class)
+        if (pd_class(&g->g_pd) == canvas_class)
         {
-            if(canvas_isabstraction((t_canvas *)g) && ((t_canvas *)g)->gl_isab
+            if (canvas_isabstraction((t_canvas *)g) && ((t_canvas *)g)->gl_isab
                 && ((t_canvas *)g)->gl_absource == abdef)
             {
                 res += (((t_canvas *)g)->gl_dirty > 0);
                 canvas_dirty_common((t_canvas *)g, mess);
             }
-            else if(!canvas_isabstraction((t_canvas *)g) || ((t_canvas *)g)->gl_isab)
+            else if (!canvas_isabstraction((t_canvas *)g) || ((t_canvas *)g)->gl_isab)
             {
                 res += canvas_dirty_broadcast_ab((t_canvas *)g, abdef, mess);
             }
         }
-        else if(pd_class(&g->g_pd) == clone_class)
+        else if (pd_class(&g->g_pd) == clone_class)
         {
             int cres = 0;
             t_dirty_broadcast_ab_data data;
             data.abdef = abdef; data.mess = mess; data.res = &cres;
-            if(clone_matchab(&g->g_pd, abdef))
+            if (clone_matchab(&g->g_pd, abdef))
             {
                 clone_iterate(&g->g_pd, canvas_dirty_deliver_ab_packed, &data);
             }
-            else if(clone_isab(&g->g_pd))
+            else if (clone_isab(&g->g_pd))
             {
                 clone_iterate(&g->g_pd, canvas_dirty_broadcast_ab_packed, &data);
             }
@@ -1005,8 +1007,9 @@ int canvas_dirty_broadcast_ab(t_canvas *x, t_ab_definition *abdef, int mess)
     return (res);
 }
 
-static void canvas_dirty_broadcast_ab_packed(t_canvas *x, t_dirty_broadcast_ab_data *data)
+static void canvas_dirty_broadcast_ab_packed(t_canvas *x, void *z)
 {
+    t_dirty_broadcast_ab_data *data = (t_dirty_broadcast_ab_data *)z;
     *data->res = canvas_dirty_broadcast_ab(x, data->abdef, data->mess);
 }
 
