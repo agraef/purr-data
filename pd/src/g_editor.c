@@ -1302,7 +1302,7 @@ typedef struct _reload_data
     t_gobj *e;
 } t_reload_data;
 
-static void glist_doreload_packed(t_canvas *x, t_reload_data *data);
+static void glist_doreload_packed(t_canvas *x, void *z);
 
     /* recursively check for abstractions to reload as result of a save. 
     Don't reload the one we just saved ("except") though. */
@@ -1410,8 +1410,9 @@ static void glist_doreload(t_glist *gl, t_symbol *name, t_symbol *dir,
         canvas_vis(glist_getcanvas(gl), 0);
 }
 
-static void glist_doreload_packed(t_canvas *x, t_reload_data *data)
+static void glist_doreload_packed(t_canvas *x, void *z)
 {
+    t_reload_data *data = (t_reload_data *)z;
     glist_doreload(x, data->n, data->d, data->e);
 }
 
@@ -1439,7 +1440,7 @@ typedef struct _reload_ab_data
     t_gobj *e;
 } t_reload_ab_data;
 
-static void glist_doreload_ab_packed(t_canvas *x, t_reload_ab_data *data);
+static void glist_doreload_ab_packed(t_canvas *x, void *data);
 
 /* recursive ab reload method */
 static void glist_doreload_ab(t_canvas *x, t_ab_definition *a, t_gobj *e)
@@ -1495,8 +1496,9 @@ static void glist_doreload_ab(t_canvas *x, t_ab_definition *a, t_gobj *e)
     }
 }
 
-static void glist_doreload_ab_packed(t_canvas *x, t_reload_ab_data *data)
+static void glist_doreload_ab_packed(t_canvas *x, void *z)
 {
+    t_reload_ab_data *data = (t_reload_ab_data *)z;
     glist_doreload_ab(x, data->a, data->e);
 }
 
@@ -2409,61 +2411,72 @@ static int do_replace_subpatches(t_canvas *x, const char* label, t_binbuf *origi
 
 static void abstracthandler_callback(t_abstracthandler *x, t_symbol *s)
 {
-    char fullpath[MAXPDSTRING], label[MAXPDSTRING], *dir, *filename, *o = s->s_name;
-    memset(fullpath, '\0', MAXPDSTRING); memset(label, '\0', MAXPDSTRING);
+    char fullpath[MAXPDSTRING], label[MAXPDSTRING], *dir, *filename;
+    memset(fullpath, '\0', MAXPDSTRING);
+    memset(label, '\0', MAXPDSTRING);
     sys_unbashfilename(s->s_name, fullpath);
-    if(strlen(fullpath) < 3 || strcmp(fullpath+strlen(fullpath)-3, ".pd"))
+    if (strlen(fullpath) < 3 || strcmp(fullpath+strlen(fullpath)-3, ".pd"))
         strcat(fullpath, ".pd");
-    filename = strrchr(fullpath, '/')+1;
-    fullpath[(int)filename-(int)fullpath-1] = '\0';
+    filename = strrchr(fullpath, '/') + 1;
+    fullpath[filename - fullpath - 1] = '\0';
     dir = fullpath;
 
     int flag, prefix = 0;
-    if(flag = sys_relativizepath(canvas_getdir(canvas_getrootfor(x->tarjet))->s_name, dir, label))
+    if (flag =
+        sys_relativizepath(canvas_getdir(canvas_getrootfor(x->tarjet))->s_name,
+            dir, label))
     {
         int len = strlen(label), creator, fd = -1;
-        if(len && label[len-1] != '/') label[len] = '/';
-        strncat(label, filename, strlen(filename)-3);
-        /* check if there is a creator with the same name or if it's one of the built-in methods */
+        if (len && label[len-1] != '/')
+            label[len] = '/';
+        strncat(label, filename, MAXPDSTRING - 4);
+        /* check if there is a creator with the same name or if it's one of
+           the built-in methods */
         t_symbol *sym = gensym(label);
-        creator = (sym == &s_bang || sym == &s_float || sym == &s_symbol || sym == &s_blob
-                    || sym == &s_list || sym == &s_anything);
-        if(!len && creator)
+        creator = (sym == &s_bang ||
+                   sym == &s_float ||
+                   sym == &s_symbol ||
+                   sym == &s_blob ||
+                   sym == &s_list ||
+                   sym == &s_anything);
+        if (!len && creator)
         {
             prefix = (!len && creator);
             creator = 0;
         }
         creator = (creator || zgetfn(&pd_objectmaker, sym));
 
-        /* check if there in an abstraction with the same name in the search path */
-        if(!creator)
+        /* check if there in an abstraction with the same name in the
+           search path */
+        if (!creator)
         {
             char opendir[MAXPDSTRING], *filenameptr;
-            fd = canvas_open(canvas_getrootfor(x->tarjet), label, ".pd", opendir,
-                                &filenameptr, MAXPDSTRING, 0); //high load
-            if(fd > 0)
+            fd = canvas_open(canvas_getrootfor(x->tarjet), label, ".pd",
+                opendir, &filenameptr, MAXPDSTRING, 0); //high load
+            if (fd > 0)
             {
                 sys_close(fd);
                 /* check if we are overwriting the file */
-                if(!strncmp(dir, opendir, (int)filenameptr-(int)opendir-1)) fd = -1;
+                if (!strncmp(dir, opendir, filenameptr - opendir - 1)) fd = -1;
             }
         }
         flag = !(creator || (fd > 0));
 
-        if(flag && prefix)
+        if (flag && prefix)
         {
             strcpy(label, "./");
-            strncat(label, filename, strlen(filename)-3);
+            strncat(label, filename, MAXPDSTRING - 4);
         }
-        else if(!flag)
-            error("warning: couldn't use relative path, there is a coincidence in the creator list or the search path");
+        else if (!flag)
+            error("warning: couldn't use relative path, there is a coincidence "
+                  "in the creator list or the search path");
     }
-    if(!flag) /* absolute path is required */
+    if (!flag) /* absolute path is required */
     {
         memset(label, '\0', MAXPDSTRING);
         strcpy(label, dir);
         strcat(label, "/");
-        strncat(label, filename, strlen(filename)-3);
+        strncat(label, filename, strlen(label) - 3);
         /* should check if 'filename' is one of the built-in special methods
             in order to inform the user about the nameclash problem */
     }
@@ -2472,19 +2485,29 @@ static void abstracthandler_callback(t_abstracthandler *x, t_symbol *s)
 
     /* save the subpatch into a separated pd file */
     t_atom at[3];
-    SETSYMBOL(at, gensym(filename)); SETSYMBOL(at+1, gensym(dir)); SETFLOAT(at+2, 0.f);
-    x->tarjet->gl_env = dummy_canvas_env(dir); /* gl_env is set to non-zero in order to save the subcanvas as a root canvas */
+    SETSYMBOL(at, gensym(filename));
+    SETSYMBOL(at+1, gensym(dir));
+    SETFLOAT(at+2, 0.f);
+    /* gl_env is set to non-zero in order to save the subcanvas as a
+       root canvas */
+    x->tarjet->gl_env = dummy_canvas_env(dir);
     typedmess(&x->tarjet->gl_pd, gensym("savetofile"), 3, at);
     x->tarjet->gl_env = 0;
 
     t_binbuf *tmp = binbuf_new(), *tmps = binbuf_new();
     gobj_save((t_gobj *)x->tarjet, tmp);
-    /* only the internals are kept, the position on the parent canvas may differ */
+    /* only the internals are kept, the position on parent canvas may differ */
     int i = 0, j = binbuf_getnatom(tmp)-2, matches;
     t_atom *v = binbuf_getvec(tmp);
-    while(v[i].a_type != A_SEMI) i++;
+    while(v[i].a_type != A_SEMI)
+    {
+        i++;
+    }
     i++;
-    while(v[j].a_type != A_SEMI) j--;
+    while(v[j].a_type != A_SEMI)
+    {
+        j--;
+    }
     binbuf_restore(tmps, j-i+1, v+i);
     binbuf_free(tmp);
     matches = do_replace_subpatches(canvas_getrootfor(x->tarjet), 0, tmps);
@@ -2499,27 +2522,29 @@ static void abstracthandler_callback(t_abstracthandler *x, t_symbol *s)
 
 static void abstracthandler_dialog(t_abstracthandler *x, t_floatarg val)
 {
-    if(x->tarjet == x->dialog) canvas_vis(x->dialog, 0);
+    if (x->tarjet == x->dialog) canvas_vis(x->dialog, 0);
     t_canvas *owner = x->tarjet->gl_owner, *root = canvas_getrootfor(x->tarjet);
     int all = val;
-    if(!all)
+    if (!all)
     {
         /* change the text of the subpatch object to create the abstraction,
             emulating the procedure done by the user. could be simplified */
         int edi = 0;
-        if(!owner->gl_editor) { canvas_create_editor(owner); edi = 1; }
+        if (!owner->gl_editor) { canvas_create_editor(owner); edi = 1; }
         glist_noselect(owner);
         glist_select(owner, &x->tarjet->gl_gobj);
         do_rename_light(&x->tarjet->gl_gobj, owner, x->path);
         glist_deselect(owner, &x->tarjet->gl_gobj);
-        if(edi) canvas_destroy_editor(owner);
+        if (edi) canvas_destroy_editor(owner);
 
         /* select '[args]' slice
         canvas_editmode(owner, 1);
         t_gobj *abst = glist_nth(owner, glist_getindex(owner, 0)-1);
         int len = strlen(x->path);
         glist_select(owner, abst);
-        gobj_activate(abst, owner, (0b1 << 31) | (((len+1) & 0x7FFF) << 16) | ((len+7) & 0xFFFF)); */
+        gobj_activate(abst, owner, (0b1 << 31) |
+            (((len+1) & 0x7FFF) << 16) |
+            ((len+7) & 0xFFFF)); */
     }
     else
     {
@@ -2531,13 +2556,12 @@ static void abstracthandler_dialog(t_abstracthandler *x, t_floatarg val)
 void abstracthandler_setup(void)
 {
     abstracthandler_class = class_new(gensym("abstracthandler"), 0,
-                                        (t_method)abstracthandler_free,
-                                        sizeof(t_abstracthandler),
-                                        CLASS_NOINLET, 0);
+        (t_method)abstracthandler_free, sizeof(t_abstracthandler),
+        CLASS_NOINLET, 0);
     class_addmethod(abstracthandler_class, (t_method)abstracthandler_callback,
-                        gensym("callback"), A_SYMBOL, 0);
+        gensym("callback"), A_SYMBOL, 0);
     class_addmethod(abstracthandler_class, (t_method)abstracthandler_dialog,
-                        gensym("dialog"), A_FLOAT, 0);
+        gensym("dialog"), A_FLOAT, 0);
 }
 
 /* ------------------------ event handling ------------------------ */
@@ -2873,7 +2897,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 (int)(x->gl_screeny2 - x->gl_screeny1),
                 geobuf,
                 sys_snaptogrid,
-		sys_gridsize,
+                sys_gridsize,
                 x->gl_zoom,
                 x->gl_edit,
                 x->gl_name->s_name,
@@ -3940,8 +3964,8 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 //int enlarged = 0;
                 //if (closest == last_outlet)
                 //    enlarged = 5;
-                //post("xpos=%d closest=%d noutlet=%d \
-                    nout1=%d hotspot=%d IOWIDTH=%d enlarged=%d",
+                //post("xpos=%d closest=%d noutlet=%d "
+                //    "nout1=%d hotspot=%d IOWIDTH=%d enlarged=%d",
                 //    xpos, closest, noutlet, nout1, hotspot, IOWIDTH, enlarged);
                 // if have found an outlet and are within its range...
                 if (closest < noutlet &&
@@ -4091,7 +4115,6 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
                 /* not in an outlet; select and move */
             else if (doit)
             {
-                t_rtext *rt;
                     /* check if the box is being text edited */
                 nooutletafterall:
                     /* otherwise select and drag to displace */
@@ -4449,7 +4472,7 @@ void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
         //second object is below the first
         if (abs(halfx) <=10)
         {
-            ymax = abs(halfy * pow((halfx/10.0),2));
+            ymax = abs((int)(halfy * pow((halfx/10.0),2)));
             if (ymax > 10) ymax = 10;
         }
         else ymax = 10;
@@ -4495,7 +4518,7 @@ void canvas_updateconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
             //second object is below the first
             if (abs(halfx) <=10)
             {
-                ymax = abs(halfy * pow((halfx/10.0),2));
+                ymax = abs((int)(halfy * pow((halfx/10.0),2)));
                 if (ymax > 10) ymax = 10;
             }
             else ymax = 10;
@@ -5642,15 +5665,17 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
         if (x->gl_editor->e_grab)
         {
             if (x->gl_editor->e_keyfn && keynum && focus)
+            {
                 (* x->gl_editor->e_keyfn)
                     (x->gl_editor->e_grab, (t_float)keynum);
-          	if (x->gl_editor->e_keynameafn && gotkeysym && focus)
-          	{
-          		at[0] = av[0];
-            	SETFLOAT(at, down);
-            	SETSYMBOL(at+1, gotkeysym);
-            	(* x->gl_editor->e_keynameafn) (x->gl_editor->e_grab, 0, 2, at);
-          	}
+            }
+            if (x->gl_editor->e_keynameafn && gotkeysym && focus)
+            {
+                at[0] = av[0];
+                SETFLOAT(at, down);
+                SETSYMBOL(at+1, gotkeysym);
+                (*x->gl_editor->e_keynameafn)(x->gl_editor->e_grab, 0, 2, at);
+            }
         }
             /* if a text editor is open send the key on, as long as
             it is either "real" (has a key number) or else is an arrow key. */
@@ -5794,7 +5819,7 @@ static void snap_get_anchor_xy(t_canvas *x, int *gobj_x, int *gobj_y)
             *gobj_y = y1;
             return;
         }
-	s = s->sel_next;
+        s = s->sel_next;
     }
     bug("canvas_get_snap_offset");
 }
@@ -5813,7 +5838,7 @@ static void canvas_snap_to_grid(t_canvas *x, int xwas, int ywas, int xnew,
     int snap_dx = 0, snap_dy = 0;
     if (!snap_got_anchor)
     {
-        int obx = xnew, oby = ynew, xsign, ysign;
+        int obx = xnew, oby = ynew;
         snap_get_anchor_xy(x, &obx, &oby);
             /* First, get the distance the selection should be displaced
                in order to align the anchor object with a grid line. */
@@ -7051,7 +7076,6 @@ static void canvas_encapsulate(t_canvas *x)
     canvas_undo_add(x, UNDO_SEQUENCE_START, "encapsulate", 0);
     /* cut selected objects using special copy method, based on canvas_cut */
     t_binbuf *object, *connections;
-    int centx, centy;
     canvas_undo_add(x, UNDO_CUT, "cut", canvas_undo_set_cut(x, UCUT_CUT));
     canvas_dofancycopy(x, &object, &connections);
     canvas_doclear(x);
