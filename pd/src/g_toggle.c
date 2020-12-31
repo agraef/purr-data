@@ -114,7 +114,7 @@ static void toggle__motionhook(t_scalehandle *sh, t_floatarg mouse_x, t_floatarg
         {
             if (mouse_y > y2)
                 d = mouse_y - y2;
-            else if (abs(mouse_y - y2) < abs(mouse_x - x2))
+            else if (abs((int)(mouse_y - y2)) < abs((int)(mouse_x - x2)))
                 d = mouse_y - y2;
             else
                 d = mouse_x - x2;

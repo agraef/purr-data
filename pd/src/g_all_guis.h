@@ -48,7 +48,7 @@ typedef struct _scalehandle
     t_symbol  *h_bindsym;
     int        h_scale;
     char       h_pathname[37]; // max size for ".x%llx.h%llx" = 5+4*sizeof(long)
-    char       h_outlinetag[18]; // max size for "h%llx" = 2+2*sizeof(long)
+    char       h_outlinetag[25]; // "h%zux", (t_uint)h
     int        h_dragon; // bool
     int        h_dragx;
     int        h_dragy;

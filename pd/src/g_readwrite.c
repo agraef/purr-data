@@ -552,6 +552,7 @@ void canvas_writescalar(t_symbol *templatesym, t_word *w, t_binbuf *b,
     }
 }
 
+/*
 static void glist_writelist(t_gobj *y, t_binbuf *b)
 {
     for (; y; y = y->g_next)
@@ -563,6 +564,7 @@ static void glist_writelist(t_gobj *y, t_binbuf *b)
         }
     }
 }
+*/
 
     /* ------------ routines to write out templates for data ------- */
 
@@ -637,6 +639,7 @@ static void canvas_addtemplatesforstruct(t_template *template,
     }
 }
 
+/*
 static void canvas_addtemplatesforlist(t_gobj *y,
     int  *p_ntemplates, t_symbol ***p_templatevec)
 {
@@ -649,6 +652,7 @@ static void canvas_addtemplatesforlist(t_gobj *y,
         }
     }
 }
+*/
 
     /* write all "scalars" in a glist to a binbuf. */
 t_binbuf *glist_writetobinbuf(t_glist *x, int wholething)
