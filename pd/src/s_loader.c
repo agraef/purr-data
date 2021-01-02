@@ -117,7 +117,7 @@ static int sys_do_load_lib(t_canvas *canvas, const char *objectname,
     const char *path)
 {
     char symname[MAXPDSTRING], filename[MAXPDSTRING], dirbuf[MAXPDSTRING],
-        *nameptr, altsymname[MAXPDSTRING];
+        *nameptr;
     const char *classname, *cnameptr;
     void *dlobj;
     t_xxx makeout = NULL;
@@ -159,7 +159,7 @@ static int sys_do_load_lib(t_canvas *canvas, const char *objectname,
     if (hexmunge)
     {
         memmove(symname+6, symname, strlen(symname)+1);
-        strncpy(symname, "setup_", 6);
+        memcpy(symname, "setup_", 6);
     }
     else strcat(symname, "_setup");
 

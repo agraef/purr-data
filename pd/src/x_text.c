@@ -348,6 +348,7 @@ t_binbuf *pointertobinbuf(t_pd *x, t_gpointer *gp, t_symbol *s,
 
     /* these are unused; they copy text from this object to and from a text
         field in a scalar. */
+/*
 static void text_define_frompointer(t_text_define *x, t_gpointer *gp,
     t_symbol *s)
 {
@@ -359,7 +360,10 @@ static void text_define_frompointer(t_text_define *x, t_gpointer *gp,
         binbuf_add(x->x_textbuf.b_binbuf, binbuf_getnatom(b), binbuf_getvec(b));
     }
 }
+*/
 
+/* This doesn't seem to be used, either... */
+/*
 static void text_define_topointer(t_text_define *x, t_gpointer *gp, t_symbol *s)
 {
     t_binbuf *b = pointertobinbuf(&x->x_textbuf.b_ob.ob_pd,
@@ -382,6 +386,7 @@ static void text_define_topointer(t_text_define *x, t_gpointer *gp, t_symbol *s)
         }
     }
 }
+*/
 
     /* bang: output a pointer to a struct containing this text */
 void text_define_bang(t_text_define *x)
