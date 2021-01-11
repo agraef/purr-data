@@ -77,13 +77,23 @@ static void doerror(const void *object, const char *s)
 
 static void dologpost(const void *object, const int level, const char *s)
 {
-    char upbuf[MAXPDSTRING];
-    upbuf[MAXPDSTRING-1]=0;
+    /* 1. s is at most MAXPDSTRING, but we're prepending a stupid header
+       below. So for sanity, we first overallocate here to ensure the stupid
+       header doesn't end up overflowing the buffer. */
+    char upbuf[MAXPDSTRING * 2];
 
     // what about sys_printhook_verbose ?
     if (sys_printhook) 
     {
-        snprintf(upbuf, MAXPDSTRING-1, "verbose(%d): %s", level, s);
+        /* 2. The "n" in snprintf stands for "evil": we have to subtract one
+           from total size so the null doesn't get truncated */ 
+        snprintf(upbuf, MAXPDSTRING * 2 - 1, "verbose(%d): %s", level, s);
+        /* 3. Finally, we add a null at MAXPDSTRING-1 so that we end up with
+           a string that fits inside MAXPDSTRING for use with t_symbol, etc.
+
+           If anyone knows how I was *supposed* to do this safely within the
+           constraints of C's stupid stdlib, please teach me... */
+        upbuf[MAXPDSTRING-1]=0;
         (*sys_printhook)(upbuf);
     }
     else if (sys_printtostderr) 

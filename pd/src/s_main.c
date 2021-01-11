@@ -368,7 +368,11 @@ int sys_main(int argc, char **argv)
     if (getuid() != geteuid())
     {
         fprintf(stderr, "warning: canceling setuid privilege\n");
-        setuid(getuid());
+        if (setuid(getuid()) < 0)
+        {
+            fprintf(stderr, "error: couldn't cancel setuid privilege");
+            exit(1);
+	}
     }
 #endif  /* _WIN32 */
     pd_init();                                  /* start the message system */
@@ -640,7 +644,7 @@ void sys_findprogdir(char *progname)
             /* complicated layout: lib dir is the one we just stat-ed above */
         sys_libdir = gensym(sbuf2);
             /* gui lives in .../lib/pd-l2ork/bin */
-        strncpy(sbuf2, sbuf, FILENAME_MAX-30);
+        strncpy(sbuf2, sbuf, FILENAME_MAX);
         sbuf[FILENAME_MAX-30] = 0;
         strcat(sbuf2, "/lib/pd-l2ork/bin");
         sys_guidir = gensym(sbuf2);
@@ -649,8 +653,8 @@ void sys_findprogdir(char *progname)
     {
             /* simple layout: lib dir is the parent */
             /* gui lives in .../bin */
-        strncpy(sbuf2, sbuf, FILENAME_MAX-30);
-        strncpy(appbuf, sbuf, FILENAME_MAX-30);
+        strncpy(sbuf2, sbuf, FILENAME_MAX);
+        strncpy(appbuf, sbuf, FILENAME_MAX);
         sbuf[FILENAME_MAX-30] = 0;
         sys_libdir = gensym(sbuf);
         strcat(sbuf2, "/bin");

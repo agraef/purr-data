@@ -822,7 +822,9 @@ void glob_midi_dialog(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
 {
     int i, nindev, noutdev;
     int newmidiindev[10], newmidioutdev[10];
+#ifdef USEAPI_ALSA
     int alsadevin, alsadevout;
+#endif
 
     for (i = 0; i < 10; i++)
     {
@@ -846,10 +848,9 @@ void glob_midi_dialog(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
             noutdev++;
         }
     }
+#ifdef USEAPI_ALSA
     alsadevin = atom_getintarg(20, argc, argv);
     alsadevout = atom_getintarg(21, argc, argv);
-        
-#ifdef USEAPI_ALSA
             /* invent a story so that saving/recalling "settings" will
             be able to restore the number of devices.  ALSA MIDI handling
             uses its own set of variables.  LATER figure out how to get

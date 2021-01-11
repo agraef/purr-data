@@ -80,10 +80,15 @@ int u8_utf8toucs2(uint16_t *dest, int sz, char *src, int srcsz)
         }
         ch = 0;
         switch (nb) {
-            /* these fall through deliberately */
+            /* these fall through deliberately, but commenting each explicitly
+               seems to quiet the compiler. If that's not future proof we
+               can just use copy/pasta and add the break statements */
         case 3: ch += (unsigned char)*src++; ch <<= 6;
+                /* fall through */
         case 2: ch += (unsigned char)*src++; ch <<= 6;
+                /* fall through */
         case 1: ch += (unsigned char)*src++; ch <<= 6;
+                /* fall through */
         case 0: ch += (unsigned char)*src++;
         }
         ch -= offsetsFromUTF8[nb];

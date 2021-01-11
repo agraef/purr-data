@@ -2989,8 +2989,10 @@ static void svg_curvedim(t_float p1x, t_float p1y,
     t_float a = (c2x - 2 * c1x + p1x) - (p2x - 2 * c2x + c1x);
     t_float b = 2 * (c1x - p1x) - 2 * (c2x - c1x),
             c = p1x - c1x;
-    t_float t1 = (a ? ((-b + sqrt(abs(b * b - 4 * a * c))) / 2.0 / a) : 0),
-            t2 = (a ? ((-b - sqrt(abs(b * b - 4 * a * c))) / 2.0 / a) : 0);
+    t_float t1 = (a ?
+        ((-b + sqrt(fabs(b * b - 4 * a * c))) / 2.0 / a) : 0);
+    t_float t2 = (a ?
+        ((-b - sqrt(fabs(b * b - 4 * a * c))) / 2.0 / a) : 0);
     t_float xy[12];
     xy[0] = p1x; xy[1] = p1y; xy[2] = p2x; xy[3] = p2y;
 
@@ -3001,8 +3003,8 @@ static void svg_curvedim(t_float p1x, t_float p1y,
     xy[0] = mtx2[0][0]; xy[1] = mtx2[1][0]; xy[2] = mtx2[0][1]; xy[3] = mtx2[1][1];
     int xyc = 4;
     t_float dotx, doty;
-    if (abs(t1) > 1e12) t1 = 0.5;
-    if (abs(t2) > 1e12) t2 = 0.5;
+    if (fabs(t1) > 1e12) t1 = 0.5;
+    if (fabs(t2) > 1e12) t2 = 0.5;
     if (t1 > 0 && t1 < 1)
     {
         svg_findDotAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t1, &dotx, &doty);
@@ -3028,10 +3030,10 @@ static void svg_curvedim(t_float p1x, t_float p1y,
     a = (c2y - 2 * c1y + p1y) - (p2y - 2 * c2y + c1y);
     b = 2 * (c1y - p1y) - 2 * (c2y - c1y);
     c = p1y - c1y;
-    t1 = (a ? ((-b + sqrt(abs(b * b - 4 * a * c))) / 2.0 / a) : 0);
-    t2 = (a ? ((-b - sqrt(abs(b * b - 4 * a * c))) / 2.0 / a) : 0);
-    if (abs(t1) > 1e12) t1 = 0.5;
-    if (abs(t2) > 1e12) t2 = 0.5;
+    t1 = (a ? ((-b + sqrt(fabs(b * b - 4 * a * c))) / 2.0 / a) : 0);
+    t2 = (a ? ((-b - sqrt(fabs(b * b - 4 * a * c))) / 2.0 / a) : 0);
+    if (fabs(t1) > 1e12) t1 = 0.5;
+    if (fabs(t2) > 1e12) t2 = 0.5;
     if (t1 > 0 && t1 < 1)
     {
         svg_findDotAtSegment(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t1, &dotx, &doty);
@@ -3364,7 +3366,7 @@ static void svg_getpathrect(t_svg *x, t_glist *glist,
                 }
                 else
                 {
-                   yy = *(ia+j) = fielddesc_getcoord(fd+j, template, data, 1) + (rel? yy : 0);
+                    yy = *(ia+j) = fielddesc_getcoord(fd+j, template, data, 1) + (rel? yy : 0);
                 }
             }
             break;
@@ -3390,6 +3392,12 @@ static void svg_getpathrect(t_svg *x, t_glist *glist,
                 mx = *(ia);
                 my = *(ia+1);
             }
+            if (x->x_nargs_per_cmd[i] > 1)
+            {
+                xx = *(ia+(x->x_nargs_per_cmd[i] - 2));
+                yy = *(ia+(x->x_nargs_per_cmd[i] - 1));
+            }
+            break;
         default:
             if (x->x_nargs_per_cmd[i] > 1)
             {
@@ -7189,7 +7197,6 @@ static void drawsymbol_getrect(t_gobj *z, t_glist *glist,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
     t_drawsymbol *x = (t_drawsymbol *)z;
-    t_atom at;
     int xloc, yloc, font, fontwidth, fontheight, width, height;
     char buf[DRAWSYMBOL_BUFSIZE], *startline, *newline;
 
@@ -7269,7 +7276,6 @@ static void drawsymbol_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     //    return;
     if (vis)
     {
-        t_atom at;
         int in_array = (sc->sc_vec == data) ? 0 : 1;
         // Ico: why are we using scale here? For group transforms? I thought
         // that drawsymbol was not eligible for group transforms since it is 
