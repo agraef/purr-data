@@ -1,0 +1,37 @@
+#N canvas 72 64 1067 916 12;
+#X obj 138 754 route bang;
+#X obj 138 783 f 0;
+#X obj 205 783 b;
+#X obj 205 812 f 1;
+#X obj 23 843 list prepend;
+#X obj 23 708 list prepend this message should trigger an error:;
+#X obj 23 20 inlet;
+#X msg 23 99 bang;
+#X obj 23 651 receive \$0-;
+#X text 42 54 This just covers the flags. We probably need to add file-loading
+tests at some point.;
+#X obj 23 872 outlet;
+#X msg 23 168 \; \$1- \$2 -skip \; \$1- \$2 -skip rope \; \$1- \$2
+-skip -1 \; \$1- \$2 -nframes \; \$1- \$2 -nframes dope \; \$1- \$2
+-nframes -1 \; \$1- \$2 -normalize 12 \; \$1- \$2 -bytes \; \$1- \$2
+-bytes 1 \; \$1- \$2 -bytes 5 \; \$1- \$2 -resize 12 \; \$1- \$2 -wave
+1 \; \$1- \$2 -nextstep 1 \; \$1- \$2 -aiff 1 \; \$1- \$2 -big 1 \;
+\$1- \$2 -little 1 \; \$1- \$2 -r \; \$1- \$2 -rate \; \$1- \$2 -r
+0 \; \$1- \$2 -rate 0 \; \$1- \$2 -reginald \; \$1- \$2 \; \$1- \$2
+12 \; \$1- \$2 foo 12 \; \$1- \$2 -bytes 4 -aiff foo \; \$1- \$2 foo
+extra_arg \;;
+#X obj 23 128 list \$0 open;
+#X obj 23 679 ../utils/method-error writesf~;
+#X connect 0 0 1 0;
+#X connect 0 1 2 0;
+#X connect 1 0 4 1;
+#X connect 2 0 3 0;
+#X connect 3 0 4 1;
+#X connect 4 0 10 0;
+#X connect 5 0 4 0;
+#X connect 6 0 7 0;
+#X connect 7 0 12 0;
+#X connect 8 0 13 0;
+#X connect 12 0 11 0;
+#X connect 13 0 5 0;
+#X connect 13 1 0 0;

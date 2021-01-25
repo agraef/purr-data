@@ -1,0 +1,56 @@
+#N canvas 106 64 1067 916 12;
+#X obj 53 609 ../utils/method-error soundfiler;
+#X obj 168 684 route bang;
+#X obj 168 713 f 0;
+#X obj 235 713 b;
+#X obj 235 742 f 1;
+#X obj 53 773 list prepend;
+#X obj 53 638 list prepend this message should trigger an error:;
+#X obj 53 10 inlet;
+#X msg 53 89 bang;
+#X obj 53 581 receive \$0-;
+#N canvas 771 533 450 425 \$0-too-many-channels 0;
+#X obj 80 31 inlet;
+#X obj 80 60 f \$0;
+#X msg 80 110 \; \$1- read z z z z z z z z z z z z z z z z z z z z
+z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z
+z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z
+z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z
+z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z
+z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z
+z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z
+z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z z;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X restore 169 128 pd \$0-too-many-channels;
+#X msg 169 97 bang;
+#X obj 53 39 trigger bang bang;
+#X text 182 24 This just covers the flags. We probably need to add
+file-loading tests at some point.;
+#X obj 53 802 outlet;
+#X msg 53 158 \; \$1- \$2 -skip \; \$1- \$2 -skip rope \; \$1- \$2
+-skip -1 \; \$1- \$2 -raw \; \$1- \$2 -raw dope \; \$1- \$2 -raw \;
+\$1- \$2 -raw 0 \; \$1- \$2 -raw 0 0 \; \$1- \$2 -raw 0 0 0 \; \$1-
+\$2 -raw dope 0 0 0 \; \$1- \$2 -raw 0 dope 0 0 \; \$1- \$2 -raw 0
+1 dope 0 \; \$1- \$2 -raw 0 1 2 dope \; \$1- \$2 -raw -1 0 0 0 \; \$1-
+\$2 -raw 0 0 2 l \; \$1- \$2 -raw 0 1024 2 n \; \$1- \$2 -raw 0 1 1
+n \; \$1- \$2 -raw 0 1 5 n \; \$1- \$2 -raw 0 1 2 z \; \$1- \$2 -resize
+12 \; \$1- \$2 -maxsize \; \$1- \$2 -maxsize 1e+19 \; \$1- \$2 -reginald
+\; \$1- \$2;
+#X obj 53 118 list \$0 read;
+#X connect 0 0 6 0;
+#X connect 0 1 1 0;
+#X connect 1 0 2 0;
+#X connect 1 1 3 0;
+#X connect 2 0 5 1;
+#X connect 3 0 4 0;
+#X connect 4 0 5 1;
+#X connect 5 0 14 0;
+#X connect 6 0 5 0;
+#X connect 7 0 12 0;
+#X connect 8 0 16 0;
+#X connect 9 0 0 0;
+#X connect 11 0 10 0;
+#X connect 12 0 8 0;
+#X connect 12 1 11 0;
+#X connect 16 0 15 0;
