@@ -1,6 +1,6 @@
 ## Pd-L2Ork
 
-maintainers:
+Maintainers:
 
 * Ivica Ico Bukvic <ico@vt.edu>
 * Albert Graef <aggraef@gmail.com>
@@ -278,28 +278,28 @@ The instructions are exactly the same as for the 32 bit build (see above), but t
 
 ### Code of Conduct
 
-1. No sarcasm, please
-2. Don't appear to lack empathy
+1. No sarcasm, please.
+2. Don't appear to lack empathy.
 3. You can't live here. If you're spending hours a day writing Purr Data
    code or-- worse-- spending hours a day *writing emails about* code that 
-   has yet to be written, you're doing it wrong
-4. If working on something for the first time, ask to be mentored
-5. If no one asked you to mentor them, don't teach
+   has yet to be written, you're doing it wrong.
+4. If working on something for the first time, ask to be mentored.
+5. If no one asked you to mentor them, don't teach.
 6. It is better to let small things go then to risk taking time away from
-   solving bigger problems
+   solving bigger problems.
 
 It is a bad idea to break this Code of Conduct *even if* no one complains
-about your behavior.
+about your behaviour.
 
 ### Project Governance
 
-* the three maintainers listed at the top of this document are the ones in
-  charge of this project
-* unanimous decisions are preferred
-* 2 out of 3 can break a disagreement
-* there will only ever be three maintainers of this project at any given time.
+* The three maintainers listed at the top of this document are the ones in
+  charge of this project.
+* Unanimous decisions are preferred.
+* 2 out of 3 can break a disagreement.
+* There will only ever be three maintainers of this project at any given time.
   If you'd like to temporarily step in as one of the three,
-  send an inquiry to the list and we cany discuss it
+  send an inquiry to the list and we can discuss it.
 
 ### Contributor Guide
 
@@ -342,22 +342,22 @@ A few guidelines:
 
 Here are some of the current tasks:
 
-* writing small audio/visual Pd games or demos to include in the next release
-  * skills needed: ability to write Pd programs
-  * status: I wrote a little sprite-based game that will ship with the next
+* Writing small audio/visual Pd games or demos to include in the next release
+  * Skills needed: Ability to write Pd programs
+  * Status: I wrote a little sprite-based game that will ship with the next
     version of Pd-L2Ork.  In it, the character walks around in an actual
     Pd diagram shoots at the objects to progress, and to make realtime
     changes to the music.
     What I'd like is to include a new, smallish game with each release
     that has a link in the Pd console.  It can be a little demo or game,
     just something fun that shows off what can be done using Pure Data.
-* designing/implementing regression test template
-  * skills needed: knowledge about... regression tests. :)  But also some
+* Designing/Implementing regression test template
+  * Skills needed: Knowledge about... regression tests. :)  But also some
     expertise in using Pd so that the tests themselves can
     be written in Pure Data.  At the same time, they should
     be able to be run as part of the automated packaging
     process (i.e., in -nogui mode).
-  * status: some externals have their own testing environments, but they are
+  * Status: Some externals have their own testing environments, but they are
     limited as they require manual intervention to run and read the
     results inside a graphical window.
     We currently have a crude test system that at least ensures that each
@@ -368,9 +368,9 @@ Here are some of the current tasks:
     And Mathieu Bouchard's "pure unity" (not sure if this is the most
     recent link...):
     http://sourceforge.net/p/pure-data/svn/HEAD/tree/tags/externals/pureunity/pureunity-0.0/
-* adding support for double precision to the external libraries that ship with purr-data
-  * skills needed: knowledge about data types in C language(specially float and double)
-  * status: the core classes of purr data and the freeverb~ external library
+* Adding support for double precision to the external libraries that ship with purr-data
+  * Skills needed: Knowledge about data types in C language(specially float and double)
+  * Status: The core classes of purr data and the freeverb~ external library
     have been changed to support both float and double but still the remaining
     external libraries only have support for single precision.
     The task ahead is to add double precision support to these external libraries.
@@ -585,10 +585,10 @@ PD-GUI:
     gui    GUI front end
 
 #### 6. Javascript style
-1. Brackets on the same line as declaration or expression: `if (a) {`
-2. Single line comments only: `//`
-3. Use double-quotes for strings
-4. Use underscores to separate words of function names and variables
+1. Brackets on the same line as declaration or expression: `if (a) {`.
+2. Single line comments only: `//`.
+3. Use double-quotes for strings.
+4. Use underscores to separate words of function names and variables.
 
 ### GUI Messaging Specification
 #### Public GUI interface
