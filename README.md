@@ -123,6 +123,10 @@ However, to make this work, you will most likely have to install some prerequisi
 Time to build: *10 minutes light install, 45 minutes to 1.5 hours full install*
 Hard drive space required: *roughly 2.5 GB*
 
+0. Remember to update your packages:
+
+        sudo apt-get update && sudo apt-get upgrade
+
 1. Install the dependencies (please note that the packages may be named
    slightly differently for different Linux distributions; the given names are
    for Debian/Ubuntu)
@@ -142,6 +146,7 @@ Hard drive space required: *roughly 2.5 GB*
              libfluidsynth-dev fluid-soundfont-gm byacc
 
 2. The gui toolkit may require installing the following extra dependencies
+
         sudo apt-get install gconf2 libnss3
 
 3. Clone the Purr-Data repository *(2 to 10 minutes)*
