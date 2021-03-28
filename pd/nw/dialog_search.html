@@ -865,6 +865,13 @@ function doc_search() {
             description: {boost: 1}
         }
     });
+    // Increase priority of pd-l2ork docs over externals docs
+    for (i = 0; i < results.length; i++) {
+        if (results[i].ref.match(/.*\/pd-l2ork\/doc\/.*/) != null) {
+            results[i].score *= 5;
+        }
+    }
+    results.sort(function(a, b) { return b.score - a.score; });
     for (i = 0; i < results.length; i++) {
         doc = index.documentStore.getDoc(results[i].ref);
         display_doc(doc);
