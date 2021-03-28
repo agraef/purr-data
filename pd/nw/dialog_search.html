@@ -858,7 +858,13 @@ function doc_search() {
     clear_results();
     text_elem.blur();
     toc_bookmark_status(false);
-    results = index.search(search_text);
+    results = index.search(search_text, {
+        fields: {
+            title: {boost: 64, expand: true},
+            keywords: {boost: 8, expand: true},
+            description: {boost: 1}
+        }
+    });
     for (i = 0; i < results.length; i++) {
         doc = index.documentStore.getDoc(results[i].ref);
         display_doc(doc);
