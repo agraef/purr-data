@@ -784,6 +784,10 @@ function add_events() {
         }
 
     });
+    document.getElementById("search_text").addEventListener("keyup",
+        function() {
+            doc_search();
+    });
     document.getElementById("search_text").addEventListener("search",
         function() {
             doc_search();
