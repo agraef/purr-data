@@ -18,6 +18,7 @@ int pd_compatibilitylevel = PD_MINOR_VERSION;
 over.  Some others are prototyped in m_imp.h as well. */
 
 void glob_setfilename(void *dummy, t_symbol *filesym, t_symbol *dirsym);
+void glob_menunew(void *dummy, t_symbol *name, t_symbol *dir);
 void glob_verifyquit(void *dummy, t_floatarg f);
 void glob_dsp(void *dummy, t_symbol *s, int argc, t_atom *argv);
 void glob_meters(void *dummy, t_floatarg f);
@@ -143,6 +144,8 @@ void glob_init(void)
         CLASS_DEFAULT, A_NULL);
     class_addmethod(glob_pdobject, (t_method)glob_initfromgui, gensym("init"),
         A_GIMME, 0);
+    class_addmethod(glob_pdobject, (t_method)glob_menunew, gensym("menunew"),
+        A_SYMBOL, A_SYMBOL, 0);
     class_addmethod(glob_pdobject,
         (t_method)glob_forward_files_from_secondary_instance,
         gensym("forward_files_from_secondary_instance"), 0);
