@@ -59,7 +59,7 @@ AC_DEFUN([AC_CHECK_FRAMEWORK],
   temp_check_ldflags_org="${LDFLAGS}"
   LDFLAGS="-framework [$1] ${LDFLAGS}"
 
-  AC_LINK_IFELSE(AC_LANG_PROGRAM(,), [temp_check_ldflags_success="yes"],[temp_check_ldflags_success="no"])
+  AC_LINK_IFELSE([AC_LANG_PROGRAM(,)], [temp_check_ldflags_success="yes"],[temp_check_ldflags_success="no"])
 
   if test "x$temp_check_ldflags_success" = "xyes"; then
     AC_MSG_RESULT([yes])
@@ -81,7 +81,7 @@ AC_DEFUN([AC_CHECK_LDFLAGS],
   temp_check_ldflags_org="${LDFLAGS}"
   LDFLAGS="$1 ${LDFLAGS}"
 
-  AC_LINK_IFELSE(AC_LANG_PROGRAM(,), [temp_check_ldflags_success="yes"],[temp_check_ldflags_success="no"])
+  AC_LINK_IFELSE([AC_LANG_PROGRAM(,)], [temp_check_ldflags_success="yes"],[temp_check_ldflags_success="no"])
 
   if test "x$temp_check_ldflags_success" = "xyes"; then
     AC_MSG_RESULT([yes])
