@@ -115,7 +115,7 @@ ifneq ($(LIGHT),yes)
 	install -p $(bin_src)/libreadline8.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libtermcap-0.dll $(DESTDIR)$(bindir)/
 	# For other external libs
-	install -p $(bin_src)/lua53.dll          $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/lua*.dll          $(DESTDIR)$(bindir)/
 	#install -p $(bin_src)/pthreadGC2.dll     $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libdl.dll     $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libportaudio-2.dll     $(DESTDIR)$(bindir)/
