@@ -159,6 +159,13 @@ void glob_setfilename(void *dummy, t_symbol *filesym, t_symbol *dirsym)
     canvas_newdirectory = dirsym;
 }
 
+void glob_menunew(void *dummy, t_symbol *filesym, t_symbol *dirsym)
+{
+    glob_setfilename(dummy, filesym, dirsym);
+    canvas_new(0, 0, 0, 0);
+    canvas_pop((t_canvas *)s__X.s_thing, 1);
+}
+
 /* set the source for the next canvas, it will be an ab instance */
 void canvas_setabsource(t_ab_definition *abdef)
 {
