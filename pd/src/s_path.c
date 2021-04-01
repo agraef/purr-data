@@ -196,11 +196,17 @@ int sys_isabsolutepath(const char *dir)
 }
 
 int sys_relativizepath(const char *from, const char *to, char *result)
+// precond: from and to fit into char[MAXPDSTRING]
+// postcond: result will fit into char[MAXPDSTRING]
 {
-    char fromext[FILENAME_MAX];
+    char fromext[MAXPDSTRING];
     sys_unbashfilename(from, fromext);
-    char toext[FILENAME_MAX];
+    char toext[MAXPDSTRING];
     sys_unbashfilename(to, toext);
+    // this will be large enough to hold the result in any case (FLW)
+    char buf[4*MAXPDSTRING];
+
+    memset(buf, '\0', 4*MAXPDSTRING);
 
     int i = 0, j;
     while(fromext[i] && toext[i] && fromext[i] == toext[i]) i++;
@@ -221,12 +227,12 @@ int sys_relativizepath(const char *from, const char *to, char *result)
             {
                 if(k == 0)
                 {
-                    strcpy(result+k, "..");
+                    strcpy(buf+k, "..");
                     k += 2;
                 }
                 else
                 {
-                    strcpy(result+k, "/..");
+                    strcpy(buf+k, "/..");
                     k += 3;
                 }
             }
@@ -234,9 +240,11 @@ int sys_relativizepath(const char *from, const char *to, char *result)
         }
         if(toext[j])
         {
-            result[k] = '/';
-            strcpy(result+k+1, toext+j+1);
+            buf[k] = '/';
+            strcpy(buf+k+1, toext+j+1);
         }
+        strncpy(result, buf, MAXPDSTRING);
+        result[MAXPDSTRING-1] = '\0';
     }
     else if(!fromext[i] && toext[j])
     {

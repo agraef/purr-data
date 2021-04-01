@@ -2412,7 +2412,7 @@ static int do_replace_subpatches(t_canvas *x, const char* label, t_binbuf *origi
 static void abstracthandler_callback(t_abstracthandler *x, t_symbol *s)
 {
     char fullpath[MAXPDSTRING], label[MAXPDSTRING], *dir, *filename;
-    char basename[MAXPDSTRING];
+    char basename[MAXPDSTRING], buf[MAXPDSTRING];
     memset(fullpath, '\0', MAXPDSTRING);
     memset(basename, '\0', MAXPDSTRING);
     memset(label, '\0', MAXPDSTRING);
@@ -2424,9 +2424,12 @@ static void abstracthandler_callback(t_abstracthandler *x, t_symbol *s)
     dir = fullpath;
     strncpy(basename, filename, strlen(filename) - 3);
     int flag, prefix = 0;
+    strncpy(buf,
+            canvas_getdir(canvas_getrootfor(x->tarjet))->s_name,
+            MAXPDSTRING);
+    buf[MAXPDSTRING-1] = 0;
     if (flag =
-        sys_relativizepath(canvas_getdir(canvas_getrootfor(x->tarjet))->s_name,
-            dir, label))
+        sys_relativizepath(buf, dir, label))
     {
         int len = strlen(label), creator, fd = -1;
         if (len && label[len-1] != '/')
