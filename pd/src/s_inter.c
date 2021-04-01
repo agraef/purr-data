@@ -1574,7 +1574,7 @@ int sys_startgui(const char *guidir)
             portbuf,
             "localhost",
             (sys_k12_mode ? "pd-l2ork-k12" : "pd-l2ork"),
-            scriptbuf, pd_this_string, 0);
+            scriptbuf, pd_this_string, NULL);
         if (spawnret < 0)
         {
             perror("spawnl");
