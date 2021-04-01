@@ -2412,7 +2412,9 @@ static int do_replace_subpatches(t_canvas *x, const char* label, t_binbuf *origi
 static void abstracthandler_callback(t_abstracthandler *x, t_symbol *s)
 {
     char fullpath[MAXPDSTRING], label[MAXPDSTRING], *dir, *filename;
+    char basename[MAXPDSTRING];
     memset(fullpath, '\0', MAXPDSTRING);
+    memset(basename, '\0', MAXPDSTRING);
     memset(label, '\0', MAXPDSTRING);
     sys_unbashfilename(s->s_name, fullpath);
     if (strlen(fullpath) < 3 || strcmp(fullpath+strlen(fullpath)-3, ".pd"))
@@ -2420,7 +2422,7 @@ static void abstracthandler_callback(t_abstracthandler *x, t_symbol *s)
     filename = strrchr(fullpath, '/') + 1;
     fullpath[filename - fullpath - 1] = '\0';
     dir = fullpath;
-
+    strncpy(basename, filename, strlen(filename) - 3);
     int flag, prefix = 0;
     if (flag =
         sys_relativizepath(canvas_getdir(canvas_getrootfor(x->tarjet))->s_name,
@@ -2429,7 +2431,7 @@ static void abstracthandler_callback(t_abstracthandler *x, t_symbol *s)
         int len = strlen(label), creator, fd = -1;
         if (len && label[len-1] != '/')
             label[len] = '/';
-        strncat(label, filename, MAXPDSTRING - 4);
+        strncat(label, basename, MAXPDSTRING - strlen(label) - 1);
         /* check if there is a creator with the same name or if it's one of
            the built-in methods */
         t_symbol *sym = gensym(label);
@@ -2465,7 +2467,7 @@ static void abstracthandler_callback(t_abstracthandler *x, t_symbol *s)
         if (flag && prefix)
         {
             strcpy(label, "./");
-            strncat(label, filename, MAXPDSTRING - 4);
+            strncat(label, basename, MAXPDSTRING - strlen(label) - 1);
         }
         else if (!flag)
             error("warning: couldn't use relative path, there is a coincidence "
@@ -2476,7 +2478,7 @@ static void abstracthandler_callback(t_abstracthandler *x, t_symbol *s)
         memset(label, '\0', MAXPDSTRING);
         strcpy(label, dir);
         strcat(label, "/");
-        strncat(label, filename, strlen(label) - 3);
+        strncat(label, basename, MAXPDSTRING - strlen(label) - 1);
         /* should check if 'filename' is one of the built-in special methods
             in order to inform the user about the nameclash problem */
     }
