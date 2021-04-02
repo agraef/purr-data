@@ -10,6 +10,9 @@ nwjspkg = nwjs-sdk-v$(nwjsver)-linux
 ifeq ("$(shell dpkg-architecture -qDEB_HOST_ARCH)","armhf")
 arch = arm
 nwjsver = 0.27.6
+else ifeq ("$(shell dpkg-architecture -qDEB_HOST_ARCH)","arm64")
+arch = arm
+nwjsver = 0.27.6
 else ifeq ("$(shell dpkg-architecture -qDEB_HOST_ARCH)","amd64")
 arch = x64
 else
@@ -37,6 +40,7 @@ override_dh_auto_test:
 
 override_dh_auto_build:
 # Copy the nw.js sources to where purr-data wants them.
+	@echo "DEB_HOST_ARCH = $(shell dpkg-architecture -qDEB_HOST_ARCH)"
 	tar -xf debian/nwjs/$(nwjspkg)-$(arch).tar.gz && rm -rf pd/nw/nw && mv $(nwjspkg)-$(arch) pd/nw/nw
 	cd l2ork_addons && (export V=0 inst_dir=$(prefix); ./tar_em_up.sh -Bn)
 	make check prefix=$(prefix)
