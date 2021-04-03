@@ -271,13 +271,25 @@ since it will usually contain spaces, making the build fail.
         make
 
 8. Look in the top level source directory and double-click the setup file to
-   start installing Purr Data on your system.
+   start installing Purr Data on your system or run `./"setup file name"` in MSYS2 shell.
 
 #### Windows 64-bit Using msys2
 
 The instructions are exactly the same as for the 32 bit build (see above), but the build needs to be done using mingw64 instead of mingw32. That is:
 
 - Install the mingw64 packages for the dependencies. See the i686 packages listed under dependencies above, and replace i686 with x86_64 in the package names when installing.
+
+        pacman -S autoconf automake git libtool \
+          make mingw-w64-x86_64-dlfcn mingw-w64-x86_64-fftw \
+          mingw-w64-x86_64-fluidsynth \
+          mingw-w64-x86_64-SDL2 \
+          mingw-w64-x86_64-ftgl mingw-w64-x86_64-fribidi \
+          mingw-w64-x86_64-ladspa-sdk mingw-w64-x86_64-lame \
+          mingw-w64-x86_64-libsndfile mingw-w64-x86_64-libvorbis \
+          mingw-w64-x86_64-lua mingw-w64-x86_64-toolchain \
+          mingw-w64-x86_64-libjpeg-turbo \
+          mingw-w64-x86_64-speex \
+          rsync unzip wget
 
 - Use the MSYS2 MinGW 64-bit shell (rather than the 32-bit shell) to do the build.
 
