@@ -51,15 +51,11 @@ This is a collection of ready-made Linux packages for Arch Linux, openSUSE, and 
 
 - Support for a wide range of different Linux systems, including the latest Debian/Ubuntu versions. We generally support the two most recent stable (or long term support) releases, as well as current (or rolling) releases.
 
-- The packages are available through proper package repositories and thus can be installed and updated automatically through your distribution's standard package manager. Required dependencies will also be installed automatically.
-
-- The packages are updated more frequently (also between upstream releases) from the current git sources, if there are important new features or bugfixes.
-
 - "Classic" Pd-l2ork and Purr Data can be installed alongside each other.
 
-- Additional programming extensions for the [Faust](http://faust.grame.fr/) and [Pure](https://agraef.github.io/pure-lang/) programming languages are available.
+- The packages are available through proper package repositories (click **[here](https://software.opensuse.org/download/package?package=purr-data&project=home%3Aaggraef)**) and thus can be installed and updated automatically through your distribution's standard package manager. Required dependencies will also be installed automatically.
 
-**[Download](https://software.opensuse.org/download/package?package=purr-data&project=home%3Aaggraef)**
+- The packages are updated more frequently (also between upstream releases) from the current git sources, if there are interesting new features or important bugfixes. Such pre-releases are usually made available in our [preview repositories](https://github.com/agraef/purr-data/wiki/Installation#experimental-and-preview-builds) (click **[here](https://software.opensuse.org//download.html?project=home%3Aaggraef%3Apurr-data-git&package=purr-data)**), and corresponding Mac and Windows packages can usually be found on the Github [releases page](https://github.com/agraef/purr-data/releases).
 
 Please refer to the [Installation](https://github.com/agraef/purr-data/wiki/Installation#linux) wiki page for more information and detailed installation instructions.
 
