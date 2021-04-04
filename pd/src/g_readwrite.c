@@ -786,7 +786,13 @@ static void canvas_saveto(t_canvas *x, t_binbuf *b)
         patchsym = atom_getsymbolarg(name_index,
             binbuf_getnatom(bz), binbuf_getvec(bz));
         binbuf_free(bz);
-        if (sys_zoom && x->gl_zoom != 0) {
+        // look up the enclosing root or abstraction for the zoomflag value
+        // (this is where 'declare -zoom' stores it)
+        t_glist *gl = x;
+        while (!gl->gl_env && gl->gl_owner) {
+          gl = gl->gl_owner;
+        }
+        if (gl->gl_zoomflag && x->gl_zoom != 0) {
           // This uses the hack described above to store the zoom factor in
           // the fractional part of the windows height parameter. Note that
           // any of the other canvas geometry parameters would do just as
@@ -818,7 +824,7 @@ static void canvas_saveto(t_canvas *x, t_binbuf *b)
     else 
     {
         // See above.
-        if (sys_zoom && x->gl_zoom != 0) {
+        if (x->gl_zoomflag && x->gl_zoom != 0) {
           binbuf_addv(b, "ssiiifi;", gensym("#N"), gensym("canvas"),
                       (int)(x->gl_screenx1),
                       (int)(x->gl_screeny1),

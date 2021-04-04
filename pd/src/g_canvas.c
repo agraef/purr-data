@@ -412,7 +412,8 @@ t_symbol *canvas_field_templatesym; /* for "canvas" data type */
 t_word *canvas_field_vec;           /* for "canvas" data type */
 t_gpointer *canvas_field_gp;        /* parent for "canvas" data type */
 
-static int calculate_zoom(t_float zoom_hack)
+// This is also used in g_editor.c, so make sure to keep it non-static.
+int calculate_zoom(t_float zoom_hack)
 {
   // This gives back the zoom level stored in the patch (cf. zoom_hack
   // in g_readwrite.c). Make sure to round this value to handle any rounding
@@ -461,6 +462,25 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
         canvas_addtolist(x);
     /* post("canvas %zx, owner %zx", x, owner); */
 
+    /* This records the zoom level obtained from the patch (cf. zoom_hack in
+       g_readwrite.c, and the calculate_zoom() function above), so that the
+       actual zoom level can be calculated later in a lazy fashion if needed.
+       Initially zero, the actual value is extracted from the canvas arguments
+       below. If loading/saving zoom is enabled globally (sys_zoom != 0) then
+       we can apply the zoom factor right away and we are done (gl_zoom_hack
+       stays zero in that case).
+
+       Otherwise, we record the value so that we can apply the zoom later when
+       a [declare -zoom 1] object in the patch calls for it. (In the case of a
+       one-off subpatch, this may actually happen much later at the time the
+       subpatch window is first mapped; see the comment preceding
+       canvas_calculate_zoom() in g_editor.c for further explanation.)
+
+       Note that this 'declare' option is patch-local and will make sure that
+       the recorded zoom level is applied even if loading/saving zoom is
+       globally disabled (sys_zoom == 0). */
+    x->gl_zoom_hack = 0;
+
     if (argc == 5)  /* toplevel: x, y, w, h, font */
     {
         t_float zoom_hack = atom_getfloatarg(3, argc, argv);
@@ -472,6 +492,9 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
         zoom_hack -= height;
         if (sys_zoom && zoom_hack > 0)
             zoom = calculate_zoom(zoom_hack);
+        else
+            // record the zoom hack for later, see comment above
+            x->gl_zoom_hack = zoom_hack;
     }
     else if (argc == 6)  /* subwindow: x, y, w, h, name, vis */
     {
@@ -485,6 +508,8 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
         zoom_hack -= height;
         if (sys_zoom && zoom_hack > 0)
             zoom = calculate_zoom(zoom_hack);
+        else
+            x->gl_zoom_hack = zoom_hack;
     }
         /* (otherwise assume we're being created from the menu.) */
 
@@ -555,6 +580,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     x->gl_edit_save = 0;
     x->gl_font = sys_nearestfontsize(font);
     x->gl_zoom = zoom;
+    x->gl_zoomflag = sys_zoom;
     pd_pushsym(&x->gl_pd);
 
     x->u_queue = canvas_undo_init(x);
@@ -612,6 +638,7 @@ t_glist *glist_addglist(t_glist *g, t_symbol *sym,
     t_float x1, t_float y1, t_float x2, t_float y2,
     t_float px1, t_float py1, t_float px2, t_float py2)
 {
+    extern int sys_zoom;
     static int gcount = 0;
     int zz;
     int menu = 0;
@@ -663,6 +690,8 @@ t_glist *glist_addglist(t_glist *g, t_symbol *sym,
     x->gl_font =  (canvas_getcurrent() ?
         canvas_getcurrent()->gl_font : sys_defaultfont);
     x->gl_zoom = 0;
+    x->gl_zoom_hack = 0;
+    x->gl_zoomflag = sys_zoom;
     x->gl_screenx1 = x->gl_screeny1 = 0;
     x->gl_screenx2 = 450;
     x->gl_screeny2 = 300;
@@ -2905,6 +2934,21 @@ void canvas_declare(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         else if ((argc > i+1) && !strcmp(flag, "-stdlib"))
         {
             canvas_stdlib(e, atom_getsymbolarg(i+1, argc, argv)->s_name);
+            i++;
+        }
+        else if ((argc > i+1) && !strcmp(flag, "-zoom"))
+        {
+            x->gl_zoomflag = atom_getfloatarg(i+1, argc, argv) != 0;
+            if (x->gl_zoomflag && x->gl_zoom_hack) {
+              x->gl_zoom = calculate_zoom(x->gl_zoom_hack);
+              // we only want to calculate this once, so reset the zoom_hack
+              // value to ensure that we don't do it again
+              x->gl_zoom_hack = 0;
+            } else if (!x->gl_zoomflag) {
+              // reset the zoom level in case we already calculated it
+              // previously
+              x->gl_zoom = 0;
+            }
             i++;
         }
         // ag: Handle the case of an unrecognized option argument (presumably

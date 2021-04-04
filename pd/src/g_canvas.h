@@ -225,6 +225,8 @@ struct _glist
     t_symbol *gl_name;          /* symbol bound here */
     int gl_font;                /* nominal font size in points, e.g., 10 */
     int gl_zoom;                /* current zoom level (-7..8) */
+    t_float gl_zoom_hack;           /* stored zoom_hack used by declare */
+    int gl_zoomflag;                /* canvas-local zoom flag (0/1) */
     struct _glist *gl_next;         /* link in list of toplevels */
     t_canvasenvironment *gl_env;    /* root canvases and abstractions only */
     unsigned int gl_havewindow:1;   /* true if we own a window */
