@@ -217,8 +217,8 @@ p.msg::after {
 
 /* not sure what this is doing here... */
 text {
-    // fill: red;
-    //cursor: default;
+    /* fill: red;
+    cursor: default; */
 }
 
 /* used for numbox2 to highlight contents when clicked on in runmode */
@@ -366,7 +366,7 @@ text.activated {
 .xlet_control {
     stroke: #a294a2;
     fill: black;
-//    stroke-width: 1;
+    /* stroke-width: 1; */
 }
 
 /* signal inlet */
