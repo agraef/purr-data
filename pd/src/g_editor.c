@@ -2828,6 +2828,48 @@ void canvas_init_menu(t_canvas *x)
     gui_vmess("gui_menu_font_set_initial_size", "xi", x, x->gl_font);
 }
 
+/* ag: Calculate the proper zoom factor for a (sub)patch.
+
+   We may need to pick up the slack from 'declare -zoom 1' here, which
+   calculates zoom factors lazily from their "zoom_hack" values stored in the
+   (sub)patch headers. This will only be necessary if we're mapping a one-off
+   subpatch, because 'declare' in a subpatch always gets invoked on the
+   root patch or abstraction containing that subpatch.
+
+   So in this case the zoom factor (or rather its "zoom_hack" value) will get
+   stored at its proper location in the subpatch canvas (which 'declare -zoom'
+   never sees, thus it can't update the zoom level right there), while the
+   zoomflag gets set by 'declare -zoom' in the root/abstraction.
+
+   Catch 22. :) We solve this by looking up the zoomflag in the root, and
+   calculating the proper zoom level lazily in canvas_vis(), when the window
+   first gets mapped and we have both the zoomflag and zoom_hack values
+   readily available. */
+
+static int canvas_calculate_zoom(t_canvas *x)
+{
+  // Check whether the zoom_hack value of canvas x is nonzero. Otherwise the
+  // canvas either has no zoom level, or we already calculated it previously,
+  // and we simply return the recorded value.
+  if (x->gl_zoom_hack) {
+    t_glist *gl = x;
+    // in a subpatch, look up the enclosing root or abstraction
+    while (!gl->gl_env && gl->gl_owner) {
+      gl = gl->gl_owner;
+    }
+    // If the root zoomflag is set, employ calculate_zoom() from g_canvas.c
+    // to calculate the zoom level from the zoom_hack value.
+    if (gl->gl_zoomflag) {
+      extern int calculate_zoom(t_float zoom_hack);
+      x->gl_zoom = calculate_zoom(x->gl_zoom_hack);
+      // Now that we've updated the value, reset the zoom_hack so that we
+      // don't do that calculation again.
+      x->gl_zoom_hack = 0;
+    }
+  }
+  return x->gl_zoom;
+}
+
 extern int sys_snaptogrid; /* whether we are snapping to grid or not */
 extern int sys_gridsize;
 
@@ -2903,7 +2945,7 @@ void canvas_vis(t_canvas *x, t_floatarg f)
                 geobuf,
                 sys_snaptogrid,
                 sys_gridsize,
-                x->gl_zoom,
+                canvas_calculate_zoom(x),
                 x->gl_edit,
                 x->gl_name->s_name,
                 canvas_getdir(x)->s_name,

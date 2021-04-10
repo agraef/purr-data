@@ -1,6 +1,10 @@
 #N canvas 426 36 555 619 10;
 #X declare;
-#X declare;
+#X declare -path mylibs;
+#X declare -lib mylib;
+#X declare -stdpath mylibs;
+#X declare -stdlib mylib;
+#X declare -zoom 1;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -228856 -66577 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header declare 3 12 0 18
@@ -53,7 +57,6 @@ calling patch as well as the abstraction.);
 #X text 98 561 BUG: The name "-stdpath" is confusing \, as it has a
 quite different effect from "-stdpath" on the pd command line.;
 #X text 11 23 set environment for loading patch;
-#X text 139 69 NEEDS AN EXAMPLE;
 #X text 165 185 - the [declare] object adds one or more directories
 to the search path \, and/or pre-loads one or more libraries ("extensions")
 to Pd in preparation for opening the patch from a file. Usage is "declare
@@ -66,3 +69,33 @@ you can get it using "declare -stdpath extra/zexy".;
 #X text 80 185 n) symbol atom;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
+#X obj 40 52 declare -path mylibs;
+#X obj 240 52 declare -lib mylib;
+#X obj 40 76 declare -stdpath mylibs;
+#X obj 240 76 declare -stdlib mylib;
+#N canvas 480 189 445 363 Patch_local 0;
+#X obj 1 1 cnv 15 437 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 -204280 -1 0;
+#X text 7 1 [declare] Patch-local options;
+#X obj 10 40 declare -zoom 1;
+#X text 133 40 turns on load/restore of zoom levels in a patch;
+#X text 10 120 * [declare -zoom 0/1] turns save/restore of zoom levels
+on or off. This overrides the corresponding global option in the GUI
+preferences. Please note that this does *not* actually set the zoom
+level itself \, it merely enables or disables storing and retrieving
+that setting in a patch., f 69;
+#X text 10 70 [declare] also offers the following special (and experimental)
+patch-local option which overrides the corresponding global flag in
+the current patch (including all its one-off subpatches):, f 69;
+#X text 10 200 CAVEAT: This option is only available in Purr Data \,
+it is NOT supported by vanilla Pd (which has no way of configuring
+the zoom behavior)., f 69;
+#X text 10 250 The -zoom option is intended mainly for classroom use
+\, e.g. \, when projecting patches on a whiteboard. It ensures that
+the patch is displayed at the preset zoom level by default \, even
+if the global zoom save/load option is disabled in the preferences.
+If you abuse this option to enforce unusually high or low zoom levels
+\, you take away precious zoom levels from the user. So please use
+this option with due skill \, care \, and diligence \, or better don't
+use it at all., f 69;
+#X restore 221 597 pd Patch_local;
