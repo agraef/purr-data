@@ -210,8 +210,8 @@ p.msg::after {
 
 /* not sure what this is doing here... */
 text {
-    // fill: red;
-    //cursor: default;
+    /* fill: red;
+    cursor: default; */
 }
 
 /* not sure if this is still needed */

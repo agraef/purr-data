@@ -324,8 +324,8 @@ p.msg::after {
 
 /* not sure what this is doing here... */
 text {
-    // fill: red;
-    //cursor: default;
+    /* fill: red;
+    cursor: default; */
 }
 
 /* not sure if this is still needed */
@@ -456,7 +456,7 @@ text {
 .xlet_control {
     stroke: #777;
     fill: white;
-//    stroke-width: 1;
+    /* stroke-width: 1; */
 }
 
 /* signal inlet */
