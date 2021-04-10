@@ -409,9 +409,7 @@ static void *pddplink_new(t_symbol *s, int ac, t_atom *av)
     SETSYMBOL(&x->x_openargs[0], x->x_ulink);
     SETSYMBOL(&x->x_openargs[1], x->x_dirsym);
     x->x_ishit = 0;
-    if (x->x_isboxed)
-	outlet_new((t_object *)x, &s_anything);
-    else
+    if (!x->x_isboxed)
     {
 	/* do we need to set ((t_text *)x)->te_type = T_TEXT; ? */
 	if (!x->x_vistext)
