@@ -27,8 +27,8 @@ Maintainers:
 
 ### One Paragraph Overview
 
-Pure Data (aka Pd) is a visual programming language.  That means you can use it to
-create software graphically by drawing diagrams instead of writing lines of
+Pure Data (aka Pd) is a visual programming language.  That means you can use it
+to create software graphically by drawing diagrams instead of writing lines of
 code.  These diagrams show how data flows through the software, displaying on
 the screen what text-based languages require you to piece together in your mind.
 
@@ -78,7 +78,8 @@ For Ico Bukvic's original Pd-l2ork website see:
 
 <http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/>
 
-(Note that the latter link is more about "classic" Pd-L2Ork a.k.a. Pd-L2Ork 1.0, see below. But it also contains some information about Purr Data.)
+(Note that the latter link is more about "classic" Pd-L2Ork a.k.a. Pd-L2Ork 1.0,
+see below. But it also contains some information about Purr Data.)
  
 ### Relationship of Purr Data to Pure Data
 
@@ -102,21 +103,39 @@ Releases are done on GitHub:
 
 <https://github.com/jonwwilkes/purr-data/releases>
 
-This is where the packages first come out as soon as Jonathan Wilkes releases them. The same packages can also be dowloaded (usually shortly after release) on Albert Gräf's mirror, which also provides a website, wiki, additional documentation, and an up-to-date mirror of the source code repository:
+This is where the packages first come out as soon as Jonathan Wilkes releases
+them. The same packages can also be dowloaded (usually shortly after release)
+on Albert Gräf's mirror, which also provides a website, wiki, additional
+documentation, and an up-to-date mirror of the source code repository:
 
 <https://github.com/agraef/purr-data/releases>
 
 **Linux:**
 
-Packages for various Linux distributions (including Arch, Debian, Ubuntu, and openSUSE) are available through the JGU package repositories maintained by Albert Gräf on the OBS (Open Build System). Detailed instructions can be found [here](https://github.com/agraef/purr-data/wiki/Installation#linux).
+Packages for various Linux distributions (including Arch, Debian, Ubuntu, and
+openSUSE) are available through the JGU package repositories maintained by
+Albert Gräf on the OBS (Open Build System). Detailed instructions can be found
+[here](https://github.com/agraef/purr-data/wiki/Installation#linux).
 
-You can also just go to the [OBS Download](https://software.opensuse.org/download/package?package=purr-data&project=home%3Aaggraef), pick your Linux system, and follow the instructions.
+You can also just go to the
+[OBS Download](https://software.opensuse.org/download/package?package=purr-data&project=home%3Aaggraef),
+pick your Linux system, and follow the instructions.
 
 ### Build Guide
 
-Purr Data is usually built by just running `make` in the toplevel source directory after checking out the sources from its git repository. This works across all supported platforms (Linux, Mac and Windows at this time). The Makefile also offers the customary targets to clean (`make clean`, or `make realclean` to put the sources in pristine state again) and to roll a self-contained distribution tarball (`make dist`), as well as some other convenience targets  (please check the comments at the beginning of the Makefile for more information).
+Purr Data is usually built by just running `make` in the toplevel source
+directory after checking out the sources from its git repository. This works
+across all supported platforms (Linux, Mac and Windows at this time).
+The Makefile also offers the customary targets to clean (`make clean`, or
+`make realclean` to put the sources in pristine state again) and to roll a
+self-contained distribution tarball (`make dist`), as well as some other
+convenience targets (please check the comments at the beginning of the Makefile
+for more information).
 
-However, to make this work, you will most likely have to install some prerequisites first: *build tools* such as a C/C++ compiler and the make program itself, as well as *dependencies*, the libraries that Purr Data needs. Detailed instructions for each of the supported platforms are given below.
+However, to make this work, you will most likely have to install some
+prerequisites first: *build tools* such as a C/C++ compiler and the make
+program itself, as well as *dependencies*, the libraries that Purr Data needs.
+Detailed instructions for each of the supported platforms are given below.
 
 #### Linux
 
@@ -202,7 +221,8 @@ Hard drive space required: *roughly 2 GB*
 
         make
 
-6. There should now be a .dmg file in your current directory, which lets you install the app in the usual way
+6. There should now be a .dmg file in your current directory, which lets you
+install the app in the usual way
 
 #### Windows 32-bit Using msys2
 
@@ -275,9 +295,13 @@ since it will usually contain spaces, making the build fail.
 
 #### Windows 64-bit Using msys2
 
-The instructions are exactly the same as for the 32 bit build (see above), but the build needs to be done using mingw64 instead of mingw32. That is:
+The instructions are exactly the same as for the 32 bit build (see above), but
+the build needs to be done using mingw64 instead of mingw32. That is:
 
-- Install the mingw64 packages for the dependencies. See the i686 packages listed under dependencies above, and replace i686 with x86_64 in the package names when installing.
+- Install the mingw64 packages for the dependencies. These should be the same as
+the i686 packages listed under dependencies above, but with x86_64 instead of
+i686 in the package names. Here's the current list you can copy and paste for
+convenience:
 
         pacman -S autoconf automake git libtool \
           make mingw-w64-x86_64-dlfcn mingw-w64-x86_64-fftw \
@@ -291,7 +315,8 @@ The instructions are exactly the same as for the 32 bit build (see above), but t
           mingw-w64-x86_64-speex \
           rsync unzip wget
 
-- Use the MSYS2 MinGW 64-bit shell (rather than the 32-bit shell) to do the build.
+- Use the MSYS2 MinGW 64-bit shell (rather than the 32-bit shell) to do the
+build.
 
 ### Code of Conduct
 
