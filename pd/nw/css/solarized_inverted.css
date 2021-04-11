@@ -449,15 +449,6 @@ text {
     background-color: #002b36;
     border:1px solid #839496;
     padding: 12px;
-    margin: 12px;
-    box-shadow: 7px 7px 5px grey;
-}
-
-/* Dialog to ask to save the patch before quitting */
-#save_before_quit {
-    background-color: #f3f3f3;
-    border:1px solid #f3f3f3;
-    padding: 12px;
     /* margin: 12px; */
     /*box-shadow: 7px 7px 5px grey;*/
     width: 70%;
