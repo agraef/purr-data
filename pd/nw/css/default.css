@@ -331,6 +331,11 @@ text {
     cursor: default; */
 }
 
+/* default color for iemgui labels */
+.iemgui .defaultcol {
+    fill: black;
+}
+
 /* used for numbox2 to highlight contents when clicked on in runmode */
 text.activated {
     fill: red;

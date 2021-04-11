@@ -203,6 +203,11 @@ text {
     cursor: default; */
 }
 
+/* default color for iemgui labels */
+.iemgui .defaultcol {
+    fill: black;
+}
+
 /* not sure if this is still needed */
 .selected_border {
     stroke: blue;
