@@ -202,6 +202,11 @@ text {
     cursor: default; */
 }
 
+/* default color for iemgui labels */
+.iemgui:not(.mycanvas) .defaultcol {
+    fill: black;
+}
+
 /* not sure if this is still needed */
 .selected_border {
     stroke: blue;

@@ -3806,6 +3806,15 @@ function gui_iemgui_label_new(cid, tag, x, y, color, text, fontname, fontweight,
             "font-weight": fontweight,
             "font-size": fontsize + "px",
             fill: color,
+	    // ag: Kludge so we can set a custom label color in themes. See
+	    // Jonathan's remark in MR 756. The idea is that we take black
+	    // a.k.a. "#000000" to mean "whatever the default color in the
+	    // current theme is", which is set in the css file using the
+	    // "defaultcol" class. Of course this means that you can't get
+	    // true black unless it's the default in the theme. This situation
+	    // will hopefully not arise all that often in practice, but then
+	    // you can still use, e.g., "#010101" as a very close substitute.
+            class: (color === "#000000") ? "defaultcol" : "",
             // Iemgui labels are anchored "w" (left-aligned to non-tclers).
             // For no good reason, they are also centered vertically, unlike
             // object box text. Since svg text uses the baseline as a reference
@@ -3842,12 +3851,8 @@ function gui_iemgui_label_coords(cid, tag, x, y) {
 
 function gui_iemgui_label_color(cid, tag, color) {
     gui(cid).get_elem(tag + "label", {
-        fill: color
-    });
-}
-
-function gui_iemgui_label_color(cid, tag, color) {
-    gui(cid).get_elem(tag + "label", {
+	// default theme-specific label color, cf. gui_iemgui_label_new
+        class: (color === "#000000") ? "defaultcol" : "",
         fill: color
     });
 }
@@ -3971,6 +3976,14 @@ function gui_iemgui_label_displace_drag_handle(cid, tag, dx, dy) {
 }
 
 function gui_mycanvas_new(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
+    gui(cid).get_gobj(tag, {
+        // ag: We need to be able to distinguish this case easily in theme
+        // files, in order to suppress the default label coloring for
+        // iemguis. I'm not sure whether this is the best way to do this, but
+        // if we don't want to change the existing JS API, this seems to be
+        // the only call where we can be certain that a gobj is a canvas object.
+        class: "iemgui mycanvas"
+    });
     gui(cid).get_gobj(tag)
     .append(function(frag) {
         var rect_vis, rect, g;
