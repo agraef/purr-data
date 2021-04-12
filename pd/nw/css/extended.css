@@ -203,7 +203,7 @@ text {
 }
 
 /* default color for iemgui labels */
-.iemgui .defaultcol {
+.iemgui:not(.mycanvas) .defaultcol {
     fill: black;
 }
 

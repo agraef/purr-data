@@ -212,7 +212,7 @@ text {
 }
 
 /* default color for iemgui labels */
-.iemgui .defaultcol {
+.iemgui:not(.mycanvas) .defaultcol {
     fill: #4bd046;
 }
 
