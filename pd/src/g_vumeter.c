@@ -244,7 +244,7 @@ static void vu_draw_config(t_vu* x, t_glist* glist)
         {
             int isselected = x->x_gui.x_selected == canvas &&
                 x->x_gui.x_glist == canvas && x->x_scale;
-            gui_vmess("gui_vumeter_update_text", "xxssixi",
+            gui_vmess("gui_vumeter_update_text", "xxssisi",
                 canvas, x, iemgui_vu_scale_str[i/4],
                 iemgui_font(&x->x_gui), isselected, cbuf, i);
         }
