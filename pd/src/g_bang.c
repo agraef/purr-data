@@ -26,7 +26,10 @@ void bng_draw_update(t_gobj *xgobj, t_glist *glist)
 {
     t_bng *x = (t_bng *)xgobj;
     char cbuf[8];
-    sprintf(cbuf, "#%6.6x", x->x_flashed ? x->x_gui.x_fcol : x->x_gui.x_bcol);
+    if (x->x_flashed)
+        sprintf(cbuf, "#%6.6x", x->x_gui.x_fcol);
+    else
+        sprintf(cbuf, "none");
     if (x->x_gui.x_changed != x->x_flashed && glist_isvisible(glist))
     {
         gui_vmess("gui_bng_button_color", "xxs",
@@ -88,7 +91,10 @@ void bng_draw_config(t_bng* x, t_glist* glist)
 {
     t_canvas *canvas=glist_getcanvas(glist);
     char cbuf[8];
-    sprintf(cbuf, "#%6.6x", x->x_flashed ? x->x_gui.x_fcol : x->x_gui.x_bcol);
+    if (x->x_flashed)
+        sprintf(cbuf, "#%6.6x", x->x_gui.x_fcol);
+    else
+        sprintf(cbuf, "none");
     iemgui_base_draw_config(&x->x_gui);
     gui_vmess("gui_bng_button_color", "xxs",
         canvas,

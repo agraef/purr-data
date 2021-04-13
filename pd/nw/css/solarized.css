@@ -363,8 +363,35 @@ text {
     stroke-width: 1;
 }
 
+/* default label, foreground, and background colors for iemguis.
+   These classes get set only if the colors sent from the backend
+   are the black or white default colors for the widget.
+
+   By using the class we allow iemguis with default colors to inherit
+   from CSS. However, if the user changes these colors then the tag
+   is removed and the given SVG fill/stroke attribute applies. */
+
+    /* special case for [cnv] label */
+.iemgui:not(.mycanvas) .iem_label {
+    fill: #657b83;
+}
+
+.iem_fg {
+    fill: #93a1a1;
+}
+
+.iem_bg {
+    fill: #fdf6e3;
+}
+
+/* special case for inner strokes that should match the border-- things like
+   [bng] circle stroke, etc. */
+.iem_stroke {
+    stroke: #93a1a1;
+}
+
 /* text label for an iemgui */
-.iemgui_label_selected {
+.iemgui:not(.mycanvas) .iemgui_label_selected {
     fill: #268bd2;
 }
 
@@ -421,15 +448,6 @@ text {
 #save_before_quit {
     background-color: #fdf6e3;
     border:1px solid #eee8d5;
-    padding: 12px;
-    margin: 12px;
-    box-shadow: 7px 7px 5px grey;
-}
-
-/* Dialog to ask to save the patch before quitting */
-#save_before_quit {
-    background-color: #f3f3f3;
-    border:1px solid #f3f3f3;
     padding: 12px;
     /* margin: 12px; */
     /*box-shadow: 7px 7px 5px grey;*/

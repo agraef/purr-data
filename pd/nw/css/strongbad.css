@@ -323,13 +323,13 @@ text {
       canvas.
 */
 :not(.gop).selected .border {
-    stroke: green;
+    stroke: yellow;
     display: inline;
 }
 
 /* text inside selected objects */
 :not(.gop).selected text {
-    fill: green;
+    fill: yellow;
 }
 
 /* for an object that didn't create */
@@ -360,9 +360,36 @@ text {
     stroke-width: 1;
 }
 
+/* default label, foreground, and background colors for iemguis.
+   These classes get set only if the colors sent from the backend
+   are the black or white default colors for the widget.
+
+   By using the class we allow iemguis with default colors to inherit
+   from CSS. However, if the user changes these colors then the tag
+   is removed and the given SVG fill/stroke attribute applies. */
+
+    /* special case for [cnv] label */
+.iem_label {
+    fill: #4bd046;
+}
+
+.iem_fg {
+    fill: #0b560b;
+}
+
+.iem_bg {
+    fill: black;
+}
+
+/* special case for inner strokes that should match the border-- things like
+   [bng] circle stroke, etc. */
+.iem_stroke {
+    stroke: #0b560b;
+}
+
 /* text label for an iemgui */
-.iemgui_label_selected {
-    fill: blue;
+.iemgui:not(.mycanvas) .iemgui_label_selected {
+    fill: yellow;
 }
 
 /* test of xlet hover animation... this should 
@@ -415,8 +442,9 @@ text {
 
 /* Dialog to ask to save the patch before quitting */
 #save_before_quit {
-    background-color: #f3f3f3;
-    border:1px solid #f3f3f3;
+    color: #53b83b;
+    background-color: black;
+    border:1px solid green;
     padding: 12px;
     /* margin: 12px; */
     /*box-shadow: 7px 7px 5px grey;*/
