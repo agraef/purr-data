@@ -3293,18 +3293,22 @@ function gui_bng_new(cid, tag, cx, cy, radius) {
             r: radius,
             "shape-rendering": "auto",
             fill: "none",
-            stroke: "black",
             "stroke-width": 1,
             id: tag + "button"
         });
+            // For some reason the user was never allowed to change the color
+            // of the circle stroke. So we just set the color in a way that
+            // guarantees we will inherit the default iemgui stroke color
+            // as defined in the current GUI preset.
+        iemgui_set_color(circle, "stroke", "#000000");
         frag.appendChild(circle);
         return frag;
     });
 }
 
 function gui_bng_button_color(cid, tag, color) {
-    gui(cid).get_elem(tag + "button", {
-        fill: color
+    gui(cid).get_elem(tag + "button", function(e) {
+        iemgui_set_color(e, "fg", color);
     });
 }
 
@@ -3314,6 +3318,9 @@ function gui_bng_configure(cid, tag, color, cx, cy, r) {
         cy: cy,
         r: r,
         fill: color
+    });
+    gui(cid).get_elem(tag + "button", function(e) {
+        iemgui_set_color(e, "fg", color);
     });
 }
 
@@ -3325,7 +3332,6 @@ function gui_toggle_new(cid, tag, color, width, state, p1,p2,p3,p4,p5,p6,p7,p8,b
         ].join(" ");
         var cross1 = create_item(cid, "polyline", {
             points: points,
-            stroke: color,
             fill: "none",
             id: tag + "cross1",
             display: state ? "inline" : "none",
@@ -3342,6 +3348,8 @@ function gui_toggle_new(cid, tag, color, width, state, p1,p2,p3,p4,p5,p6,p7,p8,b
             display: state ? "inline" : "none",
             "stroke-width": width
         });
+        iemgui_set_color(cross1, "stroke", color);
+        iemgui_set_color(cross2, "stroke", color);
         frag.appendChild(cross1);
         frag.appendChild(cross2);
         return frag;
@@ -3369,14 +3377,14 @@ function gui_toggle_resize_cross(cid,tag,w,p1,p2,p3,p4,p5,p6,p7,p8,basex,basey) 
 function gui_toggle_update(cid, tag, state, color) {
     var disp = !!state ? "inline" : "none";
     gui(cid)
-    .get_elem(tag + "cross1", {
-        display: disp,
-        stroke: color
+    .get_elem(tag + "cross1", function(e) {
+        iemgui_set_color(e, "stroke", color);
+        configure_item(e, { display: disp });
     })
-    .get_elem(tag + "cross2", {
-        display: disp,
-        stroke: color
-    })
+    .get_elem(tag + "cross2", function(e) {
+        iemgui_set_color(e, "stroke", color);
+        configure_item(e, { display: disp });
+    });
 }
 
 function numbox_data_string_frame(w, h) {
@@ -3405,21 +3413,21 @@ function gui_numbox_new(cid, tag, color, x, y, w, h, drawstyle, is_toplevel) {
         var g = gui_gobj_new(cid, tag, "iemgui", x, y, is_toplevel);
         var border = create_item(cid, "path", {
             d: numbox_data_string_frame(w, h),
-            fill: color,
-            stroke: "black",
             "stroke-width": (drawstyle < 2 ? 1 : 0),
             id: (tag + "border"),
             "class": "border"
         });
+        iemgui_set_color(border, "stroke", "#000000");
+        iemgui_set_color(border, "bg", color);
         g.appendChild(border);
         var triangle = create_item(cid, "path", {
             d: numbox_data_string_triangle(w, h),
-            fill: color,
-            stroke: "black",
+            fill: "none",
             "stroke-width": (drawstyle == 0 || drawstyle ==  2 ? 1 : 0),
             id: (tag + "triangle"),
             "class": "border"
         });
+        iemgui_set_color(triangle, "stroke", "#000000");
         g.appendChild(triangle);
     });
 }
@@ -3445,24 +3453,21 @@ function gui_numbox_draw_text(cid,tag,text,font_size,color,xpos,ypos,basex,basey
                         (xpos - basex) + "," +
                         ((ypos - basey + (ypos - basey) * 0.5)|0) + ")",
             "font-size": font_size,
-            fill: color,
             id: tag + "text"
         }),
         text_node = w.document.createTextNode(text);
+        iemgui_set_color(svg_text, "fg", color);
         svg_text.appendChild(text_node);
         frag.appendChild(svg_text);
         return frag;
     });
 }
 
-function gui_numbox_update(cid, tag, fcolor, bgcolor, num_font_size, font_name, font_size, font_weight) {
+function gui_numbox_update(cid, tag, fgcolor, bgcolor, num_font_size, font_name, font_size, font_weight) {
     gui(cid)
-    .get_elem(tag + "border", {
-        fill: bgcolor
-    })
-    .get_elem(tag + "text", {
-        fill: fcolor,
-        "font-size": num_font_size
+    .get_elem(tag + "text", function(e) {
+        configure_item(e, { "font-size": num_font_size });
+        iemgui_set_color(e, "fg", fgcolor);
     })
     // label may or may not exist, but that's covered by the API
     .get_elem(tag + "label", function() {
@@ -3484,11 +3489,11 @@ function gui_slider_new(cid, tag, color, p1, p2, p3, p4, basex, basey) {
             y1: p2 - basey,
             x2: p3 - basex,
             y2: p4 - basey,
-            stroke: color,
             "stroke-width": 3,
             fill: "none",
             id: tag + "indicator"
         });
+        iemgui_set_color(indicator, "stroke", color);
         frag.appendChild(indicator);
         return frag;
     });
@@ -3504,8 +3509,8 @@ function gui_slider_update(cid, tag, p1, p2, p3, p4, basex, basey) {
 }
 
 function gui_slider_indicator_color(cid, tag, color) {
-    gui(cid).get_elem(tag + "indicator", {
-        stroke: color
+    gui(cid).get_elem(tag + "indicator", function(e) {
+        iemgui_set_color(e, "stroke", color);
     });
 }
 
@@ -3517,12 +3522,11 @@ function gui_radio_new(cid, tag, p1, p2, p3, p4, i, basex, basey) {
             y1: p2 - basey,
             x2: p3 - basex,
             y2: p4 - basey,
-            // stroke is just black for now
-            stroke: "black",
             "stroke-width": 1,
             fill: "none",
             id: tag + "cell_" + i
         });
+        iemgui_set_color(cell, "stroke", "#000000");
         frag.appendChild(cell);
         return frag;
     });
@@ -3536,11 +3540,10 @@ function gui_radio_create_buttons(cid,tag,color,p1,p2,p3,p4,basex,basey,i,state)
             y: p2 - basey,
             width: p3 - p1,
             height: p4 - p2,
-            stroke: color,
-            fill: color,
             id: tag + "button_" + i,
             display: state ? "inline" : "none"
         });
+        iemgui_set_color(b, "fg", color);
         frag.appendChild(b);
         return frag;
     });
@@ -3572,10 +3575,9 @@ function gui_radio_update(cid, tag, fgcolor, prev, next) {
     .get_elem(tag + "button_" + prev, {
         display: "none"
     })
-    .get_elem(tag + "button_" + next, {
-        display: "inline",
-        fill: fgcolor,
-        stroke: fgcolor
+    .get_elem(tag + "button_" + next, function(e) {
+        configure_item(e, { display: "inline" });
+        iemgui_set_color(e, "fg", fgcolor);
     });
 }
 
@@ -3591,6 +3593,7 @@ function gui_vumeter_draw_text(cid,tag,color,xpos,ypos,text,index,basex,basey, f
             id: tag + "text_" + index
         }),
         text_node = w.document.createTextNode(text);
+        iemgui_set_color(svg_text, "label", color);
         svg_text.appendChild(text_node);
         frag.appendChild(svg_text);
         return frag;
@@ -3607,8 +3610,8 @@ function gui_vumeter_draw_text(cid,tag,color,xpos,ypos,text,index,basex,basey, f
 // To get on to other work we just parrot the insanity here,
 // and silently ignore calls to update non-existent text.
 function gui_vumeter_update_text(cid, tag, text, font, selected, color, i) {
-    gui(cid).get_elem(tag + "text_" + i, {
-        fill: color
+    gui(cid).get_elem(tag + "text_" + i, function(e) {
+        iemgui_set_color(e, "label", color);
     });
 }
 
@@ -3734,10 +3737,41 @@ function gui_vumeter_update_peak(cid,tag,color,p1,p2,p3,p4,basex,basey) {
     });
 }
 
+    // set a color for an iemgui. We go through contortions to compare the
+    // color to a stated "default_color." If it's the same, we set a CSS
+    // class so the element can inherit from the GUI preset. If not, we just
+    // set the SVG fill attribute. If our CSS class is set it will override
+    // the SVG attribute because CSS props *always* override SVG attrs.
+function iemgui_set_color(elem, which, color) {
+    var obj = {},
+        default_color,
+        color_class,
+        prop;
+    // default fg, stroke, and label color for iemguis are all black.
+    // the default background for all iemguis (except vumeter) is #fcfcfc.
+    // No idea why it's not "#ffffff" but that's what we're stuck with.
+    default_color = (which === "bg" ? "#fcfcfc" : "#000000");
+
+    // For custom colors we set the stroke attr for "stroke", and we use the
+    // fill attr for everything else.
+    prop = (which == "stroke" ? "stroke" : "fill");
+
+    // our class is just `which` prepended with iem_
+    color_class = "iem_" + which;
+
+    if (color === default_color) {
+        elem.classList.add(color_class);
+    } else {
+        elem.classList.remove(color_class);
+        obj[prop] = color;
+        configure_item(elem, obj);
+    }
+}
+
 function gui_iemgui_base_color(cid, tag, color) {
     gui(cid).get_gobj(tag)
-    .q(".border", {
-        fill: color
+    .q(".border", function(e) {
+        iemgui_set_color(e, "bg", color);
     });
 }
 
@@ -3805,7 +3839,6 @@ function gui_iemgui_label_new(cid, tag, x, y, color, text, fontname, fontweight,
             // for some reason the font looks bold in Pd-Vanilla-- not sure why
             "font-weight": fontweight,
             "font-size": fontsize + "px",
-            fill: color,
             // Iemgui labels are anchored "w" (left-aligned to non-tclers).
             // For no good reason, they are also centered vertically, unlike
             // object box text. Since svg text uses the baseline as a reference
@@ -3820,6 +3853,8 @@ function gui_iemgui_label_new(cid, tag, x, y, color, text, fontname, fontweight,
                 iemgui_font_height(fontname, fontsize) / 2 + ")",
             id: tag + "label"
         });
+            // now set the color
+        iemgui_set_color(svg_text, "label", color);
         var text_node = w.document.createTextNode(text);
         svg_text.appendChild(text_node);
         frag.appendChild(svg_text);
@@ -3841,14 +3876,8 @@ function gui_iemgui_label_coords(cid, tag, x, y) {
 }
 
 function gui_iemgui_label_color(cid, tag, color) {
-    gui(cid).get_elem(tag + "label", {
-        fill: color
-    });
-}
-
-function gui_iemgui_label_color(cid, tag, color) {
-    gui(cid).get_elem(tag + "label", {
-        fill: color
+    gui(cid).get_elem(tag + "label", function(e) {
+        iemgui_set_color(e, "label", color);
     });
 }
 
