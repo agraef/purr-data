@@ -442,7 +442,7 @@ text {
 
 /* text inside selected objects */
 :not(.gop).selected text {
-    fill: blue;
+    fill: #e87216;
 }
 
 /* for an object that didn't create */
@@ -501,7 +501,7 @@ text {
 
 /* text label for an iemgui */
 .iemgui:not(.mycanvas) .iemgui_label_selected {
-    fill: blue;
+    fill: #e87216;
 }
 
 /* test of xlet hover animation... this should 

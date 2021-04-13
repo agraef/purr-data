@@ -413,7 +413,7 @@ text.activated {
 
 /* text label for an iemgui */
 .iemgui:not(.mycanvas) .iemgui_label_selected {
-    fill: blue;
+    fill: #ffff00;
 }
 
 /* test of xlet hover animation... this should 

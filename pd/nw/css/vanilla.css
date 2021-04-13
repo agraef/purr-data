@@ -292,7 +292,7 @@ text {
 
 /* text inside selected objects */
 :not(.gop).selected text {
-    fill: black;
+    fill: blue;
 }
 
 .graph .border {

@@ -309,7 +309,7 @@ text {
 
 /* text inside selected objects */
 :not(.gop).selected text {
-    fill: white;
+    fill: yellow;
 }
 
 .graph .border {
@@ -373,26 +373,26 @@ text {
    is removed and the given SVG fill/stroke attribute applies. */
 
 .iemgui:not(.mycanvas) .iem_label {
-    fill: black;
+    fill: white;
 }
 
 .iemgui:not(.mycanvas) .iem_fg {
-    fill: black;
+    fill: white;
 }
 
 .iemgui:not(.mycanvas) .iem_bg {
-    fill: #fcfcfc;
+    fill: #030303;
 }
 
 /* special case for inner strokes that should match the border-- things like
    [bng] circle stroke, etc. */
 .iemgui:not(.mycanvas) .iem_stroke {
-    stroke: black;
+    stroke: white;
 }
 
 /* text label for an iemgui */
 .iemgui:not(.mycanvas) .iemgui_label_selected {
-    fill: blue;
+    fill: yellow;
 }
 
 /* test of xlet hover animation... this should 

@@ -323,13 +323,13 @@ text {
       canvas.
 */
 :not(.gop).selected .border {
-    stroke: green;
+    stroke: yellow;
     display: inline;
 }
 
 /* text inside selected objects */
 :not(.gop).selected text {
-    fill: green;
+    fill: yellow;
 }
 
 /* for an object that didn't create */
@@ -388,7 +388,7 @@ text {
 
 /* text label for an iemgui */
 .iemgui:not(.mycanvas) .iemgui_label_selected {
-    fill: blue;
+    fill: yellow;
 }
 
 /* test of xlet hover animation... this should 

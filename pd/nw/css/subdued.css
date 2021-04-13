@@ -371,7 +371,7 @@ text {
 }
 
 .iemgui:not(.mycanvas) .iem_bg {
-    fill: #fcfcfc;
+    fill: #9fc79f;
 }
 
 /* special case for inner strokes that should match the border-- things like
