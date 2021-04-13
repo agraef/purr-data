@@ -368,26 +368,26 @@ text {
    from CSS. However, if the user changes these colors then the tag
    is removed and the given SVG fill/stroke attribute applies. */
 
-.iem_label {
+.iemgui:not(.mycanvas) .iem_label {
     fill: #4bd046;
 }
 
-.iem_fg {
+.iemgui:not(.mycanvas) .iem_fg {
     fill: #0b560b;
 }
 
-.iem_bg {
+.iemgui:not(.mycanvas) .iem_bg {
     fill: black;
 }
 
 /* special case for inner strokes that should match the border-- things like
    [bng] circle stroke, etc. */
-.iem_stroke {
+.iemgui:not(.mycanvas) .iem_stroke {
     stroke: #0b560b;
 }
 
 /* text label for an iemgui */
-.iemgui_label_selected {
+.iemgui:not(.mycanvas) .iemgui_label_selected {
     fill: blue;
 }
 

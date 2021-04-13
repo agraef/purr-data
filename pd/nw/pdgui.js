@@ -4000,6 +4000,14 @@ function gui_iemgui_label_displace_drag_handle(cid, tag, dx, dy) {
 }
 
 function gui_mycanvas_new(cid,tag,color,x1,y1,x2_vis,y2_vis,x2,y2) {
+    gui(cid).get_gobj(tag, {
+        // ag: We need to be able to distinguish this case easily in theme
+        // files, in order to suppress the default label coloring for
+        // iemguis. I'm not sure whether this is the best way to do this, but
+        // if we don't want to change the existing JS API, this seems to be
+        // the only call where we can be certain that a gobj is a canvas object.
+        class: "iemgui mycanvas"
+    });
     gui(cid).get_gobj(tag)
     .append(function(frag) {
         var rect_vis, rect, g;
