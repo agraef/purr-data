@@ -6,13 +6,15 @@
 
 nwjsver = 0.28.1
 nwjspkg = nwjs-sdk-v$(nwjsver)-linux
+nwjsdir = nwjs-sdk-v$(nwjsver)-linux
 
 ifeq ("$(shell dpkg-architecture -qDEB_HOST_ARCH)","armhf")
 arch = arm
 nwjsver = 0.27.6
 else ifeq ("$(shell dpkg-architecture -qDEB_HOST_ARCH)","arm64")
-arch = arm
-nwjsver = 0.27.6
+arch = arm64
+nwjsver = 0.23.7
+nwjspkg = nwjs-sdk-without-nacl-v$(nwjsver)-linux
 else ifeq ("$(shell dpkg-architecture -qDEB_HOST_ARCH)","amd64")
 arch = x64
 else
@@ -41,7 +43,7 @@ override_dh_auto_test:
 override_dh_auto_build:
 # Copy the nw.js sources to where purr-data wants them.
 	@echo "DEB_HOST_ARCH = $(shell dpkg-architecture -qDEB_HOST_ARCH)"
-	tar -xf debian/nwjs/$(nwjspkg)-$(arch).tar.gz && rm -rf pd/nw/nw && mv $(nwjspkg)-$(arch) pd/nw/nw
+	tar -xf debian/nwjs/$(nwjspkg)-$(arch).tar.gz && rm -rf pd/nw/nw && mv $(nwjsdir)-$(arch) pd/nw/nw
 	cd l2ork_addons && (export V=0 inst_dir=$(prefix); ./tar_em_up.sh -Bn)
 	make check prefix=$(prefix)
 
@@ -57,6 +59,10 @@ override_dh_auto_install:
 	cd debian/purr-data$(prefix)/lib/pd-l2ork/extra && rm -rf */*.pd_linux_o */*.la
 ifeq ($(arch),ia32)
 # This causes trouble in 32 bit builds (64 bit executable in the 32 bit nw.js distribution?), remove it.
+	cd debian/purr-data$(prefix)/lib/pd-l2ork && rm -rf bin/nw/minidump_stackwalk
+endif
+ifeq ($(arch),arm64)
+# Same issue in arm64 builds.
 	cd debian/purr-data$(prefix)/lib/pd-l2ork && rm -rf bin/nw/minidump_stackwalk
 endif
 # Add the bash completion file again, and edit it accordingly.

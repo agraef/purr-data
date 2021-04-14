@@ -48,7 +48,9 @@ nwjsver = 0.28.1
 nwjspkg = nwjs-sdk-v$(nwjsver)-linux
 nwjsver_arm = 0.27.6
 nwjspkg_arm = nwjs-sdk-v$(nwjsver_arm)-linux
-nwjs = $(nwjspkg)-ia32.tar.gz $(nwjspkg)-x64.tar.gz $(nwjspkg_arm)-arm.tar.gz
+nwjsver_arm64 = 0.23.7
+nwjspkg_arm64 = nwjs-sdk-without-nacl-v$(nwjsver_arm64)-linux
+nwjs = $(nwjspkg)-ia32.tar.gz $(nwjspkg)-x64.tar.gz $(nwjspkg_arm)-arm.tar.gz $(nwjspkg_arm64)-arm64.tar.gz
 
 # Submodules (Gem, etc.). You can list them with 'make submodules'.
 #submodules = Gem externals/miXed $(addprefix l2ork_addons/, cwiid fftease3.0-32bit lyonpotpourri rtcmix-in-pd)
@@ -116,6 +118,9 @@ $(debsrc):
 
 debian/nwjs/$(nwjspkg_arm)-arm.tar.gz:
 	mkdir -p debian/nwjs &&	cd debian/nwjs && wget https://github.com/LeonardLaszlo/nw.js-armv7-binaries/releases/download/v$(nwjsver_arm)/$(notdir $@)
+
+debian/nwjs/$(nwjspkg_arm64)-arm64.tar.gz:
+	mkdir -p debian/nwjs &&	cd debian/nwjs && wget https://github.com/LeonardLaszlo/nw.js-armv7-binaries/releases/download/v$(nwjsver_arm64)/$(notdir $@)
 
 debian/nwjs/$(nwjspkg)-%.tar.gz:
 	mkdir -p debian/nwjs &&	cd debian/nwjs && wget http://dl.nwjs.io/v$(nwjsver)/$(notdir $@)
