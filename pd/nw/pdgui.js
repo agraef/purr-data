@@ -1408,7 +1408,8 @@ function get_grid_coords(cid, svg_elem) {
 
 function create_svg_lock(cid) {
     var zoom = patchwin[cid].zoomLevel,
-        size;
+        size,
+        col = bg_style.svg_fg;
     // adjust for zoom level
     size = 1 / Math.pow(1.2, zoom) * 24;
     return "url('data:image/svg+xml;utf8," +
@@ -1417,7 +1418,7 @@ function create_svg_lock(cid) {
                  ['height="', size, 'px"'].join(""),
                  'viewBox="0 0 486.866 486.866"',
             '>',
-              '<path fill="#bbb" d="',
+              '<path fill="', col,'" d="',
                 'M393.904,214.852h-8.891v-72.198c0-76.962-61.075-141.253',
                 '-137.411-142.625c-2.084-0.038-6.254-0.038-8.338,0',
                 'C162.927,1.4,101.853,65.691,101.853,142.653v1.603c0,16.182,',
@@ -1444,57 +1445,20 @@ function create_svg_lock(cid) {
 // functionality is turned on in the GUI preferences. If not, we just use
 // the same grid with a lower opacity. That way the edit mode is always
 // visually distinct from run mode.
-var create_editmode_bg = function(cid, svg_elem) {
-    var data, cell_data_str, opacity_str, grid, size, pos,
-        cc, // cell color
-        gc; // grid color
-    grid = showgrid[cid];
+var create_svg_grid = function(cid, svg_elem) {
+    var data, cell_data_str, grid, size, pos,
+        cc = bg_style.svg_cell, // cell color
+        gc = bg_style.svg_grid; // grid color
     size = gridsize[cid];
     pos = get_grid_coords(cid, svg_elem);
 
-        // Annoying crap because SVG img data can't
-        // call into an external style sheet...
-    switch(skin.get()) {
-        case "default":
-        case "footgun":
-        case "vanilla":
-        case "extended":
-        case "solarized":
-            cc = "#ddd";
-            gc = "#bbb";
-            break;
-        case "inverted":
-        case "vanilla_inverted":
-        case "extended_inverted":
-            cc = "#222";
-            gc = "#444";
-            break;
-        case "c64":
-            cc = "#5347b5";
-            gc = "#6458c6";
-            break;
-        case "strongbad":
-            cc = "#222";
-            gc = "#333";
-            break;
-        case "subdued":
-            cc = "#bdc9bd";
-            gc = "#a6c1a6";
-            break;
-        case "solarized_inverted":
-            cc = "#444";
-            gc = "#555";
-            break;
-    }
     // if snap-to-grid isn't turned on, just use cell size of 10 and make the
     // grid partially transparent
-    size = grid ? size : 10;
-    opacity_str = '"' + (grid ? 1 : 0.4) + '"';
     cell_data_str = ['"', "M", size, 0, "L", 0, 0, 0, size, '"'].join(" ");
 
     data = ['<svg xmlns="http://www.w3.org/2000/svg" ',
                 'width="1000" height="1000" ',
-                'opacity=', opacity_str, '>',
+                'opacity="1">',
               '<defs>',
                 '<pattern id="cell" patternUnits="userSpaceOnUse" ',
                          'width="', size, '" height="', size, '">',
@@ -1529,7 +1493,7 @@ function set_editmode_bg(cid, svg_elem, state)
         set_bg(cid, "none", "0% 0%", "repeat");
     } else if (showgrid[cid]) {
         // Show a grid in editmode if we're snapping to grid
-        set_bg(cid, create_editmode_bg(cid, svg_elem), "0% 0%", "repeat");
+        set_bg(cid, create_svg_grid(cid, svg_elem), "0% 0%", "repeat");
     } else {
         // Otherwise show a little lock in the top right corner of the patch
         // adjusting for zoom level
@@ -1857,6 +1821,7 @@ var scroll = {},
     doscroll = {},
     showgrid = {},
     gridsize = {},
+    bg_style = {},
     last_loaded, // last loaded canvas
     last_focused, // last focused canvas (doesn't include Pd window or dialogs)
     loading = {},
@@ -6360,14 +6325,56 @@ function gui_lib_properties(dummy, defeat_rt, flag_string, lib_array) {
     }
 }
 
+function set_bg_style(w) {
+    // grid stroke
+    bg_style.svg_grid = get_style_by_selector(w, "#svg_grid").stroke;
+    // cell stroke
+    bg_style.svg_cell = get_style_by_selector(w, "#svg_cell").stroke;
+    // color for the little "lock" icon
+    bg_style.svg_fg = get_style_by_selector(w, "#svg_fg").fill;
+    return true;
+}
+
 // Let's try a closure for gui skins
 var skin = exports.skin = (function () {
     var dir = "css/";
     var preset = "default";
     var id;
-    function set_css(win) {
-        win.document.getElementById("page_style")
-            .setAttribute("href", dir + preset + ".css");
+    function set_css(win, cid) {
+            // Workaround for a workaround. We must parse the stylesheet to
+            // retrieve the styles to use for our background svg image. But
+            // when we change the href for the relevant link element,
+            // the new styles are loaded asynchronously. HTML5 apparently has
+            // no event associated with reloading a resource, so we can't
+            // know when it's safe to parse the sheet.
+
+            // Thus, we create a new link element and replace the old
+            // link element with it. This allows us to use the onload callback
+            // for the new link element and call set_bg_style from there to
+            // parse the sheet for our background svg styles.
+        var old_style = win.document.getElementById("page_style"),
+            new_style = win.document.createElement("link"),
+            head = win.document.querySelector("head");
+
+        new_style.setAttribute("rel", "stylesheet");
+        new_style.setAttribute("type", "text/css");
+        new_style.id = "page_style";
+        new_style.onload = function() {
+                // now that we've loaded the new style, do the
+                // hack to fetch the styles needed for our svg
+                // background image
+            set_bg_style(win.window);
+                // if we're just applying the skin when rendering a window,
+                // we don't have a cid yet so skip this
+            if (cid) {
+                update_svg_background(cid, win.window.document
+                    .getElementById("patchsvg"));
+            }
+        };
+        new_style.setAttribute("href", dir + preset + ".css");
+            // now switch out the sheets. Seems we get flickering
+            // no matter what. Oh well...
+        head.replaceChild(new_style, old_style);
     }
     return {
         debug: function () {
@@ -6386,7 +6393,7 @@ var skin = exports.skin = (function () {
             }
             for (id in patchwin) {
                 if (patchwin.hasOwnProperty(id) && patchwin[id]) {
-                    set_css(patchwin[id].window);
+                    set_css(patchwin[id].window, id);
                 }
             }
             // hack for the console
@@ -6394,6 +6401,8 @@ var skin = exports.skin = (function () {
                 .setAttribute("href", dir + preset + ".css");
         },
         apply: function (win) {
+                // go ahead and grab the cid so we can use it to set
+                // the svg background
             set_css(win);
         }
     };
@@ -6574,22 +6583,11 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         p.classList.add(type);
         p.contentEditable = "true";
 
-        if (is_gop == 0) {
-            // do we need to assign here color from the css theme instead?
-            p.style.setProperty("background-color", "#f6f8f8");
-        } else {
+        if (is_gop != 0) {
             // ico@vt.edu: added tweaks to ensure the GOP selection
             // border is near identical to that of its regular border
             p.style.setProperty("min-height", height_spec - 7 + "px");
             p.style.setProperty("padding-left", "2px");
-            /* ico@vt.edu:
-               should the graph be transparent or opaque? legacy compatibility
-               suggests it should be transparent, although that may go against
-               common sense UI design. Perhaps we can make this an option? If
-               so, we could do so here. Better yet, we could capture background
-               color of the subpatcher and use it to apply the same color here.
-               p.style.setProperty("background-color", "white");
-            */   
         }
         
         p.style.setProperty("left", (x - svg_view.x + textarea_x_offset_kludge(font_size, zoom)) + "px");
