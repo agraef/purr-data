@@ -221,13 +221,22 @@ static t_pd *pddplink_pdtarget(t_pddplink *x)
 	return ((t_pd *)x);  /* internal error */
 }
 
-static void pddplink_anything(t_pddplink *x, t_symbol *s, int ac, t_atom *av)
+static void pddplink_symbol(t_pddplink *x, t_symbol *s)
 {
     if (x->x_ishit)
     {
-	startpost("pddplink: internal error (%s", (s ? s->s_name : ""));
-	postatom(ac, av);
-	post(")");
+        post("pddplink: internal error (%s)", (s ? s->s_name : ""));
+    }
+    else
+    {
+        if (s == &s_) return; // nothing to see here, move along...
+        x->x_ishit = 1;
+        char final_name[FILENAME_MAX];
+        sys_expandpathelems(s->s_name, final_name);
+        gui_vmess("gui_pddplink_open", "ss",
+                  final_name,
+                  x->x_dirsym->s_name);
+        x->x_ishit = 0;
     }
 }
 
@@ -400,9 +409,7 @@ static void *pddplink_new(t_symbol *s, int ac, t_atom *av)
     SETSYMBOL(&x->x_openargs[0], x->x_ulink);
     SETSYMBOL(&x->x_openargs[1], x->x_dirsym);
     x->x_ishit = 0;
-    if (x->x_isboxed)
-	outlet_new((t_object *)x, &s_anything);
-    else
+    if (!x->x_isboxed)
     {
 	/* do we need to set ((t_text *)x)->te_type = T_TEXT; ? */
 	if (!x->x_vistext)
@@ -426,14 +433,14 @@ void pddplink_setup(void)
 			       sizeof(t_pddplink),
 			       CLASS_NOINLET | CLASS_PATCHABLE,
 			       A_GIMME, 0);
-    class_addanything(pddplink_class, pddplink_anything);
+    class_addsymbol(pddplink_class, pddplink_symbol);
     class_setwidget(pddplink_class, &pddplink_widgetbehavior);
 
     pddplinkbox_class = class_new(gensym("pddplink"), 0,
 				  (t_method)pddplink_free,
 				  sizeof(t_pddplink), 0, A_GIMME, 0);
     class_addbang(pddplinkbox_class, pddplink_bang);
-    class_addanything(pddplinkbox_class, pddplink_anything);
+    class_addsymbol(pddplinkbox_class, pddplink_symbol);
     class_addmethod(pddplinkbox_class, (t_method)pddplink_click,
 		    gensym("click"),
 		    A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);

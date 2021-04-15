@@ -1,4 +1,4 @@
-#N canvas 319 94 424 397 12;
+#N canvas 319 94 424 539 12;
 #X text 20 10 first entry;
 #X text 50 50 three ways of linking to a;
 #X text 50 170 three ways of linking to a;
@@ -21,6 +21,16 @@
 #X obj 50 99 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
 #X text 71 96 <-- bang to open the link;
+#X text 50 410 purr-data only: pass the file name or URL as a symbol
+to inlet #1 (a dummy filename argument is still needed), f 47;
+#X msg 50 470 symbol http://puredata.info;
+#X obj 250 450 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 250 470 symbol README.txt;
+#X obj 50 499 pddplink dummy -box;
 #X connect 13 0 8 0;
 #X connect 15 0 4 0;
 #X connect 17 0 12 0;
+#X connect 20 0 23 0;
+#X connect 21 0 22 0;
+#X connect 22 0 23 0;
