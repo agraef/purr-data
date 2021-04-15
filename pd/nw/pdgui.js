@@ -6326,12 +6326,16 @@ function gui_lib_properties(dummy, defeat_rt, flag_string, lib_array) {
 }
 
 function set_bg_style(w) {
+    var rule;
     // grid stroke
-    bg_style.svg_grid = get_style_by_selector(w, "#svg_grid").stroke;
+    rule = get_style_by_selector(w, "#svg_grid");
+    bg_style.svg_grid = rule ? rule.stroke : "#bbb";
     // cell stroke
-    bg_style.svg_cell = get_style_by_selector(w, "#svg_cell").stroke;
+    rule = get_style_by_selector(w, "#svg_cell");
+    bg_style.svg_cell = rule ? rule.stroke : "#ddd";
     // color for the little "lock" icon
-    bg_style.svg_fg = get_style_by_selector(w, "#svg_fg").fill;
+    rule = get_style_by_selector(w, "#svg_fg");
+    bg_style.svg_fg = rule ? rule.fill : "#bbb";
     return true;
 }
 
