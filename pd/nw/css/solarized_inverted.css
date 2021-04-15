@@ -115,6 +115,21 @@ mark.console_find_highlighted {
     background-color: #002b36;
 }
 
+/* svg background image. We actually have to parse the CSS file and set
+   these manually in javascript, so don't change the selectors or remove
+   the props here... */
+#svg_cell {
+    stroke: #444;
+}
+
+#svg_grid {
+    stroke: #555;
+}
+
+#svg_fg {
+    fill: #bbb;
+}
+
 #selection_rectangle {
     stroke: #b58900;
 }
@@ -182,7 +197,6 @@ mark.console_find_highlighted {
     display: table-cell;
     padding: 1px 0px 3px 1.5px;
     /* box-shadow: inset 1px 0px 0px 1px #000; */
-    background-color: transparent;
     white-space: pre-wrap;
     overflow-wrap: break-word;
     -webkit-margin-before: 0px;
@@ -191,21 +205,12 @@ mark.console_find_highlighted {
 
 #new_object_textentry.obj {
     outline: 1px solid #b58900;
+    background-color: #002b36;
 }
 
 #new_object_textentry.msg {
     outline: 0px solid #b58900;
-    background-image: url(../msg-box.svg);
-}
-
-p.msg::after {
-    content: "";
-    height: 100%;
-    width: 5px;
-    background-image: url(../msg-box-flag.svg);
-    position: absolute;
-    top: 0%;
-    left: 100%;
+    background-color: transparent;
 }
 
 /* not sure what this is doing here... */
