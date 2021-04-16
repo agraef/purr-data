@@ -236,7 +236,7 @@ mark.console_find_highlighted {
 }
 
 #svg_fg {
-    fill: #bbb;
+    fill: black;
 }
 
 #selection_rectangle {
