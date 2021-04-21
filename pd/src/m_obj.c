@@ -76,8 +76,9 @@ char *type_hint(t_symbol *s, int argc, t_atom *argv, int dostof);
 
 static void inlet_wrong(t_inlet *x, t_symbol *s, int argc, t_atom *argv)
 {
-    pd_error(x->i_owner, "inlet: expected '%s' but got '%s'%s",
-        x->i_symfrom->s_name, s->s_name, type_hint(s, argc, argv, 1));
+    pd_error(x->i_owner, "inlet of %s: expected '%s' but got '%s'%s",
+        (char *)class_getname(*(x->i_dest)), x->i_symfrom->s_name, s->s_name, 
+        type_hint(s, argc, argv, 1));
 }
 
     /* forward a message to an inlet~ object */
