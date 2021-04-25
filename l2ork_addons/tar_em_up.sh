@@ -174,12 +174,12 @@ if [ ! -d "../pd/nw/nw" ]; then
 
 	# for rpi
 	if [ `uname -m` == "armv7l" ]; then
-		arch="armv7l"
+		arch="arm"
 	fi
 
 	# for pinebook, probably also rpi 4
 	if [ `uname -m` == "aarch64" ]; then
-		arch="armv7l"
+		arch="arm64"
 	fi
 
 	# MSYS: Pick the right architecture depending on whether we're
@@ -199,9 +199,11 @@ if [ ! -d "../pd/nw/nw" ]; then
 		# We need the lts version to be able to run on legacy systems.
 		nwjs_version="v0.14.7"
 	else
-		# temporary kluge for rpi-- only 0.15.1 is available atm
-		if [ $arch == "armv7l" ]; then
-			nwjs_version="v0.17.6"
+		# temporary kluge for rpi-- only 0.27.6 is available atm
+		if [ $arch == "arm" ]; then
+			nwjs_version="v0.27.6"
+		elif [ $arch == "arm64" ]; then
+			nwjs_version="v0.23.7"
 		else
 			nwjs_version="v0.28.1"
 		fi
@@ -213,26 +215,30 @@ if [ ! -d "../pd/nw/nw" ]; then
 	else
 		nwjs_dirname=${nwjs}-${nwjs_version}-${os}-${arch}
 	fi
-	nwjs_filename=${nwjs_dirname}.${ext}
+	# the arm64 package has a slightly different name
+	if [ $arch == "arm64" ]; then
+		nwjs_filename=${nwjs}-without-nacl-${nwjs_version}-${os}-${arch}.${ext}
+	else
+		nwjs_filename=${nwjs_dirname}.${ext}
+	fi
 	nwjs_url=https://git.purrdata.net/jwilkes/nwjs-binaries/raw/master
 	nwjs_url=${nwjs_url}/$nwjs_filename
 	echo "Fetching the nwjs binary from"
 	echo "$nwjs_url"
 	if ! wget -nv $nwjs_url; then
+	    if [[ $arch == "arm" || $arch == "arm64" ]]; then
+		nwjs_url=https://github.com/LeonardLaszlo/nw.js-armv7-binaries/releases/download/${nwjs_version}/$nwjs_filename
+	    else
 		nwjs_url=https://dl.nwjs.io/${nwjs_version}/$nwjs_filename
-		echo "Fetching the nwjs binary from"
-		echo "$nwjs_url"
-		wget -nv $nwjs_url
+	    fi
+	    echo "Fetching the nwjs binary from"
+	    echo "$nwjs_url"
+	    wget -nv $nwjs_url
 	fi
 	if [[ $os == "win" || $os == "win64" || $os == "osx" ]]; then
 		unzip $nwjs_filename
 	else
 		tar -xf $nwjs_filename
-	fi
-	# Special case for arm binary's inconsistent directory name
-	# (It's not the same as the `uname -m` output)
-	if [ $arch == "armv7l" ]; then
-		nwjs_dirname=`echo $nwjs_dirname | sed 's/armv7l/arm/'`
 	fi
         mv $nwjs_dirname ../pd/nw/nw
 	# make sure the nw binary is executable on GNU/Linux
