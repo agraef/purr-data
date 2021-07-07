@@ -111,6 +111,7 @@ function init_elasticlunr()
     index.addField("title");
     index.addField("keywords");
     index.addField("description");
+    index.addField("related_objects");
     //index.addField("body");
     index.addField("path");
     index.setRef("id");
@@ -131,6 +132,46 @@ function index_entry_esc(s) {
 }
 
 function add_doc_to_index(filename, data) {
+    var rel_objs;
+    const machine_related_objects = {
+        found_objects: [],
+        ref_found_objs: [],
+        state: 'SEARCHING_CANVAS',
+        transitions: {
+            SEARCHING_CANVAS: {
+                search_regex: function(line_string) {
+                    if (/#N canvas \-?\d+ \-?\d+ \-?\d+ \-?\d+ Related_objects \-?\d+;/i.test(line_string)) {
+                        this.state = "SEARCHING_OBJS";
+                    }
+                },
+            },
+            SEARCHING_OBJS: {
+                search_regex: function(line_search) {
+                    var rel_obj = line_search.match(/#X obj \-?\d+ \-?\d+ (pddp\/helplink )?(\w*\/)?([\w|\~]*);/i);
+                    if (rel_obj != null) {
+                        this.found_objects.push(rel_obj[3]);
+                        this.ref_found_objs.push(rel_obj);
+                    } else if (/#X restore \-?\d+ \-?\d+ pd Related_objects;/i.test(line_search)) {
+                        this.state = "SEARCHING_CANVAS";
+                    }
+                },
+            },
+        },
+        dispatch(actionName, ...line_string) {
+            const action = this.transitions[this.state][actionName];
+            if (action) {
+                action.call(this, ...line_string);
+            }
+        },
+    };
+    rel_objs = Object.create(machine_related_objects);
+    let eval_string = data.split("\n");
+    eval_string.forEach(function(l,a,i) {
+        rel_objs.dispatch('search_regex', l);
+    });
+    rel_objs = rel_objs.found_objects;
+    rel_objs = rel_objs ? rel_objs.toString().replace( /,/g, " ") : null;
+
     var title = path.basename(filename, ".pd"),
         big_line = data.replace("\n", " "),
         keywords,
@@ -148,10 +189,11 @@ function add_doc_to_index(filename, data) {
             // format Pd's "comma atoms" as normal commas
             desc = desc.replace(" \\,", ",");
         }
+
     if (title.slice(-5) === "-help") {
         title = title.slice(0, -5);
     }
-    index_cache[index_cache.length] = [filename, title, keywords, desc]
+    index_cache[index_cache.length] = [filename, title, keywords, desc, rel_objs]
         .map(index_entry_esc).join(":");
     var d = path.dirname(filename);
     index_manif.add(d);
@@ -161,8 +203,8 @@ function add_doc_to_index(filename, data) {
         "id": filename,
         "title": title,
         "keywords": keywords,
-        "description": desc
-        //"body": big_line,
+        "description": desc,
+        "related_objects": rel_objs
     });
 }
 
@@ -315,12 +357,14 @@ function make_index() {
                 var filename = e[0] ? e[0] : null;
                 var title = e[1] ? e[1] : null;
                 var keywords = e[2] ? e[2] : null;
-                var descr = e[3] ? e[3] : null;
+                var desc = e[3] ? e[3] : null;
+                var rel_obj = e[4] ? e[4] : null;
                 index.addDoc({
                     "id": filename,
                     "title": title,
                     "keywords": keywords,
-                    "description": descr
+                    "description": desc,
+                    "related_objects": rel_obj
                 });
             }
         }

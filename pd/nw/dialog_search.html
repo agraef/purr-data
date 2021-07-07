@@ -834,6 +834,10 @@ function display_doc(doc) {
 	text_node = document.createTextNode(doc.description);
 	div.appendChild(text_node);
     }
+    if (doc.related_objects) {
+        text_node = document.createTextNode("\n Related objects: " + doc.related_objects.toString());
+        div.appendChild(text_node);
+    }
     results_elem.appendChild(div);
     toc_bookmark_update(current_dir);
 }
@@ -866,7 +870,8 @@ function doc_search() {
         fields: {
             title: {boost: 64, expand: true},
             keywords: {boost: 8, expand: true},
-            description: {boost: 1}
+            description: {boost: 2},
+            related_objects: {boost: 1}
         }
     });
     // Increase priority of pd-l2ork docs over externals docs
