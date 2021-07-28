@@ -1,0 +1,21 @@
+#N canvas 584 240 582 350 12;
+#X obj 60 100 inlet;
+#X text 8 8 This is the abstraction for the pdcontrol help patch. It
+serves an example on how it determines the argument type of first argument.
+Similary can be done for all arguments, f 41;
+#X obj 60 129 pdcontrol;
+#X obj 60 160 list split 1;
+#X obj 60 189 route symbol float;
+#X obj 60 280 print symbol;
+#X obj 120 250 print float;
+#X obj 180 220 print other;
+#X text 130 100 args message as input;
+#X text 160 140 takes the first argument from the list of arguments.
+, f 41;
+#X text 270 220 prints the output correspondiing to type., f 28;
+#X connect 0 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 4 0 5 0;
+#X connect 4 1 6 0;
+#X connect 4 2 7 0;

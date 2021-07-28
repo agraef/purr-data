@@ -8,6 +8,7 @@ away before the panel does... */
 #include "config.h"
 
 #include "m_pd.h"
+#include "g_canvas.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -613,6 +614,94 @@ static void mouse_setup(void)
     mousewheel_sym = gensym("#legacy_mousewheel");
 }
 
+/* ------------------------ pdcontrol --------------------------------- */
+
+static t_class *pdcontrol_class;
+
+typedef struct _pdcontrol
+{
+    t_object x_obj;
+    t_canvas *x_canvas;
+    t_outlet *x_outlet;
+} t_pdcontrol;
+
+static void *pdcontrol_new( void)
+{
+    t_pdcontrol *x = (t_pdcontrol *)pd_new(pdcontrol_class);
+    x->x_canvas = canvas_getcurrent();
+    x->x_outlet = outlet_new(&x->x_obj, 0);
+    return (x);
+}
+
+    /* output containing directory of patch.  optional args:
+    1. a number, zero for this patch, one for the parent, etc.;
+    2. a symbol to concatenate onto the directory; */
+
+static void pdcontrol_dir(t_pdcontrol *x, t_symbol *s, t_floatarg f)
+{
+    t_canvas *c = x->x_canvas;
+    int i;
+    for (i = 0; i < (int)f; i++)
+    {
+        while (!c->gl_env)  /* back up to containing canvas or abstraction */
+            c = c->gl_owner;
+        if (c->gl_owner)    /* back up one more into an owner if any */
+            c = c->gl_owner;
+    }
+    if (*s->s_name)
+    {
+        char buf[MAXPDSTRING];
+        snprintf(buf, MAXPDSTRING, "%s/%s",
+            canvas_getdir(c)->s_name, s->s_name);
+        buf[MAXPDSTRING-1] = 0;
+        outlet_symbol(x->x_outlet, gensym(buf));
+    }
+    else outlet_symbol(x->x_outlet, canvas_getdir(c));
+}
+
+static void pdcontrol_args(t_pdcontrol *x, t_floatarg f)
+{
+    t_canvas *c = x->x_canvas;
+    int i;
+    int argc;
+    t_atom *argv;
+    for (i = 0; i < (int)f; i++)
+    {
+        while (!c->gl_env)  /* back up to containing canvas or abstraction */
+            c = c->gl_owner;
+        if (c->gl_owner)    /* back up one more into an owner if any */
+            c = c->gl_owner;
+    }
+    canvas_setcurrent(c);
+    canvas_getargs(&argc, &argv);
+    canvas_unsetcurrent(c);
+    outlet_list(x->x_outlet, &s_list, argc, argv);
+}
+
+static void pdcontrol_browse(t_pdcontrol *x, t_symbol *s)
+{
+    gui_vmess("gui_pddplink_open", "ss", s->s_name, "");
+}
+
+static void pdcontrol_isvisible(t_pdcontrol *x)
+{
+    outlet_float(x->x_outlet, glist_isvisible(x->x_canvas));
+}
+
+static void pdcontrol_setup(void)
+{
+    pdcontrol_class = class_new(gensym("pdcontrol"),
+        (t_newmethod)pdcontrol_new, 0, sizeof(t_pdcontrol), 0, 0);
+    class_addmethod(pdcontrol_class, (t_method)pdcontrol_dir,
+        gensym("dir"), A_DEFFLOAT, A_DEFSYMBOL, 0);
+    class_addmethod(pdcontrol_class, (t_method)pdcontrol_args,
+        gensym("args"), A_DEFFLOAT, 0);
+    class_addmethod(pdcontrol_class, (t_method)pdcontrol_browse,
+        gensym("browse"), A_SYMBOL, 0);
+    class_addmethod(pdcontrol_class, (t_method)pdcontrol_isvisible,
+        gensym("isvisible"), 0);
+}
+
 /* -------------------------- setup routine ------------------------------ */
 
 void x_gui_setup(void)
@@ -625,4 +714,5 @@ void x_gui_setup(void)
     // jsarlo
     magicGlass_setup();
     // end jsarlo
+    pdcontrol_setup();
 }
