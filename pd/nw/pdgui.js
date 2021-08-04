@@ -37,6 +37,7 @@ function gui_set_browser_config(doc_flag, path_flag, init_flag, helppath) {
     // here so that we can be sure that lib_dir and help_path are known already.
     // (This may also be deferred until the browser is launched for the first
     // time, depending on the value of browser_init.)
+    make_completion_index(); // GB: TODO - change this line to be called in a separated function on the c side
     if (browser_init == 1) make_index();
 }
 
@@ -242,6 +243,13 @@ function add_doc_to_index(err, filename, stat) {
                     "id": filename,
                     "title": title
                 })
+                if (obj_exact_match(title).length===0) {
+                    completion_index.add({
+                        "occurrences" : 0,
+                        "title" : title,
+                        "args" : []
+                    });
+                }
             } catch (read_err) {
                 post("err: " + read_err);
             }
@@ -258,10 +266,11 @@ var index_start_time;
 
 // Filenames for the index cache, relative to the user's homedir.
 const cache_basename = nw_os_is_windows
-      ? "~/AppData/Roaming/Purr-Data/search"
-      : "~/.purr-data/search";
-const cache_name = cache_basename + ".index";
-const stamps_name = cache_basename + ".stamps";
+    ? "~/AppData/Roaming/Purr-Data/"
+    : "~/.purr-data/";
+const cache_name = cache_basename + "search.index";
+const stamps_name = cache_basename + "search.stamps";
+const compl_name = cache_basename + "completions.json";
 
 function finish_index() {
     index_done = true;
@@ -412,6 +421,13 @@ function make_index() {
                     "related_objects": rel_obj,
                     "ref_related_objects": ref_rel_obj
                 });
+                if (obj_exact_match(title).length===0) {
+                    completion_index.add({
+                        "occurrences" : 0,
+                        "title" : title,
+                        "args" : []
+                    });
+                }
             }
         }
         finish_index();
@@ -479,6 +495,85 @@ function update_browser(doc_flag, path_flag)
 }
 
 exports.update_browser = update_browser;
+
+// GB: autocompletion feature
+
+const fuse = require("./fuse.js");
+let autocomplete_index_options = {
+    useExtendedSearch : true,
+    includeMatches : true,
+    includeScore : true,
+    keys : ["title", "args.text"]
+};
+let args_completion_field = {keys : ["args.text"]};
+let objs_completion_field = {keys : ["title"]};
+var completion_list = [], completion_index;
+
+function make_completion_index() {
+    try {
+        completion_list = require(expand_tilde(compl_name));
+    } catch (e) {
+        post("No completion list found");
+    }
+    completion_index = new fuse(completion_list,autocomplete_index_options);
+}
+
+function obj_exact_match(title) {
+    return completion_index.search("=\"" + title + "\"", objs_completion_field);
+}
+
+function arg_exact_match(title, arg) {
+    return completion_index.search({$and: [{"title": "=\"" + title + "\""}, {"args.text": "=\"" + arg + "\""}]});
+}
+
+function index_obj_completion(obj_or_msg, obj_or_msg_text) {
+    var title, arg;
+    if (obj_or_msg === "msg") {
+        title = obj_or_msg;
+        arg = obj_or_msg_text;
+    } else if (obj_or_msg === "obj") {
+        let text_array = obj_or_msg_text.split(" ");
+        title = text_array[0];
+        arg = text_array.slice(1, text_array.length).toString().replace(/\,/g, " ");
+    }
+    var obj_ref, obj_freq = 1, args = [], arg_ref = 0, arg_freq = 1, obj_found = false;
+    let obj_result = obj_exact_match(title);
+    if (obj_result.length !== 0) {
+        obj_found = true;
+        obj_ref = obj_result[0].refIndex;
+        obj_freq = obj_result[0].item.occurrences + 1;
+        args = obj_result[0].item.args;
+        if (arg) {
+            arg_ref = args.length;
+            let arg_result = arg_exact_match(title, arg);
+            if (arg_result.length !== 0) {
+                arg_ref = arg_result[0].matches[1].refIndex;
+                arg_freq = obj_result[0].item.args[arg_ref].occurrences + 1;
+            }
+        }
+    }
+    if(arg) args[arg_ref] = {"occurrences" : arg_freq, "text" : arg};
+    let obj = {"occurrences" : obj_freq, "title" : title, "args" : args};
+
+    if(obj_found) completion_index.update(obj, obj_ref);
+    else completion_index.add(obj);
+}
+
+function write_completion_index() {
+    try {
+        fs.mkdirSync(expand_tilde(path.dirname(compl_name)));
+    } catch (err) {
+        // post("err: " + err);
+    }
+    try {
+        fs.writeFileSync(expand_tilde(compl_name), JSON.stringify(completion_index._docs), {mode: 0o644});
+    } catch (err) {
+        post("err: " + err);
+    }
+}
+
+exports.index_obj_completion = index_obj_completion;
+exports.write_completion_index = write_completion_index;
 
 // Modules
 

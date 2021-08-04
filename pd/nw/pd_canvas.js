@@ -825,6 +825,7 @@ var canvas_events = (function() {
                 last_dropdown_menu_y = pointer_y;
             }
         },
+        changes_in_completion_index = 0,
         utils = {
             create_obj: function() {
                 // Yes: I _really_ want .innerText and NOT .textContent
@@ -838,6 +839,15 @@ var canvas_events = (function() {
                     pdgui.pdsend(name, "obj_addtobuf", fudi_array[i].join(" "));
                 }
                 pdgui.pdsend(name, "obj_buftotext");
+                let obj_class = document.getElementById("new_object_textentry").className;
+                pdgui.index_obj_completion(obj_class, fudi_msg);
+
+                // GB: every 50 changes in completion_index, make sure to save the alterations on json file
+                //     in case of unexpected quit or crash of purr data, it will be lost only few changes
+                if (++changes_in_completion_index > 50) {
+                    pdgui.write_completion_index();
+                    changes_in_completion_index = 0;
+                }
             }
         }
     ;
