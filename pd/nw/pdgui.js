@@ -421,13 +421,6 @@ function make_index() {
                     "related_objects": rel_obj,
                     "ref_related_objects": ref_rel_obj
                 });
-                if (obj_exact_match(title).length===0) {
-                    completion_index.add({
-                        "occurrences" : 0,
-                        "title" : title,
-                        "args" : []
-                    });
-                }
             }
         }
         finish_index();
@@ -518,18 +511,40 @@ function make_completion_index() {
     completion_index = new fuse(completion_list,autocomplete_index_options);
 }
 
+// GB: fuse legend for expand search
+// "=text" search exact match for 'text'
+// "'text" search match that contain 'text'
+// "^text" search match that begins with 'text'
+// "!text" search match that doesn't contain 'text'
+
 function obj_exact_match(title) {
     return completion_index.search("=\"" + title + "\"", objs_completion_field);
+}
+
+function search_obj(title) {
+    // GB approaches: search objects that *contains* search _word_ (1st line) or patches that *begins with* _word_ (2nd line)
+    // either should skip the result 'message' and 'text' thus messages and comments are not created the same way objects are
+    return completion_index.search({$and: [{"title": "'\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
+    // return completion_index.search({$and: [{"title": "^\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
 }
 
 function arg_exact_match(title, arg) {
     return completion_index.search({$and: [{"title": "=\"" + title + "\""}, {"args.text": "=\"" + arg + "\""}]});
 }
 
+function search_arg(title, arg) {
+    // for the arguments, we are only interested on the obj that match exactly the 'title', so we return only the args from this obj
+    let results = completion_index.search({$and: [{"title": "=\"" + title + "\""}, {"args.text": "^\"" + arg + "\""}]});
+    return (results.length > 0) ? results[0].matches : [];
+}
+
 function index_obj_completion(obj_or_msg, obj_or_msg_text) {
     var title, arg;
     if (obj_or_msg === "msg") {
-        title = obj_or_msg;
+        title = "message";
+        arg = obj_or_msg_text;
+    } else if (obj_or_msg === "comment") {
+        title = "text";
         arg = obj_or_msg_text;
     } else if (obj_or_msg === "obj") {
         let text_array = obj_or_msg_text.split(" ");
@@ -572,8 +587,41 @@ function write_completion_index() {
     }
 }
 
+function autocomplete(obj_class, text) {
+    if (text.length !== 0) {
+        let title, arg;
+        if (obj_class === "obj") {
+            let text_array = text.split(" ");
+            title = text_array[0].toString();
+            arg = text_array.slice(1, text_array.length);
+            arg = (arg.length !== 0) ? arg.toString().replace(/\,/g, " ") : "";
+        } else {
+            title = "msg";
+            arg = text;
+        }
+        let n = 10;
+        post(" -------- First " + n + " results -------- ");
+        let results = (arg.length > 0) ? (search_arg(title, arg).slice(1,)) : (search_obj(title));
+        if (results.length > n) results = results.slice(0,n);
+        if (results.length > 0) {
+            results.forEach(function (f,i,a) {
+                let suggestion;
+                if (arg.length < 1) { // autocomplete title
+                    suggestion = f.item.title;
+                } else { // autocomplete argument
+                    suggestion = ((obj_class==="obj")?(title+" "):"") + f.value;
+                }
+                post("- " + suggestion);
+            })
+        } else {
+            post("No suggestions found!");
+        }
+    }
+}
+
 exports.index_obj_completion = index_obj_completion;
 exports.write_completion_index = write_completion_index;
+exports.autocomplete = autocomplete;
 
 // Modules
 

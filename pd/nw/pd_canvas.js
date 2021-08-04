@@ -521,6 +521,7 @@ var canvas_events = (function() {
                 if (evt.keyCode === 13) {
                     grow_svg_for_element(textbox());
                 }
+                pdgui.autocomplete(document.getElementById("new_object_textentry").className, textbox().innerText);
                 //evt.preventDefault();
                 return false;
             },
@@ -839,14 +840,17 @@ var canvas_events = (function() {
                     pdgui.pdsend(name, "obj_addtobuf", fudi_array[i].join(" "));
                 }
                 pdgui.pdsend(name, "obj_buftotext");
-                let obj_class = document.getElementById("new_object_textentry").className;
-                pdgui.index_obj_completion(obj_class, fudi_msg);
 
+                // GB: index created object
+                let obj = document.getElementById(textbox().getAttribute("tag")+"gobj");
+                // find obj class and remove word "selected"
+                let obj_class = obj.getAttribute("class").toString().split(" ").slice(0,1).toString();
+                pdgui.index_obj_completion(obj_class, fudi_msg);
                 // GB: every 50 changes in completion_index, make sure to save the alterations on json file
                 //     in case of unexpected quit or crash of purr data, it will be lost only few changes
-                if (++changes_in_completion_index > 50) {
+                if (changes_in_completion_index===0 || ++changes_in_completion_index > 50) {
                     pdgui.write_completion_index();
-                    changes_in_completion_index = 0;
+                    changes_in_completion_index = 1;
                 }
             }
         }
