@@ -103,6 +103,7 @@ var fs = require("fs");
 var path = require("path");
 var dive = require("./dive.js"); // small module to recursively search dirs
 var elasticlunr = require("./elasticlunr.js"); // lightweight full-text search engine in JavaScript, cf. https://github.com/weixsong/elasticlunr.js/
+elasticlunr.clearStopWords();
 
 function init_elasticlunr()
 {
