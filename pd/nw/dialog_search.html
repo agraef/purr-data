@@ -837,7 +837,19 @@ function display_doc(doc) {
     }
     if (doc.related_objects) {
         var p_rel_objs = document.createElement("p");
-        p_rel_objs.innerHTML = "Related objects: ".bold() + doc.related_objects.toString();
+        var ref_rel_objs = doc.ref_related_objects.split("\,");
+        p_rel_objs.innerHTML = "Related objects: ".bold();
+        doc.related_objects.split(" ").forEach(function (rel_obj, i, a) {
+            let link_rel_obj = rel_obj;
+            // for the objects with a help patch, add a link to its -help.pd
+            if (ref_rel_objs[i]) {
+                let ref_rel_obj = "javascript: pdgui.doc_open('" +
+                      pdgui.defunkify_windows_path(path.dirname(ref_rel_objs[i])) + "', '" +
+                      pdgui.defunkify_windows_path(path.basename(ref_rel_objs[i])) + "');";
+                link_rel_obj = rel_obj.link(ref_rel_obj);
+            }
+            p_rel_objs.innerHTML += " " + link_rel_obj;
+        });
         p_rel_objs.style.marginTop = "-10px";
         div.appendChild(p_rel_objs);
     }

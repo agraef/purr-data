@@ -13,6 +13,14 @@ exports.get_pwd = function() {
     return pwd;
 }
 
+function funkify_windows_path(s) {
+    var ret = s;
+    if (process.platform === "win32") {
+        ret = ret.replace(/\//g, "\\");
+    }
+    return ret;
+}
+
 function defunkify_windows_path(s) {
     var ret = s;
     if (process.platform === "win32") {
@@ -24,6 +32,8 @@ function defunkify_windows_path(s) {
 exports.set_pd_engine_id = function (id) {
     pd_engine_id = id;
 }
+
+exports.funkify_windows_path = funkify_windows_path;
 
 exports.defunkify_windows_path = defunkify_windows_path;
 
@@ -112,8 +122,8 @@ function init_elasticlunr()
     index.addField("keywords");
     index.addField("description");
     index.addField("related_objects");
-    //index.addField("body");
-    index.addField("path");
+    index.addField("ref_related_objects");
+    index.addField("dir");
     index.setRef("id");
     return index;
 }
@@ -121,6 +131,12 @@ function init_elasticlunr()
 var index = init_elasticlunr();
 var index_cache = new Array();
 var index_manif = new Set();
+
+function regex_dir(dir) {
+    let str_regex = funkify_windows_path(dir).replace(/\\/g, "\\\\").replace(/\//g, "\\\/")
+        + "\\" + path.sep + "?([\\w]*)\\" + path.sep + "?([\\w|\\.|\\-|\\~]*)\\" + path.sep + "?([\\S]*)";
+    return (RegExp(str_regex.toString()));
+}
 
 function index_entry_esc(s) {
     if (s) {
@@ -131,8 +147,15 @@ function index_entry_esc(s) {
     }
 }
 
-function add_doc_to_index(filename, data) {
-    var rel_objs;
+// GB: Add related_objects, keywords and description of files in indexing
+function add_doc_details_to_index(filename, data) {
+    var title = path.basename(filename, "-help.pd"),
+        big_line = data.replace("\n", " "),
+        keywords,
+        desc,
+        rel_objs,
+        ref_rel_objs;
+    // GB: investigate the related objects of each file
     const machine_related_objects = {
         found_objects: [],
         ref_found_objs: [],
@@ -147,38 +170,55 @@ function add_doc_to_index(filename, data) {
             },
             SEARCHING_OBJS: {
                 search_regex: function(line_search) {
-                    var rel_obj = line_search.match(/#X obj \-?\d+ \-?\d+ (pddp\/helplink )?(\w*\/)?([\w|\~]*);/i);
+                    var rel_obj = line_search.match(/#X obj \-?\d+ \-?\d+ (pddp\/helplink )?(\w*\/)?([\w|\~]+);/i);
                     if (rel_obj != null) {
-                        this.found_objects.push(rel_obj[3]);
-                        this.ref_found_objs.push(rel_obj);
+                        this.adds(rel_obj[3]);
                     } else if (/#X restore \-?\d+ \-?\d+ pd Related_objects;/i.test(line_search)) {
                         this.state = "SEARCHING_CANVAS";
+                    } else if ((/#N canvas \-?\d+ \-?\d+ \-?\d+ \-?\d+ [\S]* \-?\d+;/i.test(line_search))) {
+                        if (title != "random") {
+                            this.adds("pd");
+                        }
+                        this.state = "PD_AS_REL_OBJ";
                     }
                 },
             },
+            PD_AS_REL_OBJ: {
+                search_regex: function(line_search) {
+                    if (/#X restore \-?\d+ \-?\d+ pd;/i.test(line_search)) {
+                        this.state = "SEARCHING_OBJS";
+                    }
+                }
+            }
         },
-        dispatch(actionName, ...line_string) {
+        dispatch(actionName, line_string) {
             const action = this.transitions[this.state][actionName];
             if (action) {
-                action.call(this, ...line_string);
+                action.call(this, line_string);
+            }
+        },
+        adds(obj_title) {
+            if (!this.found_objects.includes(obj_title)) {
+                let obj_path = index.search(obj_title, {fields: {title: {}}});
+                if (obj_path.length > 0) obj_path = obj_path[0].ref;
+                this.found_objects.push(obj_title);
+                this.ref_found_objs.push(obj_path);
             }
         },
     };
     rel_objs = Object.create(machine_related_objects);
     let eval_string = data.split("\n");
     eval_string.forEach(function(l,a,i) {
-        rel_objs.dispatch('search_regex', l);
+        rel_objs.dispatch('search_regex', l.toString().replace(/\(/g, "\\\(")
+            .replace(/\)/, "\\\)"));
     });
+    ref_rel_objs = rel_objs.ref_found_objs.toString();
     rel_objs = rel_objs.found_objects;
-    rel_objs = rel_objs ? rel_objs.toString().replace( /,/g, " ") : null;
+    rel_objs = rel_objs ? rel_objs.toString().replace(/\,/g, " ") : null;
 
-    var title = path.basename(filename, ".pd"),
-        big_line = data.replace("\n", " "),
-        keywords,
-        desc;
         // We use [\s\S] to match across multiple lines...
         keywords = big_line
-            .match(/#X text \-?[0-9]+ \-?[0-9]+ KEYWORDS ([\s\S]*?);/i),
+            .match(/#X text \-?[0-9]+ \-?[0-9]+ KEYWORDS ([\s\S]*?);/i);
         desc = big_line
             .match(/#X text \-?[0-9]+ \-?[0-9]+ DESCRIPTION ([\s\S]*?);/i);
         keywords = keywords && keywords.length > 1 ? keywords[1].trim() : null;
@@ -190,34 +230,48 @@ function add_doc_to_index(filename, data) {
             desc = desc.replace(" \\,", ",");
         }
 
-    if (title.slice(-5) === "-help") {
-        title = title.slice(0, -5);
-    }
-    index_cache[index_cache.length] = [filename, title, keywords, desc, rel_objs]
+    index_cache[index_cache.length] = [filename, title, keywords, desc, rel_objs, ref_rel_objs]
         .map(index_entry_esc).join(":");
     var d = path.dirname(filename);
     index_manif.add(d);
     // Also add the parent directory to catch additions of siblings.
     index_manif.add(path.dirname(d));
-    index.addDoc({
+    index.update({
         "id": filename,
         "title": title,
         "keywords": keywords,
         "description": desc,
-        "related_objects": rel_objs
+        "related_objects": rel_objs,
+        "ref_related_objects": ref_rel_objs
+        //"body": big_line,
     });
 }
 
-function read_file(err, filename, stat) {
+function make_cache(filename) {
+    index_cache[index_cache.length] = [filename, path.basename(filename, "-help.pd"), null, null, null, null]
+        .map(index_entry_esc).join(":");
+    var d = path.dirname(filename);
+    index_manif.add(d);
+    // Also add the parent directory to catch additions of siblings.
+    index_manif.add(path.dirname(d));
+}
+
+// GB: Index all the files in Purr Data folder considering its filename, title and parent dir
+function add_doc_to_fast_index(err, filename, stat) {
     if (!err) {
-        if (filename.slice(-3) === ".pd") {
-            // AG: We MUST read the files synchronously here. This might be a
-            // performance issue on some systems, but if we don't do this then
-            // we may open a huge number of files simultaneously, causing the
-            // process to run out of file handles.
+        if (filename.slice(-8) === "-help.pd") {
             try {
-                var data = fs.readFileSync(filename, { encoding: "utf8", flag: "r" });
-                add_doc_to_index(filename, data);
+                let title = path.basename(filename, "-help.pd");
+                let regex_dir_compare = filename.match(regex_home_dir);
+                var dir = regex_dir_compare[1];
+                if (dir=="extra" && regex_dir_compare[3]) {
+                    dir = dir + "\/" + regex_dir_compare[2];
+                }
+                index.addDoc({
+                    "id": filename,
+                    "title": title,
+                    "dir": dir
+                })
             } catch (read_err) {
                 post("err: " + read_err);
             }
@@ -231,6 +285,7 @@ function read_file(err, filename, stat) {
 var index_done = false;
 var index_started = false;
 var index_start_time;
+var regex_home_dir;
 
 // Filenames for the index cache, relative to the user's homedir.
 const cache_basename = nw_os_is_windows
@@ -312,6 +367,36 @@ function make_index() {
     var doc_path = browser_doc?path.join(lib_dir, "doc"):lib_dir;
     var i = 0;
     var l = help_path.length;
+    function detail_files () {
+        post("adding details to files in " + expand_tilde(doc_path));
+        let dir = expand_tilde(doc_path).match(regex_home_dir);
+        let all_indexed_files = Object.keys(index.documentStore.docs);
+        let files_not_to_detail = all_indexed_files;
+        var files_to_detail, data;
+        if (!dir) {
+            files_to_detail = all_indexed_files;
+            files_not_to_detail = null;
+        } else {
+            dir = (dir[1]=="extra" && dir[3])?(dir[1]+"\/"+dir[2]):dir[1];
+            files_to_detail = index.search(dir,{fields: {dir: {}}}).map(obj => obj.ref);
+            files_not_to_detail = files_not_to_detail.filter(doc => !files_to_detail.includes(doc));
+        }
+        files_to_detail.forEach(function(filename,i,a) {
+            // AG: We MUST read the files synchronously here. This might be a
+            // performance issue on some systems, but if we don't do this then
+            // we may open a huge number of files simultaneously, causing the
+            // process to run out of file handles.
+            try {
+                data = fs.readFileSync(filename, { encoding: "utf8", flag: "r" });
+                add_doc_details_to_index(filename, data);
+            } catch (read_err) {
+                post("err: " + read_err);
+            }
+        });
+        if (browser_path) make_index_cont();
+        if (files_not_to_detail) files_not_to_detail.forEach(file => make_cache(file));
+        finish_index();
+    }
     function make_index_cont() {
         if (i < l) {
             var doc_path = help_path[i++];
@@ -321,13 +406,13 @@ function make_index() {
             fs.lstat(full_path, function(err, stat) {
                 if (!err) {
                     post("building help index in " + doc_path);
-                    dive(full_path, read_file, make_index_cont);
+                    detail_files();
                 } else {
                     make_index_cont();
                 }
             });
         } else {
-            finish_index();
+            // finish_index();
         }
     }
     pdsend("pd gui-busy 1");
@@ -359,12 +444,14 @@ function make_index() {
                 var keywords = e[2] ? e[2] : null;
                 var desc = e[3] ? e[3] : null;
                 var rel_obj = e[4] ? e[4] : null;
+                var ref_rel_obj = e[5] ? e[5] : null;
                 index.addDoc({
                     "id": filename,
                     "title": title,
                     "keywords": keywords,
                     "description": desc,
-                    "related_objects": rel_obj
+                    "related_objects": rel_obj,
+                    "ref_related_objects": ref_rel_obj
                 });
             }
         }
@@ -372,8 +459,9 @@ function make_index() {
     } else {
         // no index cache, or it is out of date, so (re)build it now, and
         // save the new cache along the way
-        post("building help index in " + doc_path);
-        dive(doc_path, read_file, browser_path?make_index_cont:finish_index);
+        regex_home_dir = regex_dir(lib_dir);
+        post("building help index in " + lib_dir);
+        dive(lib_dir, add_doc_to_fast_index, detail_files);
     }
     pdsend("pd gui-busy 0");
 }
