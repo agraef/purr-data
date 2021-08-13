@@ -387,8 +387,9 @@ function display_toc() {
 		header.appendChild(a);
 		div.appendChild(header);
 		if (doc.description) {
-		    text_node = document.createTextNode(doc.description);
-		    div.appendChild(text_node);
+		    var p_desc = document.createElement("p");
+		    p_desc.innerHTML = doc.description;
+		    div.appendChild(p_desc);
 		}
 	    } catch (e) {
 		// entry doesn't exist, ignore it
@@ -819,8 +820,7 @@ function display_doc(doc) {
     var div = document.createElement("div"),
         a = document.createElement("a"),
         results_elem = document.getElementById("results"),
-        header,
-        text_node;
+        header;
     a.href = "javascript: pdgui.doc_open('" +
          pdgui.defunkify_windows_path(path.dirname(doc.id)) + "', '" +
          pdgui.defunkify_windows_path(path.basename(doc.id)) + "');"
@@ -831,12 +831,15 @@ function display_doc(doc) {
     header.appendChild(a);
     div.appendChild(header);
     if (doc.description) {
-	text_node = document.createTextNode(doc.description);
-	div.appendChild(text_node);
+        var p_desc = document.createElement("p");
+        p_desc.innerHTML = doc.description;
+	    div.appendChild(p_desc);
     }
     if (doc.related_objects) {
-        text_node = document.createTextNode("\n Related objects: " + doc.related_objects.toString());
-        div.appendChild(text_node);
+        var p_rel_objs = document.createElement("p");
+        p_rel_objs.innerHTML = "Related objects: ".bold() + doc.related_objects.toString();
+        p_rel_objs.style.marginTop = "-10px";
+        div.appendChild(p_rel_objs);
     }
     results_elem.appendChild(div);
     toc_bookmark_update(current_dir);
@@ -871,7 +874,7 @@ function doc_search() {
             title: {boost: 64, expand: true},
             keywords: {boost: 8, expand: true},
             description: {boost: 2},
-            related_objects: {boost: 1}
+            related_objects: {boost: 1, expand: true}
         }
     });
     // Increase priority of pd-l2ork docs over externals docs
