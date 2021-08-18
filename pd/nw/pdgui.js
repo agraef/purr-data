@@ -575,53 +575,158 @@ function index_obj_completion(obj_or_msg, obj_or_msg_text) {
 }
 
 function write_completion_index() {
-    try {
+    try { // be sure the dir exists
         fs.mkdirSync(expand_tilde(path.dirname(compl_name)));
     } catch (err) {
         // post("err: " + err);
     }
-    try {
+    try { // create the file
         fs.writeFileSync(expand_tilde(compl_name), JSON.stringify(completion_index._docs), {mode: 0o644});
     } catch (err) {
         post("err: " + err);
     }
 }
 
-function autocomplete(obj_class, text) {
-    if (text.length !== 0) {
-        let title, arg;
-        if (obj_class === "obj") {
-            let text_array = text.split(" ");
-            title = text_array[0].toString();
-            arg = text_array.slice(1, text_array.length);
-            arg = (arg.length !== 0) ? arg.toString().replace(/\,/g, " ") : "";
-        } else {
-            title = "msg";
-            arg = text;
+// GB: manage the selection of the autocomplete dropdown options
+function update_autocomplete_selected(ac_dropdown, sel, new_sel) {
+    if (sel > -1) ac_dropdown.children.item(sel).classList.remove("selected");
+    if (new_sel > -1 && new_sel < ac_dropdown.children.length) {
+        ac_dropdown.children.item(new_sel).classList.add("selected");
+    } else {
+        new_sel = -1;
+    }
+    ac_dropdown.setAttribute("selected_item", new_sel);
+}
+
+function update_autocomplete_dd_arrowdown(ac_dropdown) {
+    if (ac_dropdown !== null) {
+        let sel = ac_dropdown.getAttribute("selected_item");
+        update_autocomplete_selected(ac_dropdown, sel, parseInt(sel) + 1);
+    }
+}
+
+function update_autocomplete_dd_arrowup(ac_dropdown) {
+    if (ac_dropdown !== null) {
+        let sel = ac_dropdown.getAttribute("selected_item");
+        update_autocomplete_selected(ac_dropdown, sel, parseInt(sel) - 1);
+    }
+}
+
+// GB TODO: In messages, when the chosen autocomplete is bigger than the message box, it doesn't resize it
+//           (so the text is written partially outside the message box in gui, what looks strange to the user)
+function select_result_autocomplete_dd(textbox, ac_dropdown) {
+    if (ac_dropdown !== null) {
+        let sel = ac_dropdown.getAttribute("selected_item");
+        if (sel > -1) {
+            textbox.innerText = ac_dropdown.children.item(sel).innerText;
+            delete_autocomplete_dd(ac_dropdown);
+        } else { // it only passes here when the user presses 'tab' and there is no option selected
+            textbox.innerText = ac_dropdown.children.item(0).innerText;
         }
-        let n = 10;
-        post(" -------- First " + n + " results -------- ");
-        let results = (arg.length > 0) ? (search_arg(title, arg).slice(1,)) : (search_obj(title));
-        if (results.length > n) results = results.slice(0,n);
-        if (results.length > 0) {
-            results.forEach(function (f,i,a) {
-                let suggestion;
-                if (arg.length < 1) { // autocomplete title
-                    suggestion = f.item.title;
-                } else { // autocomplete argument
-                    suggestion = ((obj_class==="obj")?(title+" "):"") + f.value;
-                }
-                post("- " + suggestion);
-            })
-        } else {
-            post("No suggestions found!");
-        }
+    }
+}
+
+// GB: update autocomplete dropdown with new results
+function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
+    ac_dropdown().setAttribute("searched_text", text);
+    let title, arg;
+    if (obj_class === "obj") {
+        let text_array = text.split(" ");
+        title = text_array[0].toString();
+        arg = text_array.slice(1, text_array.length);
+        arg = (arg.length !== 0) ? arg.toString().replace(/\,/g, " ") : "";
+    } else if (obj_class === "msg"){
+        title = "message";
+        arg = text;
+    } else if (obj_class === "comment") {
+        title = "text";
+        arg = text;
+    } else { // The code should never enter this 'else', but it's covered just in case there is a situation not covered above
+        return;
+    }
+
+    // If there are arg, we are autocompleting the arg field, and if there isn't we are autocompleting the obj_title field
+    let results = (arg.length > 0) ? (search_arg(title, arg).slice(1,)) : (search_obj(title));
+
+    // GB TODO: ideally we should be able to show all the results in a limited window with a scroll bar
+    let n = 8; // Maximum number of suggestions
+    if (results.length > n) results = results.slice(0,n);
+
+    ac_dropdown().innerHTML = ""; // clear all old results
+    if (results.length > 0) {
+        // for each result, make a paragraph child of autocomplete_dropdown
+        results.forEach(function (f,i,a) {
+            let h = ac_dropdown().getAttribute("font_height");
+            let y = h*(i+1);
+            let r = doc.createElement("p");
+            r.setAttribute("width", "150");
+            r.setAttribute("height", h);
+            r.setAttribute("y", y);
+            r.setAttribute("class", "border");
+            r.setAttribute("idx", i);
+            if (arg.length < 1) { // autocomplete object
+                r.textContent = f.item.title;
+            } else { // autocomplete argument, message or comment
+                r.textContent = ((obj_class==="obj")?(title+" "):"") + f.value;
+            }
+            ac_dropdown().appendChild(r);
+        })
+        ac_dropdown().setAttribute("selected_item", "-1");
+    } else { // if there is no suggestion candidate, the autocompletion dropdown should disappear
+        delete_autocomplete_dd (ac_dropdown());
+    }
+}
+
+// GB: create autocomplete dropdown based on the properties of the textbox for new_obj_element
+function create_autocomplete_dd (doc, ac_dropdown, new_obj_element) {
+    if(ac_dropdown === null) {
+        let font_width = new_obj_element.getAttribute("font_width");
+        let font_height = new_obj_element.getAttribute("font_height");
+        let style = new_obj_element.style;
+        let font_size = style.getPropertyValue("font-size").toString();
+        font_size = parseFloat(font_size.slice(0,font_size.length-2));
+        let line_height = style.getPropertyValue("line-height").toString();
+        let zoom = parseFloat(line_height.slice(0,line_height.length-1))/100;
+        let offset_y = zoom*font_size + 4;
+        let top = style.getPropertyValue("top").toString();
+        top = parseFloat(top.slice(0, top.length-2)) + offset_y;
+
+        var dd = doc.createElement("div");
+        configure_item(dd, {
+            id: "autocomplete_dropdown",
+            font_width: font_width,
+            font_height: font_height
+        });
+        dd.style.setProperty("position", "fixed");
+        dd.style.setProperty("left", style.getPropertyValue("left"));
+        dd.style.setProperty("top", top.toString() + "px");
+        dd.style.setProperty("font-size", style.getPropertyValue("font-size"));
+        dd.style.setProperty("line-height", line_height);
+        dd.style.setProperty("transform", style.getPropertyValue("transform"));
+        dd.style.setProperty("max-width", style.getPropertyValue("max-width"));
+        // dd.style.setProperty("-webkit-padding-after", style.getPropertyValue("-webkit-padding-after"));
+        dd.style.setProperty("min-width", style.getPropertyValue("min-width"));
+        dd.setAttribute("selected_item", "-1");
+        dd.setAttribute("searched_text", "");
+        doc.body.appendChild(dd);
+    }
+}
+
+function delete_autocomplete_dd (ac_dropdown) {
+    if (ac_dropdown !== null) {
+        ac_dropdown.parentNode.removeChild(ac_dropdown);
     }
 }
 
 exports.index_obj_completion = index_obj_completion;
 exports.write_completion_index = write_completion_index;
-exports.autocomplete = autocomplete;
+exports.update_autocomplete_selected = update_autocomplete_selected;
+exports.update_autocomplete_dd_arrowdown = update_autocomplete_dd_arrowdown;
+exports.update_autocomplete_dd_arrowup = update_autocomplete_dd_arrowup;
+exports.select_result_autocomplete_dd = select_result_autocomplete_dd;
+exports.repopulate_autocomplete_dd = repopulate_autocomplete_dd;
+exports.create_autocomplete_dd = create_autocomplete_dd;
+exports.delete_autocomplete_dd = delete_autocomplete_dd;
 
 // Modules
 
@@ -6906,6 +7011,13 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
             patchwin[cid].window.canvas_events.search();
         } else {
             patchwin[cid].window.canvas_events.normal();
+        }
+
+        // GB: Autocomplete dropdown -- if the paragraph element of "new_object_textentry" is deleted,
+        //     the dropdown of autocompletion shall be deleted also
+        let autocomplete_dropdown = patchwin[cid].window.document.getElementById("autocomplete_dropdown");
+        if (autocomplete_dropdown !== null) {
+            autocomplete_dropdown.parentNode.removeChild(autocomplete_dropdown);
         }
     }
 }
