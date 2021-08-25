@@ -13,14 +13,6 @@ exports.get_pwd = function() {
     return pwd;
 }
 
-function funkify_windows_path(s) {
-    var ret = s;
-    if (process.platform === "win32") {
-        ret = ret.replace(/\//g, "\\");
-    }
-    return ret;
-}
-
 function defunkify_windows_path(s) {
     var ret = s;
     if (process.platform === "win32") {
@@ -32,8 +24,6 @@ function defunkify_windows_path(s) {
 exports.set_pd_engine_id = function (id) {
     pd_engine_id = id;
 }
-
-exports.funkify_windows_path = funkify_windows_path;
 
 exports.defunkify_windows_path = defunkify_windows_path;
 
@@ -123,7 +113,6 @@ function init_elasticlunr()
     index.addField("description");
     index.addField("related_objects");
     index.addField("ref_related_objects");
-    index.addField("dir");
     index.setRef("id");
     return index;
 }
@@ -131,12 +120,6 @@ function init_elasticlunr()
 var index = init_elasticlunr();
 var index_cache = new Array();
 var index_manif = new Set();
-
-function regex_dir(dir) {
-    let str_regex = funkify_windows_path(dir).replace(/\\/g, "\\\\").replace(/\//g, "\\\/")
-        + "\\" + path.sep + "?([\\w]*)\\" + path.sep + "?([\\w|\\.|\\-|\\~]*)\\" + path.sep + "?([\\S]*)";
-    return (RegExp(str_regex.toString()));
-}
 
 function index_entry_esc(s) {
     if (s) {
@@ -147,7 +130,8 @@ function index_entry_esc(s) {
     }
 }
 
-// GB: Add related_objects, keywords and description of files in indexing
+// GB: This actually retrieves the meta data concerning related_objects,
+// keywords, and description of help patches.
 function add_doc_details_to_index(filename, data) {
     var title = path.basename(filename, "-help.pd"),
         big_line = data.replace("\n", " "),
@@ -216,19 +200,19 @@ function add_doc_details_to_index(filename, data) {
     rel_objs = rel_objs.found_objects;
     rel_objs = rel_objs ? rel_objs.toString().replace(/\,/g, " ") : null;
 
-        // We use [\s\S] to match across multiple lines...
-        keywords = big_line
-            .match(/#X text \-?[0-9]+ \-?[0-9]+ KEYWORDS ([\s\S]*?);/i);
-        desc = big_line
-            .match(/#X text \-?[0-9]+ \-?[0-9]+ DESCRIPTION ([\s\S]*?);/i);
-        keywords = keywords && keywords.length > 1 ? keywords[1].trim() : null;
-        desc = desc && desc.length > 1 ? desc[1].trim() : null;
-        // Remove the Pd escapes for commas
-        desc = desc ? desc.replace(" \\,", ",") : null;
-        if (desc) {
-            // format Pd's "comma atoms" as normal commas
-            desc = desc.replace(" \\,", ",");
-        }
+    // We use [\s\S] to match across multiple lines...
+    keywords = big_line
+        .match(/#X text \-?[0-9]+ \-?[0-9]+ KEYWORDS ([\s\S]*?);/i);
+    desc = big_line
+        .match(/#X text \-?[0-9]+ \-?[0-9]+ DESCRIPTION ([\s\S]*?);/i);
+    keywords = keywords && keywords.length > 1 ? keywords[1].trim() : null;
+    desc = desc && desc.length > 1 ? desc[1].trim() : null;
+    // Remove the Pd escapes for commas
+    desc = desc ? desc.replace(" \\,", ",") : null;
+    if (desc) {
+        // format Pd's "comma atoms" as normal commas
+        desc = desc.replace(" \\,", ",");
+    }
 
     index_cache[index_cache.length] = [filename, title, keywords, desc, rel_objs, ref_rel_objs]
         .map(index_entry_esc).join(":");
@@ -247,30 +231,16 @@ function add_doc_details_to_index(filename, data) {
     });
 }
 
-function make_cache(filename) {
-    index_cache[index_cache.length] = [filename, path.basename(filename, "-help.pd"), null, null, null, null]
-        .map(index_entry_esc).join(":");
-    var d = path.dirname(filename);
-    index_manif.add(d);
-    // Also add the parent directory to catch additions of siblings.
-    index_manif.add(path.dirname(d));
-}
-
-// GB: Index all the files in Purr Data folder considering its filename, title and parent dir
-function add_doc_to_fast_index(err, filename, stat) {
+// GB: This does an initial scan of help patches, recording filename, title and
+// parent dir, without looking at the meta data.
+function add_doc_to_index(err, filename, stat) {
     if (!err) {
         if (filename.slice(-8) === "-help.pd") {
             try {
                 let title = path.basename(filename, "-help.pd");
-                let regex_dir_compare = filename.match(regex_home_dir);
-                var dir = regex_dir_compare[1];
-                if (dir=="extra" && regex_dir_compare[3]) {
-                    dir = dir + "\/" + regex_dir_compare[2];
-                }
                 index.addDoc({
                     "id": filename,
-                    "title": title,
-                    "dir": dir
+                    "title": title
                 })
             } catch (read_err) {
                 post("err: " + read_err);
@@ -285,7 +255,6 @@ function add_doc_to_fast_index(err, filename, stat) {
 var index_done = false;
 var index_started = false;
 var index_start_time;
-var regex_home_dir;
 
 // Filenames for the index cache, relative to the user's homedir.
 const cache_basename = nw_os_is_windows
@@ -367,21 +336,10 @@ function make_index() {
     var doc_path = browser_doc?path.join(lib_dir, "doc"):lib_dir;
     var i = 0;
     var l = help_path.length;
-    function detail_files () {
-        post("adding details to files in " + expand_tilde(doc_path));
-        let dir = expand_tilde(doc_path).match(regex_home_dir);
+    function detail_files() {
         let all_indexed_files = Object.keys(index.documentStore.docs);
-        let files_not_to_detail = all_indexed_files;
-        var files_to_detail, data;
-        if (!dir) {
-            files_to_detail = all_indexed_files;
-            files_not_to_detail = null;
-        } else {
-            dir = (dir[1]=="extra" && dir[3])?(dir[1]+"\/"+dir[2]):dir[1];
-            files_to_detail = index.search(dir,{fields: {dir: {}}}).map(obj => obj.ref);
-            files_not_to_detail = files_not_to_detail.filter(doc => !files_to_detail.includes(doc));
-        }
-        files_to_detail.forEach(function(filename,i,a) {
+        var data;
+        all_indexed_files.forEach(function(filename,i,a) {
             // AG: We MUST read the files synchronously here. This might be a
             // performance issue on some systems, but if we don't do this then
             // we may open a huge number of files simultaneously, causing the
@@ -393,26 +351,27 @@ function make_index() {
                 post("err: " + read_err);
             }
         });
-        if (browser_path) make_index_cont();
-        if (files_not_to_detail) files_not_to_detail.forEach(file => make_cache(file));
         finish_index();
     }
     function make_index_cont() {
-        if (i < l) {
+        if (browser_path && i < l) {
             var doc_path = help_path[i++];
             // AG: These paths might not exist, ignore them in this case. Also
             // note that we need to expand ~ here.
             var full_path = expand_tilde(doc_path);
             fs.lstat(full_path, function(err, stat) {
                 if (!err) {
-                    post("building help index in " + doc_path);
-                    detail_files();
+                    post("scanning help patches in " + doc_path);
+                    dive(full_path, add_doc_to_index, make_index_cont);
                 } else {
                     make_index_cont();
                 }
             });
         } else {
-            // finish_index();
+            // reset the help path index, then invoke the main pass
+            i = 0;
+            post("building help index");
+            detail_files();
         }
     }
     pdsend("pd gui-busy 1");
@@ -459,9 +418,8 @@ function make_index() {
     } else {
         // no index cache, or it is out of date, so (re)build it now, and
         // save the new cache along the way
-        regex_home_dir = regex_dir(lib_dir);
-        post("building help index in " + lib_dir);
-        dive(lib_dir, add_doc_to_fast_index, detail_files);
+        post("scanning help patches in " + doc_path);
+        dive(doc_path, add_doc_to_index, make_index_cont);
     }
     pdsend("pd gui-busy 0");
 }
