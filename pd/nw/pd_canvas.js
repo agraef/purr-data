@@ -894,12 +894,15 @@ var canvas_events = (function() {
                 let obj = document.getElementById(textbox().getAttribute("tag")+"gobj");
                 // find obj class and remove word "selected"
                 let obj_class = obj.getAttribute("class").toString().split(" ").slice(0,1).toString();
-                pdgui.index_obj_completion(obj_class, fudi_msg);
-                // GB: every 50 changes in completion_index, make sure to save the alterations on json file
-                //     in case of unexpected quit or crash of purr data, it will be lost only few changes
-                if (changes_in_completion_index===0 || ++changes_in_completion_index > 50) {
-                    pdgui.write_completion_index();
-                    changes_in_completion_index = 1;
+                if (pdgui.autocomplete_enabled()) {
+                    pdgui.index_obj_completion(obj_class, fudi_msg);
+                    // GB: save every 50 changes, so that we don't loose too
+                    // much data in case purr-data unexpectedly quits or crashes
+                    if (changes_in_completion_index===0 ||
+                        ++changes_in_completion_index > 50) {
+                        pdgui.write_completion_index();
+                        changes_in_completion_index = 1;
+                    }
                 }
             }
         }

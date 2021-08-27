@@ -3,7 +3,12 @@
 var pwd;
 var lib_dir;
 var help_path, browser_doc, browser_path, browser_init;
+var autocomplete, autocomplete_prefix;
 var pd_engine_id;
+
+exports.autocomplete_enabled = function() {
+    return autocomplete;
+}
 
 exports.set_pwd = function(pwd_string) {
     pwd = pwd_string;
@@ -27,17 +32,28 @@ exports.set_pd_engine_id = function (id) {
 
 exports.defunkify_windows_path = defunkify_windows_path;
 
-function gui_set_browser_config(doc_flag, path_flag, init_flag, helppath) {
+function gui_set_browser_config(doc_flag, path_flag, init_flag,
+                                ac_flag, ac_prefix_flag,
+                                helppath) {
     // post("gui_set_browser_config: " + helppath.join(":"));
     browser_doc = doc_flag;
     browser_path = path_flag;
     browser_init = init_flag;
     help_path = helppath;
+    // AG: This should ideally be in its own separate callback, but for the
+    // time being we really need the tie-in with the help browser here, so
+    // that the completion index can be loaded first, and then be updated with
+    // data from the help index when make_index() gets called. Also note that
+    // in order to keep things simple, we build the autocompletion index even
+    // if autcompletion is disabled, so that the index is ready to go if the
+    // user decides to enable it later.
+    autocomplete = ac_flag;
+    autocomplete_prefix = ac_prefix_flag;
+    make_completion_index();
     // AG: Start building the keyword index for dialog_search.html. We do this
     // here so that we can be sure that lib_dir and help_path are known already.
     // (This may also be deferred until the browser is launched for the first
     // time, depending on the value of browser_init.)
-    make_completion_index(); // GB: TODO - change this line to be called in a separated function on the c side
     if (browser_init == 1) make_index();
 }
 
@@ -469,9 +485,11 @@ function rebuild_index()
 }
 
 // this is called from the gui tab of the prefs dialog
-function update_browser(doc_flag, path_flag)
+function update_browser(doc_flag, path_flag, ac_flag, ac_prefix_flag)
 {
     var changed = false;
+    autocomplete = ac_flag;
+    autocomplete_prefix = ac_prefix_flag;
     doc_flag = doc_flag?1:0;
     path_flag = path_flag?1:0;
     if (browser_doc !== doc_flag) {
@@ -522,10 +540,14 @@ function obj_exact_match(title) {
 }
 
 function search_obj(title) {
+    if (!autocomplete) return [];
     // GB approaches: search objects that *contains* search _word_ (1st line) or patches that *begins with* _word_ (2nd line)
     // either should skip the result 'message' and 'text' thus messages and comments are not created the same way objects are
-    return completion_index.search({$and: [{"title": "'\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
-    // return completion_index.search({$and: [{"title": "^\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
+    if (!autocomplete_prefix) {
+        return completion_index.search({$and: [{"title": "'\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
+    } else {
+        return completion_index.search({$and: [{"title": "^\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
+    }
 }
 
 function arg_exact_match(title, arg) {
@@ -533,6 +555,7 @@ function arg_exact_match(title, arg) {
 }
 
 function search_arg(title, arg) {
+    if (!autocomplete) return [];
     // for the arguments, we are only interested on the obj that match exactly the 'title', so we return only the args from this obj
     let results = completion_index.search({$and: [{"title": "=\"" + title + "\""}, {"args.text": "^\"" + arg + "\""}]});
     return (results.length > 0) ? results[0].matches : [];
@@ -6632,10 +6655,13 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
     }
 }
 
-function gui_gui_properties(dummy, name, show_grid, grid_size, save_zoom, browser_doc, browser_path,
-    browser_init, autopatch_yoffset) {
+function gui_gui_properties(dummy, name, show_grid, grid_size, save_zoom,
+                            autocomplete, autocomplete_prefix,
+                            browser_doc, browser_path, browser_init,
+                            autopatch_yoffset) {
     if (dialogwin["prefs"] !== null) {
-        dialogwin["prefs"].window.gui_prefs_callback(name, show_grid, grid_size, save_zoom,
+        dialogwin["prefs"].window.gui_prefs_callback(name, show_grid, grid_size,
+            save_zoom, autocomplete, autocomplete_prefix,
             browser_doc, browser_path, browser_init, autopatch_yoffset);
     }
 }

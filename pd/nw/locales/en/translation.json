@@ -439,6 +439,13 @@
         "save_zoom": "save/load zoom level with patch",
         "save_zoom_tt": "Save the current zoom level with the patch and restore it when reloading the patch"
       },
+      "autocomplete": {
+        "autocomplete_title": "Auto-completion settings",
+        "autocomplete": "auto-complete object names and arguments (experimental)",
+        "autocomplete_tt": "Offers completions for object names and arguments as you type",
+        "autocomplete_prefix": "match completions by object name prefix",
+        "autocomplete_prefix_tt": "Only list completions whose prefix matches (rather than matches anywhere in object names)"
+      },
       "browser": {
         "browser_title": "Help browser settings (WARNING: changing these may affect startup times!)",
         "browser_doc": "help browser only searches the doc folder",

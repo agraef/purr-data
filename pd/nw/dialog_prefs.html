@@ -442,6 +442,18 @@ select {
                    name="autopatch_yoffset_value"
                    data-i18n="[title]prefs.gui.autopatch_yoffset_tt">
             <br/><br/>
+            <span data-i18n="prefs.gui.autocomplete.autocomplete_title"></span>
+            <br/>
+            <label data-i18n="[title]prefs.gui.autocomplete.autocomplete_tt">
+              <input type="checkbox" id="autocomplete" name="autocomplete">
+              <span data-i18n="prefs.gui.autocomplete.autocomplete"></span>
+            </label>
+            <br/>
+            <label data-i18n="[title]prefs.gui.autocomplete.autocomplete_prefix_tt">
+              <input type="checkbox" id="autocomplete_prefix" name="autocomplete_prefix">
+              <span data-i18n="prefs.gui.autocomplete.autocomplete_prefix"></span>
+            </label>
+            <br/><br/>
             <span data-i18n="prefs.gui.browser.browser_title"></span>
             <br/>
             <label data-i18n="[title]prefs.gui.browser.browser_doc_tt">
@@ -792,6 +804,8 @@ function apply(save_prefs) {
         get_bool_elem("show_grid"),
 	document.getElementById("grid_size").value,
         get_bool_elem("save_zoom"),
+        get_bool_elem("autocomplete"),
+        get_bool_elem("autocomplete_prefix"),
         get_bool_elem("browser_doc"),
         get_bool_elem("browser_path"),
         get_bool_elem("browser_init"),
@@ -801,7 +815,9 @@ function apply(save_prefs) {
     // help browser accordingly.
     pdgui.update_browser(
         get_bool_elem("browser_doc"),
-        get_bool_elem("browser_path")
+        get_bool_elem("browser_path"),
+        get_bool_elem("autocomplete"),
+        get_bool_elem("autocomplete_prefix")
     );
     // Update the grid on all open windows.
     pdgui.update_grid(get_bool_elem("show_grid"),
@@ -1054,8 +1070,9 @@ function autopatch_yoffset_toggle(checked) {
     document.getElementById("autopatch_yoffset").checked = checked;
 }
 
-function gui_prefs_callback(name, show_grid, grid_size, save_zoom, browser_doc,
-    browser_path, browser_init, autopatch_yoffset) {
+function gui_prefs_callback(name, show_grid, grid_size, save_zoom,
+    autocomplete, autocomplete_prefix,
+    browser_doc, browser_path, browser_init, autopatch_yoffset) {
     var s = document.getElementById("gui_preset");
 
     // ag: scan the css subdir for user-defined styles
@@ -1088,6 +1105,8 @@ function gui_prefs_callback(name, show_grid, grid_size, save_zoom, browser_doc,
     document.getElementById("grid_size").value = grid_size;
     grid_toggle(!!show_grid);
     document.getElementById("save_zoom").checked = !!save_zoom;
+    document.getElementById("autocomplete").checked = !!autocomplete;
+    document.getElementById("autocomplete_prefix").checked = !!autocomplete_prefix;
     document.getElementById("browser_doc").checked = !!browser_doc;
     document.getElementById("browser_path").checked = !!browser_path;
     document.getElementById("browser_init").checked = !!browser_init;
