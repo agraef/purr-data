@@ -540,16 +540,12 @@ function search_arg(title, arg) {
 
 function index_obj_completion(obj_or_msg, obj_or_msg_text) {
     var title, arg;
-    if (obj_or_msg === "msg") {
-        title = "message";
-        arg = obj_or_msg_text;
-    } else if (obj_or_msg === "comment") {
-        title = "text";
-        arg = obj_or_msg_text;
-    } else if (obj_or_msg === "obj") {
+    if (obj_or_msg === "obj") {
         let text_array = obj_or_msg_text.split(" ");
         title = text_array[0];
         arg = text_array.slice(1, text_array.length).toString().replace(/\,/g, " ");
+    } else { // the autocomplete feature doesn't work with messages and comments
+        return;
     }
     var obj_ref, obj_freq = 1, args = [], arg_ref = 0, arg_freq = 1, obj_found = false;
     let obj_result = obj_exact_match(title);
@@ -612,8 +608,6 @@ function update_autocomplete_dd_arrowup(ac_dropdown) {
     }
 }
 
-// GB TODO: In messages, when the chosen autocomplete is bigger than the message box, it doesn't resize it
-//           (so the text is written partially outside the message box in gui, what looks strange to the user)
 function select_result_autocomplete_dd(textbox, ac_dropdown) {
     if (ac_dropdown !== null) {
         let sel = ac_dropdown.getAttribute("selected_item");
@@ -635,13 +629,7 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
         title = text_array[0].toString();
         arg = text_array.slice(1, text_array.length);
         arg = (arg.length !== 0) ? arg.toString().replace(/\,/g, " ") : "";
-    } else if (obj_class === "msg"){
-        title = "message";
-        arg = text;
-    } else if (obj_class === "comment") {
-        title = "text";
-        arg = text;
-    } else { // The code should never enter this 'else', but it's covered just in case there is a situation not covered above
+    } else { // the autocomplete feature doesn't work with messages and comments
         return;
     }
 
