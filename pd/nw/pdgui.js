@@ -3,7 +3,12 @@
 var pwd;
 var lib_dir;
 var help_path, browser_doc, browser_path, browser_init;
+var autocomplete, autocomplete_prefix;
 var pd_engine_id;
+
+exports.autocomplete_enabled = function() {
+    return autocomplete;
+}
 
 exports.set_pwd = function(pwd_string) {
     pwd = pwd_string;
@@ -27,12 +32,24 @@ exports.set_pd_engine_id = function (id) {
 
 exports.defunkify_windows_path = defunkify_windows_path;
 
-function gui_set_browser_config(doc_flag, path_flag, init_flag, helppath) {
+function gui_set_browser_config(doc_flag, path_flag, init_flag,
+                                ac_flag, ac_prefix_flag,
+                                helppath) {
     // post("gui_set_browser_config: " + helppath.join(":"));
     browser_doc = doc_flag;
     browser_path = path_flag;
     browser_init = init_flag;
     help_path = helppath;
+    // AG: This should ideally be in its own separate callback, but for the
+    // time being we really need the tie-in with the help browser here, so
+    // that the completion index can be loaded first, and then be updated with
+    // data from the help index when make_index() gets called. Also note that
+    // in order to keep things simple, we build the autocompletion index even
+    // if autcompletion is disabled, so that the index is ready to go if the
+    // user decides to enable it later.
+    autocomplete = ac_flag;
+    autocomplete_prefix = ac_prefix_flag;
+    make_completion_index();
     // AG: Start building the keyword index for dialog_search.html. We do this
     // here so that we can be sure that lib_dir and help_path are known already.
     // (This may also be deferred until the browser is launched for the first
@@ -103,6 +120,7 @@ var fs = require("fs");
 var path = require("path");
 var dive = require("./dive.js"); // small module to recursively search dirs
 var elasticlunr = require("./elasticlunr.js"); // lightweight full-text search engine in JavaScript, cf. https://github.com/weixsong/elasticlunr.js/
+elasticlunr.clearStopWords();
 
 function init_elasticlunr()
 {
@@ -110,8 +128,8 @@ function init_elasticlunr()
     index.addField("title");
     index.addField("keywords");
     index.addField("description");
-    //index.addField("body");
-    index.addField("path");
+    index.addField("related_objects");
+    index.addField("ref_related_objects");
     index.setRef("id");
     return index;
 }
@@ -129,52 +147,125 @@ function index_entry_esc(s) {
     }
 }
 
-function add_doc_to_index(filename, data) {
-    var title = path.basename(filename, ".pd"),
+// GB: This actually retrieves the meta data concerning related_objects,
+// keywords, and description of help patches.
+function add_doc_details_to_index(filename, data) {
+    var title = path.basename(filename, "-help.pd"),
         big_line = data.replace("\n", " "),
         keywords,
-        desc;
-        // We use [\s\S] to match across multiple lines...
-        keywords = big_line
-            .match(/#X text \-?[0-9]+ \-?[0-9]+ KEYWORDS ([\s\S]*?);/i),
-        desc = big_line
-            .match(/#X text \-?[0-9]+ \-?[0-9]+ DESCRIPTION ([\s\S]*?);/i);
-        keywords = keywords && keywords.length > 1 ? keywords[1].trim() : null;
-        desc = desc && desc.length > 1 ? desc[1].trim() : null;
-        // Remove the Pd escapes for commas
-        desc = desc ? desc.replace(" \\,", ",") : null;
-        if (desc) {
-            // format Pd's "comma atoms" as normal commas
-            desc = desc.replace(" \\,", ",");
-        }
-    if (title.slice(-5) === "-help") {
-        title = title.slice(0, -5);
+        desc,
+        rel_objs,
+        ref_rel_objs;
+    // GB: investigate the related objects of each file
+    const machine_related_objects = {
+        found_objects: [],
+        ref_found_objs: [],
+        state: 'SEARCHING_CANVAS',
+        transitions: {
+            SEARCHING_CANVAS: {
+                search_regex: function(line_string) {
+                    if (/#N canvas \-?\d+ \-?\d+ \-?\d+ \-?\d+ Related_objects \-?\d+;/i.test(line_string)) {
+                        this.state = "SEARCHING_OBJS";
+                    }
+                },
+            },
+            SEARCHING_OBJS: {
+                search_regex: function(line_search) {
+                    var rel_obj = line_search.match(/#X obj \-?\d+ \-?\d+ (pddp\/helplink )?(\w*\/)?([\w|\~]+);/i);
+                    if (rel_obj != null) {
+                        this.adds(rel_obj[3]);
+                    } else if (/#X restore \-?\d+ \-?\d+ pd Related_objects;/i.test(line_search)) {
+                        this.state = "SEARCHING_CANVAS";
+                    } else if ((/#N canvas \-?\d+ \-?\d+ \-?\d+ \-?\d+ [\S]* \-?\d+;/i.test(line_search))) {
+                        if (title != "random") {
+                            this.adds("pd");
+                        }
+                        this.state = "PD_AS_REL_OBJ";
+                    }
+                },
+            },
+            PD_AS_REL_OBJ: {
+                search_regex: function(line_search) {
+                    if (/#X restore \-?\d+ \-?\d+ pd;/i.test(line_search)) {
+                        this.state = "SEARCHING_OBJS";
+                    }
+                }
+            }
+        },
+        dispatch(actionName, line_string) {
+            const action = this.transitions[this.state][actionName];
+            if (action) {
+                action.call(this, line_string);
+            }
+        },
+        adds(obj_title) {
+            if (!this.found_objects.includes(obj_title)) {
+                let obj_path = index.search(obj_title, {fields: {title: {}}});
+                if (obj_path.length > 0) obj_path = obj_path[0].ref;
+                this.found_objects.push(obj_title);
+                this.ref_found_objs.push(obj_path);
+            }
+        },
+    };
+    rel_objs = Object.create(machine_related_objects);
+    let eval_string = data.split("\n");
+    eval_string.forEach(function(l,a,i) {
+        rel_objs.dispatch('search_regex', l.toString().replace(/\(/g, "\\\(")
+            .replace(/\)/, "\\\)"));
+    });
+    ref_rel_objs = rel_objs.ref_found_objs.toString();
+    rel_objs = rel_objs.found_objects;
+    rel_objs = rel_objs ? rel_objs.toString().replace(/\,/g, " ") : null;
+
+    // We use [\s\S] to match across multiple lines...
+    keywords = big_line
+        .match(/#X text \-?[0-9]+ \-?[0-9]+ KEYWORDS ([\s\S]*?);/i);
+    desc = big_line
+        .match(/#X text \-?[0-9]+ \-?[0-9]+ DESCRIPTION ([\s\S]*?);/i);
+    keywords = keywords && keywords.length > 1 ? keywords[1].trim() : null;
+    desc = desc && desc.length > 1 ? desc[1].trim() : null;
+    // Remove the Pd escapes for commas
+    desc = desc ? desc.replace(" \\,", ",") : null;
+    if (desc) {
+        // format Pd's "comma atoms" as normal commas
+        desc = desc.replace(" \\,", ",");
     }
-    index_cache[index_cache.length] = [filename, title, keywords, desc]
+
+    index_cache[index_cache.length] = [filename, title, keywords, desc, rel_objs, ref_rel_objs]
         .map(index_entry_esc).join(":");
     var d = path.dirname(filename);
     index_manif.add(d);
     // Also add the parent directory to catch additions of siblings.
     index_manif.add(path.dirname(d));
-    index.addDoc({
+    index.update({
         "id": filename,
         "title": title,
         "keywords": keywords,
-        "description": desc
+        "description": desc,
+        "related_objects": rel_objs,
+        "ref_related_objects": ref_rel_objs
         //"body": big_line,
     });
 }
 
-function read_file(err, filename, stat) {
+// GB: This does an initial scan of help patches, recording filename, title and
+// parent dir, without looking at the meta data.
+function add_doc_to_index(err, filename, stat) {
     if (!err) {
-        if (filename.slice(-3) === ".pd") {
-            // AG: We MUST read the files synchronously here. This might be a
-            // performance issue on some systems, but if we don't do this then
-            // we may open a huge number of files simultaneously, causing the
-            // process to run out of file handles.
+        if (filename.slice(-8) === "-help.pd") {
             try {
-                var data = fs.readFileSync(filename, { encoding: "utf8", flag: "r" });
-                add_doc_to_index(filename, data);
+                let title = path.basename(filename, "-help.pd");
+                index.addDoc({
+                    "id": filename,
+                    "title": title
+                })
+                if (obj_exact_match(title).length===0) {
+                    completion_index.add({
+                        "occurrences" : 0,
+                        "title" : title,
+                        "args" : []
+                    });
+                }
             } catch (read_err) {
                 post("err: " + read_err);
             }
@@ -191,10 +282,11 @@ var index_start_time;
 
 // Filenames for the index cache, relative to the user's homedir.
 const cache_basename = nw_os_is_windows
-      ? "~/AppData/Roaming/Purr-Data/search"
-      : "~/.purr-data/search";
-const cache_name = cache_basename + ".index";
-const stamps_name = cache_basename + ".stamps";
+    ? "~/AppData/Roaming/Purr-Data/"
+    : "~/.purr-data/";
+const cache_name = cache_basename + "search.index";
+const stamps_name = cache_basename + "search.stamps";
+const compl_name = cache_basename + "completions.json";
 
 function finish_index() {
     index_done = true;
@@ -269,22 +361,42 @@ function make_index() {
     var doc_path = browser_doc?path.join(lib_dir, "doc"):lib_dir;
     var i = 0;
     var l = help_path.length;
+    function detail_files() {
+        let all_indexed_files = Object.keys(index.documentStore.docs);
+        var data;
+        all_indexed_files.forEach(function(filename,i,a) {
+            // AG: We MUST read the files synchronously here. This might be a
+            // performance issue on some systems, but if we don't do this then
+            // we may open a huge number of files simultaneously, causing the
+            // process to run out of file handles.
+            try {
+                data = fs.readFileSync(filename, { encoding: "utf8", flag: "r" });
+                add_doc_details_to_index(filename, data);
+            } catch (read_err) {
+                post("err: " + read_err);
+            }
+        });
+        finish_index();
+    }
     function make_index_cont() {
-        if (i < l) {
+        if (browser_path && i < l) {
             var doc_path = help_path[i++];
             // AG: These paths might not exist, ignore them in this case. Also
             // note that we need to expand ~ here.
             var full_path = expand_tilde(doc_path);
             fs.lstat(full_path, function(err, stat) {
                 if (!err) {
-                    post("building help index in " + doc_path);
-                    dive(full_path, read_file, make_index_cont);
+                    post("scanning help patches in " + doc_path);
+                    dive(full_path, add_doc_to_index, make_index_cont);
                 } else {
                     make_index_cont();
                 }
             });
         } else {
-            finish_index();
+            // reset the help path index, then invoke the main pass
+            i = 0;
+            post("building help index");
+            detail_files();
         }
     }
     pdsend("pd gui-busy 1");
@@ -314,12 +426,16 @@ function make_index() {
                 var filename = e[0] ? e[0] : null;
                 var title = e[1] ? e[1] : null;
                 var keywords = e[2] ? e[2] : null;
-                var descr = e[3] ? e[3] : null;
+                var desc = e[3] ? e[3] : null;
+                var rel_obj = e[4] ? e[4] : null;
+                var ref_rel_obj = e[5] ? e[5] : null;
                 index.addDoc({
                     "id": filename,
                     "title": title,
                     "keywords": keywords,
-                    "description": descr
+                    "description": desc,
+                    "related_objects": rel_obj,
+                    "ref_related_objects": ref_rel_obj
                 });
             }
         }
@@ -327,8 +443,8 @@ function make_index() {
     } else {
         // no index cache, or it is out of date, so (re)build it now, and
         // save the new cache along the way
-        post("building help index in " + doc_path);
-        dive(doc_path, read_file, browser_path?make_index_cont:finish_index);
+        post("scanning help patches in " + doc_path);
+        dive(doc_path, add_doc_to_index, make_index_cont);
     }
     pdsend("pd gui-busy 0");
 }
@@ -369,9 +485,11 @@ function rebuild_index()
 }
 
 // this is called from the gui tab of the prefs dialog
-function update_browser(doc_flag, path_flag)
+function update_browser(doc_flag, path_flag, ac_flag, ac_prefix_flag)
 {
     var changed = false;
+    autocomplete = ac_flag;
+    autocomplete_prefix = ac_prefix_flag;
     doc_flag = doc_flag?1:0;
     path_flag = path_flag?1:0;
     if (browser_doc !== doc_flag) {
@@ -388,6 +506,238 @@ function update_browser(doc_flag, path_flag)
 }
 
 exports.update_browser = update_browser;
+
+// GB: autocompletion feature
+
+const fuse = require("./fuse.js");
+let autocomplete_index_options = {
+    useExtendedSearch : true,
+    includeMatches : true,
+    includeScore : true,
+    keys : ["title", "args.text"]
+};
+let args_completion_field = {keys : ["args.text"]};
+let objs_completion_field = {keys : ["title"]};
+var completion_list = [], completion_index;
+
+function make_completion_index() {
+    try {
+        completion_list = require(expand_tilde(compl_name));
+    } catch (e) {
+        post("No completion list found");
+    }
+    completion_index = new fuse(completion_list,autocomplete_index_options);
+}
+
+// GB: fuse legend for expand search
+// "=text" search exact match for 'text'
+// "'text" search match that contain 'text'
+// "^text" search match that begins with 'text'
+// "!text" search match that doesn't contain 'text'
+
+function obj_exact_match(title) {
+    return completion_index.search("=\"" + title + "\"", objs_completion_field);
+}
+
+function search_obj(title) {
+    if (!autocomplete) return [];
+    // GB approaches: search objects that *contains* search _word_ (1st line) or patches that *begins with* _word_ (2nd line)
+    // either should skip the result 'message' and 'text' thus messages and comments are not created the same way objects are
+    if (!autocomplete_prefix) {
+        return completion_index.search({$and: [{"title": "'\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
+    } else {
+        return completion_index.search({$and: [{"title": "^\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
+    }
+}
+
+function arg_exact_match(title, arg) {
+    return completion_index.search({$and: [{"title": "=\"" + title + "\""}, {"args.text": "=\"" + arg + "\""}]});
+}
+
+function search_arg(title, arg) {
+    if (!autocomplete) return [];
+    // for the arguments, we are only interested on the obj that match exactly the 'title', so we return only the args from this obj
+    let results = completion_index.search({$and: [{"title": "=\"" + title + "\""}, {"args.text": "^\"" + arg + "\""}]});
+    return (results.length > 0) ? results[0].matches : [];
+}
+
+function index_obj_completion(obj_or_msg, obj_or_msg_text) {
+    var title, arg;
+    if (obj_or_msg === "obj") {
+        let text_array = obj_or_msg_text.split(" ");
+        title = text_array[0];
+        arg = text_array.slice(1, text_array.length).toString().replace(/\,/g, " ");
+    } else { // the autocomplete feature doesn't work with messages and comments
+        return;
+    }
+    var obj_ref, obj_freq = 1, args = [], arg_ref = 0, arg_freq = 1, obj_found = false;
+    let obj_result = obj_exact_match(title);
+    if (obj_result.length !== 0) {
+        obj_found = true;
+        obj_ref = obj_result[0].refIndex;
+        obj_freq = obj_result[0].item.occurrences + 1;
+        args = obj_result[0].item.args;
+        if (arg) {
+            arg_ref = args.length;
+            let arg_result = arg_exact_match(title, arg);
+            if (arg_result.length !== 0) {
+                arg_ref = arg_result[0].matches[1].refIndex;
+                arg_freq = obj_result[0].item.args[arg_ref].occurrences + 1;
+            }
+        }
+    }
+    if(arg) args[arg_ref] = {"occurrences" : arg_freq, "text" : arg};
+    let obj = {"occurrences" : obj_freq, "title" : title, "args" : args};
+
+    if(obj_found) completion_index.update(obj, obj_ref);
+    else completion_index.add(obj);
+}
+
+function write_completion_index() {
+    try { // be sure the dir exists
+        fs.mkdirSync(expand_tilde(path.dirname(compl_name)));
+    } catch (err) {
+        // post("err: " + err);
+    }
+    try { // create the file
+        fs.writeFileSync(expand_tilde(compl_name), JSON.stringify(completion_index._docs), {mode: 0o644});
+    } catch (err) {
+        post("err: " + err);
+    }
+}
+
+// GB: manage the selection of the autocomplete dropdown options
+function update_autocomplete_selected(ac_dropdown, sel, new_sel) {
+    if (sel > -1) ac_dropdown.children.item(sel).classList.remove("selected");
+    if (new_sel > -1 && new_sel < ac_dropdown.children.length) {
+        ac_dropdown.children.item(new_sel).classList.add("selected");
+    } else {
+        new_sel = -1;
+    }
+    ac_dropdown.setAttribute("selected_item", new_sel);
+}
+
+function update_autocomplete_dd_arrowdown(ac_dropdown) {
+    if (ac_dropdown !== null) {
+        let sel = ac_dropdown.getAttribute("selected_item");
+        update_autocomplete_selected(ac_dropdown, sel, parseInt(sel) + 1);
+    }
+}
+
+function update_autocomplete_dd_arrowup(ac_dropdown) {
+    if (ac_dropdown !== null) {
+        let sel = ac_dropdown.getAttribute("selected_item");
+        update_autocomplete_selected(ac_dropdown, sel, parseInt(sel) - 1);
+    }
+}
+
+function select_result_autocomplete_dd(textbox, ac_dropdown) {
+    if (ac_dropdown !== null) {
+        let sel = ac_dropdown.getAttribute("selected_item");
+        if (sel > -1) {
+            textbox.innerText = ac_dropdown.children.item(sel).innerText;
+            delete_autocomplete_dd(ac_dropdown);
+        } else { // it only passes here when the user presses 'tab' and there is no option selected
+            textbox.innerText = ac_dropdown.children.item(0).innerText;
+        }
+    }
+}
+
+// GB: update autocomplete dropdown with new results
+function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
+    ac_dropdown().setAttribute("searched_text", text);
+    let title, arg;
+    if (obj_class === "obj") {
+        let text_array = text.split(" ");
+        title = text_array[0].toString();
+        arg = text_array.slice(1, text_array.length);
+        arg = (arg.length !== 0) ? arg.toString().replace(/\,/g, " ") : "";
+    } else { // the autocomplete feature doesn't work with messages and comments
+        return;
+    }
+
+    // If there are arg, we are autocompleting the arg field, and if there isn't we are autocompleting the obj_title field
+    let results = (arg.length > 0) ? (search_arg(title, arg).slice(1,)) : (search_obj(title));
+
+    // GB TODO: ideally we should be able to show all the results in a limited window with a scroll bar
+    let n = 8; // Maximum number of suggestions
+    if (results.length > n) results = results.slice(0,n);
+
+    ac_dropdown().innerHTML = ""; // clear all old results
+    if (results.length > 0) {
+        // for each result, make a paragraph child of autocomplete_dropdown
+        results.forEach(function (f,i,a) {
+            let h = ac_dropdown().getAttribute("font_height");
+            let y = h*(i+1);
+            let r = doc.createElement("p");
+            r.setAttribute("width", "150");
+            r.setAttribute("height", h);
+            r.setAttribute("y", y);
+            r.setAttribute("class", "border");
+            r.setAttribute("idx", i);
+            if (arg.length < 1) { // autocomplete object
+                r.textContent = f.item.title;
+            } else { // autocomplete argument, message or comment
+                r.textContent = ((obj_class==="obj")?(title+" "):"") + f.value;
+            }
+            ac_dropdown().appendChild(r);
+        })
+        ac_dropdown().setAttribute("selected_item", "-1");
+    } else { // if there is no suggestion candidate, the autocompletion dropdown should disappear
+        delete_autocomplete_dd (ac_dropdown());
+    }
+}
+
+// GB: create autocomplete dropdown based on the properties of the textbox for new_obj_element
+function create_autocomplete_dd (doc, ac_dropdown, new_obj_element) {
+    if(ac_dropdown === null) {
+        let font_width = new_obj_element.getAttribute("font_width");
+        let font_height = new_obj_element.getAttribute("font_height");
+        let style = new_obj_element.style;
+        let font_size = style.getPropertyValue("font-size").toString();
+        font_size = parseFloat(font_size.slice(0,font_size.length-2));
+        let line_height = style.getPropertyValue("line-height").toString();
+        let zoom = parseFloat(line_height.slice(0,line_height.length-1))/100;
+        let offset_y = zoom*font_size + 4;
+        let top = style.getPropertyValue("top").toString();
+        top = parseFloat(top.slice(0, top.length-2)) + offset_y;
+
+        var dd = doc.createElement("div");
+        configure_item(dd, {
+            id: "autocomplete_dropdown",
+            font_width: font_width,
+            font_height: font_height
+        });
+        dd.style.setProperty("position", "fixed");
+        dd.style.setProperty("left", style.getPropertyValue("left"));
+        dd.style.setProperty("top", top.toString() + "px");
+        dd.style.setProperty("font-size", style.getPropertyValue("font-size"));
+        dd.style.setProperty("line-height", line_height);
+        dd.style.setProperty("transform", style.getPropertyValue("transform"));
+        dd.style.setProperty("max-width", style.getPropertyValue("max-width"));
+        // dd.style.setProperty("-webkit-padding-after", style.getPropertyValue("-webkit-padding-after"));
+        dd.style.setProperty("min-width", style.getPropertyValue("min-width"));
+        dd.setAttribute("selected_item", "-1");
+        dd.setAttribute("searched_text", "");
+        doc.body.appendChild(dd);
+    }
+}
+
+function delete_autocomplete_dd (ac_dropdown) {
+    if (ac_dropdown !== null) {
+        ac_dropdown.parentNode.removeChild(ac_dropdown);
+    }
+}
+
+exports.index_obj_completion = index_obj_completion;
+exports.write_completion_index = write_completion_index;
+exports.update_autocomplete_selected = update_autocomplete_selected;
+exports.update_autocomplete_dd_arrowdown = update_autocomplete_dd_arrowdown;
+exports.update_autocomplete_dd_arrowup = update_autocomplete_dd_arrowup;
+exports.select_result_autocomplete_dd = select_result_autocomplete_dd;
+exports.repopulate_autocomplete_dd = repopulate_autocomplete_dd;
+exports.create_autocomplete_dd = create_autocomplete_dd;
+exports.delete_autocomplete_dd = delete_autocomplete_dd;
 
 // Modules
 
@@ -6305,10 +6655,13 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
     }
 }
 
-function gui_gui_properties(dummy, name, show_grid, grid_size, save_zoom, browser_doc, browser_path,
-    browser_init, autopatch_yoffset) {
+function gui_gui_properties(dummy, name, show_grid, grid_size, save_zoom,
+                            autocomplete, autocomplete_prefix,
+                            browser_doc, browser_path, browser_init,
+                            autopatch_yoffset) {
     if (dialogwin["prefs"] !== null) {
-        dialogwin["prefs"].window.gui_prefs_callback(name, show_grid, grid_size, save_zoom,
+        dialogwin["prefs"].window.gui_prefs_callback(name, show_grid, grid_size,
+            save_zoom, autocomplete, autocomplete_prefix,
             browser_doc, browser_path, browser_init, autopatch_yoffset);
     }
 }
@@ -6672,6 +7025,13 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
             patchwin[cid].window.canvas_events.search();
         } else {
             patchwin[cid].window.canvas_events.normal();
+        }
+
+        // GB: Autocomplete dropdown -- if the paragraph element of "new_object_textentry" is deleted,
+        //     the dropdown of autocompletion shall be deleted also
+        let autocomplete_dropdown = patchwin[cid].window.document.getElementById("autocomplete_dropdown");
+        if (autocomplete_dropdown !== null) {
+            autocomplete_dropdown.parentNode.removeChild(autocomplete_dropdown);
         }
     }
 }

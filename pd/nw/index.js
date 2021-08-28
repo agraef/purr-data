@@ -65,6 +65,7 @@ function set_vars(win) {
 }
 
 function app_quit() {
+    pdgui.write_completion_index();
     console.log("quitting Pd...");
     gui.App.quit();
 }

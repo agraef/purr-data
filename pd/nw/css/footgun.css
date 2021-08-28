@@ -903,3 +903,19 @@ input[type="color"] {
     position: relative;
     bottom: 2px;
 }
+
+/* GB: Autocomplete Dropdown style */
+#autocomplete_dropdown {
+    background-color: #ebebec;
+    border: 1px solid;
+    padding: 1px;
+}
+
+#autocomplete_dropdown p {
+    padding: 2px;
+    margin: 1px;
+}
+
+#autocomplete_dropdown p.selected {
+    background-color: #cfcfd0;
+}

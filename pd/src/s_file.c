@@ -42,8 +42,9 @@
 #define snprintf sprintf_s
 #endif
 
-int sys_defeatrt, sys_autopatch_yoffset, sys_snaptogrid = 1, sys_gridsize = 10, sys_zoom, sys_browser_doc = 1,
-    sys_browser_path, sys_browser_init;
+int sys_defeatrt, sys_autopatch_yoffset, sys_snaptogrid = 1, sys_gridsize = 10,
+    sys_zoom, sys_autocomplete, sys_autocomplete_prefix,
+    sys_browser_doc = 1, sys_browser_path, sys_browser_init;
 t_symbol *sys_flags = &s_;
 void sys_doflags( void);
 
@@ -676,6 +677,10 @@ void sys_loadpreferences( void)
         sscanf(prefbuf, "%d", &sys_gridsize);
     if (sys_getpreference("savezoom", prefbuf, MAXPDSTRING))
         sscanf(prefbuf, "%d", &sys_zoom);
+    if (sys_getpreference("autocomplete", prefbuf, MAXPDSTRING))
+        sscanf(prefbuf, "%d", &sys_autocomplete);
+    if (sys_getpreference("autocomplete_prefix", prefbuf, MAXPDSTRING))
+        sscanf(prefbuf, "%d", &sys_autocomplete_prefix);
     if (sys_getpreference("browser_doc", prefbuf, MAXPDSTRING))
         sscanf(prefbuf, "%d", &sys_browser_doc);
     if (sys_getpreference("browser_path", prefbuf, MAXPDSTRING))
@@ -827,6 +832,10 @@ void glob_savepreferences(t_pd *dummy)
     sys_putpreference("gridsize", buf1);
     sprintf(buf1, "%d", sys_zoom);
     sys_putpreference("savezoom", buf1);
+    sprintf(buf1, "%d", sys_autocomplete);
+    sys_putpreference("autocomplete", buf1);
+    sprintf(buf1, "%d", sys_autocomplete_prefix);
+    sys_putpreference("autocomplete_prefix", buf1);
     sprintf(buf1, "%d", sys_browser_doc);
     sys_putpreference("browser_doc", buf1);
     sprintf(buf1, "%d", sys_browser_path);
