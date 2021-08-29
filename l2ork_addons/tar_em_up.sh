@@ -252,9 +252,9 @@ fi
 if [[ $os == "win" || $os == "win64" ]]; then
 	if [ ! -d "../pd/lib" ]; then
 		mkdir ../pd/lib
-		wget http://www.steinberg.net/sdk_downloads/asiosdk2.3.zip
+		wget https://www.steinberg.net/asiosdk -O asiosdk2.3.zip
 		unzip asiosdk2.3.zip
-		mv ASIOSDK2.3 ../pd/lib
+		mv asiosdk_2.3* asiosdk2.3 && mv asiosdk2.3 ../pd/lib/
 	fi
 fi
 
