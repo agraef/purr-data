@@ -103,6 +103,7 @@ var fs = require("fs");
 var path = require("path");
 var dive = require("./dive.js"); // small module to recursively search dirs
 var elasticlunr = require("./elasticlunr.js"); // lightweight full-text search engine in JavaScript, cf. https://github.com/weixsong/elasticlunr.js/
+elasticlunr.clearStopWords();
 
 function init_elasticlunr()
 {
@@ -110,8 +111,8 @@ function init_elasticlunr()
     index.addField("title");
     index.addField("keywords");
     index.addField("description");
-    //index.addField("body");
-    index.addField("path");
+    index.addField("related_objects");
+    index.addField("ref_related_objects");
     index.setRef("id");
     return index;
 }
@@ -129,52 +130,118 @@ function index_entry_esc(s) {
     }
 }
 
-function add_doc_to_index(filename, data) {
-    var title = path.basename(filename, ".pd"),
+// GB: This actually retrieves the meta data concerning related_objects,
+// keywords, and description of help patches.
+function add_doc_details_to_index(filename, data) {
+    var title = path.basename(filename, "-help.pd"),
         big_line = data.replace("\n", " "),
         keywords,
-        desc;
-        // We use [\s\S] to match across multiple lines...
-        keywords = big_line
-            .match(/#X text \-?[0-9]+ \-?[0-9]+ KEYWORDS ([\s\S]*?);/i),
-        desc = big_line
-            .match(/#X text \-?[0-9]+ \-?[0-9]+ DESCRIPTION ([\s\S]*?);/i);
-        keywords = keywords && keywords.length > 1 ? keywords[1].trim() : null;
-        desc = desc && desc.length > 1 ? desc[1].trim() : null;
-        // Remove the Pd escapes for commas
-        desc = desc ? desc.replace(" \\,", ",") : null;
-        if (desc) {
-            // format Pd's "comma atoms" as normal commas
-            desc = desc.replace(" \\,", ",");
-        }
-    if (title.slice(-5) === "-help") {
-        title = title.slice(0, -5);
+        desc,
+        rel_objs,
+        ref_rel_objs;
+    // GB: investigate the related objects of each file
+    const machine_related_objects = {
+        found_objects: [],
+        ref_found_objs: [],
+        state: 'SEARCHING_CANVAS',
+        transitions: {
+            SEARCHING_CANVAS: {
+                search_regex: function(line_string) {
+                    if (/#N canvas \-?\d+ \-?\d+ \-?\d+ \-?\d+ Related_objects \-?\d+;/i.test(line_string)) {
+                        this.state = "SEARCHING_OBJS";
+                    }
+                },
+            },
+            SEARCHING_OBJS: {
+                search_regex: function(line_search) {
+                    var rel_obj = line_search.match(/#X obj \-?\d+ \-?\d+ (pddp\/helplink )?(\w*\/)?([\w|\~]+);/i);
+                    if (rel_obj != null) {
+                        this.adds(rel_obj[3]);
+                    } else if (/#X restore \-?\d+ \-?\d+ pd Related_objects;/i.test(line_search)) {
+                        this.state = "SEARCHING_CANVAS";
+                    } else if ((/#N canvas \-?\d+ \-?\d+ \-?\d+ \-?\d+ [\S]* \-?\d+;/i.test(line_search))) {
+                        if (title != "random") {
+                            this.adds("pd");
+                        }
+                        this.state = "PD_AS_REL_OBJ";
+                    }
+                },
+            },
+            PD_AS_REL_OBJ: {
+                search_regex: function(line_search) {
+                    if (/#X restore \-?\d+ \-?\d+ pd;/i.test(line_search)) {
+                        this.state = "SEARCHING_OBJS";
+                    }
+                }
+            }
+        },
+        dispatch(actionName, line_string) {
+            const action = this.transitions[this.state][actionName];
+            if (action) {
+                action.call(this, line_string);
+            }
+        },
+        adds(obj_title) {
+            if (!this.found_objects.includes(obj_title)) {
+                let obj_path = index.search(obj_title, {fields: {title: {}}});
+                if (obj_path.length > 0) obj_path = obj_path[0].ref;
+                this.found_objects.push(obj_title);
+                this.ref_found_objs.push(obj_path);
+            }
+        },
+    };
+    rel_objs = Object.create(machine_related_objects);
+    let eval_string = data.split("\n");
+    eval_string.forEach(function(l,a,i) {
+        rel_objs.dispatch('search_regex', l.toString().replace(/\(/g, "\\\(")
+            .replace(/\)/, "\\\)"));
+    });
+    ref_rel_objs = rel_objs.ref_found_objs.toString();
+    rel_objs = rel_objs.found_objects;
+    rel_objs = rel_objs ? rel_objs.toString().replace(/\,/g, " ") : null;
+
+    // We use [\s\S] to match across multiple lines...
+    keywords = big_line
+        .match(/#X text \-?[0-9]+ \-?[0-9]+ KEYWORDS ([\s\S]*?);/i);
+    desc = big_line
+        .match(/#X text \-?[0-9]+ \-?[0-9]+ DESCRIPTION ([\s\S]*?);/i);
+    keywords = keywords && keywords.length > 1 ? keywords[1].trim() : null;
+    desc = desc && desc.length > 1 ? desc[1].trim() : null;
+    // Remove the Pd escapes for commas
+    desc = desc ? desc.replace(" \\,", ",") : null;
+    if (desc) {
+        // format Pd's "comma atoms" as normal commas
+        desc = desc.replace(" \\,", ",");
     }
-    index_cache[index_cache.length] = [filename, title, keywords, desc]
+
+    index_cache[index_cache.length] = [filename, title, keywords, desc, rel_objs, ref_rel_objs]
         .map(index_entry_esc).join(":");
     var d = path.dirname(filename);
     index_manif.add(d);
     // Also add the parent directory to catch additions of siblings.
     index_manif.add(path.dirname(d));
-    index.addDoc({
+    index.update({
         "id": filename,
         "title": title,
         "keywords": keywords,
-        "description": desc
+        "description": desc,
+        "related_objects": rel_objs,
+        "ref_related_objects": ref_rel_objs
         //"body": big_line,
     });
 }
 
-function read_file(err, filename, stat) {
+// GB: This does an initial scan of help patches, recording filename, title and
+// parent dir, without looking at the meta data.
+function add_doc_to_index(err, filename, stat) {
     if (!err) {
-        if (filename.slice(-3) === ".pd") {
-            // AG: We MUST read the files synchronously here. This might be a
-            // performance issue on some systems, but if we don't do this then
-            // we may open a huge number of files simultaneously, causing the
-            // process to run out of file handles.
+        if (filename.slice(-8) === "-help.pd") {
             try {
-                var data = fs.readFileSync(filename, { encoding: "utf8", flag: "r" });
-                add_doc_to_index(filename, data);
+                let title = path.basename(filename, "-help.pd");
+                index.addDoc({
+                    "id": filename,
+                    "title": title
+                })
             } catch (read_err) {
                 post("err: " + read_err);
             }
@@ -269,22 +336,42 @@ function make_index() {
     var doc_path = browser_doc?path.join(lib_dir, "doc"):lib_dir;
     var i = 0;
     var l = help_path.length;
+    function detail_files() {
+        let all_indexed_files = Object.keys(index.documentStore.docs);
+        var data;
+        all_indexed_files.forEach(function(filename,i,a) {
+            // AG: We MUST read the files synchronously here. This might be a
+            // performance issue on some systems, but if we don't do this then
+            // we may open a huge number of files simultaneously, causing the
+            // process to run out of file handles.
+            try {
+                data = fs.readFileSync(filename, { encoding: "utf8", flag: "r" });
+                add_doc_details_to_index(filename, data);
+            } catch (read_err) {
+                post("err: " + read_err);
+            }
+        });
+        finish_index();
+    }
     function make_index_cont() {
-        if (i < l) {
+        if (browser_path && i < l) {
             var doc_path = help_path[i++];
             // AG: These paths might not exist, ignore them in this case. Also
             // note that we need to expand ~ here.
             var full_path = expand_tilde(doc_path);
             fs.lstat(full_path, function(err, stat) {
                 if (!err) {
-                    post("building help index in " + doc_path);
-                    dive(full_path, read_file, make_index_cont);
+                    post("scanning help patches in " + doc_path);
+                    dive(full_path, add_doc_to_index, make_index_cont);
                 } else {
                     make_index_cont();
                 }
             });
         } else {
-            finish_index();
+            // reset the help path index, then invoke the main pass
+            i = 0;
+            post("building help index");
+            detail_files();
         }
     }
     pdsend("pd gui-busy 1");
@@ -314,12 +401,16 @@ function make_index() {
                 var filename = e[0] ? e[0] : null;
                 var title = e[1] ? e[1] : null;
                 var keywords = e[2] ? e[2] : null;
-                var descr = e[3] ? e[3] : null;
+                var desc = e[3] ? e[3] : null;
+                var rel_obj = e[4] ? e[4] : null;
+                var ref_rel_obj = e[5] ? e[5] : null;
                 index.addDoc({
                     "id": filename,
                     "title": title,
                     "keywords": keywords,
-                    "description": descr
+                    "description": desc,
+                    "related_objects": rel_obj,
+                    "ref_related_objects": ref_rel_obj
                 });
             }
         }
@@ -327,8 +418,8 @@ function make_index() {
     } else {
         // no index cache, or it is out of date, so (re)build it now, and
         // save the new cache along the way
-        post("building help index in " + doc_path);
-        dive(doc_path, read_file, browser_path?make_index_cont:finish_index);
+        post("scanning help patches in " + doc_path);
+        dive(doc_path, add_doc_to_index, make_index_cont);
     }
     pdsend("pd gui-busy 0");
 }
