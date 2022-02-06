@@ -484,11 +484,19 @@ var canvas_events = (function() {
                 evt.preventDefault();
             },
             text_mousemove: function(evt) {
+                if (evt.target.parentNode === document.getElementById("autocomplete_dropdown")) {
+                    let sel = document.getElementById("autocomplete_dropdown").getAttribute("selected_item");
+                    let new_sel = evt.target.getAttribute("idx");
+                    pdgui.update_autocomplete_selected(document.getElementById("autocomplete_dropdown"), sel, new_sel)
+                }
                 evt.stopPropagation();
                 //evt.preventDefault();
                 return false;
             },
             text_mousedown: function(evt) {
+                if (evt.target.parentNode === document.getElementById("autocomplete_dropdown")) {
+                    pdgui.select_result_autocomplete_dd(textbox(), document.getElementById("autocomplete_dropdown"));
+                }
                 if (textbox() !== evt.target && !target_is_scrollbar(evt)) {
                     utils.create_obj();
                     // send a mousedown and mouseup event to Pd to instantiate
@@ -518,9 +526,51 @@ var canvas_events = (function() {
             },
             text_keyup: function(evt) {
                 evt.stopPropagation();
-                if (evt.keyCode === 13) {
-                    grow_svg_for_element(textbox());
+
+                // GB: Autocomplete feature
+                let ac_dropdown = function() {
+                    return document.getElementById("autocomplete_dropdown")
                 }
+                switch (evt.keyCode) {
+                    case 40: // arrowdown
+                        pdgui.update_autocomplete_dd_arrowdown(ac_dropdown())
+                        break;
+                    case 38: // arrowup
+                        pdgui.update_autocomplete_dd_arrowup(ac_dropdown())
+                        break;
+                    case 13: // enter
+                        // if there is no item selected on autocomplete dropdown, enter make the obj box bigger
+                        if(ac_dropdown() === null || ac_dropdown().getAttribute("selected_item") === "-1") {
+                            grow_svg_for_element(textbox());
+                        } else { // else, if there is a selected item on autocompletion tool, the selected item is written on the box
+                            pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
+                            // TODO: Substitute the editing box by the object itself
+                            // utils.create_obj(); // not working, it's not that simple.
+                            // canvas_events.normal();
+                        }
+                        break;
+                    case 9: // tab
+                        // TODO: Substitute this function by one that autocomplete with the prefix in common in all results
+                        pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
+                        break;
+                    default:
+                        if (textbox().innerText === "") {
+                            pdgui.delete_autocomplete_dd(ac_dropdown());
+                        } else {
+                            let obj_class = document.getElementById(textbox().getAttribute("tag")+"gobj")
+                                .getAttribute("class").toString().split(" ").slice(0,1).toString();
+                            if (obj_class === "obj") { // autocomplete only works for objects
+                                pdgui.create_autocomplete_dd(document, ac_dropdown(), textbox());
+                                if (ac_dropdown().getAttribute("searched_text") !== textbox().innerText) {
+                                    // finding the class from obj: find obj throwout tag of textbox, get obj class and remove from the class the word "selected".
+                                    //                             this has to be done because in textbox obj and comment have class: 'obj'
+                                    //                             and it's import here to differentiate them
+                                    pdgui.repopulate_autocomplete_dd(document, ac_dropdown, obj_class, textbox().innerText);
+                                }
+                            }
+                        }
+                }
+
                 //evt.preventDefault();
                 return false;
             },
@@ -825,6 +875,7 @@ var canvas_events = (function() {
                 last_dropdown_menu_y = pointer_y;
             }
         },
+        changes_in_completion_index = 0,
         utils = {
             create_obj: function() {
                 // Yes: I _really_ want .innerText and NOT .textContent
@@ -838,6 +889,21 @@ var canvas_events = (function() {
                     pdgui.pdsend(name, "obj_addtobuf", fudi_array[i].join(" "));
                 }
                 pdgui.pdsend(name, "obj_buftotext");
+
+                // GB: index created object
+                let obj = document.getElementById(textbox().getAttribute("tag")+"gobj");
+                // find obj class and remove word "selected"
+                let obj_class = obj.getAttribute("class").toString().split(" ").slice(0,1).toString();
+                if (pdgui.autocomplete_enabled()) {
+                    pdgui.index_obj_completion(obj_class, fudi_msg);
+                    // GB: save every 50 changes, so that we don't loose too
+                    // much data in case purr-data unexpectedly quits or crashes
+                    if (changes_in_completion_index===0 ||
+                        ++changes_in_completion_index > 50) {
+                        pdgui.write_completion_index();
+                        changes_in_completion_index = 1;
+                    }
+                }
             }
         }
     ;

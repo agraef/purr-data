@@ -439,6 +439,13 @@
         "save_zoom": "Speichern/Laden der Vergrößerung im Patch",
         "save_zoom_tt": "Speichere die aktuelle Vergrößerung mit dem Patch und stelle diese beim Laden des Patches wieder her"
       },
+      "autocomplete": {
+        "autocomplete_title": "Autovervollständigungs-Einstellungen",
+        "autocomplete": "Autovervollständigung von Objekt-Namen und Argumenten (experimentell)",
+        "autocomplete_tt": "Schlägt bei der Eingabe Vervollständigungen von Objekt-Namen und Argumenten vor",
+        "autocomplete_prefix": "Vervollständigung per Objektnamens-Präfix",
+        "autocomplete_prefix_tt": "Vervollständigung nur per Objektnamens-Präfix (statt Übereinstimmung irgendwo im Objektnamen)"
+      },
       "browser": {
         "browser_title": "Hilfe-Browser-Einstellungen (WARNUNG: Änderungen können Startup-Zeiten beeinflussen!)",
         "browser_doc": "Hilfe-Browser durchsucht nur den doc-Ordner",
