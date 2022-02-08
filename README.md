@@ -1,6 +1,7 @@
 ## Pd-L2Ork
 
-##[**GitLab Repository**](https://git.purrdata.net/jwilkes/purr-data) 
+**Note to Github users**: Please use our [**GitLab Repository**](https://git.purrdata.net/jwilkes/purr-data).
+
 
 Maintainers:
 
