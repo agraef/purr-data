@@ -9,7 +9,7 @@ This repository is a mirror of Wilkes' original Gitlab repository available at <
 Here's a quick shopping list:
 
 - [**Downloads**](https://github.com/agraef/purr-data/releases): This is where you get ready-made packages for **Mac and Windows**. Please also make sure to check our [installation instructions](#installation) below.
-- [**JGU packages**](#jgu-packages): Use these if you're on **Arch**, **openSUSE**, or a recent **Debian/Ubuntu** version. We offer proper package repositories including all dependencies which aren't readily available in the official repositories of your Linux distribution. **[Download](https://software.opensuse.org/download/package?package=purr-data&project=home%3Aaggraef)**
+- [**JGU packages**](#jgu-packages): Use these if you're on **Arch**, **Fedora**, or a recent **Debian/Ubuntu** version. We offer proper package repositories including all dependencies which aren't readily available in the official repositories of your Linux distribution. **[Download](https://software.opensuse.org/download/package?package=purr-data&project=home%3Aaggraef%3Apurr-data-jgu)**
 - [**Sources**](https://github.com/agraef/purr-data): Github mirror of the sources, updated regularly.
 - [**Development**](https://git.purrdata.net/jwilkes/purr-data): Wilkes' Gitlab repository. **This is where you should go for submitting bug reports and pull requests.**
 - [**Mailing list**](http://disis.music.vt.edu/listinfo/l2ork-dev): The DISIS Pd-l2ork mailing list is the right place for getting help and discuss Purr Data, so please subscribe!
@@ -43,19 +43,19 @@ Purr Data is the official nickname of the Pd-l2ork 2.x branch. Quite obviously t
 
 The easiest way to get up and running on **Mac** and **Windows** is to use one of the available binary packages and installers available from the Github [releases page](https://github.com/agraef/purr-data/releases). Generally you can just double-click these packages and go through the usual (platform-dependent) installation process.
 
-**Linux users:** On OBS we provide the **JGU packages** for a variety of Linux distributions including Arch and Debian/Ubuntu, see [below](#jgu-packages). If your Linux distro is not among any of these then sorry, you'll just have to bite the bullet and build Purr Data [from source](#building-from-source). (It's not that hard any more once you got all the required dependencies installed, but it may take a little while.)
+**Linux users:** On OBS we provide the **JGU packages** for a variety of Linux distributions, see [below](#jgu-packages). If your Linux distro is not among any of these then sorry, you'll just have to bite the bullet and build Purr Data [from source](#building-from-source). (It's not that hard any more once you got all the required dependencies installed, but it may take a little while.)
 
 ### JGU Packages
 
-This is a collection of ready-made Linux packages for Arch Linux, openSUSE, and recent Debian, Raspbian and Ubuntu releases, maintained by the Johannes Gutenberg University (JGU) at the [OBS](https://build.opensuse.org/project/show/home:aggraef) (Open Build System). They offer the following advantages:
+This is a collection of ready-made Linux packages for Arch Linux, Fedora, and recent Debian, Raspbian and Ubuntu releases, maintained by the Johannes Gutenberg University (JGU) at the [OBS](https://build.opensuse.org/project/show/home:aggraef:purr-data-jgu) (Open Build System). They offer the following advantages:
 
 - Support for a wide range of different Linux systems, including the latest Debian/Ubuntu versions. We generally support the two most recent stable (or long term support) releases, as well as current (or rolling) releases.
 
 - "Classic" Pd-l2ork and Purr Data can be installed alongside each other.
 
-- The packages are available through proper package repositories (click **[here](https://software.opensuse.org/download/package?package=purr-data&project=home%3Aaggraef)**) and thus can be installed and updated automatically through your distribution's standard package manager. Required dependencies will also be installed automatically.
+- The packages are available through proper package repositories (click **[here](https://software.opensuse.org/download/package?package=purr-data&project=home%3Aaggraef%3Apurr-data-jgu)**) and thus can be installed and updated automatically through your distribution's standard package manager. Required dependencies will also be installed automatically.
 
-- The packages are updated more frequently (also between upstream releases) from the current git sources, if there are interesting new features or important bugfixes. Such pre-releases are usually made available in our [preview repositories](https://github.com/agraef/purr-data/wiki/Installation#experimental-and-preview-builds) (click **[here](https://software.opensuse.org//download.html?project=home%3Aaggraef%3Apurr-data-git&package=purr-data)**), and corresponding Mac and Windows packages can usually be found on the Github [releases page](https://github.com/agraef/purr-data/releases).
+- The packages are thoroughly tested, but are updated more frequently (also between upstream releases) from the current git sources, if there are interesting new features or important bugfixes. Corresponding Mac and Windows packages for such pre-releases can then usually be found on the Github [releases page](https://github.com/agraef/purr-data/releases).
 
 Please refer to the [Installation](https://github.com/agraef/purr-data/wiki/Installation#linux) wiki page for more information and detailed installation instructions.
 
