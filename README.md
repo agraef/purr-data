@@ -80,7 +80,7 @@ For Ico Bukvic's original Pd-l2ork website see:
 
 (Note that the latter link is more about "classic" Pd-L2Ork a.k.a. Pd-L2Ork 1.0,
 see below. But it also contains some information about Purr Data.)
- 
+
 ### Relationship of Purr Data to Pure Data
 
 There are three maintained distributions of Pure Data:
@@ -113,12 +113,12 @@ documentation, and an up-to-date mirror of the source code repository:
 **Linux:**
 
 Packages for various Linux distributions (including Arch, Debian, Ubuntu, and
-openSUSE) are available through the JGU package repositories maintained by
+Fedora) are available through the JGU package repositories maintained by
 Albert Gräf on the OBS (Open Build System). Detailed instructions can be found
 [here](https://github.com/agraef/purr-data/wiki/Installation#linux).
 
 You can also just go to the
-[OBS Download](https://software.opensuse.org/download/package?package=purr-data&project=home%3Aaggraef),
+[OBS Download](https://software.opensuse.org/download/package?package=purr-data&project=home%3Aaggraef%3Apurr-data-jgu),
 pick your Linux system, and follow the instructions.
 
 ### Build Guide
