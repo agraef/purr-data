@@ -298,6 +298,8 @@ since it will usually contain spaces, making the build fail.
 The instructions are exactly the same as for the 32 bit build (see above), but
 the build needs to be done using mingw64 instead of mingw32. That is:
 
+- in the Start menu, type MSYS2 MinGW x64 to enter the 64-bit msys2 environment
+
 - Install the mingw64 packages for the dependencies. These should be the same as
 the i686 packages listed under dependencies above, but with x86_64 instead of
 i686 in the package names. Here's the current list you can copy and paste for
