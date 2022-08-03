@@ -32,8 +32,8 @@
 .test_windows: &test_windows
   - echo -e "section_start:`date +%s`:test_windows\r\e[0KTesting Purr Data for Windows"
   - cd scripts
-  - ../packages/win32_inno/build/bin/pd.com -noprefs -nogui -noaudio -send "init dollarzero \$0" regression_tests.pd
-  - ../packages/win32_inno/build/bin/pd.com -noprefs -nostdpath -nogui -noaudio external-tests.pd
+  - ../packages/win64_inno/build/bin/pd.com -noprefs -nogui -noaudio -send "init dollarzero \$0" regression_tests.pd
+  - ../packages/win64_inno/build/bin/pd.com -noprefs -nostdpath -nogui -noaudio external-tests.pd
   - echo -e "section_end:`date +%s`:text_windows\r\e[0K"
 
 
@@ -108,10 +108,10 @@ osx_10.8_x86_64_dmg:
      paths:
        - Pd*.dmg
 
-windows_i386_innosetup:
+windows_x86_64_innosetup:
   tags:
     - windows
-    - i386
+    - x86_64
   variables:
     BUILD_TYPE_FLAG: -Z
   script:
