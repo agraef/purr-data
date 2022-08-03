@@ -109,7 +109,7 @@ ifneq ($(LIGHT),yes)
 	install -p $(bin_src)/libsystre-0.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libtre-5.dll $(DESTDIR)$(bindir)/
 	# For fluid~
-	install -p $(bin_src)/libfluidsynth-2.dll $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libfluidsynth-3.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/SDL2.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libgmodule-2.0-0.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libreadline8.dll $(DESTDIR)$(bindir)/
@@ -118,8 +118,8 @@ ifneq ($(LIGHT),yes)
 	install -p $(bin_src)/lua*.dll          $(DESTDIR)$(bindir)/
 	#install -p $(bin_src)/pthreadGC2.dll     $(DESTDIR)$(bindir)/
 	#install -p $(bin_src)/libdl.dll     $(DESTDIR)$(bindir)/
-	install -p $(bin_src)/libportaudio-2.dll     $(DESTDIR)$(bindir)/
-	install -p $(bin_src)/libFLAC-8.dll     $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libportaudio.dll     $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libFLAC.dll     $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libspeex-1.dll     $(DESTDIR)$(bindir)/
         # These are for Gem
 	install -p $(bin_src)/libftgl-2.dll $(DESTDIR)$(bindir)/
