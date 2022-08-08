@@ -312,15 +312,15 @@ static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
     }
     else
     {
-        // fluid_settings_setstr(settings, "audio.driver", "float");
-        // settings:
-        fluid_settings_setnum(x->x_settings, "synth.midi-channels", 16);
-        fluid_settings_setnum(x->x_settings, "synth.polyphony", 256);
+        // ag: fluidsynth defaults are: 16, 256, 0.2, 44100.0, 1, 1, 0
+        // to use these, just comment the section below
+        fluid_settings_setint(x->x_settings, "synth.midi-channels", 16);
+        fluid_settings_setint(x->x_settings, "synth.polyphony", 256);
         fluid_settings_setnum(x->x_settings, "synth.gain", 0.600000);
-        fluid_settings_setnum(x->x_settings, "synth.sample-rate", 44100.000000);
-        fluid_settings_setstr(x->x_settings, "synth.chorus.active", "no");
-        fluid_settings_setstr(x->x_settings, "synth.reverb.active", "no");
-        fluid_settings_setstr(x->x_settings, "synth.ladspa.active", "no");
+        fluid_settings_setnum(x->x_settings, "synth.sample-rate", 44100.0);
+        fluid_settings_setint(x->x_settings, "synth.chorus.active", 0);
+        fluid_settings_setint(x->x_settings, "synth.reverb.active", 0);
+        fluid_settings_setint(x->x_settings, "synth.ladspa.active", 0);
 
         if (sr != 0)
         {
