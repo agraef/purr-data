@@ -6,6 +6,7 @@
 #include <fluidsynth.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <fcntl.h>
 
 #include "m_pd.h"
@@ -298,6 +299,17 @@ static void fluid_load(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
+// Where to put the temporary log file (see below). The only place we can
+// safely assume to be writable is the user's configuration directory, so
+// that's where it goes.
+#ifdef _WIN32
+#define USER_CONFIG_DIR "AppData/Roaming/Purr-Data"
+#else
+#define USER_CONFIG_DIR ".purr-data"
+#endif
+
+#define maxline 1024
+
 static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (x->x_synth) delete_fluid_synth(x->x_synth);
@@ -305,13 +317,37 @@ static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
 
     float sr = sys_getsr();
 
-    // Some drivers (e.g. ALSA) are very chatty and will print a lot of
-    // log messages to the terminal while fluidsynth is being
-    // initialized. The only way to get rid of those seems to temporarily
-    // redirect stderr, so here goes.
+    // check the options
+    int vflag = 0;
+    while (argc > 0) {
+      const char* arg = atom_getsymbolarg(0, argc, argv)->s_name;
+      if (strcmp(arg, "-smmf") == 0) {
+        // SMMF mode
+        x->smmf_mode = 1; argc--; argv++;
+      } else if (strcmp(arg, "-v") == 0) {
+        // verbose mode (capture stderr, see below)
+        vflag = 1; argc--; argv++;
+      } else {
+        break;
+      }
+    }
+
+    // Some drivers (e.g. ALSA) are very chatty and will print a lot of log
+    // messages to stderr while fluidsynth is being initialized. We can
+    // capture stderr and redirect it to the Pd console, or just get rid of
+    // it, depending on the user's choice. To these ends we temporarily
+    // redirect stderr while running the intialization.
+    char logfile[FILENAME_MAX], *homedir = getenv("HOME");
+    snprintf(logfile, FILENAME_MAX,
+             "%s/" USER_CONFIG_DIR "/fluidtmp.log", homedir);
     int saved_stderr = dup(STDERR_FILENO);
-    int devnull = open("/dev/null", O_RDWR);
-    dup2(devnull, STDERR_FILENO);
+    int fd;
+    if (!vflag) {
+      fd = open("/dev/null", O_RDWR);
+    } else {
+      fd = open(logfile, O_CREAT|O_RDWR, S_IRUSR|S_IWUSR);
+    }
+    dup2(fd, STDERR_FILENO);
 
     x->x_settings = new_fluid_settings();
 
@@ -351,12 +387,6 @@ static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
         {
             pd_error(x, "fluid~: couldn't create synth");
         }
-        // check for SMMF mode
-        const char* arg = atom_getsymbolarg(0, argc, argv)->s_name;
-        if (strcmp(arg, "-smmf") == 0)
-        {
-            x->smmf_mode = 1; argc--; argv++;
-        }
         // try to load argument as soundfont
         fluid_load(x, gensym("load"), argc, argv);
 
@@ -365,7 +395,25 @@ static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
             post("-- fluid~ for Pd%s --", x->smmf_mode?" (SMMF mode)":"");
     }
     // Restore stderr.
-    dup2(saved_stderr, STDERR_FILENO);
+    if (!vflag) {
+      dup2(saved_stderr, STDERR_FILENO);
+      close(fd);
+    } else {
+      lseek(fd, 0, SEEK_SET);
+      // read stuff, post it (it's more convenient to do this with a FILE*)
+      FILE *fp = fdopen(fd, "r+");
+      char buf[maxline];
+      if (fp) {
+        while (fgets(buf, maxline, fp)) {
+          int n = strlen(buf);
+          if (n > 0 && buf[n-1] == '\n') buf[n-1] = '\0';
+          if (*buf) post("%s", buf);
+        }
+      }
+      fclose(fp);
+      dup2(saved_stderr, STDERR_FILENO);
+      unlink(logfile);
+    }
 }
 
 static void *fluid_tilde_new(t_symbol *s, int argc, t_atom *argv)
