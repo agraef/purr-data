@@ -262,6 +262,15 @@ static void fluid_sysex(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
+static void fluid_gain(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
+{
+  t_float gain = atom_getfloatarg(0, argc, argv);
+  // clamp the value to fluidsynths 0-10 range
+  if (gain < 0.0) gain = 0.0;
+  if (gain > 10.0) gain = 10.0;
+  fluid_settings_setnum(x->x_settings, "synth.gain", gain);
+}
+
 static void fluid_load(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (x->x_synth == NULL)
@@ -509,6 +518,9 @@ void fluid_tilde_setup(void)
     class_addmethod(fluid_tilde_class, (t_method)fluid_bend, gensym("bend"),
         A_GIMME, 0);
     class_addmethod(fluid_tilde_class, (t_method)fluid_sysex, gensym("sysex"),
+        A_GIMME, 0);
+
+    class_addmethod(fluid_tilde_class, (t_method)fluid_gain, gensym("gain"),
         A_GIMME, 0);
 
     // Simulate Flext's help message
