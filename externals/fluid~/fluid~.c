@@ -312,15 +312,25 @@ static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
     }
     else
     {
-        // ag: fluidsynth defaults are: 16, 256, 0.2, 44100.0, 1, 1, 0
-        // to use these, just comment the section below
+        // ag: fluidsynth defaults are: 0.2, 16, 256, 44100.0, 1, 1, 0. The
+        // default gain is absurdly low, so we use a larger but still moderate
+        // value (range is 0-10). I find 1.0 to be a good default, YMMV.
+        // (Original fluid~ had 0.6 here, but I found that too low with most
+        // soundfonts.)
+        fluid_settings_setnum(x->x_settings, "synth.gain", 1.0);
+#if 0
+        // These are the original defaults from fluid~ of old, but most of
+        // these are the defaults anyway, or weren't working with fluidsynth
+        // 2, so lets just get rid of them. We really want to keep things as
+        // close to the defaults as possible, so that fluid~ sounds *exactly*
+        // like the stand-alone program, in order to not confuse the user.
         fluid_settings_setint(x->x_settings, "synth.midi-channels", 16);
         fluid_settings_setint(x->x_settings, "synth.polyphony", 256);
-        fluid_settings_setnum(x->x_settings, "synth.gain", 0.600000);
         fluid_settings_setnum(x->x_settings, "synth.sample-rate", 44100.0);
         fluid_settings_setint(x->x_settings, "synth.chorus.active", 0);
         fluid_settings_setint(x->x_settings, "synth.reverb.active", 0);
         fluid_settings_setint(x->x_settings, "synth.ladspa.active", 0);
+#endif
 
         if (sr != 0)
         {
