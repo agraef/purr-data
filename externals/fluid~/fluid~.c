@@ -317,6 +317,13 @@ static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
 
     float sr = sys_getsr();
 
+    // Gain value. Fluidsynth's default gain is absurdly low, so we use a
+    // larger but still moderate value (range is 0-10). I find 1.0 to be a
+    // good default, YMMV. (Original fluid~ had 0.6 here, but I found that too
+    // low with most soundfonts.) This value can be changed by the user with
+    // the -g option, see below.
+    float gain = 1.0;
+
     // check the options
     int vflag = 0;
     while (argc > 0) {
@@ -327,6 +334,16 @@ static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
       } else if (strcmp(arg, "-v") == 0) {
         // verbose mode (capture stderr, see below)
         vflag = 1; argc--; argv++;
+      } else if (strcmp(arg, "-g") == 0) {
+        // default gain value ("synth.gain")
+        argc--; argv++;
+        if (argc > 0) {
+          gain = atom_getfloatarg(0, argc, argv);
+          // clamp the value to fluidsynths 0-10 range
+          if (gain < 0.0) gain = 0.0;
+          if (gain > 10.0) gain = 10.0;
+          argc--; argv++;
+        }
       } else {
         break;
       }
@@ -357,18 +374,13 @@ static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
     }
     else
     {
-        // ag: fluidsynth defaults are: 0.2, 16, 256, 44100.0, 1, 1, 0. The
-        // default gain is absurdly low, so we use a larger but still moderate
-        // value (range is 0-10). I find 1.0 to be a good default, YMMV.
-        // (Original fluid~ had 0.6 here, but I found that too low with most
-        // soundfonts.)
-        fluid_settings_setnum(x->x_settings, "synth.gain", 1.0);
+        // ag: fluidsynth defaults are: 0.2, 16, 256, 44100.0, 1, 1, 0.
+        fluid_settings_setnum(x->x_settings, "synth.gain", gain);
 #if 0
-        // These are the original defaults from fluid~ of old, but most of
-        // these are the defaults anyway, or weren't working with fluidsynth
-        // 2, so lets just get rid of them. We really want to keep things as
-        // close to the defaults as possible, so that fluid~ sounds *exactly*
-        // like the stand-alone program, in order to not confuse the user.
+        // Crufty old defaults which we don't use any more. Except for the
+        // gain, we really want to keep things as close to the defaults as
+        // possible, so that fluid~ sounds *exactly* like the stand-alone
+        // program.
         fluid_settings_setint(x->x_settings, "synth.midi-channels", 16);
         fluid_settings_setint(x->x_settings, "synth.polyphony", 256);
         fluid_settings_setnum(x->x_settings, "synth.sample-rate", 44100.0);
