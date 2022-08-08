@@ -6,6 +6,7 @@
 #include <fluidsynth.h>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include "m_pd.h"
  
@@ -304,6 +305,14 @@ static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
 
     float sr = sys_getsr();
 
+    // Some drivers (e.g. ALSA) are very chatty and will print a lot of
+    // log messages to the terminal while fluidsynth is being
+    // initialized. The only way to get rid of those seems to temporarily
+    // redirect stderr, so here goes.
+    int saved_stderr = dup(STDERR_FILENO);
+    int devnull = open("/dev/null", O_RDWR);
+    dup2(devnull, STDERR_FILENO);
+
     x->x_settings = new_fluid_settings();
 
     if (x->x_settings == NULL)
@@ -355,6 +364,8 @@ static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
         if (x->x_synth)
             post("-- fluid~ for Pd%s --", x->smmf_mode?" (SMMF mode)":"");
     }
+    // Restore stderr.
+    dup2(saved_stderr, STDERR_FILENO);
 }
 
 static void *fluid_tilde_new(t_symbol *s, int argc, t_atom *argv)
