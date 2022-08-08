@@ -463,6 +463,6 @@ void fluid_tilde_setup(void)
     // terminal.
     fluid_set_log_function(FLUID_PANIC, fluid_log_cb, NULL);
     fluid_set_log_function(FLUID_ERR, fluid_log_cb, NULL);
-    fluid_set_log_function(FLUID_WARN, NULL, NULL);
+    fluid_set_log_function(FLUID_WARN, fluid_log_cb, NULL);
     fluid_set_log_function(FLUID_DBG, NULL, NULL);
 }
