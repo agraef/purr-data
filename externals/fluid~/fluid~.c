@@ -368,7 +368,12 @@ static void *fluid_tilde_new(t_symbol *s, int argc, t_atom *argv)
     fluid_init(x, gensym("init"), argc, argv);
     return (void *)x;
 }
- 
+
+static void fluid_log_cb(int level, const char *message, void *data)
+{
+  post("fluid~ [%d]: %s", level, message);
+}
+
 void fluid_tilde_setup(void)
 {
     fluid_tilde_class = class_new(gensym("fluid~"),
@@ -441,4 +446,12 @@ void fluid_tilde_setup(void)
 
     class_addmethod(fluid_tilde_class,
         (t_method)fluid_tilde_dsp, gensym("dsp"), A_CANT, 0);
+
+    // Set up logging. We don't want to have too much noise here, and we also
+    // want to see the important stuff in the Pd console rather than the
+    // terminal.
+    fluid_set_log_function(FLUID_PANIC, fluid_log_cb, NULL);
+    fluid_set_log_function(FLUID_ERR, fluid_log_cb, NULL);
+    fluid_set_log_function(FLUID_WARN, NULL, NULL);
+    fluid_set_log_function(FLUID_DBG, NULL, NULL);
 }
