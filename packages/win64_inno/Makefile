@@ -120,6 +120,8 @@ ifneq ($(LIGHT),yes)
 	#install -p $(bin_src)/libdl.dll     $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libportaudio.dll     $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libFLAC.dll     $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libgomp-1.dll     $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libssp-0.dll     $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libspeex-1.dll     $(DESTDIR)$(bindir)/
         # These are for Gem
 	install -p $(bin_src)/libftgl-2.dll $(DESTDIR)$(bindir)/
