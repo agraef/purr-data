@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
+// needed to get S_IRUSR etc. in msys2
+#include <sys/stat.h>
 
 #include "m_pd.h"
  
