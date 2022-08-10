@@ -235,21 +235,19 @@ license_install:
 
 
 
+# AG: Replaced the previous jumble of echo commands with document generation
+# from Markdown using awk for preprocessing and pandoc for formatting. Also
+# updated the document content which was really outdated. You can find all
+# this stuff including the Markdown source in the gendoc subdirectory.
+
+osname = $(shell uname -s|sed 's/\([[:alpha:]]*\).*/\1/')
+
 WELCOME_FILE = $(DESTDIR)$(manualsdir)/$(PD_NAME)/Welcome.html
 welcome_install:
 	install -d $(DESTDIR)$(manualsdir)/$(PD_NAME)
-	-rm $(WELCOME_FILE)
-	touch $(WELCOME_FILE)
-	echo "<html><head>" >> $(WELCOME_FILE)
-	echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://puredata.org/ploneCustom.css\" />" >> $(WELCOME_FILE)
-	echo "</head>" >> $(WELCOME_FILE)
-	echo "<body><p><p>" >> $(WELCOME_FILE)
-	echo "<h2>Pd-l2ork version $(PD_L2ORK_VERSION) ($(PD_BUILD_VERSION))</h2>" >> $(WELCOME_FILE)
-	echo "<p>Pd-l2ork was written by Ivica Bukvic and Jonathan Wilkes. It is a fork of Hans-Christoph Steiner's Pd-extended, which in turn is based on Miller S. Puckette's Pd. The included Pd abstractions and externals are the work of many people whose contributions are gratefully acknowledged.</p>" >> $(WELCOME_FILE)
-	echo "<font size=\"-1\">" >> $(WELCOME_FILE)
-	echo "<p>`grep -A9 ACKNOWLEDG $(pd_src)/README.txt`</p>" >> $(WELCOME_FILE)
-	echo "</font>" >> $(WELCOME_FILE)
-	echo "</body></html>" >> $(WELCOME_FILE)
+	rm -f $(WELCOME_FILE)
+	$(MAKE) -C gendoc Welcome-$(osname).html version="$(PD_L2ORK_VERSION)" build_version="$(PD_BUILD_VERSION)"
+	cp gendoc/Welcome-$(osname).html $(WELCOME_FILE)
 
 
 
@@ -257,102 +255,9 @@ README_FILE = $(DESTDIR)$(manualsdir)/$(PD_NAME)/ReadMe.html
 readme_install: 
 	install -d $(DESTDIR)$(manualsdir)/$(PD_NAME)
 	echo $(CYCLONE_RELEASE)
-	-rm $(README_FILE)
-	touch $(README_FILE)
-	echo "<html>" >> $(README_FILE)
-	echo "<head>" >> $(README_FILE)
-	echo "<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\" />" >> $(README_FILE)
-	echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"http://puredata.org/plone.css\" />" >> $(README_FILE)
-	echo "</head>" >> $(README_FILE)
-	echo "<body>" >> $(README_FILE)
-	echo "<h2>Pd-l2ork version $(PD_L2ORK_VERSION) ($(PD_BUILD_VERSION))</h2>" 	>> $(README_FILE)
-	echo "<p>Pd is a real-time, graphical programming language for media processing created by Miller S. Puckette.  It provides an environment for audio analysis, synthesis, and processing, with a rich set of multimedia capabilities.  You can get Pd for Linux, Windows, MacOS X, BSD, or IRIX.</p>" >> $(README_FILE)
-	echo "<p>Pd-l2ork is a version of Pd based on Hans-Christoph Steiner's Pd-extended which features many bugfixes and enhancements, especially in the user interface.  Pd-l2ork was created by Ivica Ico Bukvic and is maintained by a team of volunteers including Jonathan Wilkes who ported it to the Mac and Windows.  It is available for Linux, Windows and MacOS X.</p>" >> $(README_FILE)
-	echo "<p>For general information about Pd, go to: <a href=\"http://puredata.org\" target=\"pd\">http://puredata.org</a>.  More information about Pd-l2ork can be found on the <a href=\"http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/\" target=\"pd-l2ork\">Pd-l2ork website</a>.</p>" >> $(README_FILE)
-	echo "<h3>Installation</h3>" >> $(README_FILE)	
-ifeq ($(OS_NAME),linux)
-	echo "<p>Links to Pd-l2ork packages for various Linux distributions are available on the <a href=\"http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/\" target=\"pd-l2ork\">Pd-l2ork website</a>.</p>" >> $(README_FILE)
-	echo "<p>If you're running Ubuntu or Arch, you may also want to check out Albert Gräf's packages on Launchpad and the Arch User Repositories (AUR).  Please check his corresponding <a href=\"https://l2orkaur.bitbucket.io/\" target=\"l2orkaur\">Bitbucket</a> <a href=\"https://l2orkubuntu.bitbucket.io/\" target=\"l2orkubuntu\">pages</a> for details.</p>" >> $(README_FILE)
-endif
-ifeq ($(OS_NAME),darwin)
-	echo "<p>To install Pd-l2ork, drag the $(APPLICATION_NAME).app into your <b>/Applications</b> folder or to the shortcut in the disk image.</p>" >> $(README_FILE)
-	echo "<p>By default, most of the included libraries are loaded at startup.  To change this, set your own preferences in the <b>Startup</b> tab of the Preferences dialog.  If you want to reset Pd-l2ork to the default preferences, remove the Pd-l2ork preferences file <strong>~/Library/Preferences/org.puredata.pd-l2ork.plist</strong> (<code>~</code> means your home folder), or run the following command in the Terminal.app: </p><p><code>rm ~/Library/Preferences/org.puredata.pd-l2ork.plist</code></p>" >> $(README_FILE)
-	echo "<p>If you want to use PDP on Mac OS X, you may have to install X11.  See <a href=\"http://puredata.info/docs/faq/macosx\" target=\"_blank\">How do I install Pd on MacOS X?</a> for details.</p>" >> $(README_FILE)
-endif
-ifeq ($(OS_NAME),windows)
-	echo "<p>To make sure that all of the included libraries are loaded when Pd runs, " >> $(README_FILE)
-	echo "double-click <code>C:\Program Files\pd\pd-settings.reg</code> to import the settings to the registry.  WARNING: this will overwrite any existing Pd preferences!</p>" >> $(README_FILE)
-	echo "<h3>ASIO4ALL</h3>" >> $(README_FILE)	
-	echo "<p><a href=\"http://www.asio4all.com/\" target=\"_blank\">ASIO4ALL</a> is a cost-free <a href=\"http://en.wikipedia.org/wiki/Audio_Stream_Input/Output\" target=\"_blank\">ASIO</a> audio driver.  Is it highly recommended for use with Pd.  Download and install it, then when you launch Pd, choose the <strong>ASIO</strong> option from the <strong>Media</strong> menu.  Using ASIO4ALL should mean less crashes and troubles, as well as better audio performance." >> $(README_FILE)
-	echo "</p>" >> $(README_FILE)
-endif
-	echo "<h3>Installing Externals, Objects, and Help files</h3>" >> $(README_FILE)
-	echo "<p>" >> $(README_FILE)
-	echo "If you would like to install other externals, objects, help files, etc. there are special folders that Pd-l2ork uses, which are listed below.  If the folder does not exist, you should create it.  You can find out more details about this by reading this FAQ:  <a href=\"http://puredata.info/docs/faq/how-do-i-install-externals-and-help-files\" target=\"_blank\">How do I install externals and help files?</a>." >> $(README_FILE)
-	echo "<dl>" >> $(README_FILE)
-ifeq ($(OS_NAME),darwin)
-	echo "<dt>Only for the current user account</dt>" >> $(README_FILE)
-	echo "<dd>~/Library/Pd-l2ork</dd>" >> $(README_FILE)
-	echo "<dt>For all user accounts on the computer</dt>" >> $(README_FILE)
-	echo "<dd>/Library/Pd-l2ork</dd>" >> $(README_FILE)
-endif
-ifeq ($(OS_NAME),linux)
-	echo "<dt>Only for the current user account</dt>" >> $(README_FILE)
-	echo "<dd>~/pd-l2ork-externals/</dd>" >> $(README_FILE)
-	echo "<dt>For all user accounts on the computer</dt>" >> $(README_FILE)
-	echo "<dd>/usr/local/lib/pd-l2ork-externals</dd>" >> $(README_FILE)
-endif
-ifeq ($(OS_NAME),windows)
-	echo "<dt>Only for the current user account</dt>" >> $(README_FILE)
-	echo "<dd><a href=\"file:///%UserProfile%/Application%20Data\">%UserProfile%\Application Data\Pd-l2ork</a></dd>" >> $(README_FILE)
-	echo "<dt>For all user accounts on the computer</dt>" >> $(README_FILE)
-	echo "<dd><a href=\"file:///%CommonProgramFiles%/\">%ProgramFiles%\Common Files\Pd-l2ork</a></dd>" >> $(README_FILE)
-endif
-	echo "</dl>" >> $(README_FILE)
-	echo "</p>" >> $(README_FILE)
-	echo "<h3>License</h3>" >> $(README_FILE)	
-	echo "<p>" >> $(README_FILE)
-	echo 'This package is released under the <a href="http://www.gnu.org/copyleft/gpl.html" target="gpl">GNU GPL</a>.  The Pd core and some other included code is available under a <a href="http://pure-data.cvs.sourceforge.net/pure-data/pd/LICENSE.txt">BSD license</a> from the Pd source code repository on SourceForge.' >> $(README_FILE)
-	echo "</p>" >> $(README_FILE)
-	echo "<h3>Patented Algorithms</h3>" >> $(README_FILE)
-	echo "<p>" >> $(README_FILE)
-	echo "This package may contain software that is covered by patents in certain countries, like the U.S. and Germany.  In order to use this software you must have the proper license.  Below is a list of the known software packages that are covered by patents in some countries:" >> $(README_FILE)
-	echo "</p>" >> $(README_FILE)
-	echo "<ul>" >> $(README_FILE)
-	echo '<li><a href="http://en.wikipedia.org/wiki/MP3" target="license">MP3 aka MPEG-1 Part 3 Layer 3</a></li>' >> $(README_FILE)
-	echo '<li><a href="http://en.wikipedia.org/wiki/MPEG-2" target="license">MPEG-2</a></li>' >> $(README_FILE)
-	echo '<li><a href="http://en.wikipedia.org/wiki/MPEG-4#Licensing" target="license">MPEG-4</a></li>' >> $(README_FILE)
-	echo "</ul>" >> $(README_FILE)
-	echo '<p>Please consider trying to get rid of software patents in your country: <a href="http://www.nosoftwarepatents.com" target="nsp">http://www.nosoftwarepatents.com</a></p>' >> $(README_FILE)
-	#echo "<h3>Pure Data CVS Developers</h3>" >> $(README_FILE)	
-# this may seem whack, but it generates the list of developers from the SourceForge site: (as of 11-13-2014 this 404s, so we disable it)
-	#curl 'http://sourceforge.net/project/memberlist.php?group_id=55736' | grep -A2 -e '<td>' | sed 's|\(href="\)|target="w" \1http://sourceforge.net|' >> $(README_FILE)
-	#echo "</p>" >> $(README_FILE)
-	#echo "<p>" >> $(README_FILE)
-	#echo "Many others not listed have contributed their time and effort, this is just a list of the current developers in the SourceForge project.  But really, every Pd user is a developer and is encouraged to contribute to the CVS repository." >> $(README_FILE)
-	#echo "</p>" >> $(README_FILE)
-	#echo "<h3>Included Versions</h3>" >> $(README_FILE)	
-	#echo "<p>These externals are all included from the Pd CVS repository:</p>" >> $(README_FILE)
-	#echo "<ul>" >> $(README_FILE)
-	#echo "<li>pure data: $(PD_VERSION) " >> $(README_FILE)
-	#echo "<li>cyclone: $(CYCLONE_VERSION)" >> $(README_FILE)
-	#echo "<li>gem: $(GEM_VERSION)" >> $(README_FILE)
-	#echo "<li>iemlib: `date +20%y.%m.%d`" >> $(README_FILE)
-	#echo "<li>maxlib: $(MAXLIB_VERSION)" >> $(README_FILE)
-	#echo "<li>osc: $(OSC_VERSION)" >> $(README_FILE)
-	#echo "<li>pmpd: $(PMPD_VERSION)" >> $(README_FILE)
-	#echo "<li>pd-abstractions: `date +20%y.%m.%d`" >> $(README_FILE)
-	#echo "<li>pd-doc: `date +20%y.%m.%d`" >> $(README_FILE)
-	#echo "<li>pd-externals: `date +20%y.%m.%d`" >> $(README_FILE)
-	#echo "<li>pddp: `date +20%y.%m.%d`" >> $(README_FILE)
-	#echo "<li>pdp: $(PDP_VERSION)" >> $(README_FILE)
-	#echo "<li>pidip: $(PIDIP_VERSION)" >> $(README_FILE)
-	#echo "<li>toxy: $(TOXY_VERSION)" >> $(README_FILE)
-	#echo "<li>unauthorized: `date +20%y.%m.%d`" >> $(README_FILE)
-	#echo "<li>zexy: $(ZEXY_VERSION)" >> $(README_FILE)
-	#echo "</ul>" >> $(README_FILE)
-	echo "(this package was built on `date`) <BR>" >> $(README_FILE)
-	echo "</body></html>" >> $(README_FILE)
+	rm -f $(README_FILE)
+	$(MAKE) -C gendoc ReadMe-$(osname).html version="$(PD_L2ORK_VERSION)" build_version="$(PD_BUILD_VERSION)"
+	cp gendoc/ReadMe-$(osname).html $(README_FILE)
 
 
 
@@ -410,6 +315,7 @@ abstractions_clean:
 	-$(MAKE) -C $(abstractions_src) $(DEST_PATHS) clean
 
 doc_clean:
+	$(MAKE) -C gendoc clean
 
 externals_clean:
 	-$(MAKE) -C $(externals_src) $(DEST_PATHS) clean
@@ -422,7 +328,7 @@ clean: abstractions_clean doc_clean externals_clean pd_clean
 	echo "Complete clean finished."
 
 
-distclean: cruft_clean
+distclean: cruft_clean doc_clean
 	$(MAKE) -C $(abstractions_src) distclean
 	-$(MAKE) -C $(extensions_src) distclean
 	$(MAKE) -C $(externals_src) distclean
