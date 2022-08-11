@@ -315,7 +315,10 @@ abstractions_clean:
 	-$(MAKE) -C $(abstractions_src) $(DEST_PATHS) clean
 
 doc_clean:
-	$(MAKE) -C gendoc clean
+# These are precious, don't clean them! Otherwise pre-generated docs will be
+# removed before the build starts, and the build system may not have the
+# required tools (i.e., pandoc) installed to re-generate them.
+#	$(MAKE) -C gendoc clean
 
 externals_clean:
 	-$(MAKE) -C $(externals_src) $(DEST_PATHS) clean
