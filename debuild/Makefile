@@ -112,6 +112,14 @@ $(debsrc):
 # Pre-generate and put s_version.h into the tarball (see above; the build
 # version is generated using git which can't be done outside the git repo).
 	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' ../pd/src/s_version.h.in > $(debdist)/pd/src/s_version.h
+# Pre-generate the markdown and html docs so that they will be included in the
+# source. This means that we don't need pandoc as a build dependency, which
+# makes live a lot easier since the pandoc versions on older Debian/Ubuntu
+# releases are quite ancient.
+	make -C ../packages/gendoc
+	mv ../packages/gendoc/*-Linux* $(debdist)/packages/gendoc
+	make -C ../packages/gendoc clean
+	ls -l $(debdist)/packages/gendoc/*.html
 # Create the source tarball.
 	tar cfz $(debsrc) $(debdist)
 	rm -rf $(debdist)

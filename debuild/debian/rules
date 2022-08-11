@@ -44,6 +44,9 @@ override_dh_auto_build:
 # Copy the nw.js sources to where purr-data wants them.
 	@echo "DEB_HOST_ARCH = $(shell dpkg-architecture -qDEB_HOST_ARCH)"
 	tar -xf debian/nwjs/$(nwjspkg)-$(arch).tar.gz && rm -rf pd/nw/nw && mv $(nwjsdir)-$(arch) pd/nw/nw
+# Make sure that the html docs in packages/gendoc are current so that we don't
+# accidentally try to rebuild them.
+	cd packages/gendoc && touch *-Linux*.html
 	cd l2ork_addons && (export V=0 inst_dir=$(prefix); ./tar_em_up.sh -Bn)
 	make check prefix=$(prefix)
 
