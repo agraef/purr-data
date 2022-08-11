@@ -11,6 +11,13 @@ html = $(addsuffix .html, $(targets))
 # Note: This requires special tools (pandoc, awk).
 all: html
 
+# Check for the official Pandoc package on Windows, so that make will find it.
+ifneq (,$(wildcard /c/Program\ Files/Pandoc/pandoc.exe))
+pandoc = /c/Program\ Files/Pandoc/pandoc
+else
+pandoc = pandoc
+endif
+
 # NOTE: In pandoc 2.19, --self-contained, which forces the css to be included
 # in the html output, is deprecated in favour of --embed-resources. But the
 # new option isn't supported in pandoc 2.18, which is still being used a
@@ -33,7 +40,7 @@ ReadMe-%.md: ReadMe.md
 
 ReadMe-%.html: osname = $(patsubst ReadMe-%.html,%,$@)
 ReadMe-%.html: ReadMe-%.md
-	pandoc $< -o $@ -M pagetitle="Purr Data $(version) ($(osname))" $(self-contained) --css gh-pandoc.css
+	$(pandoc) $< -o $@ -M pagetitle="Purr Data $(version) ($(osname))" $(self-contained) --css gh-pandoc.css
 
 Welcome-%.md: osname = $(patsubst Welcome-%.md,%,$@)
 Welcome-%.md: Welcome.md
@@ -41,7 +48,7 @@ Welcome-%.md: Welcome.md
 
 Welcome-%.html: osname = $(patsubst Welcome-%.html,%,$@)
 Welcome-%.html: Welcome-%.md
-	pandoc $< -o $@ -M pagetitle="Purr Data $(version) ($(osname))" $(self-contained) --css gh-pandoc.css
+	$(pandoc) $< -o $@ -M pagetitle="Purr Data $(version) ($(osname))" $(self-contained) --css gh-pandoc.css
 
 clean:
 	rm -f $(markdown) $(html)
