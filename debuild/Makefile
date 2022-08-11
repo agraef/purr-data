@@ -32,9 +32,15 @@
 # 4. Run 'make debclean' to get rid of any files that were created in steps 2
 # and 3.
 
+# Determine the version number of this build. We get this from m_pd.h.
+PD_L2ORK_VERSION := $(shell grep PD_L2ORK_VERSION ../pd/src/m_pd.h | sed 's|^.define *PD_L2ORK_VERSION *"\(.*\)".*|\1|')
+# Determine the build version which needs git to be computed, so we can't do
+# it in a stand-alone build from a tarball
+PD_BUILD_VERSION := $(shell git log -1 --format=%cd --date=short | sed -e 's/-//g')-rev.$(shell git rev-parse --short HEAD)
+
 # The Debian version gets derived from the date and serial number of the last
 # commit. You can print it with 'make debversion'.
-debversion = $(shell grep PD_L2ORK_VERSION ../pd/src/m_pd.h | sed 's|^.define *PD_L2ORK_VERSION *"\(.*\)".*|\1|')+git$(shell git rev-list --count HEAD)+$(shell git rev-parse --short HEAD)
+debversion = $(PD_L2ORK_VERSION)+git$(shell git rev-list --count HEAD)+$(shell git rev-parse --short HEAD)
 # Debian revision number of the package.
 debrevision = 1
 # Source tarball and folder.
@@ -97,10 +103,6 @@ deb-us:
 debsrc-us:
 	$(MAKE) deb DEBUILD_FLAGS="-S -d -us -uc"
 
-# Determine the build version which needs git to be computed, so we can't do
-# it in a stand-alone build from a tarball.
-PD_BUILD_VERSION := $(shell git log -1 --format=%cd --date=short | sed -e 's/-//g')-rev.$(shell git rev-parse --short HEAD)
-
 $(debsrc):
 	rm -rf $(debdist)
 # Make sure that the submodules are initialized.
@@ -112,6 +114,14 @@ $(debsrc):
 # Pre-generate and put s_version.h into the tarball (see above; the build
 # version is generated using git which can't be done outside the git repo).
 	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' ../pd/src/s_version.h.in > $(debdist)/pd/src/s_version.h
+# Pre-generate the markdown and html docs so that they will be included in the
+# source. This means that we don't need pandoc as a build dependency, which
+# makes live a lot easier since the pandoc versions on older Debian/Ubuntu
+# releases are quite ancient.
+	make -C ../packages/gendoc version="$(PD_L2ORK_VERSION)" build_version="$(PD_BUILD_VERSION)"
+	mv ../packages/gendoc/*-Linux* $(debdist)/packages/gendoc
+	make -C ../packages/gendoc clean
+	ls -l $(debdist)/packages/gendoc/*.html
 # Create the source tarball.
 	tar cfz $(debsrc) $(debdist)
 	rm -rf $(debdist)
