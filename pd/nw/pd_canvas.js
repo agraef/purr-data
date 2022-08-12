@@ -520,6 +520,17 @@ var canvas_events = (function() {
             text_mousedown: function(evt) {
                 if (evt.target.parentNode === document.getElementById("autocomplete_dropdown")) {
                     pdgui.select_result_autocomplete_dd(textbox(), document.getElementById("autocomplete_dropdown"));
+                    // ag: Don't do the usual object instantiation thing if
+                    // we've clicked on the autocompletion dropdown. This
+                    // means that the user can just go on editing, entering
+                    // object arguments, etc.
+                    evt.stopPropagation();
+                    //evt.preventDefault();
+                    caret_end();
+                    // Defer this to the event loop to prevent losing the
+                    // keyboard focus.
+                    setTimeout(function () { textbox().focus() }, 0);
+                    return false;
                 }
                 if (textbox() !== evt.target && !target_is_scrollbar(evt)) {
                     utils.create_obj();
@@ -569,9 +580,8 @@ var canvas_events = (function() {
                         } else { // else, if there is a selected item on autocompletion tool, the selected item is written on the box
                             pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
                             caret_end();
-                            // TODO: Substitute the editing box by the object itself
-                            // utils.create_obj(); // not working, it's not that simple.
-                            // canvas_events.normal();
+                            // No need to instantiate the object here,
+                            // presumably the user wants to go on editing.
                         }
                         break;
                     case 9: // tab
