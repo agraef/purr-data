@@ -589,6 +589,9 @@ var canvas_events = (function() {
                         pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
                         caret_end();
                         break;
+                    case 27: // esc
+                        pdgui.delete_autocomplete_dd(ac_dropdown());
+                        break;
                     default:
                         if (textbox().innerText === "") {
                             pdgui.delete_autocomplete_dd(ac_dropdown());
