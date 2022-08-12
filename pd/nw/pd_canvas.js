@@ -53,6 +53,30 @@ var canvas_events = (function() {
         textbox = function () {
             return document.getElementById("new_object_textentry");
         },
+        caret_end = function () {
+            /* ag: Move the caret to the end of the texbox while editing. This
+               is needed for the autcompletion. We essentially fake pressing
+               the End key here; maybe there's an easier way to do this, but
+               the following seems to work alright, so... We first grab the
+               textbox content and determine its length, which is where we
+               want the caret to be. */
+            var t = textbox();
+            var x = t.innerText;
+            var p = x.length;
+            //console.log("move "+p+": "+x);
+            /* The DOM doesn't make this easy. We first have to define a
+               range, set its start to the desired caret position, and
+               collapse it to a single position (i.e., end = start). Next we
+               grab the current selection, remove all currently selected
+               ranges, and set our new range. Quite a hullaballoo for such a
+               simple task. */
+            var r = document.createRange();
+            var s = window.getSelection();
+            r.setStart(t.childNodes[0], p);
+            r.collapse(true);
+            s.removeAllRanges();
+            s.addRange(r);
+        },
         current_events = {}, // keep track of our current listeners
         edit_events = function(elem, events, action, init) {
             // convenience routine for adding an object full of
@@ -544,14 +568,16 @@ var canvas_events = (function() {
                             grow_svg_for_element(textbox());
                         } else { // else, if there is a selected item on autocompletion tool, the selected item is written on the box
                             pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
+                            caret_end();
                             // TODO: Substitute the editing box by the object itself
                             // utils.create_obj(); // not working, it's not that simple.
                             // canvas_events.normal();
                         }
                         break;
                     case 9: // tab
-                        // TODO: Substitute this function by one that autocomplete with the prefix in common in all results
+                        // TODO: Substitute this function by one that autocompletes with the common prefix of all results
                         pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
+                        caret_end();
                         break;
                     default:
                         if (textbox().innerText === "") {
