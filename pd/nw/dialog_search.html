@@ -837,7 +837,8 @@ function display_doc(doc) {
     }
     if (doc.related_objects) {
         var p_rel_objs = document.createElement("p");
-        var ref_rel_objs = doc.ref_related_objects.split("\,");
+        var ref_rel_objs = doc.ref_related_objects == null
+            ? [] : doc.ref_related_objects.split("\,");
         p_rel_objs.innerHTML = "Related objects: ".bold();
         doc.related_objects.split(" ").forEach(function (rel_obj, i, a) {
             let link_rel_obj = rel_obj;
