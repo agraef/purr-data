@@ -238,6 +238,42 @@ function add_doc_details_to_index(filename, data) {
         desc = desc.replace(" \\,", ",");
     }
 
+    /* AG: Deal with a bunch of special cases which have multiple objects
+       documented in them, listing the object names in the NAME field of the
+       META data. */
+    var names = big_line
+        .match(/#X text \-?[0-9]+ \-?[0-9]+ NAME ([\s\S]*?);/);
+    names = names && names.length > 1 ? names[1].trim().split(" ") : [];
+    if (names.length > 1) {
+        // special help file, not an actual object, remove from completions
+        let obj_result = obj_exact_match(title);
+        if (obj_result.length !== 0) {
+            let obj_ref = obj_result[0].refIndex;
+            //post("scanning "+filename);
+            completion_index.removeAt(obj_ref);
+        }
+        // Special cases which don't have information in their NAME fields
+        // that we can use. We might add more as we become aware of them.
+        let skip = title == "list" | title == "midi";
+        if (!skip) {
+            // enter the completion entries for each of the objects named in
+            // the NAME field
+            for (let i = 0; i < names.length; i++) {
+                let title = names[i];
+                // check for existing entries, skip those
+                obj_result = obj_exact_match(title);
+                if (obj_result.length === 0) {
+                    //post("add completion "+title);
+                    completion_index.add({
+                        "occurrences" : 0,
+                        "title" : title,
+                        "args" : []
+                    });
+                }
+            }
+        }
+    }
+
     index_cache[index_cache.length] = [filename, title, keywords, desc, rel_objs, ref_rel_objs]
         .map(index_entry_esc).join(":");
     var d = path.dirname(filename);
