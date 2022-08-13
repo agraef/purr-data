@@ -50,6 +50,7 @@ var canvas_events = (function() {
         last_dropdown_menu_y,
         last_search_term = "",
         svg_view = document.getElementById("patchsvg").viewBox.baseVal,
+        last_completed = -1, // last Tab completion (autocomplete)
         textbox = function () {
             return document.getElementById("new_object_textentry");
         },
@@ -318,6 +319,9 @@ var canvas_events = (function() {
                 }
             }
         },
+        ac_dropdown = function() {
+            return document.getElementById("autocomplete_dropdown")
+        },
         events = {
             mousemove: function(evt) {
                 //pdgui.post("x: " + evt.pageX + " y: " + evt.pageY +
@@ -518,8 +522,8 @@ var canvas_events = (function() {
                 return false;
             },
             text_mousedown: function(evt) {
-                if (evt.target.parentNode === document.getElementById("autocomplete_dropdown")) {
-                    pdgui.select_result_autocomplete_dd(textbox(), document.getElementById("autocomplete_dropdown"));
+                if (evt.target.parentNode === ac_dropdown()) {
+                    last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed);
                     // ag: Don't do the usual object instantiation thing if
                     // we've clicked on the autocompletion dropdown. This
                     // means that the user can just go on editing, entering
@@ -563,9 +567,6 @@ var canvas_events = (function() {
                 evt.stopPropagation();
 
                 // GB: Autocomplete feature
-                let ac_dropdown = function() {
-                    return document.getElementById("autocomplete_dropdown")
-                }
                 switch (evt.keyCode) {
                     case 40: // arrowdown
                         pdgui.update_autocomplete_dd_arrowdown(ac_dropdown())
@@ -578,21 +579,22 @@ var canvas_events = (function() {
                         if(ac_dropdown() === null || ac_dropdown().getAttribute("selected_item") === "-1") {
                             grow_svg_for_element(textbox());
                         } else { // else, if there is a selected item on autocompletion tool, the selected item is written on the box
-                            pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
+                            last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed);
                             caret_end();
                             // No need to instantiate the object here,
                             // presumably the user wants to go on editing.
                         }
                         break;
                     case 9: // tab
-                        // TODO: Substitute this function by one that autocompletes with the common prefix of all results
-                        pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
+                        last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed);
                         caret_end();
                         break;
                     case 27: // esc
                         pdgui.delete_autocomplete_dd(ac_dropdown());
+                        last_completed = -1;
                         break;
                     default:
+                        last_completed = -1;
                         if (textbox().innerText === "") {
                             pdgui.delete_autocomplete_dd(ac_dropdown());
                         } else {

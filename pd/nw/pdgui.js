@@ -631,15 +631,21 @@ function update_autocomplete_dd_arrowup(ac_dropdown) {
     }
 }
 
-function select_result_autocomplete_dd(textbox, ac_dropdown) {
+function select_result_autocomplete_dd(textbox, ac_dropdown, last) {
     if (ac_dropdown !== null) {
         let sel = ac_dropdown.getAttribute("selected_item");
         if (sel > -1) {
             textbox.innerText = ac_dropdown.children.item(sel).innerText;
             delete_autocomplete_dd(ac_dropdown);
+            return sel;
         } else { // it only passes here when the user presses 'tab' and there is no option selected
-            textbox.innerText = ac_dropdown.children.item(0).innerText;
+            var n = ac_dropdown.children.length;
+            var next = (last+1) % n;
+            textbox.innerText = ac_dropdown.children.item(next).innerText;
+            return next;
         }
+    } else {
+        return -1;
     }
 }
 
