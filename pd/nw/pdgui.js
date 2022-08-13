@@ -51,10 +51,17 @@ function gui_set_browser_config(doc_flag, path_flag, init_flag,
     autocomplete_prefix = ac_prefix_flag;
     make_completion_index();
     // AG: Start building the keyword index for dialog_search.html. We do this
-    // here so that we can be sure that lib_dir and help_path are known already.
-    // (This may also be deferred until the browser is launched for the first
-    // time, depending on the value of browser_init.)
-    if (browser_init == 1) make_index();
+    // here so that we can be sure that lib_dir and help_path are known
+    // already. (This may also be deferred until the browser is launched for
+    // the first time, depending on the value of browser_init, unless
+    // autocomplete is enabled in which case we have to build it anyway.)
+    if (autocomplete == 1 && !fs.existsSync(expand_tilde(compl_name))) {
+        // if the completion.json file has gone missing, rebuild it
+        rebuild_index();
+    } else if (browser_init == 1 || autocomplete == 1) {
+        // otherwise we only generate the index as needed
+        make_index();
+    }
 }
 
 function gui_set_lib_dir(dir) {
@@ -469,11 +476,10 @@ function build_index(cb) {
 
 exports.build_index = build_index;
 
-// this doesn't actually rebuild the index, it just clears it, so that it
-// will be rebuilt the next time the help browser is opened
+// normally, this doesn't actually rebuild the index, it just clears it, so
+// that it will be rebuilt the next time the help browser is opened
 function rebuild_index()
 {
-    post("clearing help index (reopen browser to rebuild!)");
     index = init_elasticlunr();
     index_started = index_done = false;
     try {
@@ -482,12 +488,19 @@ function rebuild_index()
     } catch (err) {
         //console.log(err);
     }
+    if (browser_init == 1 || autocomplete == 1) {
+        // if autocomplete is enabled, we *have* to rebuild the index now
+        make_index();
+    } else {
+        // we can defer rebuilding of the index until the browser is reopened
+        post("clearing help index (reopen the browser to rebuild!)");
+    }
 }
 
 // this is called from the gui tab of the prefs dialog
 function update_browser(doc_flag, path_flag, ac_flag, ac_prefix_flag)
 {
-    var changed = false;
+    var changed = ac_flag == 1 && autocomplete == 0;
     autocomplete = ac_flag;
     autocomplete_prefix = ac_prefix_flag;
     doc_flag = doc_flag?1:0;
