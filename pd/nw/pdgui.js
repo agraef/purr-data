@@ -735,6 +735,81 @@ function delete_autocomplete_dd (ac_dropdown) {
     }
 }
 
+function check_completion(text)
+{
+    if (!autocomplete) return false;
+    // checks whether an exact match (title+args) exists for the given text
+    let text_array = text.split(" ");
+    let title = text_array[0].toString();
+    let arg = text_array.slice(1, text_array.length);
+    if (arg.length > 0) {
+        arg = arg.toString().replace(/\,/g, " ");
+    } else {
+        arg = "";
+    }
+    let obj_result = obj_exact_match(title);
+    if (obj_result.length !== 0) {
+        let args = obj_result[0].item.args;
+        if (arg !== "") {
+            let arg_result = arg_exact_match(title, arg);
+            if (arg_result.length !== 0) {
+                // found exact title+args match
+                return true;
+            }
+        } else {
+            // no args, found exact title match
+            return true;
+        }
+    }
+    // no matches found
+    return false;
+}
+
+function remove_completion(text, log)
+{
+    if (!autocomplete) return false;
+    // Check to see whether we're removing an object or just its arguments
+    // from the index.
+    let text_array = text.split(" ");
+    let title = text_array[0].toString();
+    let arg = text_array.slice(1, text_array.length);
+    if (arg.length > 0) {
+        arg = arg.toString().replace(/\,/g, " ");
+        //log("title: "+title+", args: "+arg);
+    } else {
+        arg = "";
+        //log("title: "+title);
+    }
+    let obj_result = obj_exact_match(title);
+    if (obj_result.length !== 0) {
+        let obj_ref = obj_result[0].refIndex;
+        let obj_freq = obj_result[0].item.occurrences;
+        let args = obj_result[0].item.args;
+        if (arg !== "") {
+            let arg_result = arg_exact_match(title, arg);
+            if (arg_result.length !== 0) {
+                // found exact title+args match
+                let arg_ref = arg_result[0].matches[1].refIndex;
+                //log("removing %s %s at index %d %d", title, arg, obj_ref, arg_ref);
+                // remove from args
+                args.splice(arg_ref, 1);
+                // update the object
+                let obj = {"occurrences" : obj_freq, "title" : title, "args" : args};
+                //log("updating %d with %o", obj_ref, obj);
+                completion_index.update(obj, obj_ref);
+                return true;
+            }
+        } else {
+            // no args, found exact title match, remove it
+            //log("removing %s at index %d", title, obj_ref);
+            completion_index.removeAt(obj_ref);
+            return true;
+        }
+    }
+    // no matches found
+    return false;
+}
+
 exports.index_obj_completion = index_obj_completion;
 exports.write_completion_index = write_completion_index;
 exports.update_autocomplete_selected = update_autocomplete_selected;
@@ -744,6 +819,8 @@ exports.select_result_autocomplete_dd = select_result_autocomplete_dd;
 exports.repopulate_autocomplete_dd = repopulate_autocomplete_dd;
 exports.create_autocomplete_dd = create_autocomplete_dd;
 exports.delete_autocomplete_dd = delete_autocomplete_dd;
+exports.check_completion = check_completion;
+exports.remove_completion = remove_completion;
 
 // Modules
 
