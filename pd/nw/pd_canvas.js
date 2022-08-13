@@ -51,6 +51,7 @@ var canvas_events = (function() {
         last_search_term = "",
         svg_view = document.getElementById("patchsvg").viewBox.baseVal,
         last_completed = -1, // last Tab completion (autocomplete)
+        last_yanked = "", // last yanked completion (to confirm deletion)
         textbox = function () {
             return document.getElementById("new_object_textentry");
         },
@@ -322,6 +323,27 @@ var canvas_events = (function() {
         ac_dropdown = function() {
             return document.getElementById("autocomplete_dropdown")
         },
+        // AG: Little helper function to do all the necessary steps to
+        // re-create the autocompletion dropdown after changes. We factored
+        // this out since it will be needed to deal with changes to both the
+        // edited object text and the autocompletion index.
+        ac_repopulate = function() {
+            // GB: Finding the class from obj: find obj through tag of
+            // textbox, get obj class and remove from the class the word
+            // "selected". This is necessary because in textbox obj and
+            // comment both have class 'obj' and it's import here to
+            // differentiate them.
+            let obj_class = document
+                .getElementById(textbox().getAttribute("tag")+"gobj")
+                .getAttribute("class").toString()
+                .split(" ").slice(0,1).toString();
+            if (obj_class === "obj") { // autocomplete only works for objects
+                pdgui.create_autocomplete_dd(document, ac_dropdown(), textbox());
+                if (ac_dropdown().getAttribute("searched_text") !== textbox().innerText) {
+                    pdgui.repopulate_autocomplete_dd(document, ac_dropdown, obj_class, textbox().innerText);
+                }
+            }
+        },
         events = {
             mousemove: function(evt) {
                 //pdgui.post("x: " + evt.pageX + " y: " + evt.pageY +
@@ -524,6 +546,7 @@ var canvas_events = (function() {
             text_mousedown: function(evt) {
                 if (evt.target.parentNode === ac_dropdown()) {
                     last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed);
+                    last_yanked = "";
                     // ag: Don't do the usual object instantiation thing if
                     // we've clicked on the autocompletion dropdown. This
                     // means that the user can just go on editing, entering
@@ -570,9 +593,11 @@ var canvas_events = (function() {
                 switch (evt.keyCode) {
                     case 40: // arrowdown
                         pdgui.update_autocomplete_dd_arrowdown(ac_dropdown())
+                        last_yanked = "";
                         break;
                     case 38: // arrowup
                         pdgui.update_autocomplete_dd_arrowup(ac_dropdown())
+                        last_yanked = "";
                         break;
                     case 13: // enter
                         // if there is no item selected on autocomplete dropdown, enter make the obj box bigger
@@ -584,30 +609,75 @@ var canvas_events = (function() {
                             // No need to instantiate the object here,
                             // presumably the user wants to go on editing.
                         }
+                        last_yanked = "";
                         break;
                     case 9: // tab
                         last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed);
+                        last_yanked = "";
                         caret_end();
                         break;
                     case 27: // esc
                         pdgui.delete_autocomplete_dd(ac_dropdown());
                         last_completed = -1;
+                        if (last_yanked != "") {
+                            pdgui.post("Operation aborted.")
+                        }
+                        last_yanked = "";
+                        break;
+		    case 89:
+                        if (pdgui.cmd_or_ctrl_key(evt)) { // ctrl-y
+                            // AG: Note that this key is usually bound to the
+                            // Tidy Up operation in the Edit menu, but this
+                            // presumably won't interfere with our use here,
+                            // which is to "yank" the current completion
+                            // (remove it from the completion index).
+                            last_completed = -1;
+                            if (textbox().innerText === "") {
+                                pdgui.delete_autocomplete_dd(ac_dropdown());
+                                last_yanked = "";
+                            } else if (textbox().innerText === last_yanked) {
+                                // confirmed, really yank now
+                                if (pdgui.remove_completion(textbox().innerText, console.log)) {
+                                    pdgui.post("Removed completion: "+textbox().innerText);
+                                    ac_repopulate();
+                                }
+                                last_yanked = "";
+                            } else if (pdgui.check_completion(textbox().innerText)) {
+                                // for some safety, ask the user to confirm with another ctrl+y
+                                pdgui.post("Really remove completion "+textbox().innerText+"?");
+                                pdgui.post("Press ctrl+y again to confirm (Esc to abort).");
+                                last_yanked = textbox().innerText;
+                            } else {
+                                pdgui.post("No completion "+textbox().innerText);
+                            }
+                        }
                         break;
                     default:
-                        last_completed = -1;
-                        if (textbox().innerText === "") {
-                            pdgui.delete_autocomplete_dd(ac_dropdown());
-                        } else {
-                            let obj_class = document.getElementById(textbox().getAttribute("tag")+"gobj")
-                                .getAttribute("class").toString().split(" ").slice(0,1).toString();
-                            if (obj_class === "obj") { // autocomplete only works for objects
-                                pdgui.create_autocomplete_dd(document, ac_dropdown(), textbox());
-                                if (ac_dropdown().getAttribute("searched_text") !== textbox().innerText) {
-                                    // finding the class from obj: find obj throwout tag of textbox, get obj class and remove from the class the word "selected".
-                                    //                             this has to be done because in textbox obj and comment have class: 'obj'
-                                    //                             and it's import here to differentiate them
-                                    pdgui.repopulate_autocomplete_dd(document, ac_dropdown, obj_class, textbox().innerText);
-                                }
+                        // ag: Only update the state if a "valid key" is
+                        // pressed, not some modifier or other special key.
+                        function is_valid_key(e)
+                        {
+                            // See https://stackoverflow.com/questions/51296562
+                            // This is a quick hack which works because the
+                            // names of special keys are all multiple chars
+                            // long and only contain letters and numbers.
+                            return e.key.length == 1 // ASCII
+                                // non-ASCII:
+                                || (e.key.length > 1 && /[^a-zA-Z0-9]/.test(e.key))
+                                // Spacebar:
+                                || e.keyCode == 32
+                                // We also include Backspace and Del here
+                                // since they are used in editing. Note that
+                                // Return (key code 13) is handled above.
+                                || e.keyCode == 8 || e.keyCode == 46;
+                        }
+                        if (is_valid_key(evt)) {
+                            last_completed = -1;
+                            last_yanked = "";
+                            if (textbox().innerText === "") {
+                                pdgui.delete_autocomplete_dd(ac_dropdown());
+                            } else {
+                                ac_repopulate();
                             }
                         }
                 }
