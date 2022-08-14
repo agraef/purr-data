@@ -158,6 +158,8 @@ function index_entry_esc(s) {
 // keywords, and description of help patches.
 function add_doc_details_to_index(filename, data) {
     var title = path.basename(filename, "-help.pd"),
+        // AG: This is confusing. I'm not sure why we just replace the first
+        // newline here. Maybe there's a reason to do so, but I don't get it.
         big_line = data.replace("\n", " "),
         keywords,
         desc,
@@ -232,32 +234,66 @@ function add_doc_details_to_index(filename, data) {
     keywords = keywords && keywords.length > 1 ? keywords[1].trim() : null;
     desc = desc && desc.length > 1 ? desc[1].trim() : null;
     // Remove the Pd escapes for commas
-    desc = desc ? desc.replace(" \\,", ",") : null;
+    // AG: We want to do a global replacement here.
+    desc = desc ? desc.replace(/ \\,/g, ",") : null;
     if (desc) {
-        // format Pd's "comma atoms" as normal commas
-        desc = desc.replace(" \\,", ",");
+        // AG: And we want to get rid of the newlines, there's no reason
+        // whatsover to preserve the original formatting.
+        desc = desc.replace(/\n/g, " ");
     }
 
-    /* AG: Deal with a bunch of special cases which have multiple objects
-       documented in them, listing the object names in the NAME field of the
-       META data. */
+    // AG: Deal with a bunch of special cases which have multiple objects
+    // documented in them, listing the object names (and arguments) in the
+    // NAME field of the META data.
     var names = big_line
         .match(/#X text \-?[0-9]+ \-?[0-9]+ NAME ([\s\S]*?);/);
-    names = names && names.length > 1 ? names[1].trim().split(" ") : [];
+    // Some NAME fields span multiple lines, pretend that they're spaces.
+    names = names && names.length > 1
+        ? names[1].trim().replace(/\n/g, " ").split(" ")
+        : [];
     if (names.length > 1) {
-        // special help file, not an actual object, remove from completions
+        // special help file, not a single object, remove from completions
         let obj_result = obj_exact_match(title);
         if (obj_result.length !== 0) {
             let obj_ref = obj_result[0].refIndex;
             //post("scanning "+filename);
             completion_index.removeAt(obj_ref);
         }
-        // Special cases which don't have information in their NAME fields
-        // that we can use. We might add more as we become aware of them.
-        let skip = title == "list" | title == "midi";
-        if (!skip) {
-            // enter the completion entries for each of the objects named in
-            // the NAME field
+        // Some NAME entries (e.g., list) list different variations of the
+        // same object (list append, list trim etc.), we try to be clever
+        // about these.
+        let prefix = names[0];
+        let count = names.filter(name => name == prefix).length;
+        if (count > 3) {
+            // Chances are good that we're looking at variations of the same
+            // command, and not just some oddball NAME list with repeated
+            // entries. We first check for existing entries, and skip those
+            // (TODO: we might want to update their arguments instead, but
+            // this code is already complicated enough).
+            obj_result = obj_exact_match(prefix);
+            if (obj_result.length === 0) {
+                // Now collect the arguments.
+                let args = [];
+                for (let i = 0; i < names.length; i++) {
+                    if (names[i] == prefix) {
+                        let a = [];
+                        while (i+1 < names.length && names[i+1] != prefix) {
+                            a.push(names[i+1]); i++;
+                        }
+                        if (a.length > 0) {
+                            args.push({"occurrences" : 0, "text" : a.join(' ')});
+                        }
+                    }
+                }
+                //post("add completion "+prefix+" "+args.map(a => a.text).join(' '));
+                completion_index.add({
+                    "occurrences" : 0,
+                    "title" : prefix,
+                    "args" : args
+                });
+            }
+        } else {
+            // just a list of object names here, add them all
             for (let i = 0; i < names.length; i++) {
                 let title = names[i];
                 // check for existing entries, skip those
