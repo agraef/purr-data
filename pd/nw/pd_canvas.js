@@ -78,6 +78,9 @@ var canvas_events = (function() {
             r.collapse(true);
             s.removeAllRanges();
             s.addRange(r);
+            // Defer this to the event loop to prevent losing the
+            // keyboard focus.
+            setTimeout(function () { t.focus() }, 0);
         },
         current_events = {}, // keep track of our current listeners
         edit_events = function(elem, events, action, init) {
@@ -554,9 +557,6 @@ var canvas_events = (function() {
                     evt.stopPropagation();
                     //evt.preventDefault();
                     caret_end();
-                    // Defer this to the event loop to prevent losing the
-                    // keyboard focus.
-                    setTimeout(function () { textbox().focus() }, 0);
                     return false;
                 }
                 if (textbox() !== evt.target && !target_is_scrollbar(evt)) {
@@ -625,7 +625,7 @@ var canvas_events = (function() {
                         last_yanked = "";
                         break;
 		    case 89:
-                        if (pdgui.cmd_or_ctrl_key(evt)) { // ctrl-y
+                        if (evt.ctrlKey) { // ctrl-y
                             // AG: Note that this key is usually bound to the
                             // Tidy Up operation in the Edit menu, but this
                             // presumably won't interfere with our use here,
