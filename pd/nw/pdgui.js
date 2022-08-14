@@ -737,18 +737,32 @@ function select_result_autocomplete_dd(textbox, ac_dropdown, last) {
 // GB: update autocomplete dropdown with new results
 function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
     ac_dropdown().setAttribute("searched_text", text);
-    let title, arg;
+    let title, arg, have_arg;
     if (obj_class === "obj") {
         let text_array = text.split(" ");
         title = text_array[0].toString();
         arg = text_array.slice(1, text_array.length);
+        // check whether *anything* follows the obj name, even an empty arg
+        have_arg = arg.length !== 0;
         arg = (arg.length !== 0) ? arg.toString().replace(/\,/g, " ") : "";
     } else { // the autocomplete feature doesn't work with messages and comments
         return;
     }
 
-    // If there are arg, we are autocompleting the arg field, and if there isn't we are autocompleting the obj_title field
-    let results = (arg.length > 0) ? (search_arg(title, arg).slice(1,)) : (search_obj(title));
+    /* AG: We're dealing with three different cases here which must be handled
+       separately.
+
+       (1) We're completing an object name; in this case have_arg is false and
+       arg is empty as well.
+
+       (2) We're about to start argument completion; here we have that
+       have_arg is true even though arg is still empty (which happens as soon
+       as you enter a blank after the object name).
+
+       (3) We're in the middle of argument completion (started typing some
+       arguments) in which case have_arg is true and arg is non-empty as
+       well. */
+    let results = (arg.length > 0) ? (search_arg(title, arg).slice(1,)) : have_arg ? (obj_exact_match(title)) : (search_obj(title));
 
     // GB TODO: ideally we should be able to show all the results in a limited window with a scroll bar
     let n = 8; // Maximum number of suggestions
@@ -756,23 +770,36 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
 
     ac_dropdown().innerHTML = ""; // clear all old results
     if (results.length > 0) {
-        // for each result, make a paragraph child of autocomplete_dropdown
-        results.forEach(function (f,i,a) {
+        function create_items(res, content) {
+            // Helper function to create the menu items. res is the result
+            // array to be traversed, and content the content extraction
+            // function which returns the text to be shown in the menu.
             let h = ac_dropdown().getAttribute("font_height");
-            let y = h*(i+1);
-            let r = doc.createElement("p");
-            r.setAttribute("width", "150");
-            r.setAttribute("height", h);
-            r.setAttribute("y", y);
-            r.setAttribute("class", "border");
-            r.setAttribute("idx", i);
-            if (arg.length < 1) { // autocomplete object
-                r.textContent = f.item.title;
-            } else { // autocomplete argument, message or comment
-                r.textContent = ((obj_class==="obj")?(title+" "):"") + f.value;
-            }
-            ac_dropdown().appendChild(r);
-        })
+            res.forEach(function (f,i,a) {
+                let y = h*(i+1);
+                let r = doc.createElement("p");
+                r.setAttribute("width", "150");
+                r.setAttribute("height", h);
+                r.setAttribute("y", y);
+                r.setAttribute("class", "border");
+                r.setAttribute("idx", i);
+                r.textContent = content(f);
+                ac_dropdown().appendChild(r);
+            })
+        }
+        // for each result, make a paragraph child of autocomplete_dropdown
+        if (arg.length < 1 && have_arg) {
+            // list *all* argument completions of an object (up to n items)
+            var args = results[0].item.args;
+            if (args.length > n) args = args.slice(0,n);
+            create_items(args, f => title + " " + f.text);
+        } else if (arg.length > 0) {
+            // list all matching argument completions
+            create_items(results, f => title + " " + f.value);
+        } else {
+            // list all matching object completions
+            create_items(results, f => f.item.title);
+        }
         ac_dropdown().setAttribute("selected_item", "-1");
     } else { // if there is no suggestion candidate, the autocompletion dropdown should disappear
         delete_autocomplete_dd (ac_dropdown());
