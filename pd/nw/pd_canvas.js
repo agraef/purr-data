@@ -549,7 +549,7 @@ var canvas_events = (function() {
             },
             text_mousedown: function(evt) {
                 if (evt.target.parentNode === ac_dropdown()) {
-                    last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed, last_results);
+                    last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed, last_results, 0);
                     last_yanked = "";
                     // ag: Don't do the usual object instantiation thing if
                     // we've clicked on the autocompletion dropdown. This
@@ -605,7 +605,7 @@ var canvas_events = (function() {
                         if(ac_dropdown() === null || ac_dropdown().getAttribute("selected_item") === "-1") {
                             grow_svg_for_element(textbox());
                         } else { // else, if there is a selected item on autocompletion tool, the selected item is written on the box
-                            last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed, last_results);
+                            last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed, last_results, 0);
                             caret_end();
                             // No need to instantiate the object here,
                             // presumably the user wants to go on editing.
@@ -613,7 +613,7 @@ var canvas_events = (function() {
                         last_yanked = "";
                         break;
                     case 9: // tab
-                        last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed, last_results);
+                        last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed, last_results, evt.shiftKey?-1:1);
                         last_yanked = "";
                         caret_end();
                         break;
