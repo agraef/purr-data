@@ -716,7 +716,7 @@ function update_autocomplete_dd_arrowup(ac_dropdown) {
     }
 }
 
-function select_result_autocomplete_dd(textbox, ac_dropdown, last) {
+function select_result_autocomplete_dd(textbox, ac_dropdown, last, res) {
     if (ac_dropdown !== null) {
         let sel = ac_dropdown.getAttribute("selected_item");
         if (sel > -1) {
@@ -724,9 +724,9 @@ function select_result_autocomplete_dd(textbox, ac_dropdown, last) {
             delete_autocomplete_dd(ac_dropdown);
             return sel;
         } else { // it only passes here when the user presses 'tab' and there is no option selected
-            var n = ac_dropdown.children.length;
+            var n = res.length;
             var next = (last+1) % n;
-            textbox.innerText = ac_dropdown.children.item(next).innerText;
+            textbox.innerText = res[next];
             return next;
         }
     } else {
@@ -800,6 +800,8 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
         results = results.map(a => a.item.title);
     }
 
+    // record the complete results, we need them for tab completion
+    let all_results = results;
     // GB TODO: ideally we should be able to show all the results in a limited window with a scroll bar
     let n = 8; // Maximum number of suggestions
     if (results.length > n) results = results.slice(0,n);
@@ -823,6 +825,7 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
     } else { // if there is no suggestion candidate, the autocompletion dropdown should disappear
         delete_autocomplete_dd (ac_dropdown());
     }
+    return all_results;
 }
 
 // GB: create autocomplete dropdown based on the properties of the textbox for new_obj_element
