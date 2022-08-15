@@ -716,7 +716,7 @@ function update_autocomplete_dd_arrowup(ac_dropdown) {
     }
 }
 
-function select_result_autocomplete_dd(textbox, ac_dropdown, last, res) {
+function select_result_autocomplete_dd(textbox, ac_dropdown, last, res, dir) {
     if (ac_dropdown !== null) {
         let sel = ac_dropdown.getAttribute("selected_item");
         if (sel > -1) {
@@ -725,7 +725,7 @@ function select_result_autocomplete_dd(textbox, ac_dropdown, last, res) {
             return sel;
         } else { // it only passes here when the user presses 'tab' and there is no option selected
             var n = res.length;
-            var next = (last+1) % n;
+            var next = (dir==0 ? last : dir>0 ? last+1 : last<=0 ? n-1 : last-1) % n;
             textbox.innerText = res[next];
             return next;
         }
