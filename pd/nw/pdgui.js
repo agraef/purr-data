@@ -763,6 +763,9 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
        arguments) in which case have_arg is true and arg is non-empty as
        well. */
     let results = (arg.length > 0) ? (search_arg(title, arg).slice(1,)) : have_arg ? (obj_exact_match(title)) : (search_obj(title));
+    if (arg.length < 1 && have_arg && results.length > 0) {
+        results = results[0].item.args;
+    }
 
     /* AG: Massage the result list from what Fuse delivers, which is based on
        scoring similarity and can appear pretty random at times. For now, we
@@ -773,8 +776,8 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
        already in GB's implementation, but AFAICT aren't currently used
        anywhere. */
     if (arg.length < 1 && have_arg) {
-        // here all results are in item.args, order them lexicographically
-        results[0].item.args.sort((a, b) =>
+        // all argument completions, order them lexicographically
+        results.sort((a, b) =>
             a.text == b.text ? 0 : a.text < b.text ? -1 : 1);
     } else if (arg.length > 0) {
         // matching arguments, order them lexicographically
@@ -819,9 +822,7 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
         // for each result, make a paragraph child of autocomplete_dropdown
         if (arg.length < 1 && have_arg) {
             // list *all* argument completions of an object (up to n items)
-            var args = results[0].item.args;
-            if (args.length > n) args = args.slice(0,n);
-            create_items(args, f => title + " " + f.text);
+            create_items(results, f => title + " " + f.text);
         } else if (arg.length > 0) {
             // list all matching argument completions
             create_items(results, f => title + " " + f.value);
