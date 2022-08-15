@@ -764,6 +764,35 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
        well. */
     let results = (arg.length > 0) ? (search_arg(title, arg).slice(1,)) : have_arg ? (obj_exact_match(title)) : (search_obj(title));
 
+    /* AG: Massage the result list from what Fuse delivers, which is based on
+       scoring similarity and can appear pretty random at times. For now, we
+       just do a lexicographic sort on score first, then the completion text
+       (in particular, the latter makes sure that for each score the shortest
+       matches come first, which you'd expect but isn't always guaranteed with
+       Fuse). In the future we may incorporate the occurrence counts which are
+       already in GB's implementation, but AFAICT aren't currently used
+       anywhere. */
+    if (arg.length < 1 && have_arg) {
+        // here all results are in item.args, order them lexicographically
+        results[0].item.args.sort((a, b) =>
+            a.text == b.text ? 0 : a.text < b.text ? -1 : 1);
+    } else if (arg.length > 0) {
+        // matching arguments, order them lexicographically
+        results.sort((a, b) =>
+            a.value == b.value ? 0 : a.value < b.value ? -1 : 1);
+    } else {
+        // object completions, sort by score and item.title
+        results.sort(function (a, b) {
+            if (a.score == b.score) {
+                return a.item.title == b.item.title ? 0
+                    : a.item.title < b.item.title ? -1 : 1;
+            } else {
+                let d = a.score - b.score;
+                return d == 0 ? 0 : d < 0 ? -1 : 1;
+            }
+        });
+    }
+
     // GB TODO: ideally we should be able to show all the results in a limited window with a scroll bar
     let n = 8; // Maximum number of suggestions
     if (results.length > n) results = results.slice(0,n);
