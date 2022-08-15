@@ -774,15 +774,18 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
        matches come first, which you'd expect but isn't always guaranteed with
        Fuse). In the future we may incorporate the occurrence counts which are
        already in GB's implementation, but AFAICT aren't currently used
-       anywhere. */
+       anywhere. Finally, we condense the result list to a simple string list,
+       since we don't use all the other data any more beyond this point. */
     if (arg.length < 1 && have_arg) {
         // all argument completions, order them lexicographically
         results.sort((a, b) =>
             a.text == b.text ? 0 : a.text < b.text ? -1 : 1);
+        results = results.map(a => title + " " + a.text);
     } else if (arg.length > 0) {
         // matching arguments, order them lexicographically
         results.sort((a, b) =>
             a.value == b.value ? 0 : a.value < b.value ? -1 : 1);
+        results = results.map(a => title + " " + a.value);
     } else {
         // object completions, sort by score and item.title
         results.sort(function (a, b) {
@@ -794,6 +797,7 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
                 return d == 0 ? 0 : d < 0 ? -1 : 1;
             }
         });
+        results = results.map(a => a.item.title);
     }
 
     // GB TODO: ideally we should be able to show all the results in a limited window with a scroll bar
@@ -802,34 +806,19 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
 
     ac_dropdown().innerHTML = ""; // clear all old results
     if (results.length > 0) {
-        function create_items(res, content) {
-            // Helper function to create the menu items. res is the result
-            // array to be traversed, and content the content extraction
-            // function which returns the text to be shown in the menu.
-            let h = ac_dropdown().getAttribute("font_height");
-            res.forEach(function (f,i,a) {
-                let y = h*(i+1);
-                let r = doc.createElement("p");
-                r.setAttribute("width", "150");
-                r.setAttribute("height", h);
-                r.setAttribute("y", y);
-                r.setAttribute("class", "border");
-                r.setAttribute("idx", i);
-                r.textContent = content(f);
-                ac_dropdown().appendChild(r);
-            })
-        }
         // for each result, make a paragraph child of autocomplete_dropdown
-        if (arg.length < 1 && have_arg) {
-            // list *all* argument completions of an object (up to n items)
-            create_items(results, f => title + " " + f.text);
-        } else if (arg.length > 0) {
-            // list all matching argument completions
-            create_items(results, f => title + " " + f.value);
-        } else {
-            // list all matching object completions
-            create_items(results, f => f.item.title);
-        }
+        let h = ac_dropdown().getAttribute("font_height");
+        results.forEach(function (f,i,a) {
+            let y = h*(i+1);
+            let r = doc.createElement("p");
+            r.setAttribute("width", "150");
+            r.setAttribute("height", h);
+            r.setAttribute("y", y);
+            r.setAttribute("class", "border");
+            r.setAttribute("idx", i);
+            r.textContent = f;
+            ac_dropdown().appendChild(r);
+        })
         ac_dropdown().setAttribute("selected_item", "-1");
     } else { // if there is no suggestion candidate, the autocompletion dropdown should disappear
         delete_autocomplete_dd (ac_dropdown());
