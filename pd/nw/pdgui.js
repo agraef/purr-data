@@ -716,21 +716,36 @@ function update_autocomplete_dd_arrowup(ac_dropdown) {
     }
 }
 
-function select_result_autocomplete_dd(textbox, ac_dropdown, last, res, dir) {
+function select_result_autocomplete_dd(textbox, ac_dropdown, last, offs, res, dir) {
     if (ac_dropdown !== null) {
         let sel = ac_dropdown.getAttribute("selected_item");
         if (sel > -1) {
             textbox.innerText = ac_dropdown.children.item(sel).innerText;
             delete_autocomplete_dd(ac_dropdown);
-            return sel;
-        } else { // it only passes here when the user presses 'tab' and there is no option selected
+            return [sel+offs, offs];
+        } else {
+	    // We only come here if the user presses 'tab' and there is no
+	    // option selected.
             var n = res.length;
-            var next = (dir==0 ? last : dir>0 ? last+1 : last<=0 ? n-1 : last-1) % n;
+            var next =
+		(dir==0 ? last : dir>0 ? last+1 : last<=0 ? n-1 : last-1) % n;
+	    // If the new index is outside the current scope of the popup,
+	    // repopulate the popup by shifting the entries accordingly (poor
+	    // man's scroll).
+	    if (next < offs) {
+		offs = next;
+		let c = ac_dropdown.childNodes;
+		c.forEach((r, i) => r.textContent = res[offs+i]);
+	    } else if (next > offs+7) {
+		offs = next-7;
+		let c = ac_dropdown.childNodes;
+		c.forEach((r, i) => r.textContent = res[offs+i]);
+	    }
             textbox.innerText = res[next];
-            return next;
+            return [next, offs];
         }
     } else {
-        return -1;
+        return [-1,-1];
     }
 }
 

@@ -52,6 +52,7 @@ var canvas_events = (function() {
         svg_view = document.getElementById("patchsvg").viewBox.baseVal,
         last_results = [], // last completion results (autocomplete)
         last_completed = -1, // last Tab completion (autocomplete)
+        last_offset = -1, // offset of last Tab completion (autocomplete)
         last_yanked = "", // last yanked completion (to confirm deletion)
         textbox = function () {
             return document.getElementById("new_object_textentry");
@@ -345,6 +346,7 @@ var canvas_events = (function() {
                 pdgui.create_autocomplete_dd(document, ac_dropdown(), textbox());
                 if (ac_dropdown().getAttribute("searched_text") !== textbox().innerText) {
                     last_results = pdgui.repopulate_autocomplete_dd(document, ac_dropdown, obj_class, textbox().innerText);
+                    last_offset = 0;
                 }
             }
         },
@@ -549,7 +551,7 @@ var canvas_events = (function() {
             },
             text_mousedown: function(evt) {
                 if (evt.target.parentNode === ac_dropdown()) {
-                    last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed, last_results, 0);
+                    pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
                     last_yanked = "";
                     // ag: Don't do the usual object instantiation thing if
                     // we've clicked on the autocompletion dropdown. This
@@ -605,7 +607,7 @@ var canvas_events = (function() {
                         if(ac_dropdown() === null || ac_dropdown().getAttribute("selected_item") === "-1") {
                             grow_svg_for_element(textbox());
                         } else { // else, if there is a selected item on autocompletion tool, the selected item is written on the box
-                            last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed, last_results, 0);
+                            pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
                             caret_end();
                             // No need to instantiate the object here,
                             // presumably the user wants to go on editing.
@@ -613,13 +615,27 @@ var canvas_events = (function() {
                         last_yanked = "";
                         break;
                     case 9: // tab
-                        last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed, last_results, evt.shiftKey?-1:1);
+                        [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed, last_offset, last_results, evt.shiftKey?-1:1);
                         last_yanked = "";
                         caret_end();
                         break;
+                    case 36:
+                        if (evt.altKey) { // alt-home
+                            [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), 0, last_offset, last_results, 0);
+                            last_yanked = "";
+                            caret_end();
+                        }
+                        break;
+                    case 35:
+                        if (evt.altKey) { // alt-end
+                            [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_results.length-1, last_offset, last_results, 0);
+                            last_yanked = "";
+                            caret_end();
+                        }
+                        break;
                     case 27: // esc
                         pdgui.delete_autocomplete_dd(ac_dropdown());
-                        last_completed = -1;
+                        last_completed = last_offset = -1;
                         last_results = [];
                         if (last_yanked != "") {
                             pdgui.post("Operation aborted.")
@@ -633,7 +649,7 @@ var canvas_events = (function() {
                             // presumably won't interfere with our use here,
                             // which is to "yank" the current completion
                             // (remove it from the completion index).
-                            last_completed = -1;
+                            last_completed = last_offset = -1;
                             last_results = [];
                             if (textbox().innerText === "") {
                                 pdgui.delete_autocomplete_dd(ac_dropdown());
@@ -643,6 +659,8 @@ var canvas_events = (function() {
                                 if (pdgui.remove_completion(textbox().innerText, console.log)) {
                                     pdgui.post("Removed completion: "+textbox().innerText);
                                     ac_repopulate();
+                                    last_results = [];
+                                    last_completed = last_offset = -1;
                                 }
                                 last_yanked = "";
                             } else if (pdgui.check_completion(textbox().innerText)) {
@@ -676,7 +694,7 @@ var canvas_events = (function() {
                         }
                         if (is_valid_key(evt)) {
                             last_results = [];
-                            last_completed = -1;
+                            last_completed = last_offset = -1;
                             last_yanked = "";
                             if (textbox().innerText === "") {
                                 pdgui.delete_autocomplete_dd(ac_dropdown());
