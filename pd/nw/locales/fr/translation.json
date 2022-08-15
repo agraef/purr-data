@@ -444,7 +444,9 @@
         "autocomplete": "autocompléter les noms et arguments des objets (expérimental)",
         "autocomplete_tt": "Offre complétion pour les noms et arguments des objets au fur et à mesure de la saisie",
         "autocomplete_prefix": "complétion par le préfixe du nom de l'objet",
-        "autocomplete_prefix_tt": "Complétion uniquement par le préfixe du nom de l'objet (ignorer les correspondances au milieu du nom des objets)"
+        "autocomplete_prefix_tt": "Complétion uniquement par le préfixe du nom de l'objet (ignorer les correspondances au milieu du nom des objets)",
+        "autocomplete_relevance": "Trier les complétions par pertinence",
+        "autocomplete_relevance_tt": "Affiche les complétions les plus pertinentes en premier (basé sur la fréquence d'utilisation)"
       },
       "browser": {
         "browser_title": "Paramètres du navigateur d'Aide (AVERTISSEMENT: les modifier peut affecter les temps de démarrage!)",

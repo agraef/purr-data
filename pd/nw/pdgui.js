@@ -3,7 +3,7 @@
 var pwd;
 var lib_dir;
 var help_path, browser_doc, browser_path, browser_init;
-var autocomplete, autocomplete_prefix;
+var autocomplete, autocomplete_prefix, autocomplete_relevance;
 var pd_engine_id;
 
 exports.autocomplete_enabled = function() {
@@ -33,7 +33,7 @@ exports.set_pd_engine_id = function (id) {
 exports.defunkify_windows_path = defunkify_windows_path;
 
 function gui_set_browser_config(doc_flag, path_flag, init_flag,
-                                ac_flag, ac_prefix_flag,
+                                ac_flag, ac_prefix_flag, ac_relevance_flag,
                                 helppath) {
     // post("gui_set_browser_config: " + helppath.join(":"));
     browser_doc = doc_flag;
@@ -49,6 +49,7 @@ function gui_set_browser_config(doc_flag, path_flag, init_flag,
     // user decides to enable it later.
     autocomplete = ac_flag;
     autocomplete_prefix = ac_prefix_flag;
+    autocomplete_relevance = ac_relevance_flag;
     make_completion_index();
     // AG: Start building the keyword index for dialog_search.html. We do this
     // here so that we can be sure that lib_dir and help_path are known
@@ -570,11 +571,12 @@ function rebuild_index()
 }
 
 // this is called from the gui tab of the prefs dialog
-function update_browser(doc_flag, path_flag, ac_flag, ac_prefix_flag)
+function update_browser(doc_flag, path_flag, ac_flag, ac_prefix_flag, ac_relevance_flag)
 {
     var changed = ac_flag == 1 && autocomplete == 0;
     autocomplete = ac_flag;
     autocomplete_prefix = ac_prefix_flag;
+    autocomplete_relevance = ac_relevance_flag;
     doc_flag = doc_flag?1:0;
     path_flag = path_flag?1:0;
     if (browser_doc !== doc_flag) {
@@ -643,7 +645,25 @@ function search_arg(title, arg) {
     if (!autocomplete) return [];
     // for the arguments, we are only interested on the obj that match exactly the 'title', so we return only the args from this obj
     let results = completion_index.search({$and: [{"title": "=\"" + title + "\""}, {"args.text": "^\"" + arg + "\""}]});
-    return (results.length > 0) ? results[0].matches : [];
+    if (results.length > 0) {
+        let args = results[0].item.args;
+        // AG: Matched args are in matches.slice(1,), extract them.
+        // This code originally just returned matches itself, which has the
+        // text of all matched arguments, but not the occurrence data, and we
+        // need the latter to sort based on relevance.
+        results = results[0].matches.slice(1,).map(a => args[a.refIndex]);
+    }
+    return results;
+}
+
+function search_args(title) {
+    // like above, but look up *all* arg completions for a given object
+    if (!autocomplete) return [];
+    // for the arguments, we are only interested on the obj that match exactly the 'title', so we return only the args from this obj
+    let results = obj_exact_match(title);
+    // item.args is live data from the fuse, make sure to take a shallow copy
+    // with slice() which can be safely sorted in-place later
+    return (results.length > 0) ? results[0].item.args.slice() : [];
 }
 
 function index_obj_completion(obj_or_msg, obj_or_msg_text) {
@@ -727,6 +747,13 @@ function select_result_autocomplete_dd(textbox, ac_dropdown, last, offs, res, di
 	    // We only come here if the user presses 'tab' and there is no
 	    // option selected.
             var n = res.length;
+            if (n == 0) {
+                // It seems that while pondering the mysteries of the
+                // universe, your computer has lost our completion list. This
+                // shouldn't happen, but a little bit of defensive programming
+                // can't hurt.
+                return [-1,-1];
+            }
             var next =
 		(dir==0 ? last : dir>0 ? last+1 : last<=0 ? n-1 : last-1) % n;
 	    // If the new index is outside the current scope of the popup,
@@ -777,36 +804,37 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
        (3) We're in the middle of argument completion (started typing some
        arguments) in which case have_arg is true and arg is non-empty as
        well. */
-    let results = (arg.length > 0) ? (search_arg(title, arg).slice(1,)) : have_arg ? (obj_exact_match(title)) : (search_obj(title));
-    if (arg.length < 1 && have_arg && results.length > 0) {
-        results = results[0].item.args;
-    }
+    let results = (arg.length > 0) ? (search_arg(title, arg)) : have_arg ? (search_args(title)) : (search_obj(title));
 
     /* AG: Massage the result list from what Fuse delivers, which is based on
-       scoring similarity and can appear pretty random at times. For now, we
-       just do a lexicographic sort on score first, then the completion text
-       (in particular, the latter makes sure that for each score the shortest
-       matches come first, which you'd expect but isn't always guaranteed with
-       Fuse). In the future we may incorporate the occurrence counts which are
-       already in GB's implementation, but AFAICT aren't currently used
-       anywhere. Finally, we condense the result list to a simple string list,
-       since we don't use all the other data any more beyond this point. */
-    if (arg.length < 1 && have_arg) {
-        // all argument completions, order them lexicographically
+       scoring similarity and can appear pretty random at times. What we
+       actually want here is an order based on scores, which also takes into
+       account relevance (as determined by the occurences field), and, last
+       but not least, an alphabetic ordering of the available completions (in
+       particular, the latter makes sure that for each score and relevance the
+       shortest matches come first, which you'd expect but isn't always
+       guaranteed with Fuse). Finally, we condense the result list to a simple
+       string list, since we don't use all the other data anymore beyond this
+       point. */
+    if (arg.length > 0 || have_arg) {
+        // argument completions, these don't have scores, order them by
+        // just relevance and text
         results.sort((a, b) =>
-            a.text == b.text ? 0 : a.text < b.text ? -1 : 1);
+            a.occurrences == b.occurrences || !autocomplete_relevance
+                ? (a.text == b.text ? 0 : a.text < b.text ? -1 : 1)
+                : b.occurrences - a.occurrences);
         results = results.map(a => title + " " + a.text);
-    } else if (arg.length > 0) {
-        // matching arguments, order them lexicographically
-        results.sort((a, b) =>
-            a.value == b.value ? 0 : a.value < b.value ? -1 : 1);
-        results = results.map(a => title + " " + a.value);
     } else {
-        // object completions, sort by score and item.title
+        // object completions, order by score, relevance and item.title
         results.sort(function (a, b) {
             if (a.score == b.score) {
-                return a.item.title == b.item.title ? 0
-                    : a.item.title < b.item.title ? -1 : 1;
+                if (a.item.occurrences == b.item.occurrences ||
+                    !autocomplete_relevance) {
+                    return a.item.title == b.item.title ? 0
+                        : a.item.title < b.item.title ? -1 : 1;
+                } else {
+                    return b.item.occurrences - a.item.occurrences;
+                }
             } else {
                 let d = a.score - b.score;
                 return d == 0 ? 0 : d < 0 ? -1 : 1;
@@ -6888,12 +6916,12 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
 }
 
 function gui_gui_properties(dummy, name, show_grid, grid_size, save_zoom,
-                            autocomplete, autocomplete_prefix,
+                            autocomplete, autocomplete_prefix, autocomplete_relevance,
                             browser_doc, browser_path, browser_init,
                             autopatch_yoffset) {
     if (dialogwin["prefs"] !== null) {
         dialogwin["prefs"].window.gui_prefs_callback(name, show_grid, grid_size,
-            save_zoom, autocomplete, autocomplete_prefix,
+            save_zoom, autocomplete, autocomplete_prefix, autocomplete_relevance,
             browser_doc, browser_path, browser_init, autopatch_yoffset);
     }
 }

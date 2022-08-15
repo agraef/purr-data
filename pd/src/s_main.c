@@ -331,7 +331,8 @@ void glob_forward_files_from_secondary_instance(void)
 
 extern void glob_recent_files(t_pd *dummy);
 extern int sys_browser_doc, sys_browser_path, sys_browser_init;
-extern int sys_autocomplete, sys_autocomplete_prefix;
+extern int sys_autocomplete, sys_autocomplete_prefix,
+  sys_autocomplete_relevance;
 
 /* this is called from main() in s_entry.c */
 int sys_main(int argc, char **argv)
@@ -412,9 +413,10 @@ int sys_main(int argc, char **argv)
     glob_recent_files(0);
         /* AG: send the browser config; this must come *after* gui_set_lib_dir
            so that the lib_dir is available when help indexing starts */
-    gui_start_vmess("gui_set_browser_config", "iiiii",
+    gui_start_vmess("gui_set_browser_config", "iiiiii",
                     sys_browser_doc, sys_browser_path, sys_browser_init,
-                    sys_autocomplete, sys_autocomplete_prefix);
+                    sys_autocomplete, sys_autocomplete_prefix,
+                    sys_autocomplete_relevance);
     gui_start_array();
     for (nl = sys_helppath; nl; nl = nl->nl_next)
     {
