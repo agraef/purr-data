@@ -50,6 +50,7 @@ var canvas_events = (function() {
         last_dropdown_menu_y,
         last_search_term = "",
         svg_view = document.getElementById("patchsvg").viewBox.baseVal,
+        last_results = [], // last completion results (autocomplete)
         last_completed = -1, // last Tab completion (autocomplete)
         last_yanked = "", // last yanked completion (to confirm deletion)
         textbox = function () {
@@ -343,7 +344,7 @@ var canvas_events = (function() {
             if (obj_class === "obj") { // autocomplete only works for objects
                 pdgui.create_autocomplete_dd(document, ac_dropdown(), textbox());
                 if (ac_dropdown().getAttribute("searched_text") !== textbox().innerText) {
-                    pdgui.repopulate_autocomplete_dd(document, ac_dropdown, obj_class, textbox().innerText);
+                    last_results = pdgui.repopulate_autocomplete_dd(document, ac_dropdown, obj_class, textbox().innerText);
                 }
             }
         },
@@ -548,7 +549,7 @@ var canvas_events = (function() {
             },
             text_mousedown: function(evt) {
                 if (evt.target.parentNode === ac_dropdown()) {
-                    last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed);
+                    last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed, last_results);
                     last_yanked = "";
                     // ag: Don't do the usual object instantiation thing if
                     // we've clicked on the autocompletion dropdown. This
@@ -604,7 +605,7 @@ var canvas_events = (function() {
                         if(ac_dropdown() === null || ac_dropdown().getAttribute("selected_item") === "-1") {
                             grow_svg_for_element(textbox());
                         } else { // else, if there is a selected item on autocompletion tool, the selected item is written on the box
-                            last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed);
+                            last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed, last_results);
                             caret_end();
                             // No need to instantiate the object here,
                             // presumably the user wants to go on editing.
@@ -612,13 +613,14 @@ var canvas_events = (function() {
                         last_yanked = "";
                         break;
                     case 9: // tab
-                        last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed);
+                        last_completed = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed, last_results);
                         last_yanked = "";
                         caret_end();
                         break;
                     case 27: // esc
                         pdgui.delete_autocomplete_dd(ac_dropdown());
                         last_completed = -1;
+                        last_results = [];
                         if (last_yanked != "") {
                             pdgui.post("Operation aborted.")
                         }
@@ -632,6 +634,7 @@ var canvas_events = (function() {
                             // which is to "yank" the current completion
                             // (remove it from the completion index).
                             last_completed = -1;
+                            last_results = [];
                             if (textbox().innerText === "") {
                                 pdgui.delete_autocomplete_dd(ac_dropdown());
                                 last_yanked = "";
@@ -672,6 +675,7 @@ var canvas_events = (function() {
                                 || e.keyCode == 8 || e.keyCode == 46;
                         }
                         if (is_valid_key(evt)) {
+                            last_results = [];
                             last_completed = -1;
                             last_yanked = "";
                             if (textbox().innerText === "") {
