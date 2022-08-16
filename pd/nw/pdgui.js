@@ -268,31 +268,43 @@ function add_doc_details_to_index(filename, data) {
         if (count > 3) {
             // Chances are good that we're looking at variations of the same
             // command, and not just some oddball NAME list with repeated
-            // entries. We first check for existing entries, and skip those
-            // (TODO: we might want to update their arguments instead, but
-            // this code is already complicated enough).
-            obj_result = obj_exact_match(prefix);
-            if (obj_result.length === 0) {
-                // Now collect the arguments.
-                let args = [];
-                for (let i = 0; i < names.length; i++) {
-                    if (names[i] == prefix) {
-                        let a = [];
-                        while (i+1 < names.length && names[i+1] != prefix) {
-                            a.push(names[i+1]); i++;
-                        }
-                        if (a.length > 0) {
-                            args.push({"occurrences" : 0, "text" : a.join(' ')});
-                        }
+            // entries. First collect the arguments.
+            let myargs = [];
+            for (let i = 0; i < names.length; i++) {
+                if (names[i] == prefix) {
+                    let a = [];
+                    while (i+1 < names.length && names[i+1] != prefix) {
+                        a.push(names[i+1]); i++;
+                    }
+                    if (a.length > 0) {
+                        myargs.push({"occurrences" : 0, "text" : a.join(' ')});
                     }
                 }
-                //post("add completion "+prefix+" "+args.map(a => a.text).join(' '));
+            }
+            // Next check for an existing object which can be updated.
+            obj_result = obj_exact_match(prefix);
+            if (obj_result.length !== 0) {
+                // Found an object, add new arg entries in-place.
+                let args = obj_result[0].item.args;
+                for (let i = 0; i < myargs.length; i++) {
+                    let arg_result = arg_exact_match(title, myargs[i].text);
+                    if (arg_result.length == 0) {
+                        // New arg completion. Note that the args array is
+                        // live data straight from the fuse, so we can just
+                        // add it in-place.
+                        args.push(myargs[i]);
+                    } else {
+                        // keep track of which args we actually added
+                        myargs[i] = null
+                    }
+                }
+            } else {
+                // the object doesn't exist yet in the index, add it
                 completion_index.add({
-                    "occurrences" : 0,
-                    "title" : prefix,
-                    "args" : args
+                    "occurrences" : 0, "title" : prefix, "args" : myargs
                 });
             }
+            //post("add completion "+prefix+" "+myargs.filter(a => a != null).map(a => a.text).join(', '));
         } else {
             // just a list of object names here, add them all
             for (let i = 0; i < names.length; i++) {
