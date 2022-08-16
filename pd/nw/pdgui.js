@@ -323,6 +323,27 @@ function add_doc_details_to_index(filename, data) {
         }
     }
 
+    /* AG: Some help patches have library information in them, we might want
+       to use that information, so we record it in the completion entries if
+       it is available. NOTE: The lib field will only be added to entries for
+       which library information is available, so you *must* check for its
+       existence before trying to access that data.*/
+    var libs = big_line
+        .match(/#X text \-?[0-9]+ \-?[0-9]+ LIBRARY ([\s\S]*?);/);
+    libs = libs && libs.length > 1
+        ? libs[1].trim().replace(/\n/g, " ").split(" ")
+        : [];
+    // Filter out some unwanted noise.
+    libs = libs.filter(x => x!="external" && x!="addons");
+    if (libs.length > 0) {
+        //post(title+" lib: "+libs.join(' '));
+        let obj_result = obj_exact_match(title);
+        if (obj_result.length !== 0) {
+            // The first LIBRARY entry seems to be most useful.
+            obj_result[0].item.lib = libs[0];
+        }
+    }
+
     index_cache[index_cache.length] = [filename, title, keywords, desc, rel_objs, ref_rel_objs]
         .map(index_entry_esc).join(":");
     var d = path.dirname(filename);
@@ -818,16 +839,27 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
        well. */
     let results = (arg.length > 0) ? (search_arg(title, arg)) : have_arg ? (search_args(title)) : (search_obj(title));
 
-    /* AG: Massage the result list from what Fuse delivers, which is based on
-       scoring similarity and can appear pretty random at times. What we
-       actually want here is an order based on scores, which also takes into
-       account relevance (as determined by the occurences field), and, last
-       but not least, an alphabetic ordering of the available completions (in
-       particular, the latter makes sure that for each score and relevance the
-       shortest matches come first, which you'd expect but isn't always
-       guaranteed with Fuse). Finally, we condense the result list to a simple
-       string list, since we don't use all the other data anymore beyond this
-       point. */
+    /* AG: Here we massage the result list from what Fuse delivers, which is
+       based on scoring similarity and can look pretty random at times. What
+       we actually want here is an order which also takes into account
+       relevance (as determined by the occurences and library information that
+       we have), and the alphabetic order of the available completions. The
+       latter tends to make the list tidier and easier to navigate.
+
+       The final step then is to condense the result list to a simple string
+       list, since we don't use the other data anymore beyond this point.
+
+       NB: The use of library information was an idea proposed by JW, and we
+       record that now, but unfortunately the information available in the
+       help patches is incomplete and inconsistent. Notable exceptions are
+       'internal' and 'cyclone', for which there are plenty of entries. At
+       present we only use 'internal' to identify built-ins, so that they will
+       come first in the completion list if relevance ordering is enabled.
+       This has the advantage that it works from the get-go when there's not
+       much live usage data yet, as these objects will tend to be used most
+       frequently by most Pd users. But only time and user feedback will tell
+       whether it actually makes sense to put this criterion above the live
+       usage data that we have in the occurrences field. */
     if (arg.length > 0 || have_arg) {
         // argument completions, these don't have scores, order them by
         // just relevance and text
@@ -840,8 +872,14 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
         // object completions, order by score, relevance and item.title
         results.sort(function (a, b) {
             if (a.score == b.score) {
-                if (a.item.occurrences == b.item.occurrences ||
-                    !autocomplete_relevance) {
+                // We might have to revisit this: Should library data take
+                // priority over live usage data, or the other way round?
+                let aflag = a.item.hasOwnProperty("lib") && a.item.lib == "internal";
+                let bflag = b.item.hasOwnProperty("lib") && b.item.lib == "internal";
+                if (autocomplete_relevance && aflag !== bflag) {
+                    return aflag ? -1 : 1;
+                } else if (a.item.occurrences == b.item.occurrences ||
+                           !autocomplete_relevance) {
                     return a.item.title == b.item.title ? 0
                         : a.item.title < b.item.title ? -1 : 1;
                 } else {
