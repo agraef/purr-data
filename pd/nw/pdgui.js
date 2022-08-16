@@ -854,12 +854,12 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
        help patches is incomplete and inconsistent. Notable exceptions are
        'internal' and 'cyclone', for which there are plenty of entries. At
        present we only use 'internal' to identify built-ins, so that they will
-       come first in the completion list if relevance ordering is enabled.
-       This has the advantage that it works from the get-go when there's not
-       much live usage data yet, as these objects will tend to be used most
-       frequently by most Pd users. But only time and user feedback will tell
-       whether it actually makes sense to put this criterion above the live
-       usage data that we have in the occurrences field. */
+       be preferred in relevance ordering. This has the advantage that it
+       works from the get-go when there's not much live usage data yet, as
+       these objects will tend to be used most frequently by most Pd
+       users. But only time and user feedback will tell whether it actually
+       makes sense to put this criterion above the live usage data that we
+       have in the occurrences field. */
     if (arg.length > 0 || have_arg) {
         // argument completions, these don't have scores, order them by
         // just relevance and text
@@ -871,20 +871,30 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
     } else {
         // object completions, order by score, relevance and item.title
         results.sort(function (a, b) {
-            if (a.score == b.score) {
-                // We might have to revisit this: Should library data take
-                // priority over live usage data, or the other way round?
-                let aflag = a.item.hasOwnProperty("lib") && a.item.lib == "internal";
-                let bflag = b.item.hasOwnProperty("lib") && b.item.lib == "internal";
-                if (autocomplete_relevance && aflag !== bflag) {
-                    return aflag ? -1 : 1;
-                } else if (a.item.occurrences == b.item.occurrences ||
-                           !autocomplete_relevance) {
-                    return a.item.title == b.item.title ? 0
-                        : a.item.title < b.item.title ? -1 : 1;
-                } else {
-                    return b.item.occurrences - a.item.occurrences;
-                }
+            /* XXXREVIEW: We might have to revisit this. We currently use a
+             * numeric relevance score to make this easy to adjust. The boost
+             * factor determines the relative weight of built-ins over live
+             * usage data. We currently have this at 50, so that you need 50
+             * uses of an external to win against a built-in. I hope that this
+             * will work well in practice, but currently noone knows. Also,
+             * should score take precedence over relevance? Currently we
+             * demote it to a secondary criterion, but score can be pretty
+             * important if the auto-completion prefix option is disabled
+             * (which it is by default). */
+            const boost = 50; /* NOTE: Increasing the boost to a very large
+                               * value >> 1 makes built-ins effectively take
+                               * priority over live usage data, decreasing it
+                               * to a very small value << 1 makes live usage
+                               * data the most important. */
+            let aflag = a.item.hasOwnProperty("lib") && a.item.lib == "internal" ? 1 : 0;
+            let bflag = b.item.hasOwnProperty("lib") && b.item.lib == "internal" ? 1 : 0;
+            let afreq = a.item.occurrences, bfreq = b.item.occurrences;
+            let relevance = (bflag-aflag)*boost + (bfreq-afreq);
+            if (autocomplete_relevance && relevance !== 0) {
+                return relevance;
+            } else if (a.score == b.score) {
+                return a.item.title == b.item.title ? 0
+                    : a.item.title < b.item.title ? -1 : 1;
             } else {
                 let d = a.score - b.score;
                 return d == 0 ? 0 : d < 0 ? -1 : 1;
