@@ -36,12 +36,13 @@ endif
 package:  $(PD_INNO_SETUP)
 ## this pops up the GUI app
 #	start $(PD_INNO_SETUP)
-## this compiles the package on the command line. On 64-bit Windows
-#  we have to look in a different path, hence the ugly ifeq below...
+## this compiles the package on the command line. The automated installation for
+#  the CI runner uses a local path for inno setup. We check for that if the
+#  system-wide install path turns up empty...
 ifeq (,$(wildcard /c/Program\ Files/Inno\ Setup\ 6/ISCC.exe))
 	/c/Program\ Files\ \(x86\)/Inno\ Setup\ 6/ISCC.exe $(PD_INNO_SETUP)
 else
-	/c/Program\ Files/Inno\ Setup\ 6/ISCC.exe $(PD_INNO_SETUP)
+	/c/Users/IEUser/AppData/Local/Programs/Inno\ Setup\ 6/ISCC.exe $(PD_INNO_SETUP)
 endif
 	@echo " "
 	@echo "win64_inno install succeeded!"
