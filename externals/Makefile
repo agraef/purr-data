@@ -677,17 +677,24 @@ GEM_NAME = Gem
 $(gem_src)/configure:
 	cd $(gem_src) && ./autogen.sh
 
+ifeq ($(MSYSTEM),MINGW32)
+msys_prefix = /mingw32
+else ifeq ($(MSYSTEM),MINGW64)
+msys_prefix = /mingw64
+else
+msys_prefix = /usr
+endif
+
 $(gem_src)/Gem.dll: $(gem_src)/configure
 	cd $(gem_src) && ./configure \
 		CXXFLAGS="-DHAVE_S_STUFF_H $(CFLAGS_ADD)" \
-		--host=i686-w64-mingw32 \
 		--without-ALL \
 		--with-jpeg \
-		--with-jpeg-cflags="-I/mingw32/include" \
-		--with-jpeg-libs="-L/mingw32/lib -ljpeg" \
+		--with-jpeg-cflags="-I$(msys_prefix)/include" \
+		--with-jpeg-libs="-L$(msys_prefix)/lib -ljpeg" \
 		--with-ftgl \
-		--with-ftgl-cflags="-I/mingw32/include -I/mingw32/include/freetype2" \
-		--with-ftgl-libs="-L/mingw32/lib -lftgl" \
+		--with-ftgl-cflags="-I$(msys_prefix)/include -I$(msys_prefix)/include/freetype2" \
+		--with-ftgl-libs="-L$(msys_prefix)/lib -lftgl" \
 		--with-vfw32 \
 		--prefix=$(prefix) \
 		--libdir=$(objectsdir) \
