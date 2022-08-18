@@ -6,6 +6,10 @@
 #include <fluidsynth.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <fcntl.h>
+// needed to get S_IRUSR etc. in msys2
+#include <sys/stat.h>
 
 #include "m_pd.h"
  
@@ -52,9 +56,12 @@ static void fluid_help(void)
         "fluid~: a soundfont external for Pd and Max/MSP\n"
         "options:\n"
         "-smmf: enable SMMF mode (https://bitbucket.org/agraef/pd-smmf)\n"
+        "-g 1:  set the synth.gain value (0-10, default is 1)\n"
+        "-v:    verbose mode (post startup messages to Pd console)\n"
         "any other symbol: soundfont file to load on object creation\n"
         "messages:\n"
         "load /path/to/soundfont.sf2  --- Loads a Soundfont\n"
+        "gain 1                       --- Change the gain value (0-10)\n"
         "note 0 0 0                   --- Play note, arguments:\n"
         "                                 channel-# note-#  veloc-#\n"
         "n 0 0 0                      --- Play note, same as above\n"
@@ -260,6 +267,15 @@ static void fluid_sysex(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
+static void fluid_gain(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
+{
+  t_float gain = atom_getfloatarg(0, argc, argv);
+  // clamp the value to fluidsynths 0-10 range
+  if (gain < 0.0) gain = 0.0;
+  if (gain > 10.0) gain = 10.0;
+  fluid_settings_setnum(x->x_settings, "synth.gain", gain);
+}
+
 static void fluid_load(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (x->x_synth == NULL)
@@ -297,12 +313,72 @@ static void fluid_load(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
+// Where to put the temporary log file (see below). The only place we can
+// safely assume to be writable is the user's configuration directory, so
+// that's where it goes.
+#ifdef _WIN32
+#define USER_CONFIG_DIR "AppData/Roaming/Purr-Data"
+#else
+#define USER_CONFIG_DIR ".purr-data"
+#endif
+
+#define maxline 1024
+
 static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (x->x_synth) delete_fluid_synth(x->x_synth);
     if (x->x_settings) delete_fluid_settings(x->x_settings);
 
     float sr = sys_getsr();
+
+    // Gain value. Fluidsynth's default gain is absurdly low, so we use a
+    // larger but still moderate value (range is 0-10). I find 1.0 to be a
+    // good default, YMMV. (Original fluid~ had 0.6 here, but I found that too
+    // low with most soundfonts.) This value can be changed by the user with
+    // the -g option, see below.
+    float gain = 1.0;
+
+    // check the options
+    int vflag = 0;
+    while (argc > 0) {
+      const char* arg = atom_getsymbolarg(0, argc, argv)->s_name;
+      if (strcmp(arg, "-smmf") == 0) {
+        // SMMF mode
+        x->smmf_mode = 1; argc--; argv++;
+      } else if (strcmp(arg, "-v") == 0) {
+        // verbose mode (capture stderr, see below)
+        vflag = 1; argc--; argv++;
+      } else if (strcmp(arg, "-g") == 0) {
+        // default gain value ("synth.gain")
+        argc--; argv++;
+        if (argc > 0) {
+          gain = atom_getfloatarg(0, argc, argv);
+          // clamp the value to fluidsynths 0-10 range
+          if (gain < 0.0) gain = 0.0;
+          if (gain > 10.0) gain = 10.0;
+          argc--; argv++;
+        }
+      } else {
+        break;
+      }
+    }
+
+    // Some drivers (e.g. ALSA) are very chatty and will print a lot of log
+    // messages to stderr while fluidsynth is being initialized. We can
+    // capture stderr and redirect it to the Pd console, or just get rid of
+    // it, depending on the user's choice. To these ends we temporarily
+    // redirect stderr while running the intialization.
+    char logfile[FILENAME_MAX], *homedir = getenv("HOME");
+    snprintf(logfile, FILENAME_MAX,
+             "%s/" USER_CONFIG_DIR "/fluidtmp.log", homedir);
+    int saved_stderr = dup(STDERR_FILENO);
+    int fd;
+    if (!vflag) {
+      fd = open("/dev/null", O_RDWR);
+    } else {
+      fd = open(logfile, O_CREAT|O_RDWR, S_IRUSR|S_IWUSR);
+    }
+    dup2(fd, STDERR_FILENO);
 
     x->x_settings = new_fluid_settings();
 
@@ -312,15 +388,20 @@ static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
     }
     else
     {
-        // fluid_settings_setstr(settings, "audio.driver", "float");
-        // settings:
-        fluid_settings_setnum(x->x_settings, "synth.midi-channels", 16);
-        fluid_settings_setnum(x->x_settings, "synth.polyphony", 256);
-        fluid_settings_setnum(x->x_settings, "synth.gain", 0.600000);
-        fluid_settings_setnum(x->x_settings, "synth.sample-rate", 44100.000000);
-        fluid_settings_setstr(x->x_settings, "synth.chorus.active", "no");
-        fluid_settings_setstr(x->x_settings, "synth.reverb.active", "no");
-        fluid_settings_setstr(x->x_settings, "synth.ladspa.active", "no");
+        // ag: fluidsynth defaults are: 0.2, 16, 256, 44100.0, 1, 1, 0.
+        fluid_settings_setnum(x->x_settings, "synth.gain", gain);
+#if 0
+        // Crufty old defaults which we don't use any more. Except for the
+        // gain, we really want to keep things as close to the defaults as
+        // possible, so that fluid~ sounds *exactly* like the stand-alone
+        // program.
+        fluid_settings_setint(x->x_settings, "synth.midi-channels", 16);
+        fluid_settings_setint(x->x_settings, "synth.polyphony", 256);
+        fluid_settings_setnum(x->x_settings, "synth.sample-rate", 44100.0);
+        fluid_settings_setint(x->x_settings, "synth.chorus.active", 0);
+        fluid_settings_setint(x->x_settings, "synth.reverb.active", 0);
+        fluid_settings_setint(x->x_settings, "synth.ladspa.active", 0);
+#endif
 
         if (sr != 0)
         {
@@ -332,18 +413,32 @@ static void fluid_init(t_fluid_tilde *x, t_symbol *s, int argc, t_atom *argv)
         {
             pd_error(x, "fluid~: couldn't create synth");
         }
-        // check for SMMF mode
-        const char* arg = atom_getsymbolarg(0, argc, argv)->s_name;
-        if (strcmp(arg, "-smmf") == 0)
-        {
-            x->smmf_mode = 1; argc--; argv++;
-        }
         // try to load argument as soundfont
         fluid_load(x, gensym("load"), argc, argv);
 
         // We're done constructing:
         if (x->x_synth)
             post("-- fluid~ for Pd%s --", x->smmf_mode?" (SMMF mode)":"");
+    }
+    // Restore stderr.
+    if (!vflag) {
+      dup2(saved_stderr, STDERR_FILENO);
+      close(fd);
+    } else {
+      lseek(fd, 0, SEEK_SET);
+      // read stuff, post it (it's more convenient to do this with a FILE*)
+      FILE *fp = fdopen(fd, "r+");
+      char buf[maxline];
+      if (fp) {
+        while (fgets(buf, maxline, fp)) {
+          int n = strlen(buf);
+          if (n > 0 && buf[n-1] == '\n') buf[n-1] = '\0';
+          if (*buf) post("%s", buf);
+        }
+      }
+      fclose(fp);
+      dup2(saved_stderr, STDERR_FILENO);
+      unlink(logfile);
     }
 }
 
@@ -358,7 +453,12 @@ static void *fluid_tilde_new(t_symbol *s, int argc, t_atom *argv)
     fluid_init(x, gensym("init"), argc, argv);
     return (void *)x;
 }
- 
+
+static void fluid_log_cb(int level, const char *message, void *data)
+{
+  post("fluid~ [%d]: %s", level, message);
+}
+
 void fluid_tilde_setup(void)
 {
     fluid_tilde_class = class_new(gensym("fluid~"),
@@ -425,10 +525,21 @@ void fluid_tilde_setup(void)
     class_addmethod(fluid_tilde_class, (t_method)fluid_sysex, gensym("sysex"),
         A_GIMME, 0);
 
+    class_addmethod(fluid_tilde_class, (t_method)fluid_gain, gensym("gain"),
+        A_GIMME, 0);
+
     // Simulate Flext's help message
     class_addmethod(fluid_tilde_class, (t_method)fluid_help, gensym("help"),
         0);
 
     class_addmethod(fluid_tilde_class,
         (t_method)fluid_tilde_dsp, gensym("dsp"), A_CANT, 0);
+
+    // Set up logging. We don't want to have too much noise here, and we also
+    // want to see the important stuff in the Pd console rather than the
+    // terminal.
+    fluid_set_log_function(FLUID_PANIC, fluid_log_cb, NULL);
+    fluid_set_log_function(FLUID_ERR, fluid_log_cb, NULL);
+    fluid_set_log_function(FLUID_WARN, fluid_log_cb, NULL);
+    fluid_set_log_function(FLUID_DBG, NULL, NULL);
 }
