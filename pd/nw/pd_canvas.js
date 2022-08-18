@@ -977,7 +977,6 @@ var canvas_events = (function() {
                     canvas_events[canvas_events.get_previous_state()]();
                 },
                 "mousemove": function(evt) {
-			pdgui.post("moving the thingy");
                     if (evt.movementX != 0) {
                         //console.log("move: " + e.movementX);
                         var hscroll = document.getElementById("hscroll");
@@ -1016,7 +1015,6 @@ var canvas_events = (function() {
                     canvas_events[canvas_events.get_previous_state()]();
                 },
                 "mousemove": function(evt) {
-			pdgui.post("hello");
                     if (evt.movementY != 0) {
                         //console.log("move: " + e.movementY);
                         var vscroll = document.getElementById("vscroll");
