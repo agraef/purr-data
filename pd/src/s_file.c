@@ -43,7 +43,8 @@
 #endif
 
 int sys_defeatrt, sys_autopatch_yoffset, sys_snaptogrid = 1, sys_gridsize = 10,
-    sys_zoom, sys_autocomplete, sys_autocomplete_prefix,
+    sys_zoom, sys_autocomplete = 1, sys_autocomplete_prefix,
+    sys_autocomplete_relevance = 1,
     sys_browser_doc = 1, sys_browser_path, sys_browser_init;
 t_symbol *sys_flags = &s_;
 void sys_doflags( void);
@@ -681,6 +682,8 @@ void sys_loadpreferences( void)
         sscanf(prefbuf, "%d", &sys_autocomplete);
     if (sys_getpreference("autocomplete_prefix", prefbuf, MAXPDSTRING))
         sscanf(prefbuf, "%d", &sys_autocomplete_prefix);
+    if (sys_getpreference("autocomplete_relevance", prefbuf, MAXPDSTRING))
+        sscanf(prefbuf, "%d", &sys_autocomplete_relevance);
     if (sys_getpreference("browser_doc", prefbuf, MAXPDSTRING))
         sscanf(prefbuf, "%d", &sys_browser_doc);
     if (sys_getpreference("browser_path", prefbuf, MAXPDSTRING))
@@ -836,6 +839,8 @@ void glob_savepreferences(t_pd *dummy)
     sys_putpreference("autocomplete", buf1);
     sprintf(buf1, "%d", sys_autocomplete_prefix);
     sys_putpreference("autocomplete_prefix", buf1);
+    sprintf(buf1, "%d", sys_autocomplete_relevance);
+    sys_putpreference("autocomplete_relevance", buf1);
     sprintf(buf1, "%d", sys_browser_doc);
     sys_putpreference("browser_doc", buf1);
     sprintf(buf1, "%d", sys_browser_path);

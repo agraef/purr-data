@@ -444,7 +444,9 @@
         "autocomplete": "Autovervollständigung von Objekt-Namen und Argumenten (experimentell)",
         "autocomplete_tt": "Schlägt bei der Eingabe Vervollständigungen von Objekt-Namen und Argumenten vor",
         "autocomplete_prefix": "Vervollständigung per Objektnamens-Präfix",
-        "autocomplete_prefix_tt": "Vervollständigung nur per Objektnamens-Präfix (statt Übereinstimmung irgendwo im Objektnamen)"
+        "autocomplete_prefix_tt": "Vervollständigung nur per Objektnamens-Präfix (statt Übereinstimmung irgendwo im Objektnamen)",
+        "autocomplete_relevance": "Sortiere Vervollständigungen nach Relevanz",
+        "autocomplete_relevance_tt": "Zeigt die relevantesten Vervollständigungen zuerst (basierend auf der Nutzungshäufigkeit)"
       },
       "browser": {
         "browser_title": "Hilfe-Browser-Einstellungen (WARNUNG: Änderungen können Startup-Zeiten beeinflussen!)",

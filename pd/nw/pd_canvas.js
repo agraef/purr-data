@@ -50,8 +50,39 @@ var canvas_events = (function() {
         last_dropdown_menu_y,
         last_search_term = "",
         svg_view = document.getElementById("patchsvg").viewBox.baseVal,
+        last_results = [], // last completion results (autocomplete)
+        last_completed = -1, // last Tab completion (autocomplete)
+        last_offset = -1, // offset of last Tab completion (autocomplete)
+        last_yanked = "", // last yanked completion (to confirm deletion)
         textbox = function () {
             return document.getElementById("new_object_textentry");
+        },
+        caret_end = function () {
+            /* ag: Move the caret to the end of the texbox while editing. This
+               is needed for the autcompletion. We essentially fake pressing
+               the End key here; maybe there's an easier way to do this, but
+               the following seems to work alright, so... We first grab the
+               textbox content and determine its length, which is where we
+               want the caret to be. */
+            var t = textbox();
+            var x = t.innerText;
+            var p = x.length;
+            //console.log("move "+p+": "+x);
+            /* The DOM doesn't make this easy. We first have to define a
+               range, set its start to the desired caret position, and
+               collapse it to a single position (i.e., end = start). Next we
+               grab the current selection, remove all currently selected
+               ranges, and set our new range. Quite a hullaballoo for such a
+               simple task. */
+            var r = document.createRange();
+            var s = window.getSelection();
+            r.setStart(t.childNodes[0], p);
+            r.collapse(true);
+            s.removeAllRanges();
+            s.addRange(r);
+            // Defer this to the event loop to prevent losing the
+            // keyboard focus.
+            setTimeout(function () { t.focus() }, 0);
         },
         current_events = {}, // keep track of our current listeners
         edit_events = function(elem, events, action, init) {
@@ -294,6 +325,31 @@ var canvas_events = (function() {
                 }
             }
         },
+        ac_dropdown = function() {
+            return document.getElementById("autocomplete_dropdown")
+        },
+        // AG: Little helper function to do all the necessary steps to
+        // re-create the autocompletion dropdown after changes. We factored
+        // this out since it will be needed to deal with changes to both the
+        // edited object text and the autocompletion index.
+        ac_repopulate = function() {
+            // GB: Finding the class from obj: find obj through tag of
+            // textbox, get obj class and remove from the class the word
+            // "selected". This is necessary because in textbox obj and
+            // comment both have class 'obj' and it's import here to
+            // differentiate them.
+            let obj_class = document
+                .getElementById(textbox().getAttribute("tag")+"gobj")
+                .getAttribute("class").toString()
+                .split(" ").slice(0,1).toString();
+            if (obj_class === "obj") { // autocomplete only works for objects
+                pdgui.create_autocomplete_dd(document, ac_dropdown(), textbox());
+                if (ac_dropdown().getAttribute("searched_text") !== textbox().innerText) {
+                    last_results = pdgui.repopulate_autocomplete_dd(document, ac_dropdown, obj_class, textbox().innerText);
+                    last_offset = 0;
+                }
+            }
+        },
         events = {
             mousemove: function(evt) {
                 //pdgui.post("x: " + evt.pageX + " y: " + evt.pageY +
@@ -494,8 +550,17 @@ var canvas_events = (function() {
                 return false;
             },
             text_mousedown: function(evt) {
-                if (evt.target.parentNode === document.getElementById("autocomplete_dropdown")) {
-                    pdgui.select_result_autocomplete_dd(textbox(), document.getElementById("autocomplete_dropdown"));
+                if (evt.target.parentNode === ac_dropdown()) {
+                    pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
+                    last_yanked = "";
+                    // ag: Don't do the usual object instantiation thing if
+                    // we've clicked on the autocompletion dropdown. This
+                    // means that the user can just go on editing, entering
+                    // object arguments, etc.
+                    evt.stopPropagation();
+                    //evt.preventDefault();
+                    caret_end();
+                    return false;
                 }
                 if (textbox() !== evt.target && !target_is_scrollbar(evt)) {
                     utils.create_obj();
@@ -528,15 +593,14 @@ var canvas_events = (function() {
                 evt.stopPropagation();
 
                 // GB: Autocomplete feature
-                let ac_dropdown = function() {
-                    return document.getElementById("autocomplete_dropdown")
-                }
                 switch (evt.keyCode) {
                     case 40: // arrowdown
                         pdgui.update_autocomplete_dd_arrowdown(ac_dropdown())
+                        last_yanked = "";
                         break;
                     case 38: // arrowup
                         pdgui.update_autocomplete_dd_arrowup(ac_dropdown())
+                        last_yanked = "";
                         break;
                     case 13: // enter
                         // if there is no item selected on autocomplete dropdown, enter make the obj box bigger
@@ -544,29 +608,98 @@ var canvas_events = (function() {
                             grow_svg_for_element(textbox());
                         } else { // else, if there is a selected item on autocompletion tool, the selected item is written on the box
                             pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
-                            // TODO: Substitute the editing box by the object itself
-                            // utils.create_obj(); // not working, it's not that simple.
-                            // canvas_events.normal();
+                            caret_end();
+                            // No need to instantiate the object here,
+                            // presumably the user wants to go on editing.
                         }
+                        last_yanked = "";
                         break;
                     case 9: // tab
-                        // TODO: Substitute this function by one that autocomplete with the prefix in common in all results
-                        pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
+                        [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed, last_offset, last_results, evt.shiftKey?-1:1);
+                        last_yanked = "";
+                        caret_end();
+                        break;
+                    case 36:
+                        if (evt.altKey) { // alt-home
+                            [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), 0, last_offset, last_results, 0);
+                            last_yanked = "";
+                            caret_end();
+                        }
+                        break;
+                    case 35:
+                        if (evt.altKey) { // alt-end
+                            [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_results.length-1, last_offset, last_results, 0);
+                            last_yanked = "";
+                            caret_end();
+                        }
+                        break;
+                    case 27: // esc
+                        pdgui.delete_autocomplete_dd(ac_dropdown());
+                        last_completed = last_offset = -1;
+                        last_results = [];
+                        if (last_yanked != "") {
+                            pdgui.post("Operation aborted.")
+                        }
+                        last_yanked = "";
+                        break;
+		    case 89:
+                        if (evt.ctrlKey) { // ctrl-y
+                            // AG: Note that this key is usually bound to the
+                            // Tidy Up operation in the Edit menu, but this
+                            // presumably won't interfere with our use here,
+                            // which is to "yank" the current completion
+                            // (remove it from the completion index).
+                            last_completed = last_offset = -1;
+                            last_results = [];
+                            if (textbox().innerText === "") {
+                                pdgui.delete_autocomplete_dd(ac_dropdown());
+                                last_yanked = "";
+                            } else if (textbox().innerText === last_yanked) {
+                                // confirmed, really yank now
+                                if (pdgui.remove_completion(textbox().innerText, console.log)) {
+                                    pdgui.post("Removed completion: "+textbox().innerText);
+                                    ac_repopulate();
+                                    last_results = [];
+                                    last_completed = last_offset = -1;
+                                }
+                                last_yanked = "";
+                            } else if (pdgui.check_completion(textbox().innerText)) {
+                                // for some safety, ask the user to confirm with another ctrl+y
+                                pdgui.post("Really remove completion "+textbox().innerText+"?");
+                                pdgui.post("Press ctrl+y again to confirm (Esc to abort).");
+                                last_yanked = textbox().innerText;
+                            } else {
+                                pdgui.post("No completion "+textbox().innerText);
+                            }
+                        }
                         break;
                     default:
-                        if (textbox().innerText === "") {
-                            pdgui.delete_autocomplete_dd(ac_dropdown());
-                        } else {
-                            let obj_class = document.getElementById(textbox().getAttribute("tag")+"gobj")
-                                .getAttribute("class").toString().split(" ").slice(0,1).toString();
-                            if (obj_class === "obj") { // autocomplete only works for objects
-                                pdgui.create_autocomplete_dd(document, ac_dropdown(), textbox());
-                                if (ac_dropdown().getAttribute("searched_text") !== textbox().innerText) {
-                                    // finding the class from obj: find obj throwout tag of textbox, get obj class and remove from the class the word "selected".
-                                    //                             this has to be done because in textbox obj and comment have class: 'obj'
-                                    //                             and it's import here to differentiate them
-                                    pdgui.repopulate_autocomplete_dd(document, ac_dropdown, obj_class, textbox().innerText);
-                                }
+                        // ag: Only update the state if a "valid key" is
+                        // pressed, not some modifier or other special key.
+                        function is_valid_key(e)
+                        {
+                            // See https://stackoverflow.com/questions/51296562
+                            // This is a quick hack which works because the
+                            // names of special keys are all multiple chars
+                            // long and only contain letters and numbers.
+                            return e.key.length == 1 // ASCII
+                                // non-ASCII:
+                                || (e.key.length > 1 && /[^a-zA-Z0-9]/.test(e.key))
+                                // Spacebar:
+                                || e.keyCode == 32
+                                // We also include Backspace and Del here
+                                // since they are used in editing. Note that
+                                // Return (key code 13) is handled above.
+                                || e.keyCode == 8 || e.keyCode == 46;
+                        }
+                        if (is_valid_key(evt)) {
+                            last_results = [];
+                            last_completed = last_offset = -1;
+                            last_yanked = "";
+                            if (textbox().innerText === "") {
+                                pdgui.delete_autocomplete_dd(ac_dropdown());
+                            } else {
+                                ac_repopulate();
                             }
                         }
                 }

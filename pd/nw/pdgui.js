@@ -3,7 +3,7 @@
 var pwd;
 var lib_dir;
 var help_path, browser_doc, browser_path, browser_init;
-var autocomplete, autocomplete_prefix;
+var autocomplete, autocomplete_prefix, autocomplete_relevance;
 var pd_engine_id;
 
 exports.autocomplete_enabled = function() {
@@ -33,7 +33,7 @@ exports.set_pd_engine_id = function (id) {
 exports.defunkify_windows_path = defunkify_windows_path;
 
 function gui_set_browser_config(doc_flag, path_flag, init_flag,
-                                ac_flag, ac_prefix_flag,
+                                ac_flag, ac_prefix_flag, ac_relevance_flag,
                                 helppath) {
     // post("gui_set_browser_config: " + helppath.join(":"));
     browser_doc = doc_flag;
@@ -49,12 +49,20 @@ function gui_set_browser_config(doc_flag, path_flag, init_flag,
     // user decides to enable it later.
     autocomplete = ac_flag;
     autocomplete_prefix = ac_prefix_flag;
+    autocomplete_relevance = ac_relevance_flag;
     make_completion_index();
     // AG: Start building the keyword index for dialog_search.html. We do this
-    // here so that we can be sure that lib_dir and help_path are known already.
-    // (This may also be deferred until the browser is launched for the first
-    // time, depending on the value of browser_init.)
-    if (browser_init == 1) make_index();
+    // here so that we can be sure that lib_dir and help_path are known
+    // already. (This may also be deferred until the browser is launched for
+    // the first time, depending on the value of browser_init, unless
+    // autocomplete is enabled in which case we have to build it anyway.)
+    if (autocomplete == 1 && !fs.existsSync(expand_tilde(compl_name))) {
+        // if the completion.json file has gone missing, rebuild it
+        rebuild_index();
+    } else if (browser_init == 1 || autocomplete == 1) {
+        // otherwise we only generate the index as needed
+        make_index();
+    }
 }
 
 function gui_set_lib_dir(dir) {
@@ -151,6 +159,8 @@ function index_entry_esc(s) {
 // keywords, and description of help patches.
 function add_doc_details_to_index(filename, data) {
     var title = path.basename(filename, "-help.pd"),
+        // AG: This is confusing. I'm not sure why we just replace the first
+        // newline here. Maybe there's a reason to do so, but I don't get it.
         big_line = data.replace("\n", " "),
         keywords,
         desc,
@@ -225,10 +235,113 @@ function add_doc_details_to_index(filename, data) {
     keywords = keywords && keywords.length > 1 ? keywords[1].trim() : null;
     desc = desc && desc.length > 1 ? desc[1].trim() : null;
     // Remove the Pd escapes for commas
-    desc = desc ? desc.replace(" \\,", ",") : null;
+    // AG: We want to do a global replacement here.
+    desc = desc ? desc.replace(/ \\,/g, ",") : null;
     if (desc) {
-        // format Pd's "comma atoms" as normal commas
-        desc = desc.replace(" \\,", ",");
+        // AG: And we want to get rid of the newlines, there's no reason
+        // whatsover to preserve the original formatting.
+        desc = desc.replace(/\n/g, " ");
+    }
+
+    // AG: Deal with a bunch of special cases which have multiple objects
+    // documented in them, listing the object names (and arguments) in the
+    // NAME field of the META data.
+    var names = big_line
+        .match(/#X text \-?[0-9]+ \-?[0-9]+ NAME ([\s\S]*?);/);
+    // Some NAME fields span multiple lines, pretend that they're spaces.
+    names = names && names.length > 1
+        ? names[1].trim().replace(/\n/g, " ").split(" ")
+        : [];
+    if (names.length > 1) {
+        // special help file, not a single object, remove from completions
+        let obj_result = obj_exact_match(title);
+        if (obj_result.length !== 0) {
+            let obj_ref = obj_result[0].refIndex;
+            //post("scanning "+filename);
+            completion_index.removeAt(obj_ref);
+        }
+        // Some NAME entries (e.g., list) list different variations of the
+        // same object (list append, list trim etc.), we try to be clever
+        // about these.
+        let prefix = names[0];
+        let count = names.filter(name => name == prefix).length;
+        if (count > 3) {
+            // Chances are good that we're looking at variations of the same
+            // command, and not just some oddball NAME list with repeated
+            // entries. First collect the arguments.
+            let myargs = [];
+            for (let i = 0; i < names.length; i++) {
+                if (names[i] == prefix) {
+                    let a = [];
+                    while (i+1 < names.length && names[i+1] != prefix) {
+                        a.push(names[i+1]); i++;
+                    }
+                    if (a.length > 0) {
+                        myargs.push({"occurrences" : 0, "text" : a.join(' ')});
+                    }
+                }
+            }
+            // Next check for an existing object which can be updated.
+            obj_result = obj_exact_match(prefix);
+            if (obj_result.length !== 0) {
+                // Found an object, add new arg entries in-place.
+                let args = obj_result[0].item.args;
+                for (let i = 0; i < myargs.length; i++) {
+                    let arg_result = arg_exact_match(title, myargs[i].text);
+                    if (arg_result.length == 0) {
+                        // New arg completion. Note that the args array is
+                        // live data straight from the fuse, so we can just
+                        // add it in-place.
+                        args.push(myargs[i]);
+                    } else {
+                        // keep track of which args we actually added
+                        myargs[i] = null
+                    }
+                }
+            } else {
+                // the object doesn't exist yet in the index, add it
+                completion_index.add({
+                    "occurrences" : 0, "title" : prefix, "args" : myargs
+                });
+            }
+            //post("add completion "+prefix+" "+myargs.filter(a => a != null).map(a => a.text).join(', '));
+        } else {
+            // just a list of object names here, add them all
+            for (let i = 0; i < names.length; i++) {
+                let title = names[i];
+                // check for existing entries, skip those
+                obj_result = obj_exact_match(title);
+                if (obj_result.length === 0) {
+                    //post("add completion "+title);
+                    completion_index.add({
+                        "occurrences" : 0,
+                        "title" : title,
+                        "args" : []
+                    });
+                }
+            }
+        }
+    }
+
+    /* AG: Some help patches have library information in them, we might want
+       to use that information, so we record it in the completion entries if
+       it is available. NOTE: The lib field will only be added to entries for
+       which library information is available, so you *must* check for its
+       existence before trying to access that data.*/
+    var libs = big_line
+        .match(/#X text \-?[0-9]+ \-?[0-9]+ LIBRARY ([\s\S]*?);/);
+    libs = libs && libs.length > 1
+        ? libs[1].trim().replace(/\n/g, " ").split(" ")
+        : [];
+    // Filter out some unwanted noise.
+    libs = libs.filter(x => x!="external" && x!="addons");
+    if (libs.length > 0) {
+        //post(title+" lib: "+libs.join(' '));
+        let obj_result = obj_exact_match(title);
+        if (obj_result.length !== 0) {
+            // The first LIBRARY entry seems to be most useful.
+            obj_result[0].item.lib = libs[0];
+        }
     }
 
     index_cache[index_cache.length] = [filename, title, keywords, desc, rel_objs, ref_rel_objs]
@@ -469,11 +582,10 @@ function build_index(cb) {
 
 exports.build_index = build_index;
 
-// this doesn't actually rebuild the index, it just clears it, so that it
-// will be rebuilt the next time the help browser is opened
+// normally, this doesn't actually rebuild the index, it just clears it, so
+// that it will be rebuilt the next time the help browser is opened
 function rebuild_index()
 {
-    post("clearing help index (reopen browser to rebuild!)");
     index = init_elasticlunr();
     index_started = index_done = false;
     try {
@@ -482,14 +594,22 @@ function rebuild_index()
     } catch (err) {
         //console.log(err);
     }
+    if (browser_init == 1 || autocomplete == 1) {
+        // if autocomplete is enabled, we *have* to rebuild the index now
+        make_index();
+    } else {
+        // we can defer rebuilding of the index until the browser is reopened
+        post("clearing help index (reopen the browser to rebuild!)");
+    }
 }
 
 // this is called from the gui tab of the prefs dialog
-function update_browser(doc_flag, path_flag, ac_flag, ac_prefix_flag)
+function update_browser(doc_flag, path_flag, ac_flag, ac_prefix_flag, ac_relevance_flag)
 {
-    var changed = false;
+    var changed = ac_flag == 1 && autocomplete == 0;
     autocomplete = ac_flag;
     autocomplete_prefix = ac_prefix_flag;
+    autocomplete_relevance = ac_relevance_flag;
     doc_flag = doc_flag?1:0;
     path_flag = path_flag?1:0;
     if (browser_doc !== doc_flag) {
@@ -558,7 +678,25 @@ function search_arg(title, arg) {
     if (!autocomplete) return [];
     // for the arguments, we are only interested on the obj that match exactly the 'title', so we return only the args from this obj
     let results = completion_index.search({$and: [{"title": "=\"" + title + "\""}, {"args.text": "^\"" + arg + "\""}]});
-    return (results.length > 0) ? results[0].matches : [];
+    if (results.length > 0) {
+        let args = results[0].item.args;
+        // AG: Matched args are in matches.slice(1,), extract them.
+        // This code originally just returned matches itself, which has the
+        // text of all matched arguments, but not the occurrence data, and we
+        // need the latter to sort based on relevance.
+        results = results[0].matches.slice(1,).map(a => args[a.refIndex]);
+    }
+    return results;
+}
+
+function search_args(title) {
+    // like above, but look up *all* arg completions for a given object
+    if (!autocomplete) return [];
+    // for the arguments, we are only interested on the obj that match exactly the 'title', so we return only the args from this obj
+    let results = obj_exact_match(title);
+    // item.args is live data from the fuse, make sure to take a shallow copy
+    // with slice() which can be safely sorted in-place later
+    return (results.length > 0) ? results[0].item.args.slice() : [];
 }
 
 function index_obj_completion(obj_or_msg, obj_or_msg_text) {
@@ -631,34 +769,142 @@ function update_autocomplete_dd_arrowup(ac_dropdown) {
     }
 }
 
-function select_result_autocomplete_dd(textbox, ac_dropdown) {
+function select_result_autocomplete_dd(textbox, ac_dropdown, last, offs, res, dir) {
     if (ac_dropdown !== null) {
         let sel = ac_dropdown.getAttribute("selected_item");
         if (sel > -1) {
             textbox.innerText = ac_dropdown.children.item(sel).innerText;
             delete_autocomplete_dd(ac_dropdown);
-        } else { // it only passes here when the user presses 'tab' and there is no option selected
-            textbox.innerText = ac_dropdown.children.item(0).innerText;
+            return [sel+offs, offs];
+        } else {
+	    // We only come here if the user presses 'tab' and there is no
+	    // option selected.
+            var n = res.length;
+            if (n == 0) {
+                // It seems that while pondering the mysteries of the
+                // universe, your computer has lost our completion list. This
+                // shouldn't happen, but a little bit of defensive programming
+                // can't hurt.
+                return [-1,-1];
+            }
+            var next =
+		(dir==0 ? last : dir>0 ? last+1 : last<=0 ? n-1 : last-1) % n;
+	    // If the new index is outside the current scope of the popup,
+	    // repopulate the popup by shifting the entries accordingly (poor
+	    // man's scroll).
+	    if (next < offs) {
+		offs = next;
+		let c = ac_dropdown.childNodes;
+		c.forEach((r, i) => r.textContent = res[offs+i]);
+	    } else if (next > offs+7) {
+		offs = next-7;
+		let c = ac_dropdown.childNodes;
+		c.forEach((r, i) => r.textContent = res[offs+i]);
+	    }
+            textbox.innerText = res[next];
+            return [next, offs];
         }
+    } else {
+        return [-1,-1];
     }
 }
 
 // GB: update autocomplete dropdown with new results
 function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
     ac_dropdown().setAttribute("searched_text", text);
-    let title, arg;
+    let title, arg, have_arg;
     if (obj_class === "obj") {
         let text_array = text.split(" ");
         title = text_array[0].toString();
         arg = text_array.slice(1, text_array.length);
+        // check whether *anything* follows the obj name, even an empty arg
+        have_arg = arg.length !== 0;
         arg = (arg.length !== 0) ? arg.toString().replace(/\,/g, " ") : "";
     } else { // the autocomplete feature doesn't work with messages and comments
         return;
     }
 
-    // If there are arg, we are autocompleting the arg field, and if there isn't we are autocompleting the obj_title field
-    let results = (arg.length > 0) ? (search_arg(title, arg).slice(1,)) : (search_obj(title));
+    /* AG: We're dealing with three different cases here which must be handled
+       separately.
 
+       (1) We're completing an object name; in this case have_arg is false and
+       arg is empty as well.
+
+       (2) We're about to start argument completion; here we have that
+       have_arg is true even though arg is still empty (which happens as soon
+       as you enter a blank after the object name).
+
+       (3) We're in the middle of argument completion (started typing some
+       arguments) in which case have_arg is true and arg is non-empty as
+       well. */
+    let results = (arg.length > 0) ? (search_arg(title, arg)) : have_arg ? (search_args(title)) : (search_obj(title));
+
+    /* AG: Here we massage the result list from what Fuse delivers, which is
+       based on scoring similarity and can look pretty random at times. What
+       we actually want here is an order which also takes into account
+       relevance (as determined by the occurences and library information that
+       we have), and the alphabetic order of the available completions. The
+       latter tends to make the list tidier and easier to navigate.
+
+       The final step then is to condense the result list to a simple string
+       list, since we don't use the other data anymore beyond this point.
+
+       NB: The use of library information was an idea proposed by JW, and we
+       record that now, but unfortunately the information available in the
+       help patches is incomplete and inconsistent. Notable exceptions are
+       'internal' and 'cyclone', for which there are plenty of entries. At
+       present we only use 'internal' to identify built-ins, so that they will
+       be preferred in relevance ordering. This has the advantage that it
+       works from the get-go when there's not much live usage data yet, as
+       these objects will tend to be used most frequently by most Pd
+       users. But only time and user feedback will tell whether it actually
+       makes sense to put this criterion above the live usage data that we
+       have in the occurrences field. */
+    if (arg.length > 0 || have_arg) {
+        // argument completions, these don't have scores, order them by
+        // just relevance and text
+        results.sort((a, b) =>
+            a.occurrences == b.occurrences || !autocomplete_relevance
+                ? (a.text == b.text ? 0 : a.text < b.text ? -1 : 1)
+                : b.occurrences - a.occurrences);
+        results = results.map(a => title + " " + a.text);
+    } else {
+        // object completions, order by score, relevance and item.title
+        results.sort(function (a, b) {
+            /* XXXREVIEW: We might have to revisit this. We currently use a
+             * numeric relevance score to make this easy to adjust. The boost
+             * factor determines the relative weight of built-ins over live
+             * usage data. We currently have this at 50, so that you need 50
+             * uses of an external to win against a built-in. I hope that this
+             * will work well in practice, but currently noone knows. Also,
+             * should score take precedence over relevance? Currently we
+             * demote it to a secondary criterion, but score can be pretty
+             * important if the auto-completion prefix option is disabled
+             * (which it is by default). */
+            const boost = 50; /* NOTE: Increasing the boost to a very large
+                               * value >> 1 makes built-ins effectively take
+                               * priority over live usage data, decreasing it
+                               * to a very small value << 1 makes live usage
+                               * data the most important. */
+            let aflag = a.item.hasOwnProperty("lib") && a.item.lib == "internal" ? 1 : 0;
+            let bflag = b.item.hasOwnProperty("lib") && b.item.lib == "internal" ? 1 : 0;
+            let afreq = a.item.occurrences, bfreq = b.item.occurrences;
+            let relevance = (bflag-aflag)*boost + (bfreq-afreq);
+            if (autocomplete_relevance && relevance !== 0) {
+                return relevance;
+            } else if (a.score == b.score) {
+                return a.item.title == b.item.title ? 0
+                    : a.item.title < b.item.title ? -1 : 1;
+            } else {
+                let d = a.score - b.score;
+                return d == 0 ? 0 : d < 0 ? -1 : 1;
+            }
+        });
+        results = results.map(a => a.item.title);
+    }
+
+    // record the complete results, we need them for tab completion
+    let all_results = results;
     // GB TODO: ideally we should be able to show all the results in a limited window with a scroll bar
     let n = 8; // Maximum number of suggestions
     if (results.length > n) results = results.slice(0,n);
@@ -666,8 +912,8 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
     ac_dropdown().innerHTML = ""; // clear all old results
     if (results.length > 0) {
         // for each result, make a paragraph child of autocomplete_dropdown
+        let h = ac_dropdown().getAttribute("font_height");
         results.forEach(function (f,i,a) {
-            let h = ac_dropdown().getAttribute("font_height");
             let y = h*(i+1);
             let r = doc.createElement("p");
             r.setAttribute("width", "150");
@@ -675,17 +921,14 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
             r.setAttribute("y", y);
             r.setAttribute("class", "border");
             r.setAttribute("idx", i);
-            if (arg.length < 1) { // autocomplete object
-                r.textContent = f.item.title;
-            } else { // autocomplete argument, message or comment
-                r.textContent = ((obj_class==="obj")?(title+" "):"") + f.value;
-            }
+            r.textContent = f;
             ac_dropdown().appendChild(r);
         })
         ac_dropdown().setAttribute("selected_item", "-1");
     } else { // if there is no suggestion candidate, the autocompletion dropdown should disappear
         delete_autocomplete_dd (ac_dropdown());
     }
+    return all_results;
 }
 
 // GB: create autocomplete dropdown based on the properties of the textbox for new_obj_element
@@ -729,6 +972,81 @@ function delete_autocomplete_dd (ac_dropdown) {
     }
 }
 
+function check_completion(text)
+{
+    if (!autocomplete) return false;
+    // checks whether an exact match (title+args) exists for the given text
+    let text_array = text.split(" ");
+    let title = text_array[0].toString();
+    let arg = text_array.slice(1, text_array.length);
+    if (arg.length > 0) {
+        arg = arg.toString().replace(/\,/g, " ");
+    } else {
+        arg = "";
+    }
+    let obj_result = obj_exact_match(title);
+    if (obj_result.length !== 0) {
+        let args = obj_result[0].item.args;
+        if (arg !== "") {
+            let arg_result = arg_exact_match(title, arg);
+            if (arg_result.length !== 0) {
+                // found exact title+args match
+                return true;
+            }
+        } else {
+            // no args, found exact title match
+            return true;
+        }
+    }
+    // no matches found
+    return false;
+}
+
+function remove_completion(text, log)
+{
+    if (!autocomplete) return false;
+    // Check to see whether we're removing an object or just its arguments
+    // from the index.
+    let text_array = text.split(" ");
+    let title = text_array[0].toString();
+    let arg = text_array.slice(1, text_array.length);
+    if (arg.length > 0) {
+        arg = arg.toString().replace(/\,/g, " ");
+        //log("title: "+title+", args: "+arg);
+    } else {
+        arg = "";
+        //log("title: "+title);
+    }
+    let obj_result = obj_exact_match(title);
+    if (obj_result.length !== 0) {
+        let obj_ref = obj_result[0].refIndex;
+        let obj_freq = obj_result[0].item.occurrences;
+        let args = obj_result[0].item.args;
+        if (arg !== "") {
+            let arg_result = arg_exact_match(title, arg);
+            if (arg_result.length !== 0) {
+                // found exact title+args match
+                let arg_ref = arg_result[0].matches[1].refIndex;
+                //log("removing %s %s at index %d %d", title, arg, obj_ref, arg_ref);
+                // remove from args
+                args.splice(arg_ref, 1);
+                // update the object
+                let obj = {"occurrences" : obj_freq, "title" : title, "args" : args};
+                //log("updating %d with %o", obj_ref, obj);
+                completion_index.update(obj, obj_ref);
+                return true;
+            }
+        } else {
+            // no args, found exact title match, remove it
+            //log("removing %s at index %d", title, obj_ref);
+            completion_index.removeAt(obj_ref);
+            return true;
+        }
+    }
+    // no matches found
+    return false;
+}
+
 exports.index_obj_completion = index_obj_completion;
 exports.write_completion_index = write_completion_index;
 exports.update_autocomplete_selected = update_autocomplete_selected;
@@ -738,6 +1056,8 @@ exports.select_result_autocomplete_dd = select_result_autocomplete_dd;
 exports.repopulate_autocomplete_dd = repopulate_autocomplete_dd;
 exports.create_autocomplete_dd = create_autocomplete_dd;
 exports.delete_autocomplete_dd = delete_autocomplete_dd;
+exports.check_completion = check_completion;
+exports.remove_completion = remove_completion;
 
 // Modules
 
@@ -6656,12 +6976,12 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
 }
 
 function gui_gui_properties(dummy, name, show_grid, grid_size, save_zoom,
-                            autocomplete, autocomplete_prefix,
+                            autocomplete, autocomplete_prefix, autocomplete_relevance,
                             browser_doc, browser_path, browser_init,
                             autopatch_yoffset) {
     if (dialogwin["prefs"] !== null) {
         dialogwin["prefs"].window.gui_prefs_callback(name, show_grid, grid_size,
-            save_zoom, autocomplete, autocomplete_prefix,
+            save_zoom, autocomplete, autocomplete_prefix, autocomplete_relevance,
             browser_doc, browser_path, browser_init, autopatch_yoffset);
     }
 }
