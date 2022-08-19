@@ -243,6 +243,8 @@ submodules = $(sort $(shell test -d .git && (git config --file .gitmodules --get
 
 dist: $(debsrc)
 
+# Determine the version number of this build. We get this from m_pd.h.
+PD_L2ORK_VERSION := $(shell grep PD_L2ORK_VERSION pd/src/m_pd.h | sed 's|^.define *PD_L2ORK_VERSION *"\(.*\)".*|\1|')
 # Determine the build version which needs git to be computed, so we can't do
 # it in a stand-alone build from a tarball.
 PD_BUILD_VERSION := $(shell test -d .git && (git log -1 --format=%cd --date=short | sed -e 's/-//g'))-rev.$(shell test -d .git && git rev-parse --short HEAD)
@@ -259,6 +261,12 @@ $(debsrc):
 # Pre-generate and put s_version.h into the tarball (see above; the build
 # version is generated using git which can't be done outside the git repo).
 	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' pd/src/s_version.h.in > $(debdist)/pd/src/s_version.h
+# Pre-generate the markdown and html docs so that they will be included in the
+# source. This means that we don't need any special tools as a build
+# dependency, which makes live a lot easier.
+	make -C packages/gendoc version="$(PD_L2ORK_VERSION)" build_version="$(PD_BUILD_VERSION)"
+	mv packages/gendoc/{ReadMe,Welcome}-*.{md,html} $(debdist)/packages/gendoc
+	make -C packages/gendoc clean
 # Create the source tarball.
 	tar cfz $(debsrc) $(debdist)
 	rm -rf $(debdist)
