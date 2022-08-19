@@ -56,11 +56,7 @@ After installation you will find `Pd-l2ork` in the Launchpad, which can be run b
 @mingw@
 After installation you will find an entry for `Purr-Data` in the start menu, which can be run by clicking on the icon as usual. If you opted to create a desktop and/or quick-launch icon during installation, you should be able to find these on your desktop as well.
 
-Purr Data can also be launched from the Windows command line. The executable is named `pd.com` and is located in the `%ProgramFiles%\Purr Data\bin` directory (`%ProgramFiles(x86)%\Purr Data\bin` if you installed the 32 bit version). For instance, using the command prompt, i.e., cmd.exe, you can launch the program as follows (the quotes are needed since the path contains spaces):
-
-~~~
-"%ProgramFiles%\Purr Data\bin\pd"
-~~~
+Purr Data can also be launched from the Windows command line. The executable is named `pd.com` and is located in the `%ProgramFiles%\Purr Data\bin` directory (`%ProgramFiles(x86)%\Purr Data\bin` if you installed the 32 bit version). For instance, using the command prompt, i.e., cmd.exe, you can launch the program as follows (the quotes are needed since the path contains spaces): `"%ProgramFiles%\Purr Data\bin\pd"`
 @mingw@
 
 ## Installing Externals, Objects, and Help files
