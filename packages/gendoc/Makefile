@@ -8,28 +8,8 @@ $(addprefix Welcome-, Linux Darwin MINGW)
 markdown = $(addsuffix .md, $(targets))
 html = $(addsuffix .html, $(targets))
 
-# Note: This requires special tools (pandoc, awk).
+# Note: This requires special tools (python-markdown, awk).
 all: html
-
-# Check for the official Pandoc package on Windows, so that make will find it.
-ifneq (,$(wildcard /c/Program\ Files/Pandoc/pandoc.exe))
-pandoc = /c/Program\ Files/Pandoc/pandoc
-else
-pandoc = pandoc
-endif
-
-# NOTE: In pandoc 2.19, --self-contained, which forces the css to be included
-# in the html output, is deprecated in favour of --embed-resources. But the
-# new option isn't supported in pandoc 2.18, which is still being used a
-# lot. Brilliant. For now we just live with the deprecation warning. You can
-# always set different options using the self-contained variable from the
-# command line if needed.
-
-# >=2.19:
-#self-contained = --standalone --embed-resources
-
-# <=2.18:
-self-contained = --self-contained
 
 markdown: $(markdown)
 html: $(html)
@@ -39,16 +19,20 @@ ReadMe-%.md: ReadMe.md
 	awk -f gendoc.awk osname="$(osname)" version="$(version)" build_version="$(build_version)" < $< > $@
 
 ReadMe-%.html: osname = $(patsubst ReadMe-%.html,%,$@)
-ReadMe-%.html: ReadMe-%.md
-	$(pandoc) $< -o $@ -M pagetitle="Purr Data $(version) ($(osname))" $(self-contained) --css gh-pandoc.css
+ReadMe-%.html: ReadMe-%.md pandoc-template.html
+	python -m markdown $< > ReadMe-body.html
+	sed -e "s/@version@/$(version) ($(osname))/g" -e '/--stylesheet--/r gh-pandoc.css' -e '/--body--/r ReadMe-body.html' pandoc-template.html > $@
+	rm -f ReadMe-body.html
 
 Welcome-%.md: osname = $(patsubst Welcome-%.md,%,$@)
 Welcome-%.md: Welcome.md
 	awk -f gendoc.awk osname="$(osname)" version="$(version)" build_version="$(build_version)" < $< > $@
 
 Welcome-%.html: osname = $(patsubst Welcome-%.html,%,$@)
-Welcome-%.html: Welcome-%.md
-	$(pandoc) $< -o $@ -M pagetitle="Purr Data $(version) ($(osname))" $(self-contained) --css gh-pandoc.css
+Welcome-%.html: Welcome-%.md pandoc-template.html
+	python -m markdown $< > Welcome-body.html
+	sed -e "s/@version@/$(version) ($(osname))/g" -e '/--stylesheet--/r gh-pandoc.css' -e '/--body--/r Welcome-body.html' pandoc-template.html > $@
+	rm -f Welcome-body.html
 
 clean:
 	rm -f $(markdown) $(html)
