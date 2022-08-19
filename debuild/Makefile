@@ -115,9 +115,8 @@ $(debsrc):
 # version is generated using git which can't be done outside the git repo).
 	sed 's|^\(#define PD_BUILD_VERSION "\).*"|\1$(PD_BUILD_VERSION)"|' ../pd/src/s_version.h.in > $(debdist)/pd/src/s_version.h
 # Pre-generate the markdown and html docs so that they will be included in the
-# source. This means that we don't need pandoc as a build dependency, which
-# makes live a lot easier since the pandoc versions on older Debian/Ubuntu
-# releases are quite ancient.
+# source. This means that we don't need any special tools as a build
+# dependency, which makes live a lot easier.
 	make -C ../packages/gendoc version="$(PD_L2ORK_VERSION)" build_version="$(PD_BUILD_VERSION)"
 	mv ../packages/gendoc/*-Linux* $(debdist)/packages/gendoc
 	make -C ../packages/gendoc clean

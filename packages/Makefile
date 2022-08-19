@@ -236,9 +236,10 @@ license_install:
 
 
 # AG: Replaced the previous jumble of echo commands with document generation
-# from Markdown using awk for preprocessing and pandoc for formatting. Also
-# updated the document content which was really outdated. You can find all
-# this stuff including the Markdown source in the gendoc subdirectory.
+# from Markdown using awk for preprocessing and python-markdown for
+# formatting. Also updated the document content which was really outdated. You
+# can find all this stuff including the Markdown source in the gendoc
+# subdirectory.
 
 osname = $(shell uname -s|sed 's/\([[:alpha:]]*\).*/\1/')
 
@@ -317,7 +318,7 @@ abstractions_clean:
 doc_clean:
 # These are precious, don't clean them! Otherwise pre-generated docs will be
 # removed before the build starts, and the build system may not have the
-# required tools (i.e., pandoc) installed to re-generate them.
+# required tools installed to re-generate them.
 #	$(MAKE) -C gendoc clean
 
 externals_clean:
