@@ -1,7 +1,5 @@
 #!/bin/sh
 
-PATH=/sw/bin:$PATH
-
 PWD=${0%/*}
 
 

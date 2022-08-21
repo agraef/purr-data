@@ -104,11 +104,7 @@ LADSPAPluginSearch(LADSPAPluginSearchCallbackFunction fCallbackFunction,
   pcLADSPAPath = getenv("LADSPA_PATH");
   if (!pcLADSPAPath) {
     //fprintf(stderr, "Warning: no LADSPA_PATH, assuming /usr/lib/ladspa:/usr/local/lib/ladspa\n");
-#ifdef __APPLE__
-    pcLADSPAPath = "/sw/lib/ladspa:/usr/local/lib/ladspa";
-#else
     pcLADSPAPath = "/usr/lib/ladspa:/usr/local/lib/ladspa";
-#endif
   }
   
   pcStart = pcLADSPAPath;

@@ -139,9 +139,6 @@ dnl How to test if frameworks are present ????
 if test $ARCH == Darwin
 then
 	PD_EXECUTABLE=$prefix/bin/pd-l2ork
-	LIBS="$LIBS -L/sw/lib"
-	CPPFLAGS="$CPPFLAGS -I/sw/include"
-	PDP_EXTRA_CPPFLAGS="-I/sw/include"
 
 dnl if not darwin, assume target is linux
 else

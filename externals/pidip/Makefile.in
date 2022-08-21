@@ -44,7 +44,7 @@ pdp_pidip_all:
 
 pidip.pd_darwin: pdp_pidip_all
 	rm -f pidip.pd_darwin
-	g++ -bundle -undefined dynamic_lookup -headerpad_max_install_names -o pidip.pd_darwin modules/*.o system/*.o -L/sw/lib $(THEORA_LIBS) $(DC1394_LIBS) $(FREENECT_LIBS) $(OPENCV_LIBS) $(PDP_PIDIP_LIBS) $(IMLIB_LIBS) $(ARTKP_LIBS)
+	g++ -bundle -undefined dynamic_lookup -headerpad_max_install_names -o pidip.pd_darwin modules/*.o system/*.o $(THEORA_LIBS) $(DC1394_LIBS) $(FREENECT_LIBS) $(OPENCV_LIBS) $(PDP_PIDIP_LIBS) $(IMLIB_LIBS) $(ARTKP_LIBS)
 	strip -x pidip.pd_darwin
 
 pidip.pd_linux: pdp_pidip_all

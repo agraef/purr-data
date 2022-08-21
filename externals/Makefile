@@ -2376,7 +2376,7 @@ etags_Darwin:
 	etags -a $(externals_src)/hcs/hid/HID\ Utilities\ Source/*.[ch]
 	find /System/Library/Frameworks  -type f -name \*.h -exec etags -a '{}' \;
 	find /Library/Frameworks  -type f -name \*.h -exec etags -a '{}' \;
-	find /sw/include -type f -name \*.h -exec etags -a '{}' \;
+	find /usr/local/include/ -type f -name \*.h -exec etags -a '{}' \;
 
 etags_Linux:
 

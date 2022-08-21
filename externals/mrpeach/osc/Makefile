@@ -118,8 +118,8 @@ ifeq ($(UNAME),Darwin)
       FAT_FLAGS = -arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=$(macos_target)
       SOURCES += $(SOURCES_iphoneos)
     endif
-    ALL_CFLAGS += $(FAT_FLAGS) -fPIC -I/sw/include
-    ALL_LDFLAGS += $(FAT_FLAGS) -bundle -undefined dynamic_lookup -L/sw/lib
+    ALL_CFLAGS += $(FAT_FLAGS) -fPIC
+    ALL_LDFLAGS += $(FAT_FLAGS) -bundle -undefined dynamic_lookup
     # if the 'pd' binary exists, check the linking against it to aid with stripping
     ALL_LDFLAGS += $(shell test -e $(PD_PATH)/bin/pd && echo -bundle_loader $(PD_PATH)/bin/pd)
     ALL_LIBS += -lc 

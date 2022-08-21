@@ -83,9 +83,9 @@ ifeq ($(UNAME),Darwin)
     OS = macosx
     OPT_CFLAGS = -ftree-vectorize -ftree-vectorizer-verbose=2 -fast
     FAT_FLAGS = -arch i386 -arch ppc -mmacosx-version-min=$(macos_target)
-    CFLAGS += $(FAT_FLAGS) -fPIC -I/sw/include \
+    CFLAGS += $(FAT_FLAGS) -fPIC \
       -I/Applications/Pd-extended.app/Contents/Resources/include
-    LDFLAGS += $(FAT_FLAGS) -bundle -undefined dynamic_lookup -L/sw/lib
+    LDFLAGS += $(FAT_FLAGS) -bundle -undefined dynamic_lookup
     # if the 'pd' binary exists, check the linking against it to aid with stripping
     LDFLAGS += $(shell test -e $(PD_PATH)/bin/pd && echo -bundle_loader $(PD_PATH)/bin/pd)
     LIBS += -lc 

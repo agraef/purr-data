@@ -124,7 +124,7 @@ ifeq ($(UNAME),Darwin)
         FAT_FLAGS = -arch ppc -arch i386 -arch x86_64 -mmacosx-version-min=$(macos_target)
       endif
     endif
-    ALL_CFLAGS += $(FAT_FLAGS) -fPIC -I/sw/include
+    ALL_CFLAGS += $(FAT_FLAGS) -fPIC
     # if the 'pd' binary exists, check the linking against it to aid with stripping
     BUNDLE_LOADER = $(shell test ! -e $(PD_PATH)/bin/pd || echo -bundle_loader $(PD_PATH)/bin/pd)
     ALL_LDFLAGS += $(FAT_FLAGS) -headerpad_max_install_names -bundle $(BUNDLE_LOADER) \

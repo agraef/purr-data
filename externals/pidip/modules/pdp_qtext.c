@@ -1118,8 +1118,6 @@ void pdp_qtext_setup(void)
 #ifdef __APPLE__
     imlib_add_path_to_font_path("/System/Library/Fonts");
     imlib_add_path_to_font_path("/Library/Fonts");
-    imlib_add_path_to_font_path("/sw/share/imlib2/data/fonts");
-    imlib_add_path_to_font_path("/sw/lib/X11/fonts/msttf");
 #else
     imlib_add_path_to_font_path("/var/lib/defoma/x-ttcidfont-conf.d/dirs/TrueType");
 #endif

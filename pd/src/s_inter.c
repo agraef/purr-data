@@ -1396,7 +1396,6 @@ int sys_startgui(const char *guidir)
                 "/Applications/Wish.app/Contents/MacOS/Wish",
                 "/Applications/Wish Shell.app/Contents/MacOS/Wish Shell",
                 "/usr/local/bin/wish8.4",
-                "/sw/bin/wish8.4"
                 "/opt/bin/wish8.4"
                 "/usr/bin/wish8.4"
                 "/usr/local/bin/wish8.4",
