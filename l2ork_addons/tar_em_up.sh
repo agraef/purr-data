@@ -33,8 +33,7 @@ then
 	echo
 	echo "   The incremental options bypass Gem compilation. This saves"
 	echo "   (lots of) time, but the generated package will lack Gem"
-	echo "   unless it has already been built previously. NOTE: Building"
-	echo "   Gem is NOT supported on OSX right now."
+	echo "   unless it has already been built previously."
 	echo
 	echo "   The -k (keep) option doesn't clean before compilation,"
 	echo "   preserving the build products from a previous run. This"
@@ -132,7 +131,7 @@ fi
 # Auto-detect the platform and pick an appropriate build target.
 if [ $any -gt 0 ]; then
 	if [[ $os == "osx" ]]; then
-		dmg=1
+		dmg=$any
 	elif [[ $os == "win" || $os == "win64" ]]; then
 		inno=$any
 	else
@@ -146,7 +145,7 @@ fi
 # package for the platform instead.
 if [ $full -gt 0 ]; then
 	if [[ $os == "osx" ]]; then
-		dmg=1
+		dmg=$full
 		echo "Warning: tarball installer not supported on Mac, building a dmg installer instead."
 	elif [[ $os == "win" || $os == "win64" ]]; then
 		inno=$full
@@ -356,7 +355,7 @@ then
 	elif [[ $os == "osx" ]]; then
 		echo "Making OSX package (dmg)..."
 		echo `pwd`
-		make install && make package
+		make install INCREMENTAL=$INCREMENTAL LIGHT=$LIGHT && make package
 	else
 		# create images folder
 		mkdir -p ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/images
