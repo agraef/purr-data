@@ -162,7 +162,8 @@ Hard drive space required: *roughly 2.5 GB*
              mda-lv2 libmp3lame-dev libspeex-dev libgsl0-dev \
              portaudio19-dev liblua5.3-dev python-dev libsmpeg0 libjpeg62-turbo \
              flite1-dev libgsm1-dev libgtk2.0-dev git libstk0-dev \
-             libfluidsynth-dev fluid-soundfont-gm byacc
+             libfluidsynth-dev fluid-soundfont-gm byacc \
+             python3-markdown
 
 2. The gui toolkit may require installing the following extra dependencies
 
@@ -200,6 +201,7 @@ Hard drive space required: *roughly 2 GB*
         brew install libtool
         brew install fftw
         brew install python
+        brew install python-markdown
         brew install lua
         brew install fluidsynth
         brew install lame
@@ -274,6 +276,8 @@ since it will usually contain spaces, making the build fail.
           mingw-w64-i686-lua mingw-w64-i686-toolchain \
           mingw-w64-i686-libjpeg-turbo \
           mingw-w64-i686-speex \
+          mingw-w64-i686-python \
+          mingw-w64-i686-python-markdown \
           rsync unzip wget
 
 5. Download the source code *(3-6 minutes)*  
@@ -315,6 +319,8 @@ convenience:
           mingw-w64-x86_64-lua mingw-w64-x86_64-toolchain \
           mingw-w64-x86_64-libjpeg-turbo \
           mingw-w64-x86_64-speex \
+          mingw-w64-x86_64-python \
+          mingw-w64-x86_64-python-markdown \
           rsync unzip wget
 
 - Use the MSYS2 MinGW 64-bit shell (rather than the 32-bit shell) to do the
