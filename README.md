@@ -201,7 +201,6 @@ Hard drive space required: *roughly 2 GB*
         brew install libtool
         brew install fftw
         brew install python
-        brew install python-markdown
         brew install lua
         brew install fluidsynth
         brew install lame
@@ -209,7 +208,18 @@ Hard drive space required: *roughly 2 GB*
         brew install speex
         brew install gsl
         brew install libquicktime
+        brew install sdl2
         brew install pkg-config
+
+   You'll also need to install the python markdown module to generate the
+   platform-specific release notes (ReadMe.html, Welcome.html):
+
+        pip3 install markdown
+
+   **Note:** Depending on your macOS and Xcode version, the 10 minutes
+   estimate for this step may be a overly optimistic. Some build dependencies
+   may require recompilation which can take a long time (up to several hours,
+   if it includes a complete build of, e.g., gcc and cmake).
 
 3. Clone the Purr-Data repository *(10 minutes)*
 
