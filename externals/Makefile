@@ -716,8 +716,6 @@ $(gem_src)/Gem.pd_linux: $(gem_src)/configure
 		cd $(gem_src) && ./configure \
 			CXXFLAGS="-DHAVE_S_STUFF_H $(CFLAGS_ADD)" \
 			--prefix=$(prefix) \
-			--with-video=plugins \
-			--with-film=plugins \
 			--with-pd=$(pd_src)
 	$(MAKE) $(GEM_MAKEFLAGS) -C $(gem_src)
 
@@ -761,8 +759,6 @@ $(gem_src)/Gem.pd_darwin: $(gem_src)/configure
 		--with-jpeg --with-jpeg-LIBS="-L$(usrlocal)/lib -ljpeg" \
 		$(gem_quicktime) $(gem_magick) \
 		$(gem_window) \
-		--with-video=plugins \
-		--with-film=plugins \
 		--without-ndi --without-DeckLink \
 		--with-pd=$(pd_src)
 	$(MAKE) $(GEM_MAKEFLAGS) -C $(gem_src)
