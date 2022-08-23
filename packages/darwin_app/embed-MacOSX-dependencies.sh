@@ -52,6 +52,8 @@ for pd_darwin in `find $PD_APP_CONTENTS -name '*.pd_darwin'`; do
 done
 
 # check for .so plugins used by libquicktime and others
+rm -rf $PD_APP_PLUGINS/libquicktime
+test -d ${optlocal}/libquicktime/lib/libquicktime && cp -r ${optlocal}/libquicktime/lib/libquicktime $PD_APP_PLUGINS || true
 for so in $PD_APP_PLUGINS/*/*.so; do
 	LIBS=`otool -L $so | sed -n 's|.*'"${optlocal}"'/\(.*\.dylib\).*|\1|p'`
 	if [ "x$LIBS" != "x" ]; then
