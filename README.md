@@ -203,6 +203,8 @@ Hard drive space required: *roughly 2 GB*
         brew install python
         brew install lua
         brew install fluidsynth
+        brew install faac
+        brew install jpeg
         brew install lame
         brew install libvorbis
         brew install speex
