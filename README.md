@@ -17,7 +17,7 @@ Maintainers:
 * [Build Guide](#build-guide)
   * [Gnu/Linux](#linux)
   * [OSX](#osx-64-bit-using-homebrew)
-  * [Windows](#windows-32-bit-using-msys2)
+  * [Windows](#windows-64-bit-using-msys2)
 * [Code of Conduct](#code-of-conduct)
 * [Project Governance](#project-governance)
 * [Contributor Guide](#contributor-guide)
@@ -226,7 +226,7 @@ Hard drive space required: *roughly 2 GB*
 6. There should now be a .dmg file in your current directory, which lets you
 install the app in the usual way
 
-#### Windows 32-bit Using msys2
+#### Windows 64-bit Using msys2
 
 Time to build: *roughly 1.5 hours-- 30 minutes of this is for Gem alone*  
 Hard drive space required to build: *rougly 2.5 GB*
@@ -237,52 +237,17 @@ not have any spaces in it, which would otherwise cause trouble during the
 build. Never try using your Windows home directory for this purpose instead,
 since it will usually contain spaces, making the build fail.
 
-1. Download and install [msys2](https://msys2.github.io/) *(5 minutes)*  
-   There are two installers-- one for 32-bit Windows systems (i686) and one for
-   64-bit Windows (x86_64). Be sure you know which
-   [version](http://windows.microsoft.com/en-us/windows/32-bit-and-64-bit-windows)
-   of Windows you are running and download the appropriate installer.  
-   Note: don't run the shell after installation finishes. You'll do that
-   manually in step 3.
-
-2. Download and install the [inno setup Quickstart Pack](http://www.jrsoftware.org/isdl.php) which includes the Script Editor *(5 minutes)*
-
-3. Run the "MSYS2 MinGW 32-bit" shell *(less than a minute)*  
-   msys2 adds three Start Menu items for different "flavors" of shell:
-    + MSYS2 MinGW __32-bit__ <- click this one!
-    + MSYS2 MinGW 64-bit
-    + MSYS2 MSYS
-
-4. Install the dependencies *(5-10 minutes)*  
-   Once the shell opens, we need to install the dependencies for building
-   Purr Data. First we need to update all the packages:
-
-        pacman -Syu
-
-   After closing and reopening the shell as prompted, you may need to do it
-   again:
-   
-        pacman -Syu
-   
-   Now everything should be up-to-date. Issue the following command:
-
-        pacman -S autoconf automake git libtool \
-          make mingw-w64-i686-dlfcn mingw-w64-i686-fftw \
-          mingw-w64-i686-fluidsynth \
-          mingw-w64-i686-SDL2 \
-          mingw-w64-i686-ftgl mingw-w64-i686-fribidi \
-          mingw-w64-i686-ladspa-sdk mingw-w64-i686-lame \
-          mingw-w64-i686-libsndfile mingw-w64-i686-libvorbis \
-          mingw-w64-i686-lua mingw-w64-i686-toolchain \
-          mingw-w64-i686-libjpeg-turbo \
-          mingw-w64-i686-speex \
-          mingw-w64-i686-python \
-          mingw-w64-i686-python-markdown \
-          rsync unzip wget
-
-5. Download the source code *(3-6 minutes)*  
-   Issue the following command to create a new directory "purr-data" and clone
-   the repository to it:
+1. In a browser, navigate to: `https://git.purrdata.net/jwilkes/ci-runner-setup/-/raw/master/win64_install_build_deps.ps1`
+2. Select all with `<control-a>`
+3. Right-click and choose "Copy"
+4. In the Start menu type `PowerShell ISE` and click the "Windows Powershell ISE" app that pops up.
+5. In the Powershell ISE window menu, choose File -> New
+6. In the area with the white background, right-click and choose "Paste" 
+7. Click the `Run Script` arrow in the toolbar *(20 minutes)*
+8. If there were no errors in the script, msys2 and Inno Setup are now installed.
+9. Open the directory "C:\msys64" and click `mingw64.exe`
+10. Download the source code *(3-6 minutes)*  
+   In the msys terminal window, issue the following command to create a new dire   ctory "purr-data" and clone the repository to it:
 
         git clone https://git.purrdata.net/jwilkes/purr-data.git
 
@@ -296,35 +261,6 @@ since it will usually contain spaces, making the build fail.
 
 8. Look in the top level source directory and double-click the setup file to
    start installing Purr Data on your system or run `./"setup file name"` in MSYS2 shell.
-
-#### Windows 64-bit Using msys2
-
-The instructions are exactly the same as for the 32 bit build (see above), but
-the build needs to be done using mingw64 instead of mingw32. That is:
-
-- in the Start menu, type MSYS2 MinGW x64 to enter the 64-bit msys2 environment
-
-- Install the mingw64 packages for the dependencies. These should be the same as
-the i686 packages listed under dependencies above, but with x86_64 instead of
-i686 in the package names. Here's the current list you can copy and paste for
-convenience:
-
-        pacman -S autoconf automake git libtool \
-          make mingw-w64-x86_64-dlfcn mingw-w64-x86_64-fftw \
-          mingw-w64-x86_64-fluidsynth \
-          mingw-w64-x86_64-SDL2 \
-          mingw-w64-x86_64-ftgl mingw-w64-x86_64-fribidi \
-          mingw-w64-x86_64-ladspa-sdk mingw-w64-x86_64-lame \
-          mingw-w64-x86_64-libsndfile mingw-w64-x86_64-libvorbis \
-          mingw-w64-x86_64-lua mingw-w64-x86_64-toolchain \
-          mingw-w64-x86_64-libjpeg-turbo \
-          mingw-w64-x86_64-speex \
-          mingw-w64-x86_64-python \
-          mingw-w64-x86_64-python-markdown \
-          rsync unzip wget
-
-- Use the MSYS2 MinGW 64-bit shell (rather than the 32-bit shell) to do the
-build.
 
 ### Code of Conduct
 
