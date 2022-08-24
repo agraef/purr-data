@@ -51,9 +51,22 @@ for pd_darwin in `find $PD_APP_CONTENTS -name '*.pd_darwin'`; do
 	fi
 done
 
-# check for .so plugins used by libquicktime and others
+# check for libquicktime plugins, copy them over
 rm -rf $PD_APP_PLUGINS/libquicktime
-test -d ${optlocal}/libquicktime/lib/libquicktime && cp -r ${optlocal}/libquicktime/lib/libquicktime $PD_APP_PLUGINS || true
+libqt_ffmpeg_plugins=${optlocal}/libquicktime-ffmpeg/lib/libquicktime
+libqt_plugins=${optlocal}/libquicktime/lib/libquicktime
+# prefer libquicktime-ffmpeg, in case we have both installed
+if test -d ${libqt_ffmpeg_plugins}; then
+    cp -r ${libqt_ffmpeg_plugins} $PD_APP_PLUGINS
+elif test -d ${libqt_plugins}; then
+    cp -r ${libqt_plugins} $PD_APP_PLUGINS
+elif [ "$optlocal" != "/opt/local" ]; then
+    echo "No libquicktime found, did you install it?" >&2
+fi
+# change permissions so that install_name can write to the plugin files
+chmod -fR u+xw $PD_APP_PLUGINS/libquicktime
+
+# check for .so plugins used by libquicktime and others
 for so in $PD_APP_PLUGINS/*/*.so; do
 	LIBS=`otool -L $so | sed -n 's|.*'"${optlocal}"'/\(.*\.dylib\).*|\1|p'`
 	if [ "x$LIBS" != "x" ]; then
@@ -68,6 +81,23 @@ for so in $PD_APP_PLUGINS/*/*.so; do
 			fi
 			# @executable_path starts from Contents/Resources/app.nw/bin
 			install_name_tool -change ${optlocal}/$lib @executable_path/../../../$LIB_DIR/$new_lib $so
+		done
+		echo " "
+	fi
+	# Homebrew also has some libraries in its cellar (keg-only package?).
+	LIBS=`otool -L $so | sed -n 's|.*'"/usr/local/Cellar"'/\(.*\.dylib\).*|\1|p'`
+	if [ "x$LIBS" != "x" ]; then
+		echo "`echo $so | sed 's|.*/\(lib.*/.*\.so\)|\1|'` is using:"
+		for lib in $LIBS; do
+			echo "    $lib"
+			new_lib=`echo $lib | sed 's|.*/\(.*\.dylib\)|\1|'`
+			if [ -e  $PD_APP_LIB/$new_lib ]; then
+				echo "$PD_APP_LIB/$new_lib already exists, skipping copy."
+			else
+				install -vp /usr/local/Cellar/$lib $PD_APP_LIB
+			fi
+			# @executable_path starts from Contents/Resources/app.nw/bin
+			install_name_tool -change /usr/local/Cellar/$lib @executable_path/../../../$LIB_DIR/$new_lib $so
 		done
 		echo " "
 	fi
