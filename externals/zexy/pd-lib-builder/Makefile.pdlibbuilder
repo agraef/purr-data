@@ -580,7 +580,7 @@ ifeq ($(system), Darwin)
   pdincludepath := $(firstword $(wildcard \
     /Applications/Pd*.app/Contents/Resources/src))
   extension = pd_darwin
-  cpp.flags := -DUNIX -DMACOSX -I /sw/include
+  cpp.flags := -DUNIX -DMACOSX
   c.flags :=
   c.ldflags := -undefined suppress -flat_namespace -bundle
   c.ldlibs := -lc

@@ -57,8 +57,8 @@ pd_darwin: $(NAME).pd_darwin
 
 DARWINCFLAGS = -DPD -O2 -Wall -W
 
-DARWININCLUDE =  -I../../src -I$(pd_src)/src -I/sw/include
-DARWINLIBS = -L/sw/lib -lusb
+DARWININCLUDE =  -I../../src -I$(pd_src)/src
+DARWINLIBS = -lusb
 
 .c.pd_darwin:
 	$(CC) $(DARWINCFLAGS) $(DARWININCLUDE) -o $*.o -c $*.c

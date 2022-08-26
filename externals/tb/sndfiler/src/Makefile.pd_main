@@ -100,7 +100,7 @@ pd_darwin: $(NAME).pd_darwin
 CC_DARWIN = -pthread
 LD_DARWIN = -bundle -undefined suppress -flat_namespace \
             -bundle_loader $(PD_PATH)/bin/pd --export-dynamic \
-            -L/sw/lib -L/opt/local/lib -lsndfile -lvorbisfile \
+            -lsndfile -lvorbisfile \
             $(THREADLIB_PATH)/threadlib.pd_darwin
 
 .c.pd_darwin:

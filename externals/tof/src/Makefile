@@ -90,11 +90,11 @@ ifeq ($(OS_NAME),darwin)
   FAT_FLAGS = -arch ppc -arch ppc64 -arch i386
 # 10.5 Leopard
 #  FAT_FLAGS = -arch ppc -arch ppc7400 -arch ppc64 -arch i386 -arch x86_64
-  CFLAGS += -I/sw/include -DMACOSX -DUNIX -Dunix -DDL_OPEN -arch $(ARCH)
+  CFLAGS += -DMACOSX -DUNIX -Dunix -DDL_OPEN -arch $(ARCH)
   LDFLAGS += -bundle -bundle_loader $(PD_BIN)/bin/pd -undefined dynamic_lookup \
 		-weak_framework Carbon -arch $(ARCH)
   LIBS += -lc 
-  DYLIB_LDFLAGS = -dynamiclib -undefined dynamic_lookup -read_only_relocs warning -L/sw/lib
+  DYLIB_LDFLAGS = -dynamiclib -undefined dynamic_lookup -read_only_relocs warning
   STRIP = strip -x
 endif
 ifeq ($(OS_NAME),linux)

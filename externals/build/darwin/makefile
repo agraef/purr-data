@@ -33,8 +33,8 @@ OPTIM_FLAGS = -mpowerpc-gpopt -mcpu=750
 
 CFLAGS = -DPD -DUNIX -DMACOSX -Dunix $(OPTIM_FLAGS) \
     -Wall -W -Wno-unused -Wno-parentheses -Wno-switch -Wno-shadow 
-INCLUDES = -I$(pd_src)/src -I/sw/include
-LDFLAGS = -bundle  -bundle_loader $(PDEXECUTABLE) -L/sw/lib
+INCLUDES = -I$(pd_src)/src
+LDFLAGS = -bundle  -bundle_loader $(PDEXECUTABLE)
 
 externals: $(EXTERNALS:.c=.pd_darwin)
 

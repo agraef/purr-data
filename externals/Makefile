@@ -54,14 +54,23 @@ LIBS = -lm
 
 ifeq ($(OS_NAME),darwin)
 # 10.4 Tiger
-  FAT_FLAGS = -arch ppc -arch ppc64 -arch i386
+#  FAT_FLAGS = -arch ppc -arch ppc64 -arch i386
 # 10.5 Leopard
 #  FAT_FLAGS = -arch ppc -arch ppc7400 -arch ppc64 -arch i386 -arch x86_64
-  CFLAGS += -I/sw/include -I$(externals_src)/pdp/include -DMACOSX -DUNIX -Dunix -DDL_OPEN
-  LDFLAGS += -bundle -bundle_loader $(pd_src)/bin/pd-l2ork -undefined dynamic_lookup \
-		-L/sw/lib -weak_framework Carbon
+# Check whether we have Homebrew or MacPorts, prefer the former.
+optlocal := $(shell (test -d /usr/local/opt && echo /usr/local/opt) || (test -d /opt/local && echo /opt/local) || echo /usr/local)
+ifeq ($(optlocal),/opt/local)
+# MacPorts installs directly into $(optlocal)
+usrlocal = $(optlocal)
+else
+# Homebrew links software into /usr/local, which also works for locally
+# installed software if neither MP nor Homebrew is detected.
+usrlocal = /usr/local
+endif
+  CFLAGS += -I$(usrlocal)/include -I$(externals_src)/pdp/include -DMACOSX -DUNIX -Dunix -DDL_OPEN
+  LDFLAGS += -bundle -bundle_loader $(pd_src)/bin/pd-l2ork -undefined dynamic_lookup -L$(usrlocal)/lib
   LIBS += -lc 
-  DYLIB_LDFLAGS = -dynamiclib -undefined dynamic_lookup -read_only_relocs warning -L/sw/lib
+  DYLIB_LDFLAGS = -dynamiclib -undefined dynamic_lookup -read_only_relocs warning -L$(usrlocal)/lib
   STRIP = strip -x
 endif
 ifeq ($(OS_NAME),linux)
@@ -153,9 +162,10 @@ ifeq ($(OS_NAME),windows)
 else
   ifeq ($(OS_NAME),darwin)
 # on Mac OS X 10.6/Snow Leopard don't build hid since it needs Carbon
-    lib_targets += pdp iem16 apple
-    ifneq ($(shell uname -r | sed 's|10\.[0-9][0-9]*\.[0-9][0-9]*|10|'),10)
-      lib_targets +=
+    ifeq ($(INCREMENTAL),yes)
+	lib_targets += pdp iem16 apple
+    else
+	lib_targets += gem pdp iem16 apple
     endif
   else ifneq ($(LIGHT),yes)
     # GNU/Linux, BSD, IRIX, etc. (we use exported variable INCREMENTAL to
@@ -706,22 +716,50 @@ $(gem_src)/Gem.pd_linux: $(gem_src)/configure
 		cd $(gem_src) && ./configure \
 			CXXFLAGS="-DHAVE_S_STUFF_H $(CFLAGS_ADD)" \
 			--prefix=$(prefix) \
-			--with-video=plugins \
-			--with-film=plugins \
 			--with-pd=$(pd_src)
 	$(MAKE) $(GEM_MAKEFLAGS) -C $(gem_src)
+
+# Mac: This is still a bit experimental. At present, many of the window
+# backends seem to be at least half-broken on recent macOS versions, including
+# the native gemmacoswindow, which the wiki recommends. For me, the SDL2
+# backend works best, on Mojave at least, so that's what we include as the
+# default here. NOTES: In MacPorts, libquicktime is unmaintained and doesn't
+# build, so it is currently excluded from the MacPorts build. AVF, which is
+# supposed to replace libquicktime, is enabled by default on the Mac, but
+# right now it only seems to work for video capture, not loading or recording.
+# We also exclude ImageMagick, which is needed for improved image support,
+# because it currently isn't in our OSX build requirements. But if you have it
+# (it's available in both Homebrew and MacPorts), you can enable it below.
+
+ifeq ($(optlocal),/opt/local)
+# MacPorts
+gem_quicktime = --without-libquicktime
+else
+# Homebrew
+gem_quicktime = --with-libquicktime --with-libquicktime-LIBS="-L$(usrlocal)/lib -lquicktime"
+endif
+
+# Uncomment to enable ImageMagick support. This needs imagemagick from Hombrew
+# or ImageMagick from MacPorts.
+#gem_magick = --with-MagickCore --with-MagickCore-CFLAGS="$(shell pkg-config --cflags MagickCore)" --with-MagickCore-LIBS="$(shell pkg-config --libs MagickCore)"
+
+# Adjust this as needed/wanted. If you comment this out, you'll get the
+# default gemmacoswindow which doesn't work for me, YMMV.
+gem_window = --with-sdl2 --with-sdl2-LIBS="-L$(usrlocal)/lib -lSDL2" --with-defaultwindow=gemsdl2window
 
 $(gem_src)/Gem.pd_darwin: $(gem_src)/configure
 	cd $(gem_src) && ./configure \
 		CXXFLAGS="-DHAVE_S_STUFF_H $(CFLAGS_ADD)" \
-		PKG_FTGL_CFLAGS="-I/sw/include -I/sw/include/freetype2 -I/sw/include/FTGL" \
 		--prefix=$(prefix) \
 		--libdir=$(objectsdir) \
 		--without-ALL \
-		--with-ftgl --with-ftgl-libs=/sw/lib \
-		--with-artoolkit-includes=/sw/include --with-artoolkit-libs=/sw/lib \
-		--with-video=plugins \
-		--with-film=plugins \
+		--without-QuickTime-framework --without-Carbon-framework \
+		--with-ftgl --with-ftgl-LIBS="-L$(usrlocal)/lib -lftgl" \
+		--with-tiff --with-tiff-LIBS="-L$(usrlocal)/lib -ltiff" \
+		--with-jpeg --with-jpeg-LIBS="-L$(usrlocal)/lib -ljpeg" \
+		$(gem_quicktime) $(gem_magick) \
+		$(gem_window) \
+		--without-ndi --without-DeckLink \
 		--with-pd=$(pd_src)
 	$(MAKE) $(GEM_MAKEFLAGS) -C $(gem_src)
 
@@ -2334,7 +2372,7 @@ etags_Darwin:
 	etags -a $(externals_src)/hcs/hid/HID\ Utilities\ Source/*.[ch]
 	find /System/Library/Frameworks  -type f -name \*.h -exec etags -a '{}' \;
 	find /Library/Frameworks  -type f -name \*.h -exec etags -a '{}' \;
-	find /sw/include -type f -name \*.h -exec etags -a '{}' \;
+	find /usr/local/include/ -type f -name \*.h -exec etags -a '{}' \;
 
 etags_Linux:
 

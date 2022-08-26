@@ -68,10 +68,10 @@ LDFLAGS_SAVE="$LDFLAGS"
 AC_CHECK_LIB(flite,[flite_init],[pdflite_have_lib=yes],[pdflite_have_lib=no],[-lm])
 if test "$pdflite_have_lib" != "yes"; then
   for d in \
-    /usr/lib /usr/local/lib /sw/lib \
-    /usr/lib/flite /usr/local/lib/flite /sw/lib/flite \
-    /usr/flite/lib /usr/local/flite/lib /sw/flite/lib \
-    /usr/lib/flite/lib /usr/local/lib/flite/lib /sw/lib/flite/lib
+    /usr/lib /usr/local/lib \
+    /usr/lib/flite /usr/local/lib/flite \
+    /usr/flite/lib /usr/local/flite/lib \
+    /usr/lib/flite/lib /usr/local/lib/flite/lib
   do
     LDFLAGS="$LDFLAGS_SAVE -L$d"
     AC_CHECK_LIB(flite,[flite_init],[pdflite_have_lib=yes],[pdflite_have_lib=no],[-lm])

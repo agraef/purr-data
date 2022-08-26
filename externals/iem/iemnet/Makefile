@@ -93,9 +93,9 @@ ifeq ($(UNAME),Darwin)
     OS = macosx
     OPT_CFLAGS = -ftree-vectorize -ftree-vectorizer-verbose=0 -fast
     FAT_FLAGS = -arch i386 -arch ppc -mmacosx-version-min=$(macos_target)
-    CFLAGS += $(FAT_FLAGS) -fPIC -I/sw/include \
+    CFLAGS += $(FAT_FLAGS) -fPIC \
       -I/Applications/Pd-extended.app/Contents/Resources/include
-    LDFLAGS += $(FAT_FLAGS) -bundle -undefined dynamic_lookup -L/sw/lib
+    LDFLAGS += $(FAT_FLAGS) -bundle -undefined dynamic_lookup
     LIBS += -lc 
     STRIP = strip -x
     DISTDIR=$(LIBRARY_NAME)-$(LIBRARY_VERSION)

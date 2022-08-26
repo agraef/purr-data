@@ -104,14 +104,9 @@ case "$host" in
    *-darwin* | *-macos10*)
 	  EXTENSION=pd_darwin
 	  LDFLAGS="$LDFLAGS -bundle -undefined dynamic_lookup"
-  	  # Check for DarwinPorts and/or Fink on Mac OS X/Darwin
-     if test -d /sw ; then
-       # Fink
-       PATH="/sw/bin:/sw/sbin:$PATH"
-       INCLUDES="$INCLUDES -I/sw/include"
-       LIBS="$LIBS -L/sw/lib"
-     elif test -d /opt/local ; then
-       # DarwinPorts
+	  # Check for MacPorts on Mac OS X/Darwin
+     if test -d /opt/local ; then
+       # MacPorts
        PATH="/opt/local/bin:/opt/local/sbin:$PATH"
        INCLUDES="$INCLUDES -I/opt/local/include"
        LIBS="$LIBS -L/opt/local/lib"

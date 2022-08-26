@@ -390,6 +390,17 @@ int sys_main(int argc, char **argv)
     if (!noprefs)
         sys_rcfile();                           /* parse the startup file */
 #endif
+#ifdef __APPLE__
+    // Initialize libquicktime for Gem, so that it finds its plugins.
+    char *plugins = strdup(argv[0]), *t = strstr(plugins, "/Contents");
+    if (t) {
+      strncpy(t, "/Contents/Plugins/libquicktime", strlen(t));
+      fprintf(stderr, "LIBQUICKTIME_PLUGIN_DIR = %s\n", plugins);
+      // We don't override an existing value here, since the user may have
+      // already set up her own libquicktime plugin collection.
+      setenv("LIBQUICKTIME_PLUGIN_DIR", plugins, 0);
+    }
+#endif
     if (sys_argparse(argc-1, argv+1))           /* parse cmd line */
         return (1);
     sys_afterargparse();                    /* post-argparse settings */

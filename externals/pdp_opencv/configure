@@ -2510,17 +2510,11 @@ PDP_DIR=/usr/local/pd/pdp
 SOURCES_OPT=
 
 echo $host
-# Check for DarwinPorts and/or Fink on Mac OS X/Darwin
+# Check for MacPorts on Mac OS X/Darwin
 case "$host" in
   *-darwin* | *-macos10*)
-     if test -d /sw ; then
-       # Fink
-       PATH="/sw/bin:/sw/sbin:$PATH"
-       CFLAGS="$CFLAGS -I/sw/include"
-       CPPFLAGS="$CPPFLAGS -I/sw/include"
-       LDFLAGS="$LDFLAGS -L/sw/lib"
-     elif test -d /opt/local ; then
-       # DarwinPorts
+     if test -d /opt/local ; then
+       # MacPorts
        PATH="/opt/local/bin:/opt/local/sbin:$PATH"
        CFLAGS="$CFLAGS -I/opt/local/include"
        CPPFLAGS="$CPPFLAGS -I/opt/local/include"

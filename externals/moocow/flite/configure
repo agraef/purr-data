@@ -4509,10 +4509,10 @@ fi
 
 if test "$pdflite_have_lib" != "yes"; then
   for d in \
-    /usr/lib /usr/local/lib /sw/lib \
-    /usr/lib/flite /usr/local/lib/flite /sw/lib/flite \
-    /usr/flite/lib /usr/local/flite/lib /sw/flite/lib \
-    /usr/lib/flite/lib /usr/local/lib/flite/lib /sw/lib/flite/lib
+    /usr/lib /usr/local/lib \
+    /usr/lib/flite /usr/local/lib/flite \
+    /usr/flite/lib /usr/local/flite/lib \
+    /usr/lib/flite/lib /usr/local/lib/flite/lib
   do
     LDFLAGS="$LDFLAGS_SAVE -L$d"
     { $as_echo "$as_me:${as_lineno-$LINENO}: checking for flite_init in -lflite" >&5
