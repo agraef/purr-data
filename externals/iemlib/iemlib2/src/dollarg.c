@@ -8,6 +8,8 @@ iemlib2 written by Thomas Musil, Copyright (c) IEM KUG Graz Austria 2000 - 2006 
 # include "g_canvas.h"
 #else
 EXTERN t_canvas *glist_getcanvas(t_glist *x);
+EXTERN void canvas_unsetcurrent(t_canvas *x);
+EXTERN void canvas_setcurrent(t_canvas *x);
 #endif
 #include "iemlib.h"
 

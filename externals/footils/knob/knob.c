@@ -27,7 +27,11 @@
 #include "g_canvas.h"
 
 #include "g_all_guis.h"
+/* This really should be part of g_all_guis.h... */
+EXTERN int gfxstub_haveproperties(void *key);
+
 #include <math.h>
+
 
 #ifdef WIN32
 #include <io.h>

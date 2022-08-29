@@ -10,7 +10,11 @@ SOURCES =
 
 # For objects that only build on certain platforms, add those to the SOURCES
 # line for the right platforms.
-SOURCES_macosx = ambient_light_sensor.c iodisplay.c keyboard_light.c sudden_motion_sensor.c smc.c keyboard_layout.c
+#
+# For some reason keyboard_layout.c doesn't work anymore. Even searching for
+# some of the system function calls used returns zero results. So we disable
+# building it below.
+SOURCES_macosx = ambient_light_sensor.c iodisplay.c keyboard_light.c sudden_motion_sensor.c smc.c #keyboard_layout.c
 SOURCES_iphoneos = multitouch.c
 
 # list all pd objects (i.e. myobject.pd) files here, and their helpfiles will
