@@ -59,7 +59,7 @@ static int libdir_add_to_path(const char*dirbuf, t_canvas*canvas) {
   return 0;
 }
 
-static int libdir_loader_legacy(t_canvas *canvas, char *classname)
+static int libdir_loader_legacy(t_canvas *canvas, const char *classname, const char *path)
 {
     int fd = -1;
     char fullclassname[FILENAME_MAX], dirbuf[FILENAME_MAX];
