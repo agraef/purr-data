@@ -22,7 +22,7 @@ static int makeseed(void)
     return (random1_nextseed & 0x7fffffff);
 }
 
-static int rand_random_fl(seed) {
+static int rand_random_fl(unsigned int seed) {
   int q;
   double state;
 
