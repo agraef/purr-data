@@ -16,7 +16,7 @@
 #endif
 
 static int makeseed(void);
-static int rand_random_fl(int);
+static int rand_random_fl(unsigned int);
 
 static int makeseed(void)
 {
@@ -25,7 +25,7 @@ static int makeseed(void)
     return (random1_nextseed & 0x7fffffff);
 }
 
-static int rand_random_fl(seed) {
+static int rand_random_fl(unsigned int seed) {
   int q;
   double state;
 

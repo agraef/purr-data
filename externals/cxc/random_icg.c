@@ -27,7 +27,7 @@ static int makeseed(void)
     return (random1_nextseed & 0x7fffffff);
 }
 
-static int rand_random_icg(seed, p)
+static int rand_random_icg(int seed, int p)
 {
   static int a, b, q, r;
   int state;
@@ -123,7 +123,7 @@ static void random_icg_bang(t_random_icg *x)
 {
   double nval;
 
-  x->x_state = rand_random_icg(x->x_state, x->x_p);
+  x->x_state = rand_random_icg(x->x_state, (int)x->x_p);
 
   nval = (((x->x_state / x->x_p) - 1) * (double)(x->x_g - x->x_f) + (double)x->x_f);
 
