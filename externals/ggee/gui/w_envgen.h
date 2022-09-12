@@ -529,9 +529,10 @@ void envgen_key(t_envgen *x, t_floatarg f)
     }
 }
 
-static int envgen_newclick(t_envgen *x, struct _glist *glist,
+static int envgen_newclick(t_gobj *z, struct _glist *glist,
     int xpos, int ypos, int shift, int alt, int dbl, int doit)
 {
+    t_envgen *x = (t_envgen *)z;
     /* check if user wants to resize */
     float wxpos = text_xpix(&x->x_obj, glist);
     float wypos = (int) (text_ypix(&x->x_obj,glist) + x->w.height);
