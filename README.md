@@ -1,5 +1,8 @@
 ## Pd-L2Ork
 
+**Note to Github users**: Please use our [**GitLab Repository**](https://git.purrdata.net/jwilkes/purr-data).
+
+
 Maintainers:
 
 * Ivica Ico Bukvic <ico@vt.edu>
