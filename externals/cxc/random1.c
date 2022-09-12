@@ -16,7 +16,7 @@
 #endif
 
 static int makeseed(void);
-static int rand_random1(int);
+static int rand_random1(unsigned int);
 
 static int makeseed(void)
 {
@@ -27,7 +27,7 @@ static int makeseed(void)
 
 /* -------------------------- random1 ------------------------------ */
 /* linear congruential generator.  Generator x[n+1] = a * x[n] mod m */
-static int rand_random1(seed)
+static int rand_random1(unsigned int seed)
 {
   int state;
   
