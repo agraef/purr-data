@@ -52,10 +52,11 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #define DONE 4         /* All open bundles have been closed, so can't write 
 		          anything else */
 
+#include <stdio.h>
+
 #ifdef WIN32
 	#include	<winsock2.h>
 	#include 	<io.h>    
-	#include 	<stdio.h>    
 	#include 	<errno.h>
 	#include 	<fcntl.h>
 	#include 	<sys/types.h>
@@ -68,7 +69,6 @@ MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 #ifdef unix
   #include <netinet/in.h>
-  #include <stdio.h>
 #endif
 	
 #include "OSC-client.h"

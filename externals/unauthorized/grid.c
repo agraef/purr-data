@@ -25,6 +25,8 @@
 #include <unistd.h>
 #endif
 
+EXTERN int gfxstub_haveproperties(void *key);
+
 #define DEFAULT_GRID_WIDTH 200
 #define DEFAULT_GRID_HEIGHT 200
 #define DEFAULT_GRID_NBLINES 10

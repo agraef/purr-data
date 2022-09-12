@@ -1,5 +1,11 @@
 #include "ext13.h"
 #include "m_pd.h"
+
+/* Just go ahead and include the private header since the author wants it.
+   Anyway, I think this can be handled natively now so it should only be here
+   for compatibility purposes anyway. */
+#include "m_imp.h"
+
 /*
 #ifndef PD_MAJOR_VERSION
 #include "s_stuff.h"

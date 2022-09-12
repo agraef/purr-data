@@ -23,6 +23,7 @@
 #include <unistd.h>
 #endif
 
+EXTERN int gfxstub_haveproperties(void *key);
 
 #define MKNOB_TANGLE 100
 #define MKNOB_DEFAULTH 100

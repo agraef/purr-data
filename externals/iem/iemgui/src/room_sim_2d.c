@@ -874,13 +874,13 @@ static void room_sim_2d__motionhook(t_scalehandle *sh,
             scalehandle_unclick_scale(sh);
         }
 
-        int properties = gfxstub_haveproperties((void *)x);
-        if (properties)
-        {
+        //int properties = gfxstub_haveproperties((void *)x);
+        //if (properties)
+        //{
             /* No properties for room_sim externals atm */
             //properties_set_field_int(properties,"width",new_w);
             //properties_set_field_int(properties,"height",new_h);
-        }
+        //}
     }
     scalehandle_dragon_label(sh,mouse_x, mouse_y);
 }
