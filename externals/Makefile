@@ -494,7 +494,7 @@ disis:
 ifneq ($(OS_NAME),windows)
 ifneq ($(OS_NAME),darwin)
 	cd $(externals_src)/disis/cwiid && aclocal && autoconf && \
-		./configure --with-python=python2 && make
+		./configure --without-python && make
 endif
 endif
 	make -C $(externals_src)/disis PD_PATH=$(pd_src) pdbinpath=$(pd_src)/src CFLAGS="$(CFLAGS_ADD)"
