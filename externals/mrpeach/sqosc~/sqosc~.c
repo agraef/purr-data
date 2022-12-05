@@ -37,6 +37,7 @@
 #ifdef __APPLE__
 #define __BYTE_ORDER BYTE_ORDER
 #define __LITTLE_ENDIAN LITTLE_ENDIAN
+extern int finite(double);
 #endif                                                                          
 
 #ifdef __linux__
