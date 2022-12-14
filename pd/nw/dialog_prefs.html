@@ -847,8 +847,14 @@ function cancel() {
     // to click the "Ok" button and open the preferences dialog again after
     // that. To see if the bug is gone, try removing the next line and see
     // if you can open the Prefs dialog after clicking "Ok".
+    // ico@vt.edu 2022-03-23: implemented this form of closing, so that it references
+    // the originally created window, as otherwise the window does not want to close
+    // on newer nw.js versions. this replaces window.close(true) below and needs to be
+    // called before the dialogwin["prefs"] is made into null using remove_dialogwin.
+    // see pdgui.js for more info.
+    pdgui.get_dialogwin("prefs").close(true);
     pdgui.remove_dialogwin(pd_object_callback);
-    window.close(true);
+    //window.close(true);
     //pdgui.pdsend(pd_object_callback, "cancel");
 }
 
@@ -1423,7 +1429,9 @@ function add_events(name) {
     // closing the Window
     gui.Window.get().on("close", function() {
         pdgui.remove_dialogwin(pd_object_callback);
-        gui.Window.get().close(true);
+        // ico@vt.edu 2022-03-23: see comment above under the same date
+        pdgui.get_dialogwin("prefs").close(true);
+        //gui.Window.get().close(true);
         //cancel();
     });
     pdgui.dialog_bindings(name);
