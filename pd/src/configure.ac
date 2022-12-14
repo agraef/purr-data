@@ -241,7 +241,7 @@ then
         ../portaudio/src/common/pa_debugprint.c       \
         ../portaudio/src/common/pa_ringbuffer.c  \
         ../portaudio/src/os/unix/pa_unix_util.c     \
-        ../portaudio/src/os/mac_osx/pa_mac_hostapis.c   \
+        ../portaudio/src/os/unix/pa_unix_hostapis.c   \
         ../portaudio/src/hostapi/coreaudio/pa_mac_core.c  \
         ../portaudio/src/hostapi/coreaudio/pa_mac_core_blocking.c  \
         ../portaudio/src/hostapi/coreaudio/pa_mac_core_utilities.c  \
