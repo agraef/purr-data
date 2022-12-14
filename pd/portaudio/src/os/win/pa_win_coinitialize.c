@@ -52,7 +52,7 @@
 #include "pa_win_coinitialize.h"
 
 
-#if (defined(WIN32) && (defined(_MSC_VER) && (_MSC_VER >= 1200))) && !defined(_WIN32_WCE) /* MSC version 6 and above */
+#if (defined(WIN32) && (defined(_MSC_VER) && (_MSC_VER >= 1200))) && !defined(_WIN32_WCE) && !(defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)) /* MSC version 6 and above */
 #pragma comment( lib, "ole32.lib" )
 #endif
 
@@ -72,11 +72,15 @@ PaError PaWinUtil_CoInitialize( PaHostApiTypeId hostApiType, PaWinUtilComInitial
         If COM is already initialized CoInitialize will either return
         FALSE, or RPC_E_CHANGED_MODE if it was initialised in a different
         threading mode. In either case we shouldn't consider it an error
-        but we need to be careful to not call CoUninitialize() if 
+        but we need to be careful to not call CoUninitialize() if
         RPC_E_CHANGED_MODE was returned.
     */
 
+#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_APP)
     hr = CoInitialize(0); /* use legacy-safe equivalent to CoInitializeEx(NULL, COINIT_APARTMENTTHREADED) */
+#else
+    hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+#endif
     if( FAILED(hr) && hr != RPC_E_CHANGED_MODE )
     {
         PA_DEBUG(("CoInitialize(0) failed. hr=%d\n", hr));
@@ -107,8 +111,8 @@ PaError PaWinUtil_CoInitialize( PaHostApiTypeId hostApiType, PaWinUtilComInitial
         comInitializationResult->state = PAWINUTIL_COM_INITIALIZED;
 
         /*
-            Memorize calling thread id and report warning on Uninitialize if 
-            calling thread is different as CoInitialize must match CoUninitialize 
+            Memorize calling thread id and report warning on Uninitialize if
+            calling thread is different as CoInitialize must match CoUninitialize
             in the same thread.
         */
         comInitializationResult->initializingThreadId = GetCurrentThreadId();
@@ -122,23 +126,23 @@ void PaWinUtil_CoUninitialize( PaHostApiTypeId hostApiType, PaWinUtilComInitiali
 {
     if( comInitializationResult->state != PAWINUTIL_COM_NOT_INITIALIZED
             && comInitializationResult->state != PAWINUTIL_COM_INITIALIZED ){
-    
+
         PA_DEBUG(("ERROR: PaWinUtil_CoUninitialize called without calling PaWinUtil_CoInitialize\n"));
     }
 
     if( comInitializationResult->state == PAWINUTIL_COM_INITIALIZED )
     {
         DWORD currentThreadId = GetCurrentThreadId();
-		if( comInitializationResult->initializingThreadId != currentThreadId )
-		{
-			PA_DEBUG(("ERROR: failed PaWinUtil_CoUninitialize calling thread[%d] does not match initializing thread[%d]\n",
-				currentThreadId, comInitializationResult->initializingThreadId));
-		}
-		else
-		{
-			CoUninitialize();
+        if( comInitializationResult->initializingThreadId != currentThreadId )
+        {
+            PA_DEBUG(("ERROR: failed PaWinUtil_CoUninitialize calling thread[%lu] does not match initializing thread[%lu]\n",
+                currentThreadId, comInitializationResult->initializingThreadId));
+        }
+        else
+        {
+            CoUninitialize();
 
             comInitializationResult->state = PAWINUTIL_COM_NOT_INITIALIZED;
-		}
+        }
     }
 }

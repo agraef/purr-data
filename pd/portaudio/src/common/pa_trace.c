@@ -1,5 +1,5 @@
 /*
- * $Id: pa_trace.c 1812 2012-02-14 09:32:57Z robiwan $
+ * $Id$
  * Portable Audio I/O Library Trace Facility
  * Store trace information in real-time for later printing.
  *
@@ -27,13 +27,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -227,4 +227,12 @@ void PaUtil_DiscardHighSpeedLog( LogHandle hLog )
     PaUtil_FreeMemory(pLog);
 }
 
+#else
+/* This stub was added so that this file will generate a symbol.
+ * Otherwise linker/archiver programs will complain.
+ */
+int PaUtil_TraceStubToSatisfyLinker(void)
+{
+    return 0;
+}
 #endif /* TRACE_REALTIME_EVENTS */

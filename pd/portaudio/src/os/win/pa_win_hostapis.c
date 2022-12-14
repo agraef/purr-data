@@ -1,5 +1,5 @@
 /*
- * $Id: pa_win_hostapis.c 1728 2011-08-18 03:31:51Z rossb $
+ * $Id$
  * Portable Audio I/O Library Windows initialization table
  *
  * Based on the Open Source API proposed by Ross Bencina
@@ -26,13 +26,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -85,7 +85,7 @@ PaUtilHostApiInitializer *paHostApiInitializers[] =
 #endif
 
 #if PA_USE_WASAPI
-		PaWasapi_Initialize,
+        PaWasapi_Initialize,
 #endif
 
 #if PA_USE_WDMKS
@@ -98,5 +98,3 @@ PaUtilHostApiInitializer *paHostApiInitializers[] =
 
         0   /* NULL terminated array */
     };
-
-
