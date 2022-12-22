@@ -58,15 +58,10 @@ ifeq ($(OS_NAME),darwin)
 # 10.5 Leopard
 #  FAT_FLAGS = -arch ppc -arch ppc7400 -arch ppc64 -arch i386 -arch x86_64
 # Check whether we have Homebrew or MacPorts, prefer the former.
-optlocal := $(shell (test -d /usr/local/opt && echo /usr/local/opt) || (test -d /opt/local && echo /opt/local) || echo /usr/local)
-ifeq ($(optlocal),/opt/local)
-# MacPorts installs directly into $(optlocal)
+# Homebrew links software into $HOMEBREW_PREFIX. If this isn't defined, we
+# check for MacPorts in /opt/local, and finally fall back to /usr/local.
+optlocal := $(shell test -n "$$HOMEBREW_PREFIX" && test -d $$HOMEBREW_PREFIX && echo $$HOMEBREW_PREFIX || (test -d /opt/local && echo /opt/local) || echo /usr/local)
 usrlocal = $(optlocal)
-else
-# Homebrew links software into /usr/local, which also works for locally
-# installed software if neither MP nor Homebrew is detected.
-usrlocal = /usr/local
-endif
   CFLAGS += -I$(usrlocal)/include -I$(externals_src)/pdp/include -DMACOSX -DUNIX -Dunix -DDL_OPEN
   LDFLAGS += -bundle -bundle_loader $(pd_src)/bin/pd-l2ork -undefined dynamic_lookup -L$(usrlocal)/lib
   LIBS += -lc 
@@ -399,7 +394,7 @@ boids_clean:
 #------------------------------------------------------------------------------#
 # BSAYLOR
 bsaylor:
-	make -C $(externals_src)/bsaylor PD_PATH=$(pd_src) CFLAGS="$(CFLAGS) -fno-strict-aliasing"
+	make -C $(externals_src)/bsaylor PD_PATH=$(pd_src) CFLAGS="$(CFLAGS) -fno-strict-aliasing" LDFLAGS="$(LDFLAGS)"
 
 bsaylor_install:
 	make -C $(externals_src)/bsaylor \
@@ -660,7 +655,7 @@ flib_clean:
 
 fluid:
 	make -C $(externals_src)/fluid~ PD_PATH=$(pd_src) \
-		pdbinpath=$(pd_src)/src CFLAGS="$(CFLAGS_ADD)"
+		pdbinpath=$(pd_src)/src CFLAGS="$(CFLAGS_ADD) -I$(usrlocal)/include" LDFLAGS="$(LDFLAGS)"
 
 fluid_install:
 	make -C $(externals_src)/fluid~ DESTDIR="$(DESTDIR)" \
@@ -1503,7 +1498,7 @@ pdlua_clean:
 #------------------------------------------------------------------------------#
 # PDOGG
 pdogg:
-	make -C $(externals_src)/pdogg PD_PATH=$(pd_src) CFLAGS="$(CFLAGS)"
+	make -C $(externals_src)/pdogg PD_PATH=$(pd_src) CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)"
 
 pdogg_install:
 	make -C $(externals_src)/pdogg DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" install
@@ -1526,7 +1521,7 @@ $(externals_src)/pdp/configure: $(externals_src)/pdp/configure.ac
 	cd $(externals_src)/pdp && autoconf
 
 $(externals_src)/pdp/Makefile.config: $(externals_src)/pdp/configure $(externals_src)/pdp/Makefile.config.in
-	cd $(externals_src)/pdp && ./configure PD_CPPFLAGS="-I$(pd_src)/src" \
+	cd $(externals_src)/pdp && ./configure PD_CPPFLAGS="-I$(pd_src)/src -I$(usrlocal)/include" \
 		$(PDP_OPTIONS)
 
 $(externals_src)/pdp/pdp.$(EXTENSION): $(externals_src)/pdp/Makefile.config 
@@ -1868,7 +1863,7 @@ toxy_clean:
 #------------------------------------------------------------------------------#
 # UNAUTHORIZED
 unauthorized:
-	make -C $(externals_src)/unauthorized CFLAGS="$(CFLAGS)" \
+	make -C $(externals_src)/unauthorized CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" \
 		PD_PATH=$(pd_src) PD_INCLUDE=$(pd_src)/src
 
 unauthorized_install:
