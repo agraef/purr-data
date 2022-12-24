@@ -101,6 +101,8 @@ for so in $PD_APP_PLUGINS/*/*.so; do
 	fi
 done
 
+if test -d $PD_APP_LIB; then
+
 for dylib in $PD_APP_LIB/*.dylib; do
 	LIBS=`otool -L $dylib | sed -n 's|.*'"${optlocal}"'/\(.*\.dylib\).*|\1|p'`
 	if [ "x$LIBS" != "x" ]; then
@@ -163,3 +165,5 @@ for dylib in $PD_APP_LIB/*.dylib; do
                 echo " "
         fi
 done
+
+fi
