@@ -100,6 +100,10 @@ install_vars = DESTDIR=$(firstword $(wildcard $(CURDIR)/packages/*/build)) prefi
 CFLAGS =
 export CFLAGS
 
+# For the light build only, you can add externals to be included in the build.
+addons =
+export addons
+
 # You can also set this variable to specify externals NOT to be built. E.g.,
 # to prevent building Gem (which takes an eternity to build): blacklist = gem
 blacklist =

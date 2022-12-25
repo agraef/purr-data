@@ -141,6 +141,8 @@ CXXFLAGS = $(CFLAGS)
 ifeq ($(LIGHT),yes)
 # minimal set of extensions for the "light" build
 lib_targets = loaders-libdir pddp
+# add specified externals to the light build
+lib_targets += $(addons)
 INCREMENTAL = yes
 else
 lib_targets = adaptive arraysize autotune bassemu bendinfix boids bsaylor comport creb cxc cyclone disis earplug ekext ext13 fftease flatgui fluid freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdlua pdogg plugin pmpd rjlib sigpack smlib tof unauthorized vbap windowing zexy
