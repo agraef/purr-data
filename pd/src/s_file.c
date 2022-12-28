@@ -546,6 +546,14 @@ void sys_loadpreferences( void)
                 break;
             if (sscanf(prefbuf, "%d %d", &audioindev[i], &chindev[i]) < 2)
                 break;
+            /* AG: If we have a name for the device, find the proper device
+               index in case that there was a change to the device list
+               between invocations. */
+            sprintf(keybuf, "audioindevname%d", i+1);
+            if (sys_getpreference(keybuf, prefbuf, MAXPDSTRING)) {
+              int d = sys_audiodevnametonumber(0, prefbuf);
+              if (d >= 0) audioindev[i] = d;
+            }
             naudioindev++;
         }
             /* if no preferences at all, set -1 for default behavior */
@@ -570,6 +578,14 @@ void sys_loadpreferences( void)
                 break;
             if (sscanf(prefbuf, "%d %d", &audiooutdev[i], &choutdev[i]) < 2)
                 break;
+            /* AG: If we have a name for the device, find the proper device
+               index in case that there was a change to the device list
+               between invocations. */
+            sprintf(keybuf, "audiooutdevname%d", i+1);
+            if (sys_getpreference(keybuf, prefbuf, MAXPDSTRING)) {
+              int d = sys_audiodevnametonumber(1, prefbuf);
+              if (d >= 0) audiooutdev[i] = d;
+            }
             naudiooutdev++;
         }
         if (naudiooutdev == 0)
@@ -766,6 +782,14 @@ void glob_savepreferences(t_pd *dummy)
         sprintf(buf1, "audioindev%d", i+1);
         sprintf(buf2, "%d %d", audioindev[i], chindev[i]);
         sys_putpreference(buf1, buf2);
+        /* AG: If we have a name for the device, store it with the device
+           index, so that we can find the proper device index after a change
+           to the device list between invocations. */
+        sys_audiodevnumbertoname(0, audioindev[i], buf2, MAXPDSTRING);
+        if (*buf2) {
+          sprintf(buf1, "audioindevname%d", i+1);
+          sys_putpreference(buf1, buf2);
+        }
     }
     sys_putpreference("noaudioout", (naudiooutdev <= 0 ? "True" : "False"));
     /* AG: naudioout key */
@@ -776,6 +800,14 @@ void glob_savepreferences(t_pd *dummy)
         sprintf(buf1, "audiooutdev%d", i+1);
         sprintf(buf2, "%d %d", audiooutdev[i], choutdev[i]);
         sys_putpreference(buf1, buf2);
+        /* AG: If we have a name for the device, store it with the device
+           index, so that we can find the proper device index after a change
+           to the device list between invocations. */
+        sys_audiodevnumbertoname(1, audiooutdev[i], buf2, MAXPDSTRING);
+        if (*buf2) {
+          sprintf(buf1, "audiooutdevname%d", i+1);
+          sys_putpreference(buf1, buf2);
+        }
    }
 
     sprintf(buf1, "%d", advance);
