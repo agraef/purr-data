@@ -121,7 +121,7 @@ ORIGDIR=pd-$(LIBRARY_NAME)_$(LIBRARY_VERSION)
 UNAME := $(shell uname -s)
 CPU := $(shell uname -p)
 ifeq ($(UNAME),Darwin)
-  ifeq ($(CPU),arm) # iPhone/iPod Touch
+  ifeq ($(CPU),arm-iphone) # iPhone/iPod Touch
     SOURCES += $(SOURCES_iphoneos)
     EXTENSION = pd_darwin
     OS = iphoneos

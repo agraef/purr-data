@@ -13,15 +13,13 @@ if [ $# -ne 1 ]; then
 fi
 
 # Check whether we have Homebrew or MacPorts, prefer the former.
-optlocal=$((test -d /usr/local/opt && echo /usr/local/opt) || (test -d /opt/local && echo /opt/local) || echo /usr/local)
-
-if [ "$optlocal" == "/opt/local" ]; then
-    # MacPorts installs software into /opt/local
-    usrlocal=$optlocal
+optlocal=$((test -n "$HOMEBREW_PREFIX" && test -d $HOMEBREW_PREFIX/opt && echo $HOMEBREW_PREFIX/opt) || (test -d /opt/local && echo /opt/local) || echo /usr/local)
+# Determine the actual installation prefix. On Homebrew, this is
+# $HOMEBREW_PREFIX, otherwise (MP or none) it's just $optlocal.
+if test -n "$HOMEBREW_PREFIX" && test -d $HOMEBREW_PREFIX; then
+    usrlocal=$HOMEBREW_PREFIX
 else
-    # Homebrew links software into /usr/local; if neither MP nor Homebrew is
-    # detected, fall back to plain old local software in /usr/local
-    usrlocal=/usr/local
+    usrlocal=$optlocal
 fi
 
 LIB_DIR=lib
@@ -103,6 +101,8 @@ for so in $PD_APP_PLUGINS/*/*.so; do
 	fi
 done
 
+if test -d $PD_APP_LIB; then
+
 for dylib in $PD_APP_LIB/*.dylib; do
 	LIBS=`otool -L $dylib | sed -n 's|.*'"${optlocal}"'/\(.*\.dylib\).*|\1|p'`
 	if [ "x$LIBS" != "x" ]; then
@@ -165,3 +165,5 @@ for dylib in $PD_APP_LIB/*.dylib; do
                 echo " "
         fi
 done
+
+fi

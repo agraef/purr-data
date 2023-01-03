@@ -56,7 +56,7 @@ ALLSOURCES := $(SOURCES) $(SOURCES_android) $(SOURCES_cygwin) $(SOURCES_macosx) 
 UNAME := $(shell uname -s)
 ifeq ($(UNAME),Darwin)
   CPU := $(shell uname -p)
-  ifeq ($(CPU),arm) # iPhone/iPod Touch
+  ifeq ($(CPU),arm-iphone) # iPhone/iPod Touch
     SOURCES += $(SOURCES_macosx)
     EXTENSION = pd_darwin
     OS = iphoneos

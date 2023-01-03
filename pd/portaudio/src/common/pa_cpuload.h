@@ -1,7 +1,7 @@
 #ifndef PA_CPULOAD_H
 #define PA_CPULOAD_H
 /*
- * $Id: pa_cpuload.h 1097 2006-08-26 08:27:53Z rossb $
+ * $Id$
  * Portable Audio I/O Library CPU Load measurement functions
  * Portable CPU load measurement facility.
  *
@@ -29,13 +29,13 @@
  */
 
 /*
- * The text above constitutes the entire PortAudio license; however, 
+ * The text above constitutes the entire PortAudio license; however,
  * the PortAudio community also makes the following non-binding requests:
  *
  * Any person wishing to distribute modifications to the Software is
  * requested to send the modifications to the original developer so that
- * they can be incorporated into the canonical version. It is also 
- * requested that these non-binding requests be included along with the 
+ * they can be incorporated into the canonical version. It is also
+ * requested that these non-binding requests be included along with the
  * license above.
  */
 
@@ -68,5 +68,5 @@ double PaUtil_GetCpuLoad( PaUtilCpuLoadMeasurer* measurer );
 
 #ifdef __cplusplus
 }
-#endif /* __cplusplus */     
+#endif /* __cplusplus */
 #endif /* PA_CPULOAD_H */

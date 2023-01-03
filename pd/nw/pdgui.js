@@ -1376,6 +1376,66 @@ exports.cmd_or_ctrl_key = cmd_or_ctrl_key;
                 }
                 break;
 
+            /* ag: These *should* be handled in the nwjs menu (see put menu
+               in pd_canvas.js), but aren't (at least not from nw.js 0.42.4
+               onward). XXXFIXME: Maybe this should go into the keydown
+               function in pd_canvas.js instead? Also note that we prevent
+               the default handling here, so that the menu action doesn't get
+               triggered, in case the upstream bug gets fixed eventually. */
+            case 49:
+                if (cmd_or_ctrl_key(evt)) { // ctrl-1
+                    pdsend(cid, "dirty 1");
+                    pdsend(cid, "obj 0");
+                    evt.preventDefault();
+                }
+                break;
+            case 50:
+                if (cmd_or_ctrl_key(evt)) { // ctrl-2
+                    pdsend(cid, "dirty 1");
+                    pdsend(cid, "msg 0");
+                    evt.preventDefault();
+                }
+                break;
+            case 51:
+                if (cmd_or_ctrl_key(evt)) { // ctrl-3
+                    pdsend(cid, "dirty 1");
+                    pdsend(cid, "floatatom 0");
+                    evt.preventDefault();
+                }
+                break;
+            case 52:
+                if (cmd_or_ctrl_key(evt)) { // ctrl-4
+                    pdsend(cid, "dirty 1");
+                    pdsend(cid, "symbolatom 0");
+                    evt.preventDefault();
+                }
+                break;
+            case 53:
+                if (cmd_or_ctrl_key(evt)) { // ctrl-5
+                    pdsend(cid, "dirty 1");
+                    pdsend(cid, "text 0");
+                    evt.preventDefault();
+                }
+                break;
+            case 77:
+                // ctrl+shift-m: weirdly, ctrl+shift doesn't appear to work,
+                // although the unshifted combo does??
+                if (cmd_or_ctrl_key(evt) && evt.shiftKey) {
+                    pdsend(cid, "dirty 1");
+                    pdsend(cid, "dropdown 0");
+                    evt.preventDefault();
+                }
+                break;
+            case 57:
+                // ctrl-9: funnily enough, the Alt and Shift key combinations
+                // *do* get triggered, so we don't handle these here
+                if (cmd_or_ctrl_key(evt) && !evt.shiftKey && !evt.altKey) {
+                    gui_canvas_optimal_zoom(cid, 1, 1);
+                    gui_canvas_get_scroll(cid);
+                    evt.preventDefault();
+                }
+                break;
+
         }
         if (hack !== null) {
             // To match Pd Vanilla behavior, fake a keyup if this

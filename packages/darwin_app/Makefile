@@ -40,7 +40,7 @@ ifeq ($(TARGET_PLATFORM),i386)
   # assume Intel 64-bit with core2 as minimum CPU
   OPT_CFLAGS += -march=core2 -msse3 -mssse3 -mfpmath=sse
 else
-  OPT_CFLAGS += -mcpu=7450 -mtune=7450
+#  OPT_CFLAGS += -mcpu=7450 -mtune=7450
 endif
 
 OPT_FLAGS += -DDEBUG_SOUNDFILE

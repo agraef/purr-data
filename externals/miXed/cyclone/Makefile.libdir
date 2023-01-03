@@ -18,7 +18,7 @@ ifeq ($(UNAME),Darwin)
   macos_target = 10.9
   endif
   CPU := $(shell uname -p)
-  ifeq ($(CPU),arm) # iPhone/iPod Touch
+  ifeq ($(CPU),arm-iphone) # iPhone/iPod Touch
     EXTENSION = pd_darwin
     CYCLIST_BIN = cyclist
     OS = iphoneos

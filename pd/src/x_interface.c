@@ -372,7 +372,7 @@ void info_print(t_text *te)
     t_methodentry *m;
     for(i = c->c_nmethod, m = c->c_methods; i; i--, m++)
         if(m->me_name != gensym("print"))
-            (m->me_fun)(te, m->me_name, 0, 0);
+	  ((t_gotfn3)(m->me_fun))(te, m->me_name, 0, 0);
     /* not sure why this doesn't work... */
     /* pd_forwardmess(te->te_pd, 0, 0); */
     info_to_console = 0;
