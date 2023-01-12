@@ -142,7 +142,7 @@ light-double:
 	make -C externals $(@:%_ext=%) $(@:%_ext=%_install) $(install_vars)
 
 checkout:
-	git submodule update --init
+	git submodule update --init --recursive
 
 clean:
 	test "$(shell uname -s)" = "Darwin" && make -C packages/darwin_app clean || true
