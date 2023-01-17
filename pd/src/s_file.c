@@ -251,7 +251,7 @@ static void sys_donesavepreferences( void)
 #ifdef __APPLE__
 
 // prefs file that is currently the one to save to
-static char current_prefs[FILENAME_MAX] = "org.puredata.pd-l2ork"; 
+static char current_prefs[FILENAME_MAX] = "org.puredata.purr-data";
 
 static char *sys_prefbuf;
 
@@ -294,13 +294,13 @@ static void sys_initloadpreferences(void)
     // Pd-extended right now, but we might want to support them in the future,
     // so we handle the embedded prefs case anyway.
     snprintf(default_prefs, FILENAME_MAX,
-	     "%s/../org.puredata.pd-l2ork.default",
+	     "%s/../org.puredata.purr-data.default",
              sys_libdir->s_name);
     snprintf(embedded_prefs, FILENAME_MAX,
-	     "%s/../org.puredata.pd-l2ork",
+	     "%s/../org.puredata.purr-data",
              sys_libdir->s_name);
     snprintf(user_prefs, FILENAME_MAX,
-             "%s/Library/Preferences/org.puredata.pd-l2ork", homedir);
+             "%s/Library/Preferences/org.puredata.purr-data", homedir);
     snprintf(embedded_prefs_file, FILENAME_MAX, "%s.plist", embedded_prefs);
     snprintf(user_prefs_file, FILENAME_MAX, "%s.plist", user_prefs);
     if (stat(embedded_prefs_file, &statbuf) == 0) {
