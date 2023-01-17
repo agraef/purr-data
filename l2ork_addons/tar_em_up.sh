@@ -439,7 +439,7 @@ then
 		cd ../../
 	# move OSX dmg installer
 	elif [ $dmg -gt 0 ]; then
-		mv packages/darwin_app/Pd*.dmg .
+		mv packages/darwin_app/Purr*.dmg .
 	elif [ $inno -gt 0 ]; then
 		if [[ $os == "win64" ]]; then
 		    mv packages/win64_inno/Output/Purr*.exe .

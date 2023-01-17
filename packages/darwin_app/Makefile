@@ -175,7 +175,7 @@ darwin_app_core: darwin_app_wrapper
 
 package: dmg
 
-VOLUME_NAME = Pd-l2ork
+VOLUME_NAME = Purr-Data
 dmg:
 	rm -f build.dmg
 	hdiutil create -format UDRW -fs HFS+ -srcfolder "$(BUILD_BASE)" \

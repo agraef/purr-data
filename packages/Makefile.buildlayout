@@ -199,7 +199,10 @@ PD_VERSION := $(PD_L2ORK_VERSION)-$(PD_BUILD_VERSION)
 
 VERSION_DATE := $(shell date +%Y%m%d)
 
-APPLICATION_NAME = Pd-l2ork
+# AG 20230117: As discussed on the mailing list, renamed to Purr-Data for
+# consistency with the Windows app, to avoid any confusion, and to prevent
+# name clashes with downstream Pd-l2ork 2.
+APPLICATION_NAME = Purr-Data
 PACKAGE_NAME = $(APPLICATION_NAME)-$(PD_VERSION)-`uname -m`
 
 
