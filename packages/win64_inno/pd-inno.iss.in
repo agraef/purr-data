@@ -20,7 +20,7 @@ UninstallDisplayIcon={app}\lib\pdPatch_catGraphics.ico
 
 Compression=lzma/ultra
 ChangesAssociations=true
-OutputBaseFilename=Purr Data PD_VERSION (64-bit)
+OutputBaseFilename=Purr-Data-PD_VERSION-x86_64
 AppCopyright=GNU GPL
 WizardImageFile=big_cat.bmp
 WizardImageStretch=no
