@@ -88,7 +88,7 @@ osx_10.11_x86_64_dmg:
      name: "$CI_RUNNER_DESCRIPTION"
      expire_in: 1 day
      paths:
-       - Pd*.dmg
+       - Purr*.dmg
 
 osx_10.8_x86_64_dmg:
    tags:
@@ -106,7 +106,7 @@ osx_10.8_x86_64_dmg:
      name: "$CI_RUNNER_DESCRIPTION"
      expire_in: 1 day
      paths:
-       - Pd*.dmg
+       - Purr*.dmg
 
 windows_x86_64_innosetup:
   tags:
