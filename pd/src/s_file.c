@@ -6,7 +6,7 @@
  * this file implements a mechanism for storing and retrieving preferences.
  * Should later be renamed "preferences.c" or something.
  *
- * In unix this is handled by the "~/.pd-l2ork/user.settings" file, in windows by
+ * In unix this is handled by the "~/.purr-data/user.settings" file, in windows by
  * the registry, and in MacOS by the Preferences system.
  */
 
