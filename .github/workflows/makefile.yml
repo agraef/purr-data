@@ -1,0 +1,104 @@
+name: Makefile CI
+
+on:
+  push:
+    branches: [ master, release, testing ]
+    tags: [ '*' ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  macos-build:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - name: install dependencies
+      run: |
+        brew install automake
+        brew install fftw
+        brew install fluidsynth
+        brew install faac
+        brew install jpeg
+        brew install speex
+        brew install gsl
+        brew install libquicktime
+        brew install sdl2
+        pip3 install markdown
+
+    - name: make
+      run: make V=0
+
+    - name: check
+      run: make check
+
+    - name: upload
+      uses: actions/upload-artifact@v3
+      with:
+        name: purr-data-macos-x86_64
+        path: Purr-Data-*.dmg
+        retention-days: 2
+
+  windows-build:
+
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: msys2 {0}
+    env:
+      CC: gcc
+      CXX: g++
+
+    steps:
+    - uses: msys2/setup-msys2@v2
+
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - name: install innosetup
+      run: |
+        wget https://jrsoftware.org/download.php/is.exe -O innosetup.exe
+        ./innosetup.exe //SILENT //CURRENTUSER
+
+    - name: install dependencies
+      run: |
+        pacman --noconfirm --disable-download-timeout -S autoconf automake git libtool make mingw-w64-x86_64-dlfcn mingw-w64-x86_64-fftw mingw-w64-x86_64-fluidsynth mingw-w64-x86_64-SDL2 mingw-w64-x86_64-ftgl mingw-w64-x86_64-fribidi mingw-w64-x86_64-ladspa-sdk mingw-w64-x86_64-lame mingw-w64-x86_64-libsndfile mingw-w64-x86_64-libvorbis mingw-w64-x86_64-lua mingw-w64-x86_64-toolchain mingw-w64-x86_64-libjpeg-turbo mingw-w64-x86_64-speex mingw-w64-x86_64-python mingw-w64-x86_64-python-markdown rsync unzip wget
+
+    - name: make
+      run: |
+        echo UNAME: `uname -s`
+        make V=0
+
+    - name: check
+      run: make check
+
+    - name: upload
+      uses: actions/upload-artifact@v3
+      with:
+        name: purr-data-mingw-x86_64
+        path: Purr-Data-*.exe
+        retention-days: 2
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    needs: [macos-build, windows-build]
+    steps:
+    - uses: actions/download-artifact@v3
+    - name: ziptie
+      run: |
+        mkdir dist
+        for x in purr-data-*; do (cd $x && zip -r ../dist/$x.zip Purr-Data*); done
+    - name: release
+      uses: softprops/action-gh-release@v1
+      with:
+        prerelease: true
+        draft: true
+        files: dist/*.zip
