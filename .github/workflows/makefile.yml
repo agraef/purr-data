@@ -31,8 +31,14 @@ jobs:
         brew install sdl2
         pip3 install markdown
 
+    - name: version
+      run: |
+        echo "version=$(git describe --tags)" >> $GITHUB_ENV
+
     - name: make
-      run: make V=0
+      run: |
+        echo version: $version
+        make V=0
 
     - name: check
       run: make check
@@ -40,7 +46,7 @@ jobs:
     - name: upload
       uses: actions/upload-artifact@v3
       with:
-        name: purr-data-macos-x86_64
+        name: purr-data-${{ env.version }}-macos-x86_64
         path: Purr-Data-*.dmg
         retention-days: 2
 
@@ -71,8 +77,13 @@ jobs:
       run: |
         pacman --noconfirm --disable-download-timeout -S autoconf automake git libtool make mingw-w64-x86_64-dlfcn mingw-w64-x86_64-fftw mingw-w64-x86_64-fluidsynth mingw-w64-x86_64-SDL2 mingw-w64-x86_64-ftgl mingw-w64-x86_64-fribidi mingw-w64-x86_64-ladspa-sdk mingw-w64-x86_64-lame mingw-w64-x86_64-libsndfile mingw-w64-x86_64-libvorbis mingw-w64-x86_64-lua mingw-w64-x86_64-toolchain mingw-w64-x86_64-libjpeg-turbo mingw-w64-x86_64-speex mingw-w64-x86_64-python mingw-w64-x86_64-python-markdown rsync unzip wget
 
+    - name: version
+      run: |
+        echo "version=$(git describe --tags)" >> $GITHUB_ENV
+
     - name: make
       run: |
+        echo version: $version
         echo UNAME: `uname -s`
         make V=0
 
@@ -82,7 +93,7 @@ jobs:
     - name: upload
       uses: actions/upload-artifact@v3
       with:
-        name: purr-data-mingw-x86_64
+        name: purr-data-${{ env.version }}-mingw-x86_64
         path: Purr-Data-*.exe
         retention-days: 2
 
