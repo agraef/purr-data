@@ -32,7 +32,7 @@ The [JGU Packages](https://build.opensuse.org/project/show/home:aggraef:purr-dat
 @linux@
 
 @darwin@
-The latest Mac packages are available as disk images on [GitHub](https://github.com/agraef/purr-data/releases). To install Purr Data, drag the Pd-l2ork.app bundle in the disk image into your /Applications folder, or to the shortcut in the disk image.
+The latest Mac packages are available as disk images on [GitHub](https://github.com/agraef/purr-data/releases). To install Purr Data, drag the Purr-Data.app bundle in the disk image into your /Applications folder, or to the shortcut in the disk image.
 
 If you want to use PDP on Mac OS X, you may have to install X11. For details see [How do I install Pd on MacOS X?](https://puredata.info/docs/faq/macosx)
 @darwin@
@@ -50,7 +50,7 @@ If you installed Purr Data from the JGU repositories, then the executable will b
 @linux@
 
 @darwin@
-After installation you will find `Pd-l2ork` in the Launchpad, which can be run by clicking on the icon as usual. Note that Purr Data is distributed as an application bundle on the Mac, but you can use the `open` command to launch it from the shell as follows: `open -a Pd-l2ork`
+After installation you will find `Purr-Data` in the Launchpad, which can be run by clicking on the icon as usual. Note that Purr Data is distributed as an application bundle on the Mac, but you can use the `open` command to launch it from the shell as follows: `open -a Purr-Data`
 @darwin@
 
 @mingw@
@@ -87,7 +87,7 @@ On Linux, configuration data (user preferences, help index, completions) lives i
 @linux@
 
 @darwin@
-On the Mac, the user preferences live in ~/Library/Preferences/org.puredata.pd-l2ork.plist. You can remove that file (`rm ~/Library/Preferences/org.puredata.pd-l2ork.plist`) to reset Purr Data to the default preferences.
+On the Mac, the user preferences live in ~/Library/Preferences/org.puredata.purr-data.plist. You can remove that file (`rm ~/Library/Preferences/org.puredata.purr-data.plist`) to reset Purr Data to the default preferences.
 
 Some auxiliary configuration data (help index, completions) can be found in ~/.purr-data. You can remove this directory (`rm -rf ~/.purr-data`) to reset the help index and completion data (they will be re-created automatically).
 @darwin@
