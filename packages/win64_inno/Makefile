@@ -134,7 +134,7 @@ ifneq ($(LIGHT),yes)
 	install -p $(bin_src)/libiconv-2.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libpng16-16.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/zlib1.dll $(DESTDIR)$(bindir)/
-	install -p $(bin_src)/libpcre-1.dll $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libpcre2-8-0.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libgraphite2.dll $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libjpeg-8.dll $(DESTDIR)$(bindir)/
 	# New: lossless compression algorithm. Gem.dll won't load without it.
