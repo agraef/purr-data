@@ -60,7 +60,7 @@ nwjs = $(nwjspkg)-ia32.tar.gz $(nwjspkg)-x64.tar.gz $(nwjspkg_arm)-arm.tar.gz $(
 
 # Submodules (Gem, etc.). You can list them with 'make submodules'.
 #submodules = Gem externals/miXed $(addprefix l2ork_addons/, cwiid fftease3.0-32bit lyonpotpourri rtcmix-in-pd)
-submodules = $(sort $(shell git -C .. config --file .gitmodules --get-regexp path | awk '{ print $$2 }'))
+submodules = $(sort $(shell git -C .. config --file .gitmodules --get-regexp path | awk '{ print $$2 }') externals/pd-lua/lua)
 
 # This is used for automatically generated debian/changelog entries (cf. 'make
 # debchange'). Adjust as needed.
@@ -106,7 +106,7 @@ debsrc-us:
 $(debsrc):
 	rm -rf $(debdist)
 # Make sure that the submodules are initialized.
-	git -C .. submodule update --init
+	git -C .. submodule update --init --recursive
 # Grab the main source.
 	git -C .. archive --format=tar.gz --prefix=$(debdist)/ HEAD | tar xfz -
 # Grab the submodules.
