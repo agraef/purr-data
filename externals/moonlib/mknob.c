@@ -160,15 +160,15 @@ static void mknob_getrect(t_gobj *z, t_glist *glist,
 static void mknob_save(t_gobj *z, t_binbuf *b)
 {
     t_mknob *x = (t_mknob *)z;
-    int bflcol[3];
+    t_symbol *bflcol[3];
     t_symbol *srl[3];
 
     iemgui_save(&x->x_gui, srl, bflcol);
-    binbuf_addv(b, "ssiisiiffiisssiiiiiiiii", gensym("#X"),gensym("obj"),
+    binbuf_addv(b, "ssiisiiffiisssiiiisssii", gensym("#X"),gensym("obj"),
                 (t_int)x->x_gui.x_obj.te_xpix, (t_int)x->x_gui.x_obj.te_ypix,
                 atom_getsymbol(binbuf_getvec(x->x_gui.x_obj.te_binbuf)),
                 x->x_gui.x_w, x->x_gui.x_h,
-                (float)x->x_min, (float)x->x_max,
+                (t_float)x->x_min, (t_float)x->x_max,
                 x->x_lin0_log1, iem_symargstoint(x),
                 srl[0], srl[1], srl[2],
                 x->x_gui.x_ldx, x->x_gui.x_ldy,
