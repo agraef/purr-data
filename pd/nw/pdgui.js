@@ -1759,14 +1759,13 @@ function canvas_check_geometry(cid) {
         // in nw_create_window of index.js
         // ico@vt.edu in 0.46.2 this is now 25 pixels, so I guess
         // it is now officially kludge^2
-        win_h = patchwin[cid].height - 
-            (nw_menu_offset * !nw_os_is_osx),
+        win_h = patchwin[cid].height - nw_menu_offset,
         win_x = patchwin[cid].x,
         win_y = patchwin[cid].y,
         cnv_width = patchwin[cid].window.innerWidth,
         cnv_height = patchwin[cid].window.innerHeight;
     //post("canvas_check_geometry w=" + win_w + " h=" + win_h +
-    //    " x=" + win_x + " y=" + win_y + "cnv_w=" + cnw_width + " cnv_h=" + cnv_height);
+    //    " x=" + win_x + " y=" + win_y + " cnv_w=" + cnv_width + " cnv_h=" + cnv_height);
 
     // ico@vt.edu 2020-08-31:
     // why does Windows have different innerWidth and innerHeight from other OSs?
