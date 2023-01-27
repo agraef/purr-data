@@ -1729,9 +1729,15 @@ function check_nw_version(version) {
 exports.check_nw_version = check_nw_version;
 
 // ico@vt.edu 2020-08-11: this appears to have to be 25 at all times
-// we will leave this here for later if we encounter issues with inconsistencies
-// across different nw.js versions...
-var nw_menu_offset = check_nw_version("0.46") ? 25 : 25;
+/* ag 2023-01-27: on osx the true value is 0 (the canvas has no menubar there)
+
+   However, on osx the menubar offset still needs to be accounted for in
+   canvas_check_geometry, to prevent the patch window from growing vertically
+   after each save. That's why we maintain two separate variables here,
+   nw_menu_height (the nominal value to be used in canvas_check_geometry), and
+   nw_menu_offset (the platform-dependent value to be used elsewhere). */
+var nw_menu_height = 25;
+var nw_menu_offset = nw_menu_height * !nw_os_is_osx;
 
 exports.nw_menu_offset = nw_menu_offset;
 
@@ -1754,37 +1760,29 @@ function gui_canvas_change_geometry(cid, w, h, x, y) {
 // a cpu hog, check out pdtk_canvas_checkgeometry in the old
 // pd.tk
 function canvas_check_geometry(cid) {
+    // ag 2023-01-28: For some reason, canvas_relocate takes w and h from the
+    // first ("canvas"), and x and y from the second ("window") geometry
+    // argument. We can't change this, as it's part of the officially
+    // documented vanilla API. But we can't use the real canvas geometry in
+    // the first argument, because those values are scaled according to the
+    // current zoom factor, and these might be subject to change. Therefore we
+    // use the window geometry for both, and correct for the menu bar in the
+    // first argument.
     var win_w = patchwin[cid].width,
-        // "23" is a kludge to account for the menubar size.  See comment
-        // in nw_create_window of index.js
-        // ico@vt.edu in 0.46.2 this is now 25 pixels, so I guess
-        // it is now officially kludge^2
-        win_h = patchwin[cid].height - nw_menu_offset,
+        win_h = patchwin[cid].height,
         win_x = patchwin[cid].x,
-        win_y = patchwin[cid].y,
-        cnv_width = patchwin[cid].window.innerWidth,
-        cnv_height = patchwin[cid].window.innerHeight;
+        win_y = patchwin[cid].y;
+    // scaled values, don't use:
+    //var cnv_width = patchwin[cid].window.innerWidth,
+    //    cnv_height = patchwin[cid].window.innerHeight;
+    var cnv_width = win_w,
+        cnv_height = win_h - nw_menu_height;
     //post("canvas_check_geometry w=" + win_w + " h=" + win_h +
     //    " x=" + win_x + " y=" + win_y + " cnv_w=" + cnv_width + " cnv_h=" + cnv_height);
 
-    // ico@vt.edu 2020-08-31:
-    // why does Windows have different innerWidth and innerHeight from other OSs?
-    // See canvas_params for the explanation...
-    // 2020-10-01: this was a bug in 0.14.7 but is no longer needed
-    //win_w += 16 * nw_os_is_windows;
-    //win_h += 8 * nw_os_is_windows;
-
-    // We're reusing win_x and win_y below, as it
-    // shouldn't make a difference to the bounds
-    // algorithm in Pd (ico@vt.edu: this is not true anymore for nw 0.46+)
-    //post("relocate " + pd_geo_string(cnv_width, cnv_height, win_x, win_y) + " " +
-    //       pd_geo_string(cnv_width, cnv_height, win_x, win_y));
-    // IMPORTANT! ico@vt.edu: for nw 0.46+ we will need to replace first pd_geo_string's
-    // first two args (win_w and win_h with cnv_width and cnv_height + nw_menu_offset
-    // to ensure the window reopens exactly how it was saved)
     pdsend(cid, "relocate",
-           pd_geo_string(win_w, win_h, win_x, win_y),
-           pd_geo_string(cnv_width, cnv_height, win_x, win_y)
+           pd_geo_string(cnv_width, cnv_height, win_x, win_y),
+           pd_geo_string(win_w, win_h, win_x, win_y)
     );
 }
 
