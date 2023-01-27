@@ -24,30 +24,18 @@ function print_dir ()
 function post_install ()
 {
 	echo -e "\tcp -f lib/pd-l2ork/pd-l2ork '\$(prefix)/lib/pd-l2ork/pd-l2ork'"
-	echo -e "\tcp -f /usr/local/lib/pd-l2ork/pd-l2ork.png /usr/share/icons/hicolor/128x128/apps/"
-	echo -e "\tcp -f /usr/local/lib/pd-l2ork/pd-l2ork-red.png /usr/share/icons/hicolor/128x128/apps/"
-	echo -e "\tcp -f /usr/local/lib/pd-l2ork/pd-l2ork-k12.png /usr/share/icons/hicolor/128x128/apps/"
-	echo -e "\tcp -f /usr/local/lib/pd-l2ork/pd-l2ork-k12-red.png /usr/share/icons/hicolor/128x128/apps/"
-	echo -e "\tcp -f /usr/local/lib/pd-l2ork/text-x-pd-l2ork.png /usr/share/icons/hicolor/128x128/mimetypes"
-	echo -e "\tcp -f /usr/local/lib/pd-l2ork/pd-l2ork.desktop /usr/share/applications/"
-	echo -e "\tcp -f /usr/local/lib/pd-l2ork/pd-l2ork-k12.desktop /usr/share/applications/"
-	echo -e "\tcp -f /usr/local/lib/pd-l2ork/pd-l2ork-debug.desktop /usr/share/applications/"
-	echo -e "\tcp -f /usr/local/lib/pd-l2ork/pd-l2ork-k12-debug.desktop /usr/share/applications/"
+	echo -e "\tcp -f /usr/local/lib/pd-l2ork/purr-data.png /usr/share/icons/hicolor/128x128/apps/"
+	echo -e "\tcp -f /usr/local/lib/pd-l2ork/text-x-purr-data.png /usr/share/icons/hicolor/128x128/mimetypes"
+	echo -e "\tcp -f /usr/local/lib/pd-l2ork/purr-data.desktop /usr/share/applications/"
 	echo -e "\tgtk-update-icon-cache /usr/share/icons/hicolor"
 
 }
 
 function post_remove ()
 {
-	echo -e "\trm -f /usr/share/icons/hicolor/128x128/apps/pd-l2ork.png"
-	echo -e "\trm -f /usr/share/icons/hicolor/128x128/apps/pd-l2ork-red.png"
-	echo -e "\trm -f /usr/share/icons/hicolor/128x128/apps/pd-l2ork-k12.png"
-	echo -e "\trm -f /usr/share/icons/hicolor/128x128/apps/pd-l2ork-k12-red.png"
-	echo -e "\trm -f /usr/share/icons/hicolor/128x128/mimetypes/text-x-pd-l2ork.png"
-	echo -e "\trm -f /usr/share/applications/pd-l2ork.desktop"
-	echo -e "\trm -f /usr/share/applications/pd-l2ork-k12.desktop"
-	echo -e "\trm -f /usr/share/applications/pd-l2ork-debug.desktop"
-	echo -e "\trm -f /usr/share/applications/pd-l2ork-k12-debug.desktop"
+	echo -e "\trm -f /usr/share/icons/hicolor/128x128/apps/purr-data.png"
+	echo -e "\trm -f /usr/share/icons/hicolor/128x128/mimetypes/text-x-purr-data.png"
+	echo -e "\trm -f /usr/share/applications/purr-data.desktop"
 	echo -e "\tgtk-update-icon-cache /usr/share/icons/hicolor"
 
 }
@@ -102,7 +90,7 @@ echo ""
 echo "prefix = /usr/local"
 echo ""
 echo "default:"
-echo -e "\t@echo 'you have to run \"make install\" to install Pd-l2ork'"
+echo -e "\t@echo 'you have to run \"make install\" to install Purr-Data'"
 echo ""
 echo "install:"
 traverse_install_tree $ROOT_DIR

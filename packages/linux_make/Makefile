@@ -59,6 +59,8 @@ all:
 
 install: 
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) install
+# link pd-l2ork -> purr-data since our desktop files expect it
+	ln -sf pd-l2ork $(DESTDIR)/$(prefix)/bin/purr-data
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) doc_format
 	find $(DESTDIR) -name \*.pd -print0 | xargs -0 chmod a-x
 	@echo " "
@@ -98,56 +100,30 @@ endif
 # free desktop menu, mime, and icon support
 # perhaps the icons should go in /usr/share/pixmaps like 'scribus'
 	install -d $(DESTDIR)/usr/share/icons/hicolor/128x128/apps
-	install -p -m0644 $(packages_src)/linux_make/pd-l2ork.png \
+	install -p -m0644 $(packages_src)/linux_make/purr-data.png \
 		$(DESTDIR)/usr/share/icons/hicolor/128x128/apps/
-	install -p -m0644 $(packages_src)/linux_make/pd-l2ork-red.png \
-		$(DESTDIR)/usr/share/icons/hicolor/128x128/apps/
-	install -p -m0644 $(packages_src)/linux_make/pd-l2ork-k12.png \
-		$(DESTDIR)/usr/share/icons/hicolor/128x128/apps/
-	install -p -m0644 $(packages_src)/linux_make/pd-l2ork-k12-red.png \
-		$(DESTDIR)/usr/share/icons/hicolor/128x128/apps/
-#	install -d $(DESTDIR)/usr/share/icons/hicolor/48x48/apps
-#	install -p -m0644 $(packages_src)/linux_make/pd-48x48.png \
-#		$(DESTDIR)/usr/share/icons/hicolor/48x48/apps/pd-l2ork.png
-	install -d $(DESTDIR)/usr/share/icons/hicolor/128x128/mimetypes
-	install -p -m0644 $(packages_src)/linux_make/text-x-pd-l2ork.png \
+	install -p -m0644 $(packages_src)/linux_make/text-x-purr-data.png \
 		$(DESTDIR)/usr/share/icons/hicolor/128x128/mimetypes
 	install -d $(DESTDIR)/usr/share/applications/ 
-	install -p -m0644 $(packages_src)/linux_make/pd-l2ork.desktop \
-		$(DESTDIR)/usr/share/applications/
-	install -p -m0644 $(packages_src)/linux_make/pd-l2ork-k12.desktop \
-		$(DESTDIR)/usr/share/applications/
-	install -p -m0644 $(packages_src)/linux_make/pd-l2ork-debug.desktop \
-		$(DESTDIR)/usr/share/applications/
-	install -p -m0644 $(packages_src)/linux_make/pd-l2ork-k12-debug.desktop \
+	install -p -m0644 $(packages_src)/linux_make/purr-data.desktop \
 		$(DESTDIR)/usr/share/applications/
 # add mime type to .pd files
 	install -d $(DESTDIR)/usr/share/mime/packages/
-	install -p -m0644 $(packages_src)/linux_make/pd-l2ork.xml \
+	install -p -m0644 $(packages_src)/linux_make/purr-data.xml \
 		$(DESTDIR)/usr/share/mime/packages/
 # files for /etc
 	install -d $(DESTDIR)/etc/bash_completion.d/
 	install -p -m0644 $(scripts_src)/bash_completion/pd-l2ork \
 		$(DESTDIR)/etc/bash_completion.d
-	install -d $(DESTDIR)/etc/default
-	install -p -m0644 $(scripts_src)/debian/default/pd-l2ork \
-		$(DESTDIR)/etc/default
-	install -d $(DESTDIR)/etc/init.d
-	install -p -m0644 $(scripts_src)/debian/init.d/pd-l2ork \
-		$(DESTDIR)/etc/init.d/
 # default prefs file
 	install -d $(DESTDIR)/etc/pd-l2ork
 	ln -s -f $(libpddir)/default.settings \
 		$(DESTDIR)/etc/pd-l2ork/default.settings
 	install -p $(packages_src)/linux_make/$(default).settings $(DESTDIR)$(libpddir)/default.settings
-# app window icon
-	#install -p $(packages_src)/linux_make/pd-l2ork.gif $(DESTDIR)$(libpddir)
 # emacs mode for .pd files
 	install -d $(DESTDIR)/usr/share/emacs/site-lisp/
 	install -p -m0644 $(scripts_src)/pd-l2ork-mode.el \
 		$(DESTDIR)/usr/share/emacs/site-lisp/
-# Pd-related scripts
-	#install -p $(scripts_src)/pd-diff $(DESTDIR)$(bindir)
 
 ifeq ($(PACKAGE_TYPE),deb)
 deb: DEB_BUILD_ARCH := $(shell dpkg-architecture -qDEB_BUILD_ARCH)
@@ -196,36 +172,14 @@ installer_readme:
 
 installer_settings:
 	install -p $(packages_src)/linux_make/$(default).settings $(DESTDIR)$(libpddir)/default.settings
-	# app window icon
-	# install -p $(packages_src)/linux_make/pd-l2ork.gif $(DESTDIR)$(libpddir)
-#	install -d $(DESTDIR)/usr/share/icons/hicolor/128x128/apps
-#	install -p -m0644 $(packages_src)/linux_make/pd-l2ork.png \
-#		$(DESTDIR)/usr/share/icons/hicolor/128x128/apps/
-#	install -d $(DESTDIR)/usr/share/icons/hicolor/48x48/apps
-#	install -p -m0644 $(packages_src)/linux_make/pd-48x48.png \
-#		$(DESTDIR)/usr/share/icons/hicolor/48x48/apps/pd-l2ork.png
-#	install -d $(DESTDIR)/usr/share/icons/hicolor/128x128/mimetypes
-#	install -p -m0644 $(packages_src)/linux_make/text-x-pd-l2ork.png \
-#		$(DESTDIR)/usr/share/icons/hicolor/128x128/mimetypes
-#	install -d $(DESTDIR)/usr/share/applications/ 
-#	install -p -m0644 $(packages_src)/linux_make/pd-l2ork.desktop \
-#		$(DESTDIR)/usr/share/applications/
 
 installer_makefile:
-# it is very hard to escape the $ in shell scripts so delete files
-#	-rm -f -- $(helpdir)/iem*/*\$$*.pd $(objectsdir)/iem*/*\$$*.pd
 # don't put the Makefile into the package yet, otherwise it'll get installed
 	cp -rf ../../l2ork_addons/K12/ $(DESTDIR)$(libpddir)/extra/
 	cp -rf ../../externals/hardware/arduino $(DESTDIR)$(libpddir)/extra/
-	cp -f $(packages_src)/linux_make/pd-l2ork.png $(DESTDIR)$(libpddir)
-	cp -f $(packages_src)/linux_make/pd-l2ork-red.png $(DESTDIR)$(libpddir)
-	cp -f $(packages_src)/linux_make/pd-l2ork-k12.png $(DESTDIR)$(libpddir)
-	cp -f $(packages_src)/linux_make/pd-l2ork-k12-red.png $(DESTDIR)$(libpddir)
-	cp -f $(packages_src)/linux_make/text-x-pd-l2ork.png $(DESTDIR)$(libpddir)
-	cp -f $(packages_src)/linux_make/pd-l2ork.desktop $(DESTDIR)$(libpddir)
-	cp -f $(packages_src)/linux_make/pd-l2ork-k12.desktop $(DESTDIR)$(libpddir)
-	cp -f $(packages_src)/linux_make/pd-l2ork-debug.desktop $(DESTDIR)$(libpddir)
-	cp -f $(packages_src)/linux_make/pd-l2ork-k12-debug.desktop $(DESTDIR)$(libpddir)
+	cp -f $(packages_src)/linux_make/purr-data.png $(DESTDIR)$(libpddir)
+	cp -f $(packages_src)/linux_make/text-x-purr-data.png $(DESTDIR)$(libpddir)
+	cp -f $(packages_src)/linux_make/purr-data.desktop $(DESTDIR)$(libpddir)
 	./generate_install_makefile.bash  $(DESTDIR)$(prefix) > tarbz2Makefile
 	mv -f tarbz2Makefile $(DESTDIR)$(prefix)/Makefile
 
