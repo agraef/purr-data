@@ -7420,58 +7420,6 @@ function gui_undo_menu(cid, undo_text, redo_text) {
     });
 }
 
-function zoom_level_to_chrome_percent(nw_win) {
-    var zoom = nw_win.zoomLevel;
-    switch (zoom) {
-        case -7:
-            zoom = 4;
-            break;
-        case -6:
-            zoom = 100/33;
-            break;
-        case -5:
-            zoom = 2;
-            break;
-        case -4:
-            zoom = 100/67;
-            break;
-        case -3:
-            zoom = 100/75;
-            break;
-        case -2:
-            zoom = 100/80;
-            break;
-        case -1:
-            zoom = 100/90;
-            break;
-        case 0:
-            zoom = 1;
-            break;
-        case 1:
-            zoom = 100/110;
-            break;
-        case 2:
-            zoom = 100/125;
-            break;
-        case 3:
-            zoom = 100/150;
-            break;
-        case 4:
-            zoom = 100/175;
-            break;
-        case 5:
-            zoom = 100/200;
-            break;
-        case 6:
-            zoom = 100/250;
-            break;
-        case 7:
-            zoom = 100/300;
-            break;  
-    }
-    return zoom;
-}
-
 // leverages the get_nw_window method in the callers...
 function canvas_params(nw_win)
 {
@@ -7529,7 +7477,7 @@ function canvas_params(nw_win)
        built-in ones... */  
     // zoom var is used to compensate for the zoom level and keep
     // the scrollbars the same height
-    var zoom = zoom_level_to_chrome_percent(nw_win);
+    var zoom = zoom_kludge(nw_win.zoomLevel);
     var yScrollSize, yScrollTopOffset;
     var vscroll = nw_win.window.document.getElementById("vscroll");
     yScrollSize = min_height / height; // used to be (min_height - 1) / height
@@ -7551,8 +7499,8 @@ function canvas_params(nw_win)
         // possible rationales is that zooming is there to improve visibility. If
         // we decide to reenable this, we may want to fine-tune scrollbar height to
         // ensure its size is accurate.
-        //vscroll.style.setProperty("width", (5 * zoom) + "px");
-        //vscroll.style.setProperty("right", (2 * zoom) + "px");
+        //vscroll.style.setProperty("width", (5 / zoom) + "px");
+        //vscroll.style.setProperty("right", (2 / zoom) + "px");
         vscroll.style.setProperty("visibility", "visible");
     } else {
         vscroll.style.setProperty("visibility", "hidden");
