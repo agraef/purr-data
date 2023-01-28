@@ -6763,12 +6763,6 @@ function gui_font_dialog_change_size(did, font_size) {
 
 function gui_menu_font_change_size(canvas, newsize) {
     pdsend(canvas, "menufont", newsize);
-    // ico@vt.edu 2020-08-24: changed to use submenu
-    // this was the following
-    //+document.querySelector('input[name="font_size"]:checked').value,
-    //current_size,
-    //100,
-    //0
 }
 
 exports.gui_menu_font_change_size = gui_menu_font_change_size;
