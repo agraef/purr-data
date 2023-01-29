@@ -1500,8 +1500,12 @@ var canvas_events = (function() {
             // We need to separate these into nw_window events and html5 DOM
             // events closing the Window this isn't actually closing the window
             // yet
-            gui.Window.get().on("close", function() {
+            gui.Window.get().on("close", function(arg) {
+                pdgui.canvas_check_geometry(name);
                 pdgui.pdsend(name, "menuclose 0");
+                if (arg === "quit") {
+                    pdgui.menu_quit();
+                }
             });
             // update viewport size when window size changes
             gui.Window.get().on("maximize", function() {
@@ -1812,7 +1816,10 @@ function nw_create_patch_window_menus(gui, w, name) {
     });
     minit(m.file.close, {
         enabled: true,
-        click: function() { pdgui.menu_close(name); }
+        click: function() {
+            pdgui.canvas_check_geometry(name);
+            pdgui.menu_close(name);
+        }
     });
     minit(m.file.quit, {
         click: pdgui.menu_quit

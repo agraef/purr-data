@@ -397,15 +397,6 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
             attr_array.dirty,
             attr_array.args,
             attr_array.dir);
-
-	    // ico@vt.edu 2020-08-13:
-	    // why does Windows have different innerWidth and innerHeight from other OSs?
-	    // See pdgui.js' canvas_params for the explanation...
-	    // ico@vt.edu 2020-08-21: this should only apply to patch windows
-        // 2020-10-01: this is not needed anymore since it was a bug specific to 0.14.7
-        // and Windows is now using 0.24.4
-	    //width -= 16 * pdgui.nw_os_is_windows;
-	    //height -= 8 * pdgui.nw_os_is_windows;
     } else {
         my_title = type;
         if (type !== "search" && type !== "text") {
@@ -425,7 +416,6 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
         pos = "center";
     } else {
         pos = null_pos;
-        //pdgui.post("check_os=" + pdgui.check_os("win32"));
         if (pdgui.nw_os_is_linux == 1) {
             ypos = ypos - pdgui.nw_menu_offset - 3;
         }
@@ -462,7 +452,7 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
         // altogether to simplify things. But we'd have to add some kind of
         // widget for the "Put" menu.
         // ico@vt.edu: on 0.46.2 this is now 25, go figure...
-        height: height + (pdgui.nw_menu_offset * !pdgui.nw_os_is_osx),
+        height: height + pdgui.nw_menu_offset,
         x: xpos,
         y: ypos,
         frame: win_frame,
