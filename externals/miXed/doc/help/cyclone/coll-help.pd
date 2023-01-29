@@ -1,8 +1,8 @@
-#N canvas 351 14 554 662 10;
+#N canvas 351 64 554 662 10;
 #X obj -1 1118 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12
-0 14 -233017 -33289 0;
+0 14 #e0e0e0 #202020 0;
 #X obj -1 724 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
--228856 -1 0;
+#dcdcdc #000000 0;
 #N canvas 470 383 418 288 META 0;
 #X text 44 193 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 44 31 LICENSE SIBSD;
@@ -20,35 +20,33 @@
 for Pd-l2ork version 2013.05.28;
 #X restore 500 1120 pd META;
 #X obj -1 786 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
-13 -228856 -1 0;
+13 #dcdcdc #000000 0;
 #X obj -1 902 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
-0 13 -228856 -1 0;
+0 13 #dcdcdc #000000 0;
 #N canvas 230 571 428 109 Related_objects 0;
 #X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
+14 #c4dcdc #000000 0;
 #X text 6 1 Related Objects;
 #X obj 10 30 funbuff;
 #C restore;
 #X obj 65 30 buddy;
 #X obj 108 30 textfile;
 #X restore 196 1120 pd Related_objects;
-#X obj 81 817 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 -228856
--162280 0;
+#X obj 81 817 cnv 17 3 17 empty \$0-pddp.cnv.let.0 1 5 9 0 16 #dcdcdc
+#9c9c9c 0;
 #X obj -1 0 cnv 15 552 40 empty \$0-pddp.cnv.header coll 3 12 0 18
--204280 -1 0;
+#c4dcdc #000000 0;
 #X text 11 23 store and edit collections of messages;
-#X obj 32 601 coll /tmp/test.coll;
-#C restore;
-#X obj 32 71 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
--1;
+#X obj 32 71 bng 15 250 50 0 empty empty empty 0 -6 0 8 #fcfcfc #000000
+#000000 1;
 #X msg 39 124 next;
 #X obj 32 690 print coll;
 #X msg 131 488 clear;
-#X floatatom 69 667 5 0 0 0 - - -, f 5;
-#X obj 106 647 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
--1;
-#X obj 143 629 bng 15 250 50 0 empty empty empty 0 -6 0 8 -262144 -1
--1;
+#X floatatom 69 667 5 0 0 0 - - - 0 0 1, f 5;
+#X obj 106 647 bng 15 250 50 0 empty empty empty 0 -6 0 8 #fcfcfc #000000
+#000000 1;
+#X obj 143 629 bng 15 250 50 0 empty empty empty 0 -6 0 8 #fcfcfc #000000
+#000000 1;
 #X msg 58 170 dump;
 #X msg 61 194 read /tmp/foo;
 #X msg 68 220 read;
@@ -84,7 +82,7 @@ for Pd-l2ork version 2013.05.28;
 #X text 166 242 write a file;
 #X text 118 266 open a dialog;
 #X msg 81 267 write;
-#X floatatom 122 467 5 0 0 0 - - -, f 5;
+#X floatatom 122 467 5 0 0 0 - - - 0 0 1, f 5;
 #X text 129 290 output nr. of messages stored;
 #X text 72 123 output next =;
 #X msg 159 123 bang;
@@ -138,7 +136,7 @@ for Pd-l2ork version 2013.05.28;
 #X msg 588 130 insert 2 a new two;
 #X text 584 99 inserts new message at index;
 #X text 585 110 and increments all indexes >=;
-#X floatatom 608 160 5 0 0 0 - - -, f 5;
+#X floatatom 608 160 5 0 0 0 - - - 0 0 1, f 5;
 #X text 644 159 check it out ...;
 #X text 637 225 or send it out immediately:;
 #X text 624 181 replace an item (silently):;
@@ -228,8 +226,8 @@ increments all indicesabove desired index;
 #X text 62 41 you can help...;
 #N canvas 53 134 658 284 refer 0;
 #X msg 45 98 1 1 \, 2 2 \, 3 3;
-#X floatatom 408 135 5 0 0 0 - - -, f 5;
-#X floatatom 475 204 5 0 0 0 - - -, f 5;
+#X floatatom 408 135 5 0 0 0 - - - 0 0 1, f 5;
+#X floatatom 475 204 5 0 0 0 - - - 0 0 1, f 5;
 #X obj 45 132 coll /tmp/1.coll;
 #C restore;
 #X obj 475 167 coll /tmp/2.coll;
@@ -253,13 +251,13 @@ increments all indicesabove desired index;
 #X text 111 732 message;
 #X msg 50 147 prev;
 #X text 82 145 previous;
-#X obj 81 839 cnv 17 3 17 empty \$0-pddp.cnv.let.0 2 5 9 0 16 -228856
--162280 0;
+#X obj 81 839 cnv 17 3 17 empty \$0-pddp.cnv.let.0 2 5 9 0 16 #dcdcdc
+#9c9c9c 0;
 #X text 111 816 float;
-#X obj 81 861 cnv 17 3 17 empty \$0-pddp.cnv.let.0 3 5 9 0 16 -228856
--162280 0;
-#X obj 81 795 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
+#X obj 81 861 cnv 17 3 17 empty \$0-pddp.cnv.let.0 3 5 9 0 16 #dcdcdc
+#9c9c9c 0;
+#X obj 81 795 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 #dcdcdc
+#9c9c9c 0;
 #X text 111 838 bang;
 #X text 216 816 - index of message sent out;
 #X text 111 794 message;
@@ -268,8 +266,8 @@ increments all indicesabove desired index;
 #C restore;
 #X text 315 236 rewrite last file written;
 #X text 288 186 reopens last file read;
-#X obj 81 734 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
+#X obj 81 734 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 #dcdcdc
+#9c9c9c 0;
 #X text 216 731 - can input message to store or many different commands
 for coll object as specified above;
 #X text 158 465 output by index;
@@ -288,7 +286,7 @@ which minimizeschances of dropped audio samples \, particularlywhen
 handling large coll files;
 #X text 6 926 Following creation arguments can be provided in any order:
 ;
-#N canvas 408 171 450 391 threaded 0;
+#N canvas 408 180 444 391 threaded 0;
 #X obj 56 233 coll 1;
 #C restore;
 #X obj 121 233 coll /tmp/test.coll 1;
@@ -313,8 +311,8 @@ no specific argument order.;
 #C restore;
 #X obj 121 344 coll;
 #C restore;
-#X obj 11 -7 cnv 15 443 30 empty \$0-pddp.cnv.header Threaded\ vs.\ Non-Threaded\ Implementation
-17 16 0 16 -204280 -1 0;
+#X obj 0 -7 cnv 15 443 30 empty \$0-pddp.cnv.header Threaded\ vs.\ Non-Threaded\ Implementation
+17 16 0 16 #c4dcdc #000000 0;
 #X restore 342 142 pd threaded instance;
 #X text 330 124 threaded implementation:;
 #X text 309 76 swap \, sort \, renumber \, separate:;
@@ -325,30 +323,32 @@ values of 1 or greater being truncated to 1, f 87;
 #X text 216 794 - outputs data at requested index;
 #X text 216 839 - when finishing load or save operation;
 #X text 216 862 - when finished with a dump operation;
-#X connect 9 0 12 0;
-#X connect 9 1 14 0;
-#X connect 9 2 15 0;
-#X connect 9 3 16 0;
-#X connect 10 0 25 0;
-#X connect 11 0 9 0;
-#X connect 13 0 9 0;
-#X connect 17 0 9 0;
-#X connect 18 0 9 0;
-#X connect 19 0 9 0;
-#X connect 20 0 9 0;
-#X connect 25 0 9 0;
-#X connect 30 0 9 0;
-#X connect 33 0 9 0;
-#X connect 34 0 9 0;
-#X connect 38 0 9 0;
-#X connect 40 0 9 0;
-#X connect 42 0 9 0;
-#X connect 44 0 9 0;
-#X connect 46 0 9 0;
-#X connect 48 0 9 0;
-#X connect 50 0 9 0;
-#X connect 51 0 9 0;
-#X connect 53 0 9 0;
-#X connect 55 0 9 0;
-#X connect 59 0 9 0;
-#X connect 60 0 9 0;
+#X obj 32 601 coll /tmp/test.coll 1;
+#C restore;
+#X connect 9 0 24 0;
+#X connect 10 0 94 0;
+#X connect 12 0 94 0;
+#X connect 16 0 94 0;
+#X connect 17 0 94 0;
+#X connect 18 0 94 0;
+#X connect 19 0 94 0;
+#X connect 24 0 94 0;
+#X connect 29 0 94 0;
+#X connect 32 0 94 0;
+#X connect 33 0 94 0;
+#X connect 37 0 94 0;
+#X connect 39 0 94 0;
+#X connect 41 0 94 0;
+#X connect 43 0 94 0;
+#X connect 45 0 94 0;
+#X connect 47 0 94 0;
+#X connect 49 0 94 0;
+#X connect 50 0 94 0;
+#X connect 52 0 94 0;
+#X connect 54 0 94 0;
+#X connect 58 0 94 0;
+#X connect 59 0 94 0;
+#X connect 94 0 11 0;
+#X connect 94 1 13 0;
+#X connect 94 2 14 0;
+#X connect 94 3 15 0;

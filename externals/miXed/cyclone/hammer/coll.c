@@ -63,6 +63,7 @@ typedef struct _coll
     t_object       x_ob;
     t_canvas      *x_canvas;
     t_symbol      *x_name;
+    t_symbol      *x_tmp_name;
     t_collcommon  *x_common;
     t_hammerfile  *x_filehandle;
     t_outlet      *x_keyout;
@@ -1635,6 +1636,7 @@ static void coll_read(t_coll *x, t_symbol *s)
 			}
 			else {
 				collcommon_doread(cc, s, x->x_canvas, 0);
+				outlet_bang(x->x_filebangout);
 			}
 		}
 		else
@@ -1658,6 +1660,7 @@ static void coll_write(t_coll *x, t_symbol *s)
 			}
 			else {
 				collcommon_dowrite(cc, s, x->x_canvas, 0);
+				outlet_bang(x->x_filebangout);
 			}
 		}
 		else
@@ -1680,6 +1683,7 @@ static void coll_readagain(t_coll *x)
 			}
 			else {
 				collcommon_doread(cc, 0, 0, 0);
+				outlet_bang(x->x_filebangout);
 			}
 		}
 		else
@@ -1702,6 +1706,7 @@ static void coll_writeagain(t_coll *x)
 			}
 			else {
 				collcommon_dowrite(cc, 0, 0, 0);
+				outlet_bang(x->x_filebangout);
 			}
 		}
 		else
@@ -1845,11 +1850,13 @@ static void *coll_threaded_fileio(void *ptr)
 			m = collcommon_dowrite(x->x_common, x->x_s, x->x_canvas, 1);
 			if (m->m_flag)
 				coll_enqueue_threaded_msgs(x, m);
+			clock_delay(x->x_clock, 0);
 		}
 		else if (x->unsafe == 11) { //write
 			m = collcommon_dowrite(x->x_common, 0, 0, 1);
 			if (m->m_flag)
 				coll_enqueue_threaded_msgs(x, m);
+			clock_delay(x->x_clock, 0);
 		}
 
 		if (m != NULL)
@@ -1896,6 +1903,7 @@ static void coll_free(t_coll *x)
 			coll_q_free(x);
 	}
 
+    hammereditor_close(x->x_common->c_filehandle, 1);
     hammerfile_free(x->x_filehandle);
     coll_unbind(x);
 }
@@ -1912,6 +1920,7 @@ static void *coll_new(t_symbol *s, int argc, t_atom *argv)
     x->x_filebangout = outlet_new((t_object *)x, &s_bang);
     x->x_dumpbangout = outlet_new((t_object *)x, &s_bang);
     x->x_filehandle = hammerfile_new((t_pd *)x, coll_embedhook, 0, 0, 0);
+    x->x_tmp_name = NULL;
 
     // check arguments for filename and threaded version
     if (argc > 0)
@@ -1935,7 +1944,13 @@ static void *coll_new(t_symbol *s, int argc, t_atom *argv)
 	}
 	// if no file name provided, associate with empty symbol
 	if (file == NULL)
+	{
 		file = &s_;
+		char *tmpfilename[MAXPDSTRING];
+		sprintf(tmpfilename, "/tmp/%lx", x);
+		x->x_tmp_name = gensym(tmpfilename);
+		//post("x=%lx tmp_name=%s", x, x->x_tmp_name->s_name);
+	}
 	
 	// prep threading stuff
 	x->unsafe = 0;
@@ -2031,7 +2046,7 @@ void coll_setup(void)
     class_addmethod(coll_class, (t_method)coll_writeagain,
 		    gensym("writeagain"), 0);
     class_addmethod(coll_class, (t_method)coll_filetype,
-		    gensym("filetype"), A_SYMBOL, 0);
+		    gensym("filetype"), 0);
     class_addmethod(coll_class, (t_method)coll_dump,
 		    gensym("dump"), 0);
     class_addmethod(coll_class, (t_method)coll_open,

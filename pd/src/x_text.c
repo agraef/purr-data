@@ -128,9 +128,11 @@ static void textbuf_open(t_textbuf *x)
                     //glist_getzoom(x->b_canvas)));
         sprintf(buf, "x%zx", (t_uint)x);
         x->b_guiconnect = guiconnect_new(&x->b_ob.ob_pd, gensym(buf));
-        gui_vmess("gui_text_dialog", "xsiii",
+        gui_vmess("gui_text_dialog", "xsiiiii",
             x,
             x->b_sym->s_name,
+            x->b_canvas->gl_editor ? x->b_canvas->gl_editor->e_xwas : 100,
+            x->b_canvas->gl_editor ? x->b_canvas->gl_editor->e_ywas : 100,
             480,
             550,
             sys_hostfontsize(glist_getfont(x->b_canvas)));
