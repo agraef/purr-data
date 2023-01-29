@@ -73,11 +73,6 @@ endif
 	sed -e 's/pd-l2ork/purr-data/g' < scripts/bash_completion/pd-l2ork > debian/purr-data/etc/bash_completion.d/purr-data
 # Edit the library paths in the default user.settings file.
 	cd debian/purr-data$(prefix)/lib/pd-l2ork && sed -e "s!/usr/lib/pd-l2ork!$(prefix)/lib/pd-l2ork!g" -i default.settings
-# Replace the pd-l2ork desktop/mime files and icons with purr-data ones.
-	cd debian/purr-data/usr/share/applications && (sed -e 's/pd-l2ork/purr-data/g' -e 's/Pd-L2Ork/Purr-Data/g' < pd-l2ork.desktop > purr-data.desktop) && (sed -e 's/pd-l2ork/purr-data/g' -e 's/Pd-L2Ork/Purr-Data/g' < pd-l2ork-debug.desktop > purr-data-debug.desktop) && rm -f pd-l2ork*.desktop
-	cd debian/purr-data/usr/share/mime/packages && (sed -e 's/pd-l2ork/purr-data/g' < pd-l2ork.xml > purr-data.xml) && rm -f pd-l2ork.xml
-	cd debian/purr-data/usr/share/icons/hicolor/128x128/apps/ && rm -f pd-l2ork-k12*.png && mv pd-l2ork.png purr-data.png && mv pd-l2ork-red.png purr-data-red.png
-	cd debian/purr-data/usr/share/icons/hicolor/128x128/mimetypes/ && mv text-x-pd-l2ork.png text-x-purr-data.png
 # Sanitize permissions.
 	cd debian/purr-data && chmod -R go-w * && chmod -R a+r * && chmod a-x .$(prefix)/lib/pd-l2ork/default.settings
 	find debian/purr-data$(prefix)/lib/pd-l2ork/bin/nw -executable -not -type d | xargs chmod a+x
