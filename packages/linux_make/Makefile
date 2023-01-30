@@ -102,6 +102,7 @@ endif
 	install -d $(DESTDIR)/usr/share/icons/hicolor/128x128/apps
 	install -p -m0644 $(packages_src)/linux_make/purr-data.png \
 		$(DESTDIR)/usr/share/icons/hicolor/128x128/apps/
+	install -d $(DESTDIR)/usr/share/icons/hicolor/128x128/mimetypes
 	install -p -m0644 $(packages_src)/linux_make/text-x-purr-data.png \
 		$(DESTDIR)/usr/share/icons/hicolor/128x128/mimetypes
 	install -d $(DESTDIR)/usr/share/applications/ 
