@@ -63,7 +63,6 @@ typedef struct _coll
     t_object       x_ob;
     t_canvas      *x_canvas;
     t_symbol      *x_name;
-    t_symbol      *x_tmp_name;
     t_collcommon  *x_common;
     t_hammerfile  *x_filehandle;
     t_outlet      *x_keyout;
@@ -763,10 +762,6 @@ static t_msg *collcommon_doread(t_collcommon *cc, t_symbol *fn, t_canvas *cv, in
 		int nlines = collcommon_frombinbuf(cc, bb);
 		if (nlines > 0)
 		{
-			t_coll *x;
-			/* LATER consider making this more robust */
-			for (x = cc->c_refs; x; x = x->x_next)
-			//outlet_bang(x->x_filebangout);
 			cc->c_lastcanvas = cv;
 			cc->c_filename = fn;
 			m->m_flag |= 0x04;
@@ -1920,7 +1915,6 @@ static void *coll_new(t_symbol *s, int argc, t_atom *argv)
     x->x_filebangout = outlet_new((t_object *)x, &s_bang);
     x->x_dumpbangout = outlet_new((t_object *)x, &s_bang);
     x->x_filehandle = hammerfile_new((t_pd *)x, coll_embedhook, 0, 0, 0);
-    x->x_tmp_name = NULL;
 
     // check arguments for filename and threaded version
     if (argc > 0)
@@ -1944,13 +1938,7 @@ static void *coll_new(t_symbol *s, int argc, t_atom *argv)
 	}
 	// if no file name provided, associate with empty symbol
 	if (file == NULL)
-	{
 		file = &s_;
-		char *tmpfilename[MAXPDSTRING];
-		sprintf(tmpfilename, "/tmp/%lx", x);
-		x->x_tmp_name = gensym(tmpfilename);
-		//post("x=%lx tmp_name=%s", x, x->x_tmp_name->s_name);
-	}
 	
 	// prep threading stuff
 	x->unsafe = 0;

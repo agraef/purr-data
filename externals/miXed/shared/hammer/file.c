@@ -19,6 +19,7 @@
    LATER extract the embedding stuff. */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "m_pd.h"
 #include "g_canvas.h"
@@ -40,6 +41,7 @@ struct _hammerfile
     t_hammerfilefn       f_editorfn;
     t_hammerembedfn      f_embedfn;
     t_binbuf            *f_binbuf;
+    char                *f_tmpbuf;
     t_clock             *f_panelclock;
     t_clock             *f_editorclock;
     t_guiconnect        *b_guiconnect;
@@ -167,16 +169,35 @@ static void hammereditor_guidefs(void)
 #endif
 }
 
+static char *make_title(t_hammerfile *f, char *title, char *owner)
+{
+    static char _title[MAXPDSTRING];
+    if (!owner)
+       owner = class_getname(*f->f_master);
+    if (!*owner)
+       owner = 0;
+    if (!title) {
+       title = owner;
+       owner = 0;
+    }
+    if (owner) {
+        snprintf(_title, MAXPDSTRING, "%s: %s", owner, title);
+    } else if (title) {
+        strncpy(_title, title, MAXPDSTRING);
+    } else {
+        strcpy(_title, "Untitled");
+    }
+    return _title;
+}
+
 /* null owner defaults to class name, pass "" to supress */
 void hammereditor_open(t_hammerfile *f, char *title, char *owner)
 {
-    //post("===hammereditor_open===");
     if (f->b_guiconnect)
     {
         //sys_vgui("wm deiconify .x%zx\n", x);
         //sys_vgui("raise .x%zx\n", x);
         //sys_vgui("focus .x%zx.text\n", x);
-        //post("hammereditor_open f->b_guiconnect");
         gui_vmess("gui_text_dialog_raise", "x", f);
     }
     else
@@ -184,35 +205,25 @@ void hammereditor_open(t_hammerfile *f, char *title, char *owner)
         char buf[40];
         sprintf(buf, "x%zx", (t_uint)f);
         f->b_guiconnect = guiconnect_new(&f->f_pd, gensym(buf));
-        //post("hammereditor_open new");
         gui_vmess("gui_text_dialog", "xsiiiii",
             f,
-            title,
+            make_title(f, title, owner),
             f->f_canvas->gl_editor ? f->f_canvas->gl_editor->e_xwas : 100,
             f->f_canvas->gl_editor ? f->f_canvas->gl_editor->e_ywas : 100,
             480,
             550,
             sys_hostfontsize(glist_getfont(f->f_canvas)));
-        gui_vmess("gui_text_dialog_text_init", "x", f);
     }
-#if 0
-    if (!owner)
-	owner = class_getname(*f->f_master);
-    if (!*owner)
-	owner = 0;
-    if (!title)
-    {
-	title = owner;
-	owner = 0;
+}
+
+static void clear_tmpbuf(t_hammerfile *f)
+{
+    if (f->f_tmpbuf) {
+        free(f->f_tmpbuf);
+        f->f_tmpbuf = NULL;
     }
-    if (owner)
-	sys_vgui("hammereditor_open .%x %dx%d {%s: %s} %d\n",
-		 (int)f, 600, 600, owner, title, (f->f_editorfn != 0));
-    else
-	sys_vgui("hammereditor_open .%x %dx%d {%s} %d\n",
-		 (int)f, 600, 600, (title ? title : "Untitled"),
-		 (f->f_editorfn != 0));
-#endif
+    if (f->b_guiconnect)
+        gui_vmess("gui_text_dialog_clear", "x", f);
 }
 
 static void hammereditor_tick(t_hammerfile *f)
@@ -224,6 +235,7 @@ static void hammereditor_tick(t_hammerfile *f)
         guiconnect_notarget(f->b_guiconnect, 1000);
         f->b_guiconnect = 0;
     }
+    clear_tmpbuf(f);
 }
 
 void hammereditor_close(t_hammerfile *f, int ask)
@@ -231,44 +243,104 @@ void hammereditor_close(t_hammerfile *f, int ask)
     if (ask && f->f_editorfn)
 	/* hack: deferring modal dialog creation in order to allow for
 	   a message box redraw to happen -- LATER investigate */
-	//clock_delay(f->f_editorclock, 0);
+	clock_delay(f->f_editorclock, 0);
+    else
         hammereditor_tick(f);
-    //else
-	//sys_vgui("hammereditor_close .%x 0\n", (int)f);
+}
+
+static unsigned int next_pow2(unsigned int v)
+{
+  // This is highly portable and fairly fast. Cf.
+  // https://stackoverflow.com/questions/466204/rounding-up-to-next-power-of-2
+  // https://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
+  v--;
+  v |= v >> 1;
+  v |= v >> 2;
+  v |= v >> 4;
+  v |= v >> 8;
+  v |= v >> 16;
+  v++;
+  return v;
 }
 
 void hammereditor_append(t_hammerfile *f, char *contents)
 {
     if (contents)
     {
-#if 0
-	char *ptr;
-	for (ptr = contents; *ptr; ptr++)
-	{
-	    if (*ptr == '{' || *ptr == '}')
-	    {
-		char c = *ptr;
-		*ptr = 0;
-		sys_vgui("hammereditor_append .%x {%s}\n", (int)f, contents);
-		sys_vgui("hammereditor_append .%x \"%c\"\n", (int)f, c);
-		*ptr = c;
-		contents = ptr + 1;
-	    }
-	}
-	if (*contents)
-	    sys_vgui("hammereditor_append .%x {%s}\n", (int)f, contents);
-#endif
-        //gui_vmess("gui_text_dialog_clear", "x", f);
-        gui_vmess("gui_text_init_dialog_append", "xs",
-            f, contents);
+      /* ag: This always seems to be called before the dialog window has been
+         created, thus gui_text_dialog_append doesn't work here. Instead, we
+         store the string data in a temporary buffer which gets picked up
+         later by hammereditor_senditup. (Ico's original solution stored the
+         data on the JS side, but this requires substantial changes in the
+         text dialog JS API, which we want to avoid.) */
+      unsigned int l0 = f->f_tmpbuf ? strlen(f->f_tmpbuf) : 0, l = l0;
+      l += strlen(contents) + 1;
+      // We need at least l bytes to accommodate the result. Since we don't
+      // want to realloc the buffer each time, round it up to the next power
+      // of two. We also enforce a min buffer size of MAXPDSTRING.
+      if (l < MAXPDSTRING) l = MAXPDSTRING;
+      l = next_pow2(l);
+      f->f_tmpbuf = realloc(f->f_tmpbuf, l);
+      if (l0 == 0) f->f_tmpbuf[0] = 0;
+      strcat(f->f_tmpbuf, contents);
     }
+}
+
+// ag: adapted from x_text.c
+static void hammereditor_senditup(t_hammerfile *x)
+{
+    int i, ntxt = 0;
+    char *txt = NULL;
+    /* I don't think the Pd Vanilla interface can handle cases
+       where a single line is greater than MAXPDSTRING, at least
+       coming from the GUI to Pd. So instead of the %.*s specifier
+       we just use a character array of MAXPDSTRING size. I suppose
+       that means we'll fail on the Pd side, while Pd Vanilla would
+       fail when the GUI tries to forward that line back to Pd.
+    */
+    char buf[MAXPDSTRING];
+    if (!x->b_guiconnect)
+        return;
+    /* ag: With the way the cyclone objects utilizing the hammereditor are
+       designed, the editor's f_binbuf always seems to be empty here, thus we
+       always just pick up the contents of f_tmpbuf instead. We still leave
+       the binbuf in here for future use, so that objects might set it before
+       calling hammereditor_map in order to perform live updates of the editor
+       contents in the same fashion as the vanilla text object. */
+    if (x->f_binbuf)
+        binbuf_gettext(x->f_binbuf, &txt, &ntxt);
+    if (ntxt == 0 && x->f_tmpbuf) {
+        txt = x->f_tmpbuf;
+        ntxt = strlen(txt);
+    }
+    //sys_vgui("pdtk_textwindow_clear .x%zx\n", x);
+    gui_vmess("gui_text_dialog_clear", "x", x);
+    for (i = 0; i < ntxt; )
+    {
+        char *j = strchr(txt+i, '\n');
+        if (!j) j = txt + ntxt;
+        //sys_vgui("pdtk_textwindow_append .x%zx {%.*s\n}\n",
+        //    x, j-txt-i, txt+i);
+        if (j - txt - i >= MAXPDSTRING)
+        {
+            pd_error(x, "text: can't display lines greater than %d characters",
+                MAXPDSTRING);
+            break;
+        }
+        sprintf(buf, "%.*s\n", (int)(j-txt-i), txt+i);
+        gui_vmess("gui_text_dialog_append", "xs",
+            x, buf);
+        i = (j-txt)+1;
+    }
+    //sys_vgui("pdtk_textwindow_setdirty .x%zx 0\n", x);
+    gui_vmess("gui_text_dialog_set_dirty", "xi", x, 0);
+    if (txt != x->f_tmpbuf) t_freebytes(txt, ntxt);
 }
 
 void hammereditor_map(t_hammerfile *f)
 {
-    gui_vmess("gui_text_dialog_clear", "x", f);
-    gui_vmess("gui_text_dialog_map", "x", f);
-    gui_vmess("gui_text_dialog_set_dirty", "xi", f, 0);
+    if (f->b_guiconnect)
+        hammereditor_senditup(f);
 }
 
 void hammereditor_setdirty(t_hammerfile *f, int flag)
@@ -287,6 +359,7 @@ static void hammereditor_clear(t_hammerfile *f)
 	else
 	    f->f_binbuf = binbuf_new();
     }
+    clear_tmpbuf(f);
 }
 
 static void hammereditor_addline(t_hammerfile *f,
@@ -312,6 +385,8 @@ static void hammereditor_addline(t_hammerfile *f,
 	    }
 	}
 	binbuf_add(f->f_binbuf, ac, av);
+	if (f->b_guiconnect)
+	    hammereditor_senditup(f);
     }
 }
 
@@ -323,6 +398,7 @@ static void hammereditor_end(t_hammerfile *f)
 			 binbuf_getvec(f->f_binbuf));
 	binbuf_clear(f->f_binbuf);
     }
+    clear_tmpbuf(f);
 }
 
 static void hammerpanel_guidefs(void)
@@ -539,6 +615,7 @@ void hammerfile_free(t_hammerfile *f)
 {
     t_hammerfile *prev, *next;
     hammereditor_close(f, 0);
+    clear_tmpbuf(f);
     if (f->f_embedfn)
 	/* just in case of missing 'restore' */
 	hammerembed_gc(f->f_master, ps__C, 0);
@@ -621,6 +698,7 @@ t_hammerfile *hammerfile_new(t_pd *master, t_hammerembedfn embedfn,
 	    pd_bind((t_pd *)result, result->f_bindname);
 	}
     }
+    result->f_tmpbuf = NULL;
     return (result);
 }
 

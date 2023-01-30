@@ -89,25 +89,16 @@ function close_modal_dialog() {
 
 function textarea_clear() {
     document.getElementById("text").value = "";
-    set_dirty(1);
+    dirty = true;
 }
 
 function textarea_append(line) {
     document.getElementById("text").value += line;
-    set_dirty(1);
+    dirty = true;
 }
 
 function set_dirty(state) {
     dirty = state;
-    var title = document.title;
-    //pdgui.post("title="+title);
-    if (dirty) {
-        title = title.replace("] Text", "] * Text");
-    } else {
-        title = title.replace("] * Text", "] Text");
-    }
-    //pdgui.post("..."+title);
-    document.title = title;
 }
 
 // This gets called from the nw_create_window function in index.html
@@ -144,7 +135,7 @@ function register_window_id(gfxstub, attr) {
     // nwjs window, so you'll see a flicker to the title set here if it's
     // not "text". We need to change this so that the title can be different
     // from the dialog type in nw_create_window.
-    document.title = "[" + attr.title + "] " + (dirty ? "*" : "") + " Text Editor";
+    document.title = "[" + attr.title + "] Text Editor";
 }
 
 // Stop-gap translator
@@ -190,69 +181,11 @@ function add_events(name) {
             close_window();
         }
     });
-
-    document.onkeydown = function(evt) {
-        //post("onkeydown=" + evt.keyCode + " ctrl=" +
-        //    evt.ctrlKey + " meta=" + evt.metaKey);
-        if (evt.keyCode === 27) { // escape
-            cancel();
-        } else if (!pdgui.nw_os_is_osx && evt.keyCode == 65 && evt.ctrlKey ||
-                   pdgui.nw_os_is_osx && evt.keyCode == 65 && evt.metaKey) {
-            // cmd/ctrl+a
-            //post("onkeydown ctrl+a");
-            var element = document.activeElement;
-            var tagName = element.tagName.toLowerCase();
-            if (tagName === 'input') {
-                //post("...got input");
-                var type = element.getAttribute('type').toLowerCase();
-                if (type === "text" || type === "number")
-                {
-                    //post("...we got text or number, selecting")
-                    element.select();
-                }
-            }
-            evt.preventDefault();
-        }
-        else if (pdgui.nw_os_is_osx && evt.metaKey) {
-            if (evt.keyCode == 87) {
-                //post("OSX version of cmd+w");
-                evt.preventDefault();
-                cancel();
-            }
-            else if (evt.keyCode == 10) {
-                post("OSX version of cmd+Enter");
-                evt.preventDefault();
-                ok();
-            }
-        }
-    };
-
-    document.onkeypress = function(evt) {
-        //pdgui.post("onkeypress " + evt.which + " " + evt.ctrlKey);
-        if (!pdgui.nw_os_is_osx && evt.ctrlKey) {
-            if (evt.which == 23) {
-                //post("Ctrl+W pressed");
-                evt.preventDefault();
-                cancel();
-            }
-            else if (evt.which == 10) {
-                //post("Ctrl+Enter pressed");
-                evt.preventDefault();
-                ok();
-            }
-        }
+    document.getElementById("text").onchange = function() {
+        dirty = true;
     }
-
-    var textarea = document.getElementById("text");
-    if (textarea.addEventListener) {
-        textarea.addEventListener('input', function() {
-            if (dirty != 1)
-                set_dirty(1);
-        }, false);
-    }
-
-    // because pdgui's dialog_bindings also includes "enter" key, we cannot use
-    // that call here since we are using enter to start a new line.
+    // Right now the bindings are limited to "Enter = Ok" and "Escape = Cancel".
+    // We leave off those bindings since Enter starts a new line in the textarea
     //pdgui.dialog_bindings(name);
 }
 

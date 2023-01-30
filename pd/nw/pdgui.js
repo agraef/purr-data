@@ -6588,21 +6588,13 @@ function file_dialog(cid, type, target, start_path) {
     );
 }
 
-// ico@vt.edu 2021-10-31: we expose open and save panels
-// for the coll and other cyclone objects
-
 function gui_openpanel(cid, target, path) {
-    //post("gui_openpanel "+cid+" "+target+" "+path);
     file_dialog(cid, "open", target, path);
 }
-
-exports.gui_openpanel = gui_openpanel;
 
 function gui_savepanel(cid, target, path) {
     file_dialog(cid, "save", target, path);
 }
-
-exports.gui_savepanel = gui_savepanel;
 
 function file_dialog_callback(file_string) {
     pdsend(file_dialog_target, "callback",
@@ -6836,36 +6828,14 @@ function gui_data_dialog(did, data_string) {
         data_string);
 }
 
-// 2021-10-29 ico@vt.edu: used primarily for cyclone to store text
-// while opening a new window since we cannot append text until it
-// has fully loaded.
-var text_dialog_text = {};
-
-function gui_text_dialog_text_init(did) {
-    text_dialog_text[did] = "";
-}
-
 function gui_text_dialog_clear(did) {
-    //post("gui_text_dialog_clear <"+text_dialog_text[did]+">");
     if (dialogwin[did]) {
         dialogwin[did].window.textarea_clear();
     }
 }
 
-function gui_text_init_dialog_append(did, atom) {
-    text_dialog_text[did] += atom;
-}
-
-function gui_text_dialog_map(did) {
-    if (dialogwin[did]) {
-        dialogwin[did].window.textarea_append(text_dialog_text[did]);
-    }
-}
-
 function gui_text_dialog_append(did, line) {
-    //post("gui_text_dialog_append <"+line+">");
     if (dialogwin[did]) {
-        //post("...yes");
         dialogwin[did].window.textarea_append(line);
     }
 }
@@ -6877,7 +6847,6 @@ function gui_text_dialog_set_dirty(did, state) {
 }
 
 function gui_text_dialog(did, name, x, y, width, height, font_size) {
-    //post("gui_text_dialog "+did+" "+name+" "+width+" "+height+" "+font_size);
     dialogwin[did] = create_window(did, "text", width, height, x, y,
         {
             fontsize: font_size,
