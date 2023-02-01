@@ -64,6 +64,7 @@ jobs:
 
     - name: install dependencies
       run: |
+        sudo apt-get update
         sudo apt install debhelper devscripts autoconf automake libtool pkg-config bison flex libgtk2.0-dev libgtk-3-dev dh-python flite1-dev ladspa-sdk libasound2-dev libjack-dev libbluetooth-dev libcairo2-dev libgl-dev libglew-dev libgsl-dev libmagick++-dev libavifile-0.7-dev libdc1394-dev libfftw3-dev libfluidsynth-dev libftgl-dev libgsm1-dev libjpeg-dev libmp3lame-dev libmpeg3-dev libquicktime-dev libraw1394-dev libsmpeg-dev libspeex-dev libstk-dev libtiff5-dev libv4l-dev libdv4-dev libiec61883-dev libxv-dev libxxf86vm-dev libvorbis-dev zlib1g-dev rsync libgconf2-dev libnss3-dev libxtst-dev libxss-dev
         pip install markdown
 
