@@ -2337,6 +2337,7 @@ void x_qlist_setup(void )
         A_SYMBOL, A_DEFSYM, 0);
     class_addmethod(qlist_class, (t_method)qlist_write, gensym("write"),
         A_SYMBOL, A_DEFSYM, 0);
+    class_addmethod(qlist_class, (t_method)textbuf_map, gensym("map"), 0);
     class_addmethod(qlist_class, (t_method)textbuf_open, gensym("click"), 0);
     class_addmethod(qlist_class, (t_method)textbuf_close, gensym("close"), 0);
     class_addmethod(qlist_class, (t_method)textbuf_addline,
@@ -2364,6 +2365,7 @@ void x_qlist_setup(void )
         A_SYMBOL, A_DEFSYM, 0);
     class_addmethod(textfile_class, (t_method)qlist_write, gensym("write"),
         A_SYMBOL, A_DEFSYM, 0);
+    class_addmethod(textfile_class, (t_method)textbuf_map, gensym("map"), 0);
     class_addmethod(textfile_class, (t_method)textbuf_open, gensym("click"), 0);
     class_addmethod(textfile_class, (t_method)textbuf_close, gensym("close"),
         0);
