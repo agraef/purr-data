@@ -6846,9 +6846,8 @@ function gui_text_dialog_set_dirty(did, state) {
     }
 }
 
-function gui_text_dialog(did, name, width, height, font_size) {
-    dialogwin[did] = create_window(did, "text", width, height,
-        popup_coords[2], popup_coords[3],
+function gui_text_dialog(did, name, x, y, width, height, font_size) {
+    dialogwin[did] = create_window(did, "text", width, height, x, y,
         {
             fontsize: font_size,
             title: name

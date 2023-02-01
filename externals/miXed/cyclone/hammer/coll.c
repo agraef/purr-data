@@ -762,10 +762,6 @@ static t_msg *collcommon_doread(t_collcommon *cc, t_symbol *fn, t_canvas *cv, in
 		int nlines = collcommon_frombinbuf(cc, bb);
 		if (nlines > 0)
 		{
-			t_coll *x;
-			/* LATER consider making this more robust */
-			for (x = cc->c_refs; x; x = x->x_next)
-			//outlet_bang(x->x_filebangout);
 			cc->c_lastcanvas = cv;
 			cc->c_filename = fn;
 			m->m_flag |= 0x04;
@@ -1635,6 +1631,7 @@ static void coll_read(t_coll *x, t_symbol *s)
 			}
 			else {
 				collcommon_doread(cc, s, x->x_canvas, 0);
+				outlet_bang(x->x_filebangout);
 			}
 		}
 		else
@@ -1658,6 +1655,7 @@ static void coll_write(t_coll *x, t_symbol *s)
 			}
 			else {
 				collcommon_dowrite(cc, s, x->x_canvas, 0);
+				outlet_bang(x->x_filebangout);
 			}
 		}
 		else
@@ -1680,6 +1678,7 @@ static void coll_readagain(t_coll *x)
 			}
 			else {
 				collcommon_doread(cc, 0, 0, 0);
+				outlet_bang(x->x_filebangout);
 			}
 		}
 		else
@@ -1702,6 +1701,7 @@ static void coll_writeagain(t_coll *x)
 			}
 			else {
 				collcommon_dowrite(cc, 0, 0, 0);
+				outlet_bang(x->x_filebangout);
 			}
 		}
 		else
@@ -1845,11 +1845,13 @@ static void *coll_threaded_fileio(void *ptr)
 			m = collcommon_dowrite(x->x_common, x->x_s, x->x_canvas, 1);
 			if (m->m_flag)
 				coll_enqueue_threaded_msgs(x, m);
+			clock_delay(x->x_clock, 0);
 		}
 		else if (x->unsafe == 11) { //write
 			m = collcommon_dowrite(x->x_common, 0, 0, 1);
 			if (m->m_flag)
 				coll_enqueue_threaded_msgs(x, m);
+			clock_delay(x->x_clock, 0);
 		}
 
 		if (m != NULL)
@@ -1896,6 +1898,7 @@ static void coll_free(t_coll *x)
 			coll_q_free(x);
 	}
 
+    hammereditor_close(x->x_common->c_filehandle, 1);
     hammerfile_free(x->x_filehandle);
     coll_unbind(x);
 }
@@ -2031,7 +2034,7 @@ void coll_setup(void)
     class_addmethod(coll_class, (t_method)coll_writeagain,
 		    gensym("writeagain"), 0);
     class_addmethod(coll_class, (t_method)coll_filetype,
-		    gensym("filetype"), A_SYMBOL, 0);
+		    gensym("filetype"), 0);
     class_addmethod(coll_class, (t_method)coll_dump,
 		    gensym("dump"), 0);
     class_addmethod(coll_class, (t_method)coll_open,
