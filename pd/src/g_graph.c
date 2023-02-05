@@ -368,10 +368,10 @@ void glist_retext(t_glist *glist, t_text *y)
     }
 }
 
-void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn, t_glistkeyfn keyfn,
+void glist_grabx(t_glist *x, t_gobj *y, t_glistmotionfn motionfn, t_glistkeyfn keyfn,
     t_glistkeynameafn keynameafn, int xpos, int ypos)
 {
-    //fprintf(stderr,"glist_grab\n");
+    //fprintf(stderr,"glist_grabx\n");
     t_glist *x2 = glist_getcanvas(x);
     if (motionfn)
         x2->gl_editor->e_onmotion = MA_PASSOUT;
@@ -382,6 +382,13 @@ void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn, t_glistkeyfn ke
     x2->gl_editor->e_keynameafn = keynameafn;
     x2->gl_editor->e_xwas = xpos;
     x2->gl_editor->e_ywas = ypos;
+}
+
+void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn, t_glistkeyfn keyfn,
+    int xpos, int ypos)
+{
+    //fprintf(stderr,"glist_grab\n");
+    glist_grabx(x, y, motionfn, keyfn, 0, xpos, ypos);
 }
 
 t_canvas *glist_getcanvas(t_glist *x)

@@ -43,7 +43,7 @@ static void my_numbox_tick_reset(t_my_numbox *x)
         my_numbox_ftoa(x, 0);
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
     }
-    glist_grab(x->x_gui.x_glist, 0, 0, 0, 0, 0, 0);
+    glist_grab(x->x_gui.x_glist, 0, 0, 0, 0, 0);
     x->x_focused = 0;
 }
 
@@ -624,8 +624,8 @@ static void my_numbox_motion(t_my_numbox *x, t_floatarg dx, t_floatarg dy)
 static void my_numbox_click(t_my_numbox *x, t_floatarg xpos, t_floatarg ypos,
                             t_floatarg shift, t_floatarg ctrl, t_floatarg alt)
 {
-    glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g,
-        (t_glistmotionfn)my_numbox_motion, my_numbox_key, my_numbox_list, xpos, ypos);
+    glist_grabx(x->x_gui.x_glist, &x->x_gui.x_obj.te_g,
+        (t_glistmotionfn)my_numbox_motion, my_numbox_key, (t_glistkeynameafn)my_numbox_list, xpos, ypos);
 }
 
 static int my_numbox_newclick(t_gobj *z, struct _glist *glist,

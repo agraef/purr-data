@@ -494,7 +494,11 @@ EXTERN void glist_noselect(t_glist *x);
 EXTERN void glist_selectall(t_glist *x);
 EXTERN void glist_delete(t_glist *x, t_gobj *y);
 EXTERN void glist_retext(t_glist *x, t_text *y);
+// vanilla-compatible
 EXTERN void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn,
+    t_glistkeyfn keyfn, int xpos, int ypos);
+// purr-data extension
+EXTERN void glist_grabx(t_glist *x, t_gobj *y, t_glistmotionfn motionfn,
     t_glistkeyfn keyfn, t_glistkeynameafn keynameafn,
     int xpos, int ypos);
 EXTERN int glist_isvisible(t_glist *x);

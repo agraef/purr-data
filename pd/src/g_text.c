@@ -1201,7 +1201,7 @@ static void gatom_key(void *z, t_floatarg f)
         	x->a_buf[0] = 0;
         /* We want to keep grabbing the keyboard after hitting "Enter", so
            we're commenting the following out */
-        //glist_grab(x->a_glist, 0, 0, 0, 0, 0, 0);
+        //glist_grab(x->a_glist, 0, 0, 0, 0, 0);
     }
     else if (len < (ATOMBUFSIZE-1))
     {
@@ -1276,8 +1276,8 @@ static void gatom_click(t_gatom *x,
             binbuf_add(x->a_text.te_binbuf, 1, &at);
             glist_retext(x->a_glist, &x->a_text);
         }
-	   	glist_grab(x->a_glist, &x->a_text.te_g, gatom_motion, gatom_key,
-	        gatom_list, xpos, ypos);
+	   	glist_grabx(x->a_glist, &x->a_text.te_g, gatom_motion, gatom_key,
+	        (t_glistkeynameafn)gatom_list, xpos, ypos);
 	    //post("a_shift_clicked=%d", x->a_shift_clicked);
         x->a_shift_clicked = shift;
 	    	// second click wipes prior text
