@@ -75,6 +75,9 @@ typedef int socklen_t;
 #include <glob.h>
 #else
 #include <stdlib.h>
+#if defined(__linux__) || defined(__FreeBSD_kernel__) || defined(__GNU__)
+#include <sys/stat.h>
+#endif
 #endif
 
 #define DEBUG_MESSUP 1      /* messages up from pd to pd-gui */

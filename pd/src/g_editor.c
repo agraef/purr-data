@@ -3729,7 +3729,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     //post("canvas_doclick %d", doit);
 
     t_gobj *y;
-    int shiftmod, runmode, ctrlmod, altmod, doublemod = 0, rightclick,
+    int shiftmod, runmode, ctrlmod, altmod, rightclick,
         in_text_resizing_hotspot, default_type;
     int x1=0, y1=0, x2=0, y2=0, clickreturned = 0;
     t_gobj *yclick = NULL;
@@ -3773,9 +3773,6 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
         glist_grab(x, 0, 0, 0, 0, 0);
     }
 
-    if (doit && !runmode && xpos == canvas_upx && ypos == canvas_upy &&
-        sys_getrealtime() - canvas_upclicktime < DCLICKINTERVAL)
-            doublemod = 1;
     x->gl_editor->e_lastmoved = 0;
     /* this was temporarily commented out on 5-23-2013 while fixing
        shift+click actions most likely I forgot to reenable it -- need

@@ -634,7 +634,7 @@ EXTERN void canvas_warning(t_canvas *x, int warid);
 
 /* ---- for parsing @pd_extra and other sys paths in filenames  --------------------- */
 
-EXTERN void sys_expandpathelems(const char *name, const char *result);
+EXTERN void sys_expandpathelems(const char *name, char *result);
 
 typedef void (*t_undofn)(t_canvas *canvas, void *buf,
     int action);        /* a function that does UNDO/REDO */

@@ -4544,7 +4544,7 @@ static void scalar_spelunkforword(void* word_candidate, t_template* template,
 
 void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
-    char canvas_field_namebuf[20];
+    char canvas_field_namebuf[25];
     t_symbol *canvas_field_event;
     t_symbol *scalarsym = atom_getsymbolarg(0, argc--, argv++);
     t_symbol *drawcommand_sym = atom_getsymbolarg(0, argc--, argv++);
@@ -4897,7 +4897,7 @@ static void event_anything(t_event *x, t_symbol *s, int argc, t_atom *argv)
 
 static void *event_new(void)
 {
-    char namebuf[20];
+    char namebuf[25];
     t_event *x = (t_event *)pd_new(event_class);
     t_canvas *c = canvas_getrootfor(canvas_getcurrent());
     if (c->gl_vec)

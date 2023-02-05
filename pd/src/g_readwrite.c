@@ -767,7 +767,6 @@ static void canvas_saveto(t_canvas *x, t_binbuf *b)
     t_gobj *y;
     t_linetraverser t;
     t_outconnect *oc;
-    extern int sys_zoom;
         /* subpatch */
     if (x->gl_owner && !x->gl_env)
     {
