@@ -849,7 +849,6 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
 {
     int i;
     int isKey = 0;
-    t_floatarg val;
 
     for (i=0; i < ac; i++)
     {
@@ -877,7 +876,7 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
             if (!strcmp("Up", av[1].a_w.w_symbol->s_name))
             {
                 //fprintf(stderr,"...Up\n");
-                if((x->x_buf[0] == 0 || x->x_buf == '>') && x->x_val != 0)
+                if((x->x_buf[0] == 0 || x->x_buf[0] == '>') && x->x_val != 0)
                     sprintf(x->x_buf, "%g", x->x_val+1);
                 else
                     sprintf(x->x_buf, "%g", atof(x->x_buf) + 1);
@@ -886,7 +885,7 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
             else if (!strcmp("ShiftUp", av[1].a_w.w_symbol->s_name))
             {
                 //fprintf(stderr,"...ShiftUp\n");
-                if((x->x_buf[0] == 0 || x->x_buf == '>') && x->x_val != 0)
+                if((x->x_buf[0] == 0 || x->x_buf[0] == '>') && x->x_val != 0)
                     sprintf(x->x_buf, "%g", x->x_val+0.01);
                 else
                     sprintf(x->x_buf, "%g", atof(x->x_buf) + 0.01);
@@ -895,7 +894,7 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
             else if (!strcmp("Down", av[1].a_w.w_symbol->s_name))
             {
                 //fprintf(stderr,"...Down\n");
-                if((x->x_buf[0] == 0 || x->x_buf == '>') && x->x_val != 0)
+                if((x->x_buf[0] == 0 || x->x_buf[0] == '>') && x->x_val != 0)
                     sprintf(x->x_buf, "%g", x->x_val-1);
                 else
                     sprintf(x->x_buf, "%g", atof(x->x_buf) - 1);
@@ -904,7 +903,7 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
             else if (!strcmp("ShiftDown", av[1].a_w.w_symbol->s_name))
             {
                 //fprintf(stderr,"...ShiftDown\n");
-                if((x->x_buf[0] == 0 || x->x_buf == '>') && x->x_val != 0)
+                if((x->x_buf[0] == 0 || x->x_buf[0] == '>') && x->x_val != 0)
                     sprintf(x->x_buf, "%g", x->x_val-0.01);
                 else
                     sprintf(x->x_buf, "%g", atof(x->x_buf) - 0.01);
