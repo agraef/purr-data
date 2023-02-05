@@ -20,9 +20,15 @@
 #include "s_utf8.h"
 
 t_class *text_class;
-t_class *message_class;
+static t_class *message_class;
 static t_class *gatom_class;
 static t_class *dropdown_class;
+
+int __is_message_class(t_class *c)
+{
+  return c == message_class;
+}
+
 static void text_vis(t_gobj *z, t_glist *glist, int vis);
 static void text_displace(t_gobj *z, t_glist *glist,
     int dx, int dy);
@@ -789,7 +795,7 @@ t_pd *pd_mess_from_responder(t_pd *x)
         /* do pointer math to try to get to the container message struct */
         void *tmp = (void *)x - sizeof(t_text);
         /* if it looks like a message, it must be a message */
-        if(((t_text *)tmp)->te_pd == message_class)
+        if(__is_message_class(((t_text *)tmp)->te_pd))
             return ((t_pd *)tmp);
     }
     return x;
@@ -2223,7 +2229,7 @@ static void text_vis(t_gobj *z, t_glist *glist, int vis)
     //if we are in k12 mode and this is hub with level 1 (global)
     //don't draw it and make its width/height 0
     int exception = 0;
-    if (pd_class(&x->te_pd) == preset_hub_class && sys_k12_mode)
+    if (__is_preset_hub_class(pd_class(&x->te_pd)) && sys_k12_mode)
     {
         //fprintf(stderr,"text_vis reports preset_hub_class detected\n");
         t_preset_hub *h = (t_preset_hub *)z;

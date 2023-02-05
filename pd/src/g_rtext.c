@@ -645,7 +645,7 @@ void rtext_activate(t_rtext *x, int state)
     gui_vmess("gui_textarea", "xssiiiisiiiiiii",
         canvas,
         x->x_tag,
-        (pd_class((t_pd *)x->x_text) == message_class ? "msg" : "obj"),
+        (__is_message_class(pd_class((t_pd *)x->x_text)) ? "msg" : "obj"),
         x->x_text->te_xpix,
         x->x_text->te_ypix,
         widthspec,

@@ -68,6 +68,19 @@ static void preset_node_update_my_glist_location(t_preset_node *x);
 
 //======================== global vars =============================//
 
+static t_class *preset_hub_class;
+static t_class *preset_node_class;
+
+int __is_preset_hub_class(t_class *c)
+{
+  return c == preset_hub_class;
+}
+
+int __is_preset_node_class(t_class *c)
+{
+  return c == preset_node_class;
+}
+
 /* following contains a linear list of all hubs and nodes which ensures easy
    access, pairing, deletion, etc. of all nodes and hubs regardless whether
    they are a part of subpatches, root canvases, or abstractions.

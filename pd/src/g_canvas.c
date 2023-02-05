@@ -25,8 +25,6 @@ to be different but are now unified except for some fossilized names.) */
 #endif
 
 t_garray *array_garray;
-t_class *preset_hub_class;
-t_class *preset_node_class;
 int array_joc;
 
 extern int do_not_redraw;
@@ -1395,8 +1393,8 @@ static void canvas_drawlines(t_canvas *x)
     while (oc = linetraverser_next(&t))
     {
         issignal = (outlet_getsymbol(t.tr_outlet) == &s_signal ? 1 : 0);
-        if (!(pd_class(&t.tr_ob2->ob_g.g_pd) == preset_node_class &&
-              pd_class(&t.tr_ob->ob_g.g_pd) != message_class))
+        if (!(__is_preset_node_class(pd_class(&t.tr_ob2->ob_g.g_pd)) &&
+              !__is_message_class(pd_class(&t.tr_ob->ob_g.g_pd))))
             canvas_drawconnection(glist_getcanvas(x), t.tr_lx1, t.tr_ly1,
                 t.tr_lx2, t.tr_ly2, (t_int)oc, issignal);
     }

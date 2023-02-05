@@ -278,12 +278,19 @@ typedef void (*t_canvas_iterator)(t_canvas *x, void *data);
 // this is where all the classes capable of being controlled via preset should be defined
 
 // preset objects
-extern t_class *preset_hub_class;
-extern t_class *preset_node_class;
+/* ag NOTE: These are auxiliary classes defined in x_preset.c which are not in
+   the vanilla API. I made these static, so that they don't clash with
+   3rd-party externals. Instead we provide predicates to check for objects of
+   these classes, which is all the functionality that's needed elsewhere. */
+extern int __is_preset_hub_class(t_class *);
+extern int __is_preset_node_class(t_class *);
 
 // special case objects
-extern t_class *print_class;
-extern t_class *message_class;
+/* This comes from g_text.c and also needs to be kept static, like it is in
+   vanilla. (Otherwise it clashes with ELSE's message class.) */
+extern int __is_message_class(t_class *);
+/* There also used used to be print_class from x_interface.c here, but that
+   doesn't seem to be needed by the preset manager any more. */
 /*-----------------end universal preset stuff-------------------*/
 
 /* a data structure to describe a field in a pure datum */
