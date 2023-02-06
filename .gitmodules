@@ -13,3 +13,6 @@
 [submodule "externals/pd-lua"]
 	path = externals/pd-lua
 	url = https://git.purrdata.net/jwilkes/pd-lua.git
+[submodule "externals/pd-else"]
+	path = externals/pd-else
+	url = https://github.com/porres/pd-else.git
