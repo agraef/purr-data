@@ -3204,9 +3204,11 @@ var gui = (function() {
         }
         return {
             append: !w ? null_fn: function(cb) {
-                var frag = w.window.document.createDocumentFragment();
-                frag = cb(frag, w.window, c[cid]);
-                last_thing.appendChild(frag);
+                if (last_thing) {
+                    var frag = w.window.document.createDocumentFragment();
+                    frag = cb(frag, w.window, c[cid]);
+                    last_thing.appendChild(frag);
+                }
                 return c[cid];
             },
             get_gobj: !w ? null_fn : function(sel, arg) {
