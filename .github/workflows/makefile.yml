@@ -2,7 +2,7 @@ name: Makefile CI
 
 on:
   push:
-    branches: [ master, release, testing ]
+    branches: [ master, release, testing, pd-else ]
     tags: [ '*' ]
   pull_request:
     branches: [ master ]
