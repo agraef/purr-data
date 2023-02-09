@@ -945,7 +945,7 @@ int text_xpix(t_text *x, t_glist *glist)
             glist->gl_x1 + (glist->gl_x2 - glist->gl_x1) * 
                 x->te_xpix / (glist->gl_screenx2 - glist->gl_screenx1)));
     if (x->te_iemgui == 1)
-        xpix += ((t_iemgui *)x)->legacy_x*sys_legacy;
+        xpix += ((t_iemgui *)x)->legacy_x*glist->gl_legacy;
     return(xpix);
 }
 
@@ -961,7 +961,7 @@ int text_ypix(t_text *x, t_glist *glist)
             glist->gl_y1 + (glist->gl_y2 - glist->gl_y1) * 
                 x->te_ypix / (glist->gl_screeny2 - glist->gl_screeny1)));
     if (x->te_iemgui == 1)
-        ypix += ((t_iemgui *)x)->legacy_y*sys_legacy;
+        ypix += ((t_iemgui *)x)->legacy_y*glist->gl_legacy;
     return(ypix);
 }
 
@@ -1082,7 +1082,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
     // conditional
     graph_getrect(gr, parent_glist, &x1, &y1, &x2, &y2);
     //fprintf(stderr,"%d %d %d %d\n", x1, y1, x2, y2);
-    if (sys_legacy == 1)
+    if (x->gl_legacy == 1)
     {
         //fprintf(stderr,"legacy  gop\n");
         y1 += 1;
@@ -1161,7 +1161,7 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             sys_hostfontsize(glist_getfont(x)),
             sys_fontheight(glist_getfont(x)),
             glist_isselected(x, gr),
-            sys_legacy
+            x->gl_legacy
         );
 
             /* Now start an array to hold each array of label info */
@@ -1500,7 +1500,7 @@ static void graph_getrect(t_gobj *z, t_glist *glist,
     }
     else text_widgetbehavior.w_getrectfn(z, glist, &x1, &y1, &x2, &y2);
 
-    if (sys_legacy == 1)
+    if (x->gl_legacy == 1)
     {
         //fprintf(stderr,"legacy  gop\n");
         y1 += 1;
