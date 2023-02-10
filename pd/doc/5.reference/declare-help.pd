@@ -1,16 +1,17 @@
-#N canvas 426 36 555 619 10;
+#N canvas 426 37 555 619 10;
 #X declare;
 #X declare -path mylibs;
 #X declare -lib mylib;
 #X declare -stdpath mylibs;
 #X declare -stdlib mylib;
 #X declare -zoom 1;
+#X declare -legacy;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
-14 -228856 -66577 0;
+14 #dcdcdc #404040 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header declare 3 12 0 18
--204280 -1 0;
+#c4dcdc #000000 0;
 #X obj 0 105 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
--228856 -1 0;
+#dcdcdc #000000 0;
 #N canvas 483 286 494 344 META 0;
 #X text 12 65 LIBRARY internal;
 #X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
@@ -24,15 +25,15 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 5 KEYWORDS control pd_op;
 #X restore 500 597 pd META;
 #X obj 0 134 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
-13 -228856 -1 0;
+13 #dcdcdc #000000 0;
 #X obj 0 164 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
-0 13 -228856 -1 0;
+0 13 #dcdcdc #000000 0;
 #X obj 0 386 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
-0 13 -228856 -1 0;
+0 13 #dcdcdc #000000 0;
 #N canvas 215 523 428 103 Related_objects 0;
 #X obj 15 34 import;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
+14 #c4dcdc #000000 0;
 #X text 7 1 [declare] Related Objects;
 #X restore 101 597 pd Related_objects;
 #X obj 494 12 declare;
@@ -73,29 +74,27 @@ you can get it using "declare -stdpath extra/zexy".;
 #X obj 240 52 declare -lib mylib;
 #X obj 40 76 declare -stdpath mylibs;
 #X obj 240 76 declare -stdlib mylib;
-#N canvas 480 189 445 363 Patch_local 0;
+#N canvas 480 190 445 363 Patch_local 0;
 #X obj 1 1 cnv 15 437 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
+14 #c4dcdc #000000 0;
 #X text 7 1 [declare] Patch-local options;
 #X obj 10 40 declare -zoom 1;
 #X text 133 40 turns on load/restore of zoom levels in a patch;
-#X text 10 120 * [declare -zoom 0/1] turns save/restore of zoom levels
+#X text 10 150 * [declare -zoom 0/1] turns save/restore of zoom levels
 on or off. This overrides the corresponding global option in the GUI
 preferences. Please note that this does *not* actually set the zoom
 level itself \, it merely enables or disables storing and retrieving
 that setting in a patch., f 69;
-#X text 10 70 [declare] also offers the following special (and experimental)
-patch-local option which overrides the corresponding global flag in
-the current patch (including all its one-off subpatches):, f 69;
-#X text 10 200 CAVEAT: This option is only available in Purr Data \,
-it is NOT supported by vanilla Pd (which has no way of configuring
-the zoom behavior)., f 69;
-#X text 10 250 The -zoom option is intended mainly for classroom use
-\, e.g. \, when projecting patches on a whiteboard. It ensures that
-the patch is displayed at the preset zoom level by default \, even
-if the global zoom save/load option is disabled in the preferences.
-If you abuse this option to enforce unusually high or low zoom levels
-\, you take away precious zoom levels from the user. So please use
-this option with due skill \, care \, and diligence \, or better don't
-use it at all., f 69;
+#X obj 10 64 declare -legacy;
+#X text 133 64 turns on legacy positioning in a patch;
+#X text 10 310 CAVEAT: These options are only available in Purr Data
+\, they are NOT supported by vanilla Pd., f 69;
+#X text 10 100 [declare] also offers the following special (and experimental)
+patch-local options which override the corresponding global flags in
+the current patch (including all its subpatches):, f 69;
+#X text 10 230 * [declare -legacy] enables legacy positioning in a
+patch created with vanilla Pd. Once set \, the flag is inherited by
+all subpatches. This is typically used with gop subpatches created
+with vanilla Pd so that they are rendered correctly in Purr Data \,
+while other parts of your patch are layed out as usual., f 69;
 #X restore 221 597 pd Patch_local;
