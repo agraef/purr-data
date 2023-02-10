@@ -524,8 +524,12 @@ ekext_clean:
 #------------------------------------------------------------------------------#
 # ELSE
 
+# Note that we suppress building or installing ELSE's bundled pd-lua version
+# since we ship the latest version ourselves, whereas ELSE may lag behind.
+
 else:
 	make -C $(externals_src)/pd-else PDINCLUDEDIR="$(pd_src)/src" PDBINDIR="$(pd_src)/src" luamake=no
+	make -C $(externals_src)/pd-else/sfont~ PDINCLUDEDIR="$(pd_src)/src" PDBINDIR="$(pd_src)/src"
 
 # List of gop patches which need `declare -legacy`. These already have
 # `declare -path` in them, so we can just add the -legacy flag there.
@@ -537,6 +541,8 @@ SED = sed -i'' -e
 else_install:
 	make -C $(externals_src)/pd-else DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" install luamake=no
 	for x in $(else_gop_patches); do $(SED) 's/declare -path/declare -legacy -path/' "$(DESTDIR)$(objectsdir)/else/$$x.pd"; done
+# Make sure to install sfont~ into extra/else rather than extra/sfont~.
+	make -C $(externals_src)/pd-else/sfont~ installpath="$(DESTDIR)$(objectsdir)/else" install
 
 else_clean:
 	make -C $(externals_src)/pd-else clean
