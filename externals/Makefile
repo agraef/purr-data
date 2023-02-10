@@ -527,8 +527,16 @@ ekext_clean:
 else:
 	make -C $(externals_src)/pd-else PDINCLUDEDIR="$(pd_src)/src" PDBINDIR="$(pd_src)/src" luamake=no
 
+# List of gop patches which need `declare -legacy`. These already have
+# `declare -path` in them, so we can just add the -legacy flag there.
+else_gop_patches = biplot circle display drumseq gain2~ gain~ graph~ meter2~ meter4~ meter8~ meter~ mix2~ mix4~ mtx.ctl multi.vsl out1~ out4~ out8~ out~ range.hsl setdsp~ slider2d spectrograph~ zbiplot
+
+# sed -i'' -e should work with both GNU (Linux, msys2) and OSX 10.9+ sed.
+SED = sed -i'' -e
+
 else_install:
 	make -C $(externals_src)/pd-else DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" install luamake=no
+	for x in $(else_gop_patches); do $(SED) 's/declare -path/declare -legacy -path/' "$(DESTDIR)$(objectsdir)/else/$$x.pd"; done
 
 else_clean:
 	make -C $(externals_src)/pd-else clean
