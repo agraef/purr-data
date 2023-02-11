@@ -15,4 +15,5 @@
 	url = https://git.purrdata.net/jwilkes/pd-lua.git
 [submodule "externals/pd-else"]
 	path = externals/pd-else
-	url = https://github.com/porres/pd-else.git
+	url = https://github.com/agraef/pd-else.git
+	branch = gui-port
