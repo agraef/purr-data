@@ -5995,6 +5995,23 @@ function add_popup(cid, popup) {
     popup_menu[cid] = popup;
 }
 
+// ELSE
+function gui_else_draw_pad(cid, tag, bgcolor, width, height) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var pad = create_item(cid, "rect", {
+            width: width,
+            height: height,
+	    fill: bgcolor,
+            stroke: "black",
+            //"shape-rendering": "crispEdges",
+            class: "border"
+        });
+        frag.appendChild(pad);
+        return frag;
+    });
+}
+
 // envgen
 function gui_envgen_draw_bg(cid, tag, bg_color, w, h, points_array) {
     gui(cid).get_gobj(tag)
