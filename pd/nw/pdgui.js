@@ -6012,6 +6012,13 @@ function gui_else_draw_pad(cid, tag, bgcolor, width, height) {
     });
 }
 
+function gui_else_configure_pad(cid, tag, bg_color) {
+    gui(cid).get_gobj(tag)
+    .q(".border", {
+        fill: bg_color
+    });
+}
+
 // envgen
 function gui_envgen_draw_bg(cid, tag, bg_color, w, h, points_array) {
     gui(cid).get_gobj(tag)
