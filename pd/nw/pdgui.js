@@ -6012,10 +6012,12 @@ function gui_else_draw_pad(cid, tag, bgcolor, width, height) {
     });
 }
 
-function gui_else_configure_pad(cid, tag, bg_color) {
+function gui_else_configure_pad(cid, tag, bgcolor, width, height) {
     gui(cid).get_gobj(tag)
     .q(".border", {
-        fill: bg_color
+        width: width,
+        height: height,
+        fill: bgcolor
     });
 }
 
