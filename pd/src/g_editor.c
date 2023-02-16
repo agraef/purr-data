@@ -5487,6 +5487,8 @@ void canvas_mousedown_middle(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     }
 }
 
+static void canvas_announce_editmode(t_canvas *x, int edit);
+
     /* displace the selection by (dx, dy) pixels */
 void canvas_displaceselection(t_canvas *x, int dx, int dy)
 {
@@ -5821,9 +5823,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
                 CURSOR_RUNMODE_NOTHING : CURSOR_EDITMODE_NOTHING);
             x->gl_edit = down ? 0 : 1;
             x->gl_edit_save = !x->gl_edit;
-            gui_vmess("gui_canvas_set_editmode", "xi",
-                x,
-                x->gl_edit);
+            canvas_announce_editmode(x, x->gl_edit);
             if(x->gl_editor && x->gl_editor->gl_magic_glass)
             {
                 if (down)
@@ -8334,18 +8334,36 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
     if (glist_isvisible(x))
     {
         int edit = /*!glob_ctrl && */x->gl_edit;
-        gui_vmess("gui_canvas_set_editmode", "xi",
-            glist_getcanvas(x),
-            edit);
+        canvas_announce_editmode(glist_getcanvas(x), edit);
     }
+}
+
+// Dispatch editmode status to receiver (announce edit mode changes)
+static void canvas_dispatch_editmode(t_canvas *x, t_float state)
+{
+    char buf[MAXPDSTRING];
+    // The receiver takes the form <canvas>#editmode where <canvas> is the
+    // canvas id (hex code), so that only objects on the specific canvas will
+    // receive the message.
+    snprintf(buf, MAXPDSTRING-1, "x%lx#editmode", (unsigned long)x);
+    buf[MAXPDSTRING-1] = 0;
+    t_symbol *editmodesym = gensym(buf);
+    if (editmodesym->s_thing)
+        pd_float(editmodesym->s_thing, state);
+}
+
+static void canvas_announce_editmode(t_canvas *x, int edit)
+{
+  // announce to receivers
+  canvas_dispatch_editmode(x, edit);
+  // announce to gui
+  gui_vmess("gui_canvas_set_editmode", "xi", x, edit);
 }
 
 void canvas_query_editmode(t_canvas *x)
 {
   int edit = /*!glob_ctrl && */x->gl_edit;
-  gui_vmess("gui_canvas_set_editmode", "xi",
-            glist_getcanvas(x),
-            edit);
+  canvas_announce_editmode(glist_getcanvas(x), edit);
 }
 
 // jsarlo
