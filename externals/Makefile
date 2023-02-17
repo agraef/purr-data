@@ -525,8 +525,7 @@ ekext_clean:
 # ELSE
 
 else:
-	make -C $(externals_src)/pd-else PDINCLUDEDIR="$(pd_src)/src" PDBINDIR="$(pd_src)/src"
-	make -C $(externals_src)/pd-else/sfont~ PDINCLUDEDIR="$(pd_src)/src" PDBINDIR="$(pd_src)/src"
+	make -C $(externals_src)/pd-else all sfont plaits PDINCLUDEDIR="$(pd_src)/src" PDBINDIR="$(pd_src)/src"
 
 # List of gop patches which need `declare -legacy`. These already have
 # `declare -path` in them, so we can just add the -legacy flag there.
@@ -536,10 +535,8 @@ else_gop_patches = biplot circle display drumseq gain2~ gain~ graph~ meter2~ met
 SED = sed -i'' -e
 
 else_install:
-	make -C $(externals_src)/pd-else DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" install
+	make -C $(externals_src)/pd-else DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" install sfont-install plaits-install
 	for x in $(else_gop_patches); do $(SED) 's/declare -path/declare -legacy -path/' "$(DESTDIR)$(objectsdir)/else/$$x.pd"; done
-# Make sure to install sfont~ into extra/else rather than extra/sfont~.
-	make -C $(externals_src)/pd-else/sfont~ installpath="$(DESTDIR)$(objectsdir)/else" install
 
 else_clean:
 	make -C $(externals_src)/pd-else clean
