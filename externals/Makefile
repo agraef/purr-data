@@ -531,12 +531,17 @@ else:
 # `declare -path` in them, so we can just add the -legacy flag there.
 else_gop_patches = biplot circle display drumseq gain2~ gain~ graph~ meter2~ meter4~ meter8~ meter~ mix2~ mix4~ mtx.ctl multi.vsl out1~ out4~ out8~ out~ range.hsl setdsp~ slider2d spectrograph~ zbiplot
 
+# List of midi-related patches which need bendin to be patched up for vanilla
+# bug-compatible behavior.
+else_midi_patches = midi.learn sfont~-help
+
 # sed -i'' -e should work with both GNU (Linux, msys2) and OSX 10.9+ sed.
 SED = sed -i'' -e
 
 else_install:
 	make -C $(externals_src)/pd-else DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" install sfont-install plaits-install
 	for x in $(else_gop_patches); do $(SED) 's/declare -path/declare -legacy -path/' "$(DESTDIR)$(objectsdir)/else/$$x.pd"; done
+	for x in $(else_midi_patches); do $(SED) 's/\(#X obj .* bendin\);/\1 0 1;/' "$(DESTDIR)$(objectsdir)/else/$$x.pd"; done
 
 else_clean:
 	make -C $(externals_src)/pd-else clean
