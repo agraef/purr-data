@@ -85,7 +85,8 @@ For Ico Bukvic's original Pd-l2ork website see:
 
 ### Relationship of Purr Data to Pure Data
 
-There are three maintained distributions of Pure Data:
+At the time of this writing, there are four maintained distributions of Pure
+Data, two of which (Purr Data, Pd-l2ork) belong to the Pd-extended lineage.
 
 1. Purr Data. This started out as the 2.0 version of Pd-l2ork. It ships with
    lots of external libraries and uses a modern GUI written using HTML5.
@@ -97,6 +98,8 @@ There are three maintained distributions of Pure Data:
    his website and maintains.  It doesn't come with external libraries
    pre-installed, but it does include an interface you can use to search
    and install external libraries maintained and packaged by other developers.
+4. Plugdata. A new libpd-based distribution of Pure Data which can be run as a
+   plugin. See <https://plugdata.org/>.
 
 ### Downloads
 
