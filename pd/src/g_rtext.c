@@ -41,13 +41,14 @@ struct _rtext
     int x_bufsize;  /*-- byte length --*/
     int x_selstart; /*-- byte offset --*/
     int x_selend;   /*-- byte offset --*/
-    int x_active;
-    int x_drawnwidth;
+    int x_active;      /* 1 if actively editing */
+    int x_dragfrom;    /* character onset we're dragging from */
+    int x_drawnwidth;  /* screen size in pixels */
     int x_drawnheight;
-    t_text *x_text;
-    t_glist *x_glist;
-    char x_tag[50];
-    struct _rtext *x_next;
+    t_text *x_text;    /* owner */
+    t_glist *x_glist;  /* glist owner belongs to */
+    char x_tag[50];    /* tag for gui */
+    struct _rtext *x_next; /* next in editor list */
 };
 
 t_rtext *rtext_new(t_glist *glist, t_text *who)
@@ -118,6 +119,11 @@ void rtext_getseltext(t_rtext *x, char **buf, int *bufsize)
     *bufsize = x->x_selend - x->x_selstart;
 }
 
+t_text *rtext_getowner(t_rtext *x)
+{
+    return (x->x_text);
+}
+
 /* convert t_text te_type symbol for use as a Tk tag */
 static t_symbol *rtext_gettype(t_rtext *x)
 {
@@ -173,6 +179,250 @@ static int lastone(char *s, int c, int n)
     return (-1);
 }
 
+    /* break the text into lines, and compute byte index of character at
+    location (width, height).  Then reset (width, height) to report size of
+    resulting line-broken text.  Used for object, message, and comment boxes;
+    another version below is for atoms.  Also we report the onsets of
+    the beginning and end of the selection, as byte onsets into the reformatted
+    text, which we'll use to inform the GUI how to show the selection.
+
+    The input is taken from x->buf and x->bufsize fields of the text object;
+    the wrapped text is put in "tempbuf" with byte length outchars_b_p.
+
+    x->x_buf is assumed to contain text in UTF-8 format, in which characters
+    may occupy multiple bytes. variables with a "_b" suffix are raw byte
+    strings, lengths, or offsets;  those with a "_c" suffix are logical
+    character lengths or offsets.
+    The UTF8 handling was contributed by Bryan Jurish, who says "moo." */
+
+#define DEFAULTBOXWIDTH 60
+
+/* Older (pre-8.3.4) TCL versions handle text selection differently; this
+flag is set from the GUI if this happens.  LATER take this out: early 2006? */
+
+extern int sys_oldtclversion;           
+extern int is_dropdown(t_text *x);
+
+static void rtext_formattext(t_rtext *x, int *widthp, int *heightp,
+    int *indexp,  char *tempbuf, int *outchars_b_p, int *selstart_b_p,
+    int *selend_b_p, int fontwidth, int fontheight)
+{
+    int widthspec_c = x->x_text->te_width; // width if any specified
+
+    int widthlimit_c = (widthspec_c ? widthspec_c : DEFAULTBOXWIDTH);
+
+
+    int inindex_b = 0; // index location in the buffer
+    int inindex_c = 0; // index location in the u8 chars
+
+
+
+        // buffer size in u8 chars
+        //fprintf(stderr,"buf = <%s> | last 2 chars = %d %d\n", x->x_buf, x->x_buf[x->x_bufsize-1], x->x_buf[x->x_bufsize]);
+        int x_bufsize_c = u8_charnum(x->x_buf, x->x_bufsize);
+
+    int nlines = 0, ncolumns = 0, reportedindex = 0;
+    int findx = (*widthp + (fontwidth/2)) / fontwidth;
+    int findy = *heightp / fontheight;
+
+    *selstart_b_p = *selend_b_p = 0;
+
+
+
+    while (x_bufsize_c - inindex_c > 0)
+    {
+        int inchars_b  = x->x_bufsize - inindex_b;
+        int inchars_c  = x_bufsize_c  - inindex_c;
+        int maxindex_c =
+            (inchars_c > widthlimit_c ? widthlimit_c : inchars_c);
+        int maxindex_b = u8_offset(x->x_buf + inindex_b, maxindex_c,
+            x->x_bufsize - inindex_b);
+        int eatchar = 1;
+        //fprintf(stderr, "firstone <%s> inindex_b=%d maxindex_b=%d\n", x->x_buf + inindex_b, inindex_b, maxindex_b);
+        int foundit_b  = firstone(x->x_buf + inindex_b, '\n', maxindex_b);
+        int foundit_c;
+        //following deals with \v replacement for \n in multiline comments
+        int foundit_bv  = firstone(x->x_buf + inindex_b, '\v', maxindex_b);
+        if ((foundit_bv < foundit_b && foundit_bv != -1) ||
+            (foundit_b == -1 && foundit_bv != -1))
+            foundit_b = foundit_bv;
+        if (foundit_b < 0) //if we did not find an \n
+        { 
+            /* too much text to fit in one line? */
+            if (inchars_c > widthlimit_c)
+            {
+                /* is there a space to break the line at?  OK if it's even
+                one byte past the end since in this context we know there's
+                more text */
+                foundit_b =
+                    lastone(x->x_buf + inindex_b, ' ', maxindex_b + 1);
+                if (foundit_b < 0)
+                {
+                    foundit_b = maxindex_b;
+                    foundit_c = maxindex_c;
+                    eatchar = 0;
+                }
+                else
+                    foundit_c = u8_charnum(x->x_buf + inindex_b, foundit_b);
+            }
+            else
+            {
+                foundit_b = inchars_b;
+                foundit_c = inchars_c;
+                eatchar = 0;
+            }
+        }
+        else
+            foundit_c = u8_charnum(x->x_buf + inindex_b, foundit_b);
+
+        if (nlines == findy)
+        {
+            int actualx = (findx < 0 ? 0 :
+                (findx > foundit_c ? foundit_c : findx));
+            *indexp = inindex_b + u8_offset(x->x_buf + inindex_b, actualx,
+                x->x_bufsize - inindex_b);
+            reportedindex = 1;
+        }
+        strncpy(tempbuf + *outchars_b_p, x->x_buf + inindex_b, foundit_b);
+        if (x->x_selstart >= inindex_b &&
+            x->x_selstart <= inindex_b + foundit_b + eatchar)
+                *selstart_b_p = x->x_selstart + *outchars_b_p - inindex_b;
+        if (x->x_selend >= inindex_b &&
+            x->x_selend <= inindex_b + foundit_b + eatchar)
+                *selend_b_p = x->x_selend + *outchars_b_p - inindex_b;
+        *outchars_b_p += foundit_b;
+
+        inindex_b += (foundit_b + eatchar);
+        inindex_c += (foundit_c + eatchar);
+        if (inindex_b < x->x_bufsize)
+            tempbuf[(*outchars_b_p)++] = '\n';
+        // if we found a row that is longer than previous (total width)
+        if (foundit_c > ncolumns)
+            ncolumns = foundit_c;
+        nlines++;
+    }
+
+     if (!reportedindex)
+        *indexp = *outchars_b_p;
+     if (nlines < 1) nlines = 1;
+     if (!widthspec_c)
+     {
+         while (ncolumns < (x->x_text->te_type == T_TEXT ? 1 : 3))
+         {
+             tempbuf[(*outchars_b_p)++] = ' ';
+             ncolumns++;
+         }
+     }
+     else ncolumns = widthspec_c;
+    *widthp = ncolumns * fontwidth;
+    *heightp = nlines * fontheight;
+//     if (glist_getzoom(x->x_glist) > 1)
+     if (0)
+     {
+         /* zoom margins */
+//        *widthp += (LMARGIN + RMARGIN) * glist_getzoom(x->x_glist);
+//        *heightp += (TMARGIN + BMARGIN) * glist_getzoom(x->x_glist);
+    }
+    else
+    {
+        *widthp += LMARGIN + RMARGIN;
+        *heightp += TMARGIN + BMARGIN;
+    }
+
+}
+
+    /* same as above, but for atom boxes, which are always on one line. */
+static void rtext_formatatom(t_rtext *x, int *widthp, int *heightp,
+    int *indexp,  char *tempbuf, int *outchars_b_p, int *selstart_b_p,
+    int *selend_b_p, int fontwidth, int fontheight)
+{
+    int findx = *widthp / fontwidth;  /* character index; want byte index */
+    *indexp = 0;
+        /* special case: for number boxes, try to pare the number down
+        to the specified width of the box. */
+    if (x->x_text->te_width > 0 && binbuf_getnatom(x->x_text->te_binbuf) == 1 &&
+        binbuf_getvec(x->x_text->te_binbuf)->a_type == A_FLOAT &&
+        x->x_bufsize > x->x_text->te_width)
+    {
+            /* try to reduce size by dropping decimal digits */
+        int wantreduce = x->x_bufsize - x->x_text->te_width;
+        char *decimal = 0, *nextchar, *ebuf = x->x_buf + x->x_bufsize,
+            *s1, *s2;
+        int ndecimals;
+        strncpy(tempbuf, x->x_buf, x->x_bufsize);
+        tempbuf[x->x_bufsize] = 0;
+        ebuf = tempbuf + x->x_bufsize;
+        for (decimal = tempbuf; decimal < ebuf; decimal++)
+            if (*decimal == '.')
+                break;
+        if (decimal >= ebuf)
+            goto giveup;
+        for (nextchar = decimal + 1; nextchar < ebuf; nextchar++)
+            if (*nextchar < '0' || *nextchar > '9')
+                break;
+        if (nextchar - decimal - 1 < wantreduce)
+           goto giveup;
+        for (s1 = nextchar - wantreduce, s2 = s1 + wantreduce;
+            s2 < ebuf; s1++, s2++)
+                *s1 = *s2;
+        *outchars_b_p = x->x_text->te_width;
+        goto done;
+    giveup:
+            /* give up and bash last char to '>' */
+        tempbuf[x->x_text->te_width-1] = '>';
+        tempbuf[x->x_text->te_width] = 0;
+        *outchars_b_p = x->x_text->te_width;
+    done: ;
+        *indexp = findx;
+        *widthp = x->x_text->te_width * fontwidth;
+    }
+    else
+    {
+        int outchars_c = 0, prev_b = 0;
+        int widthlimit_c = (x->x_text->te_width > 0 ? x->x_text->te_width :
+                1000);   /* nice big fat limit since we can't wrap */
+        uint32_t thischar;
+        *outchars_b_p = 0;
+        for (outchars_c = 0;
+            *outchars_b_p < x->x_bufsize && outchars_c < widthlimit_c;
+                outchars_c++)
+        {
+
+            prev_b = *outchars_b_p;
+            thischar = u8_nextchar(x->x_buf, outchars_b_p);
+            if (findx > outchars_c)
+                *indexp = *outchars_b_p;
+            if (thischar == '\n' || !thischar)
+            {
+                *(outchars_b_p) = prev_b;
+                break;
+            }
+            memcpy(tempbuf + prev_b, x->x_buf + prev_b, *outchars_b_p - prev_b);
+                /* if box is full and there's more, bash last char to '>' */
+            if (outchars_c == widthlimit_c-1 && x->x_bufsize > *(outchars_b_p)
+                 && (x->x_buf[*(outchars_b_p)] != ' ' ||
+                    x->x_bufsize > *(outchars_b_p)+1))
+            {
+                tempbuf[prev_b] = '>';
+            }
+        }
+        if (x->x_text->te_width > 0)
+            *widthp = x->x_text->te_width * fontwidth;
+        else *widthp = (outchars_c > 3 ? outchars_c : 3) * fontwidth;
+        tempbuf[*outchars_b_p] = 0;
+    }
+    if (*indexp > *outchars_b_p)
+        *indexp = *outchars_b_p;
+    if (*indexp < 0)
+        *indexp = 0;
+    *selstart_b_p = x->x_selstart;
+    *selend_b_p = x->x_selend;
+// These need to be checked... can't remember if we're using these
+// defines in Purr GUI
+    *widthp += (LMARGIN + RMARGIN - 2);
+    *heightp = fontheight + (TMARGIN + BMARGIN - 1);
+}
+
     /* the following routine computes line breaks and carries out
     some action which could be:
         SEND_FIRST - draw the box  for the first time
@@ -184,294 +434,131 @@ static int lastone(char *s, int c, int n)
     of the entire text in pixels.
     */
 
-   /*-- moo: 
-    * + some variables from the original version have been renamed
-    * + variables with a "_b" suffix are raw byte strings, lengths, or offsets
-    * + variables with a "_c" suffix are logical character lengths or offsets
-    *   (assuming valid UTF-8 encoded byte string in x->x_buf)
-    * + a fair amount of O(n) computations required to convert between raw byte
-    *   offsets (needed by the C side) and logical character offsets (needed by
-    *   the GUI)
-    */
-
     /* LATER get this and sys_vgui to work together properly,
         breaking up messages as needed.  As of now, there's
         a limit of 1950 characters, imposed by sys_vgui(). */
 #define UPBUFSIZE 4000
-#define BOXWIDTH 60
 
-/* Older (pre-8.3.4) TCL versions handle text selection differently; this
-flag is set from the GUI if this happens.  LATER take this out: early 2006? */
-
-extern int sys_oldtclversion;           
-extern int is_dropdown(t_text *x);
+void text_getfont(t_text *x, t_glist *thisglist,
+    int *fheightp, int *fwidthp, int *guifsize);
 
 static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
     int *indexp)
 {
-    //fprintf(stderr,"rtext_senditup <%s>\n", x->x_buf);
-    if (x)
+    char smallbuf[200], *tempbuf;
+    int outchars_b = 0, guifontsize, fontwidth, fontheight;
+    t_canvas *canvas = glist_getcanvas(x->x_glist);
+    char smallescbuf[400], *escbuf = 0;
+    size_t escchars = 0;
+    int selstart_b, selend_b;   /* beginning and end of selection in bytes */
+        /* if we're a GOP (the new, "goprect" style) borrow the font size
+        from the inside to preserve the spacing */
+
+    text_getfont(x->x_text, x->x_glist, &fontwidth, &fontheight, &guifontsize);
+    if (x->x_bufsize >= 100)
+         tempbuf = (char *)t_getbytes(2 * x->x_bufsize + 1);
+    else tempbuf = smallbuf;
+    tempbuf[0] = 0;
+
+    if (x->x_text->te_type == T_ATOM)
+        rtext_formatatom(x, widthp, heightp, indexp,
+            tempbuf, &outchars_b, &selstart_b,  &selend_b,
+            fontwidth, fontheight);
+    else rtext_formattext(x, widthp, heightp, indexp,
+            tempbuf, &outchars_b, &selstart_b, &selend_b,
+            fontwidth, fontheight);
+    tempbuf[outchars_b]=0;
+
+    if (action && x->x_text->te_width && x->x_text->te_type != T_ATOM)
     {
-        char smallbuf[200] = { '\0' }, *tempbuf;
-        int outchars_b = 0, nlines = 0, ncolumns = 0,
-            pixwide, pixhigh, font, fontwidth, fontheight, findx, findy;
-        int reportedindex = 0;
-        t_canvas *canvas = glist_getcanvas(x->x_glist);
-        int widthspec_c = x->x_text->te_width; // width if any specified
-        // width limit in chars
-        int widthlimit_c = (widthspec_c ? widthspec_c : BOXWIDTH);
-        int inindex_b = 0; // index location in the buffer
-        int inindex_c = 0; // index location in the u8 chars
-        int selstart_b = 0, selend_b = 0; // selection start and end
-        // buffer size in u8 chars
-        //fprintf(stderr,"buf = <%s> | last 2 chars = %d %d\n", x->x_buf, x->x_buf[x->x_bufsize-1], x->x_buf[x->x_bufsize]);
-        int x_bufsize_c = u8_charnum(x->x_buf, x->x_bufsize);
-            /* if we're a GOP (the new, "goprect" style) borrow the font size
-            from the inside to preserve the spacing */
-        if (pd_class(&x->x_text->te_pd) == canvas_class &&
-            ((t_glist *)(x->x_text))->gl_isgraph &&
-            ((t_glist *)(x->x_text))->gl_goprect)
-                font =  glist_getfont((t_glist *)(x->x_text));
-        else font = glist_getfont(x->x_glist);
-        fontwidth = sys_fontwidth(font);
-        fontheight = sys_fontheight(font);
-        // calculating x and y in pixels
-        findx = (*widthp + (fontwidth/2)) / fontwidth;
-        findy = *heightp / fontheight;
-        if (x->x_bufsize >= 100)
-             tempbuf = (char *)t_getbytes(2 * x->x_bufsize + 1);
-        else tempbuf = smallbuf;
-        while (x_bufsize_c - inindex_c > 0)
+        /* if our width is specified but the "natural" width is the
+           same as the specified width, set specified width to zero
+           so future text editing will automatically change width.
+           Except atoms whose content changes at runtime. */
+        int widthwas = x->x_text->te_width, newwidth = 0, newheight = 0,
+            newindex = 0;
+        x->x_text->te_width = 0;
+        rtext_senditup(x, 0, &newwidth, &newheight, &newindex);
+            if (newwidth != *widthp)
+                x->x_text->te_width = widthwas;
+    }
+
+    if (action && !canvas->gl_havewindow)
+        action = 0;
+
+//    escbuf = (tempbuf == smallbuf)?smallescbuf:t_getbytes(2 * outchars_b + 1);
+
+// need to change this to whatever we're using in Purr...
+//    pdgui_strnescape(escbuf, 2 * outchars_b + 1, tempbuf, outchars_b);
+    escbuf = tempbuf;
+
+    if (action == SEND_FIRST)
+    {
+        //fprintf(stderr,"send_first rtext=%zx t_text=%zx\n", x, x->x_text);
+        gui_vmess("gui_text_new", "xssiiisi",
+            canvas, x->x_tag, rtext_gettype(x)->s_name,
+            glist_isselected(x->x_glist, ((t_gobj*)x->x_text)),
+            LMARGIN,
+            fontheight,
+            escbuf,
+            guifontsize);
+           
+    }
+    else if (action == SEND_UPDATE)
+    {
+        gui_vmess("gui_text_set", "xss", canvas, x->x_tag, escbuf);
+
+        // We add the check for T_MESSAGE below so that the box border
+        // gets resized correctly using our interim event handling in
+        // pd_canvas.html.  I could remove the conditional, but
+        // this part of Pd is convoluted enough that I'm not sure
+        // if there'd be any side effects.
+        // Additionally we avoid redrawing the border here for the
+        // dropdown_class as that has its own special width handling.
+        if (glist_isvisible(x->x_glist) && !is_dropdown(x->x_text) &&
+            (*widthp != x->x_drawnwidth ||
+            *heightp != x->x_drawnheight ||
+            x->x_text->te_type == T_MESSAGE)) 
         {
-            int inchars_b  = x->x_bufsize - inindex_b;
-            int inchars_c  = x_bufsize_c  - inindex_c;
-            int maxindex_c =
-                (inchars_c > widthlimit_c ? widthlimit_c : inchars_c);
-            int maxindex_b = u8_offset(x->x_buf + inindex_b, maxindex_c,
-                x->x_bufsize - inindex_b);
-            int eatchar = 1;
-            //fprintf(stderr, "firstone <%s> inindex_b=%d maxindex_b=%d\n", x->x_buf + inindex_b, inindex_b, maxindex_b);
-            int foundit_b  = firstone(x->x_buf + inindex_b, '\n', maxindex_b);
-            int foundit_c;
-            //following deals with \v replacement for \n in multiline comments
-            int foundit_bv  = firstone(x->x_buf + inindex_b, '\v', maxindex_b);
-            if ((foundit_bv < foundit_b && foundit_bv != -1) ||
-                (foundit_b == -1 && foundit_bv != -1))
-                foundit_b = foundit_bv;
-            if (foundit_b < 0) //if we did not find an \n
-            { 
-                /* too much text to fit in one line? */
-                if (inchars_c > widthlimit_c)
-                {
-                    /* is there a space to break the line at?  OK if it's even
-                    one byte past the end since in this context we know there's
-                    more text */
-                    foundit_b =
-                        lastone(x->x_buf + inindex_b, ' ', maxindex_b + 1);
-                    if (foundit_b < 0)
-                    {
-                        foundit_b = maxindex_b;
-                        foundit_c = maxindex_c;
-                        eatchar = 0;
-                    }
-                    else
-                        foundit_c = u8_charnum(x->x_buf + inindex_b, foundit_b);
-                }
-                else
-                {
-                    foundit_b = inchars_b;
-                    foundit_c = inchars_c;
-                    eatchar = 0;
-                }
+            text_drawborder(x->x_text, x->x_glist, x->x_tag,
+                *widthp, *heightp, 0);
+        }
+        if (x->x_active)
+        {
+            if (selend_b > selstart_b)
+            {
+                //sys_vgui(".x%zx.c select from %s %d\n", canvas, 
+                //    x->x_tag, u8_charnum(tempbuf, selstart_b));
+                //sys_vgui(".x%zx.c select to %s %d\n", canvas, 
+                //    x->x_tag, u8_charnum(tempbuf, selend_b)
+                //      + (sys_oldtclversion ? 0 : -1));
+                //sys_vgui(".x%zx.c focus \"\"\n", canvas);        
             }
             else
-                foundit_c = u8_charnum(x->x_buf + inindex_b, foundit_b);
-
-            if (nlines == findy)
             {
-                int actualx = (findx < 0 ? 0 :
-                    (findx > foundit_c ? foundit_c : findx));
-                *indexp = inindex_b + u8_offset(x->x_buf + inindex_b, actualx,
-                    x->x_bufsize - inindex_b);
-                reportedindex = 1;
-            }
-            strncpy(tempbuf+outchars_b, x->x_buf + inindex_b, foundit_b);
-            if (x->x_selstart >= inindex_b &&
-                x->x_selstart <= inindex_b + foundit_b + eatchar)
-                    selstart_b = x->x_selstart + outchars_b - inindex_b;
-            if (x->x_selend >= inindex_b &&
-                x->x_selend <= inindex_b + foundit_b + eatchar)
-                    selend_b = x->x_selend + outchars_b - inindex_b;
-            outchars_b += foundit_b;
-            inindex_b += (foundit_b + eatchar);
-            inindex_c += (foundit_c + eatchar);
-            if (inindex_b < x->x_bufsize)
-                tempbuf[outchars_b++] = '\n';
-            // if we found a row that is longer than previous (total width)
-            if (foundit_c > ncolumns)
-                ncolumns = foundit_c;
-            nlines++;
-        }
-        // append new line in case we end our input with an \n
-        if (x_bufsize_c > 0 && (x->x_buf[x_bufsize_c - 1] == '\n' || x->x_buf[x_bufsize_c - 1] == '\v'))
-        {
-            nlines++;
-            tempbuf[outchars_b++] = '\n';
-            //tempbuf[outchars_b] = '\0';
-            //outchars_b++;
-        }
-        if (!reportedindex)
-            *indexp = outchars_b;
-        if (nlines < 1) nlines = 1;
-        if (!widthspec_c)
-        {
-            while (ncolumns < (x->x_text->te_type == T_TEXT ? 1 : 3))
-            {
-                tempbuf[outchars_b++] = ' ';
-                ncolumns++;
+                //sys_vgui(".x%zx.c select clear\n", canvas);
+                //sys_vgui(".x%zx.c icursor %s %d\n", canvas, x->x_tag,
+                //    u8_charnum(tempbuf, selstart_b));
+                //sys_vgui(".x%zx.c focus %s\n", canvas, x->x_tag);        
             }
         }
-        else ncolumns = widthspec_c;
-
-        // add a null character at the end of the string --for u8_charnum
-        // _and_ for the new gui_vmess calls which don't use the %.*s syntax.
-        // Because of the way binbuf_gettext works, we should always have
-        // a space before this null character. But I'm not 100% sure this
-        // space is guaranteed to be there, so we'll just filter it out on
-        // the GUI side for now.
-        tempbuf[outchars_b++] = '\0';
-
-        pixwide = ncolumns * fontwidth + (LMARGIN + RMARGIN);
-        pixhigh = nlines * fontheight + (TMARGIN + BMARGIN);
-        //printf("outchars_b=%d bufsize=%d %d\n", outchars_b, x->x_bufsize, x->x_buf[outchars_b]);
-
-        if (action && x->x_text->te_width && x->x_text->te_type != T_ATOM)
-        {
-            /* if our width is specified but the "natural" width is the
-               same as the specified width, set specified width to zero
-               so future text editing will automatically change width.
-               Except atoms whose content changes at runtime. */
-            int widthwas = x->x_text->te_width, newwidth = 0, newheight = 0,
-                newindex = 0;
-            x->x_text->te_width = 0;
-            rtext_senditup(x, 0, &newwidth, &newheight, &newindex);
-            if (newwidth/fontwidth != widthwas)
-                x->x_text->te_width = widthwas;
-            else x->x_text->te_width = 0;
-        }
-        if (action == SEND_FIRST)
-        {
-            //fprintf(stderr,"send_first rtext=%zx t_text=%zx\n", x, x->x_text);
-            gui_vmess("gui_text_new", "xssiiisi",
-                canvas, x->x_tag, rtext_gettype(x)->s_name,
-                glist_isselected(x->x_glist, ((t_gobj*)x->x_text)),
-                LMARGIN,
-                fontheight,
-                tempbuf,
-                sys_hostfontsize(font));
-               
-        }
-        else if (action == SEND_UPDATE)
-        {
-            gui_vmess("gui_text_set", "xss", canvas, x->x_tag, tempbuf);
-
-            // We add the check for T_MESSAGE below so that the box border
-            // gets resized correctly using our interim event handling in
-            // pd_canvas.html.  I could remove the conditional, but
-            // this part of Pd is convoluted enough that I'm not sure
-            // if there'd be any side effects.
-            // Additionally we avoid redrawing the border here for the
-            // dropdown_class as that has its own special width handling.
-            if (glist_isvisible(x->x_glist) && !is_dropdown(x->x_text) &&
-                (pixwide != x->x_drawnwidth ||
-                pixhigh != x->x_drawnheight ||
-                x->x_text->te_type == T_MESSAGE)) 
-            {
-                text_drawborder(x->x_text, x->x_glist, x->x_tag,
-                    pixwide, pixhigh, 0);
-            }
-            if (x->x_active)
-            {
-                if (selend_b > selstart_b)
-                {
-                    //sys_vgui(".x%zx.c select from %s %d\n", canvas, 
-                    //    x->x_tag, u8_charnum(tempbuf, selstart_b));
-                    //sys_vgui(".x%zx.c select to %s %d\n", canvas, 
-                    //    x->x_tag, u8_charnum(tempbuf, selend_b)
-                    //      + (sys_oldtclversion ? 0 : -1));
-                    //sys_vgui(".x%zx.c focus \"\"\n", canvas);        
-                }
-                else
-                {
-                    //sys_vgui(".x%zx.c select clear\n", canvas);
-                    //sys_vgui(".x%zx.c icursor %s %d\n", canvas, x->x_tag,
-                    //    u8_charnum(tempbuf, selstart_b));
-                    //sys_vgui(".x%zx.c focus %s\n", canvas, x->x_tag);        
-                }
-            }
-        }
-        x->x_drawnwidth = pixwide;
-        x->x_drawnheight = pixhigh;
-        
-        *widthp = pixwide;
-        *heightp = pixhigh;
-        if (tempbuf != smallbuf)
-            t_freebytes(tempbuf, 2 * x->x_bufsize + 1);
     }
-    //printf("END\n");
+    x->x_drawnwidth = *widthp;
+    x->x_drawnheight = *heightp;
+        
+    if (tempbuf != smallbuf)
+        t_freebytes(tempbuf, 2 * x->x_bufsize + 1);
+//    if (escbuf != smallescbuf)
+//        t_freebytes(escbuf, 2 * outchars_b + 1);
 }
 
+    /* remake text buffer from binbuf */
 void rtext_retext(t_rtext *x)
 {
     int w = 0, h = 0, indx;
     t_text *text = x->x_text;
     t_freebytes(x->x_buf, x->x_bufsize);
     binbuf_gettext(text->te_binbuf, &x->x_buf, &x->x_bufsize);
-    /* special case: for number boxes, try to pare the number down
-       to the specified width of the box. */
-    if (text->te_width > 0 && text->te_type == T_ATOM &&
-        x->x_bufsize > text->te_width)
-    {
-        t_atom *atomp = binbuf_getvec(text->te_binbuf);
-        int natom = binbuf_getnatom(text->te_binbuf);
-        int bufsize = x->x_bufsize;
-        if (natom == 1 && atomp->a_type == A_FLOAT)
-        {
-            /* try to reduce size by dropping decimal digits */
-            int wantreduce = bufsize - text->te_width;
-            char *decimal = 0, *nextchar, *ebuf = x->x_buf + bufsize,
-                *s1, *s2;
-            for (decimal = x->x_buf; decimal < ebuf; decimal++)
-                if (*decimal == '.')
-                    break;
-            if (decimal >= ebuf)
-                goto giveup;
-            for (nextchar = decimal + 1; nextchar < ebuf; nextchar++)
-                if (*nextchar < '0' || *nextchar > '9')
-                    break;
-            if (nextchar - decimal - 1 < wantreduce)
-                goto giveup;
-            for (s1 = nextchar - wantreduce, s2 = s1 + wantreduce;
-                s2 < ebuf; s1++, s2++)
-                    *s1 = *s2;
-            x->x_buf = t_resizebytes(x->x_buf, bufsize, text->te_width);
-            bufsize = text->te_width;
-            goto done;
-        giveup:
-            /* give up and bash it to "+" or "-" */
-            x->x_buf[0] = (atomp->a_w.w_float < 0 ? '-' : '+');
-            x->x_buf = t_resizebytes(x->x_buf, bufsize, 1);
-            bufsize = 1;
-        }
-        else if (bufsize > text->te_width)
-        {
-            x->x_buf[text->te_width - 1] = '>';
-            x->x_buf = t_resizebytes(x->x_buf, bufsize, text->te_width);
-            bufsize = text->te_width;
-        }
-    done:
-        x->x_bufsize = bufsize;
-    }
     rtext_senditup(x, SEND_UPDATE, &w, &h, &indx);
 }
 
@@ -662,6 +749,31 @@ void rtext_activate(t_rtext *x, int state)
     freebytes(tmpbuf, x->x_bufsize + 1);
 }
 
+    /* figure out which atom a click falls into if any; -1 if you
+    clicked on a space or something */
+int rtext_findatomfor(t_rtext *x, int xpos, int ypos)
+{
+    int w = xpos, h = ypos, indx, natom = 0, i, gotone = 0;
+        /* get byte index of character clicked on */
+    rtext_senditup(x, SEND_UPDATE, &w, &h, &indx);
+        /* search through for whitespace before that index */
+    for (i = 0; i <= indx; i++)
+    {
+        if (x->x_buf[i] == ';' || x->x_buf[i] == ',')
+            natom++, gotone = 0;
+        else if (x->x_buf[i] == ' ' || x->x_buf[i] == '\n')
+            gotone = 0;
+        else
+        {
+            if (!gotone)
+                natom++;
+            gotone = 1;
+        }
+    }
+    return (natom-1);
+}
+
+
 // outputs 1 if found one of the special chars
 // this function is used with traversal through rtext below
 // using ctrl+left/right and similar shortcuts
@@ -672,10 +784,20 @@ static int rtext_compare_special_chars(const char c)
         return 1;
 }
 
+void gatom_key(void *z, t_floatarg f);
+
 void rtext_key(t_rtext *x, int keynum, t_symbol *keysym)
 {
     //fprintf(stderr,"rtext_key %d %s\n", keynum, keysym->s_name);
     int w = 0, h = 0, indx, i, newsize, ndel;
+
+        /* CR to atom boxes sends message and resets */
+    if (keynum == '\n' && x->x_text->te_type == T_ATOM)
+    {
+        gatom_key(x->x_text, keynum);
+        return;
+    }
+
     if (keynum)
     {
         int n = keynum;
@@ -1066,6 +1188,65 @@ be printable in whatever 8-bit character set we find ourselves. */
             x->x_selstart = swap;
             last_sel = 2;
         }
+    }
+    rtext_senditup(x, SEND_UPDATE, &w, &h, &indx);
+}
+
+void rtext_mouse(t_rtext *x, int xval, int yval, int flag)
+{
+    int w = xval, h = yval, indx;
+    rtext_senditup(x, SEND_CHECK, &w, &h, &indx);
+    if (flag == RTEXT_DOWN)
+    {
+        x->x_dragfrom = x->x_selstart = x->x_selend = indx;
+    }
+    else if (flag == RTEXT_DBL)
+    {
+        int whereseparator, newseparator;
+        x->x_dragfrom = -1;
+        whereseparator = 0;
+        if ((newseparator = lastone(x->x_buf, ' ', indx)) > whereseparator)
+            whereseparator = newseparator+1;
+        if ((newseparator = lastone(x->x_buf, '\n', indx)) > whereseparator)
+            whereseparator = newseparator+1;
+        if ((newseparator = lastone(x->x_buf, ';', indx)) > whereseparator)
+            whereseparator = newseparator+1;
+        if ((newseparator = lastone(x->x_buf, ',', indx)) > whereseparator)
+            whereseparator = newseparator+1;
+        x->x_selstart = whereseparator;
+
+        whereseparator = x->x_bufsize - indx;
+        if ((newseparator =
+            firstone(x->x_buf+indx, ' ', x->x_bufsize - indx)) >= 0 &&
+                newseparator < whereseparator)
+                    whereseparator = newseparator;
+        if ((newseparator =
+            firstone(x->x_buf+indx, '\n', x->x_bufsize - indx)) >= 0 &&
+                newseparator < whereseparator)
+                    whereseparator = newseparator;
+        if ((newseparator =
+            firstone(x->x_buf+indx, ';', x->x_bufsize - indx)) >= 0 &&
+                newseparator < whereseparator)
+                    whereseparator = newseparator;
+        if ((newseparator =
+            firstone(x->x_buf+indx, ',', x->x_bufsize - indx)) >= 0 &&
+                newseparator < whereseparator)
+                    whereseparator = newseparator;
+        x->x_selend = indx + whereseparator;
+    }
+    else if (flag == RTEXT_SHIFT)
+    {
+        if (indx * 2 > x->x_selstart + x->x_selend)
+            x->x_dragfrom = x->x_selstart, x->x_selend = indx;
+        else
+            x->x_dragfrom = x->x_selend, x->x_selstart = indx;
+    }
+    else if (flag == RTEXT_DRAG)
+    {
+        if (x->x_dragfrom < 0)
+            return;
+        x->x_selstart = (x->x_dragfrom < indx ? x->x_dragfrom : indx);
+        x->x_selend = (x->x_dragfrom > indx ? x->x_dragfrom : indx);
     }
     rtext_senditup(x, SEND_UPDATE, &w, &h, &indx);
 }

@@ -887,6 +887,20 @@ EXTERN void pdinstance_free(t_pdinstance *x);
 EXTERN t_canvas *pd_getcanvaslist(void);
 EXTERN int pd_getdspstate(void);
 
+/* g_undo.c */
+/* store two messages to be sent to the object's <s> method for 'undo'ing
+ * and 'redo'ing the current state of an object.
+ * This creates an internal copy of the atom-lists-- the caller is responsible
+ * for freeing any dynamically allocated data.
+ * This is a no-op if:
+ *   1. undo_argv and redo_argv are the same length and contain the exact same
+ *      values
+ *   2. it gets called during an 'undo' or 'redo'
+ */
+EXTERN void pd_undo_set_objectstate(t_canvas*canvas, t_pd*x, t_symbol*s,
+                                    int undo_argc, t_atom*undo_argv,
+                                    int redo_argc, t_atom*redo_argv);
+
 #if defined(_LANGUAGE_C_PLUS_PLUS) || defined(__cplusplus)
 }
 #endif

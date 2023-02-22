@@ -346,10 +346,13 @@ static void slider_dialog(t_slider *x, t_symbol *s, int argc, t_atom *argv)
     scrollbar_update(x->x_gui.x_glist);
 }
 
-static void slider_motion(t_slider *x, t_floatarg dx, t_floatarg dy)
+static void slider_motion(t_slider *x, t_floatarg dx, t_floatarg dy,
+    t_floatarg up)
 {
     x->x_is_last_float = 0;
     int old = x->x_val;
+    if (up != 0)
+        return;
     int d = x->x_orient ? -dy : dx;
     if(!x->x_gui.x_finemoved) d *= 100;
     x->x_pos += d;
@@ -606,7 +609,7 @@ void slider_addmethods(t_class *c) {
     class_addmethod(c, (t_method)slider_click, gensym("click"),
         A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
     class_addmethod(c, (t_method)slider_motion, gensym("motion"),
-        A_FLOAT, A_FLOAT, 0);
+        A_FLOAT, A_FLOAT, A_DEFFLOAT, 0);
     class_setsavefn(c, slider_save);
     class_addmethod(c, (t_method)slider_size, gensym("size"), A_GIMME, 0);
     class_setwidget(c, &slider_widgetbehavior);

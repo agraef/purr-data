@@ -911,7 +911,7 @@ static int array_motion_fatten;
 
     /* this is called when a mouse drag happens inside an array (either
        scalar or the whole array--this needs to be tested) */
-static void array_motion(void *z, t_floatarg dx, t_floatarg dy)
+static void array_motion(void *z, t_floatarg dx, t_floatarg dy, t_floatarg up)
 {
     array_motion_xcumulative += dx * array_motion_xperpix;
     array_motion_ycumulative += dy * array_motion_yperpix;
@@ -1252,11 +1252,11 @@ int array_doclick(t_array *array, t_glist *glist, t_scalar *sc, t_array *ap,
                     (array_garray->x_style == PLOTSTYLE_POLY ||
                      array_garray->x_style == PLOTSTYLE_BEZ))
                 {
-                    array_motion(0, xpix - pxpix1, ypix - pypix);
+                    array_motion(0, xpix - pxpix1, ypix - pypix, 0);
                 }
                 else
                     array_motion(0, (xpix - (pxpix1 + (pxpix2 - pxpix1)/2)),
-                        ypix - pypix);
+                        ypix - pypix, 0);
             }
             else
             {

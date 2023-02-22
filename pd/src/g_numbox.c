@@ -597,10 +597,13 @@ static void my_numbox_dialog(t_my_numbox *x, t_symbol *s, int argc,
     scrollbar_update(x->x_gui.x_glist);
 }
 
-static void my_numbox_motion(t_my_numbox *x, t_floatarg dx, t_floatarg dy)
+static void my_numbox_motion(t_my_numbox *x, t_floatarg dx, t_floatarg dy,
+    t_floatarg up)
 {
     x->x_focused = 2;
     double k2=1.0;
+    if (up != 0)
+        return;
     int old = x->x_val;
 
     if(x->x_gui.x_finemoved)
@@ -1024,7 +1027,7 @@ void g_numbox_setup(void)
     class_addmethod(my_numbox_class, (t_method)my_numbox_click,
         gensym("click"), A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
     class_addmethod(my_numbox_class, (t_method)my_numbox_motion,
-        gensym("motion"), A_FLOAT, A_FLOAT, 0);
+        gensym("motion"), A_FLOAT, A_FLOAT, A_DEFFLOAT, 0);
     class_addmethod(my_numbox_class, (t_method)my_numbox_dialog,
         gensym("dialog"), A_GIMME, 0);
     class_addmethod(my_numbox_class, (t_method)my_numbox_loadbang,

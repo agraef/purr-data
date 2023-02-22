@@ -4291,7 +4291,7 @@ static t_gpointer draw_motion_gpointer;
     /* LATER protect against the template changing or the scalar disappearing
     probably by attaching a gpointer here ... */
 
-static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
+static void draw_motion(void *z, t_floatarg dx, t_floatarg dy, t_floatarg up)
 {
     t_draw *x = (t_draw *)z;
     t_svg *sa = (t_svg *)x->x_attr;
@@ -4354,7 +4354,7 @@ static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
 }
 
 /*
-static void draw_motion(void *z, t_floatarg dx, t_floatarg dy)
+static void draw_motion(void *z, t_floatarg dx, t_floatarg dy, t_floatarg up)
 {
     t_draw *x = (t_draw *)z;
     t_svg *sa = (t_svg *)x->x_attr;
@@ -5390,12 +5390,14 @@ static t_gpointer curve_motion_gpointer;
     /* LATER protect against the template changing or the scalar disappearing
     probably by attaching a gpointer here ... */
 
-static void curve_motion(void *z, t_floatarg dx, t_floatarg dy)
+static void curve_motionfn(void *z, t_floatarg dx, t_floatarg dy, t_floatarg up)
 {
     //fprintf(stderr,"curve_motion\n");
     t_curve *x = (t_curve *)z;
     t_fielddesc *f = x->x_vec + curve_motion_field;
     t_atom at;
+    if (up != 0)
+        return;
     if (!gpointer_check(&curve_motion_gpointer, 0))
     {
         post("curve_motion: scalar disappeared");
@@ -5483,7 +5485,7 @@ static int curve_click(t_gobj *z, t_glist *glist,
                 &curve_motion_scalar->sc_gobj);
         else gpointer_setarray(&curve_motion_gpointer,
                 curve_motion_array, curve_motion_wp);
-        glist_grab(glist, z, curve_motion, 0, 0, xpix, ypix);
+        glist_grab(glist, z, curve_motionfn, 0, 0, xpix, ypix);
     }
     return (1);
 }
@@ -7364,10 +7366,13 @@ static int drawsymbol_motion_firstkey;
     /* LATER protect against the template changing or the scalar disappearing
     probably by attaching a gpointer here ... */
 
-static void drawsymbol_motion(void *z, t_floatarg dx, t_floatarg dy)
+static void drawsymbol_motionfn(void *z, t_floatarg dx, t_floatarg dy,
+    t_floatarg up)
 {
     t_drawsymbol *x = (t_drawsymbol *)z;
 
+    if (up != 0)
+        return;
     if (x->x_typerror) return;
 
     t_atom at;
@@ -7512,7 +7517,7 @@ static int drawsymbol_click(t_gobj *z, t_glist *glist,
             else gpointer_setarray(&drawsymbol_motion_gpointer,
                     drawsymbol_motion_array, drawsymbol_motion_wp);
             /* ico@vt.edu 20200920: LATER consider also using keyname (currently 0) */
-            glist_grab(glist, z, drawsymbol_motion, drawsymbol_key,
+            glist_grab(glist, z, drawsymbol_motionfn, drawsymbol_key,
                 0, xpix, ypix);
         }
         return (1);
@@ -7871,7 +7876,8 @@ static int drawimage_motion_firstkey;
     /* LATER protect against the template changing or the scalar disappearing
     probably by attaching a gpointer here ... */
 
-static void drawimage_motion(void *z, t_floatarg dx, t_floatarg dy)
+static void drawimage_motion(void *z, t_floatarg dx, t_floatarg dy,
+    t_floatarg up)
 {
     t_drawimage *x = (t_drawimage *)z;
     t_svg *sa = (t_svg *)x->x_attr;

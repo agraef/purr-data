@@ -58,7 +58,8 @@ typedef struct _updateheader
 } t_updateheader;
 
     /* types to support glists grabbing mouse motion or keys from parent */
-typedef void (*t_glistmotionfn)(void *z, t_floatarg dx, t_floatarg dy);
+typedef void (*t_glistmotionfn)(void *z, t_floatarg dx, t_floatarg dy,
+    t_floatarg up);
 typedef void (*t_glistkeyfn)(void *z, t_floatarg key);
 typedef void (*t_glistkeynamefn)(void *z, t_symbol *s, int argc, t_atom *argv);
 typedef void (*t_glistkeynameafn)(void *z, t_symbol *s, int argc, t_atom *argv);
@@ -125,7 +126,7 @@ typedef struct _editor
     int e_selectline_index2;
     int e_selectline_inno;
     t_outconnect *e_selectline_tag;
-    unsigned int e_onmotion: 3;     /* action to take on motion */
+    unsigned int e_onmotion: 4;     /* action to take on motion */
     unsigned int e_lastmoved: 1;    /* one if mouse has moved since click */
     unsigned int e_textdirty: 1;    /* one if e_textedfor has changed */
     unsigned int e_selectedline: 1; /* one if a line is selected */
@@ -146,6 +147,7 @@ typedef struct _editor
 //#define MA_DRAGTEXT 5   /* drag in text editor to alter selection */
 #define MA_RESIZE  6    /* drag to resize */
 #define MA_SCROLL  7    /* scroll with middle click onto empty canvas */
+#define MA_DRAGTEXT 8   /* needed for list atom-- in Vanilla this is 6 */
 
 /* editor structure for "garrays".  We don't bother to delete and regenerate
 this structure when the "garray" becomes invisible or visible, although we
@@ -526,7 +528,7 @@ EXTERN int glist_amreloadingabstractions; /* stop GUI changes while reloading */
 EXTERN int canvas_restore_original_position(t_glist *x, t_gobj *y, const char *objtag, int dir);
 
 /* -------------------- functions on texts ------------------------- */
-EXTERN void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos);
+EXTERN void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize);
 EXTERN void text_drawborder(t_text *x, t_glist *glist, char *tag,
     int width, int height, int firsttime);
 EXTERN void text_erase_gobj(t_text *x, t_glist *glist, char *tag);
@@ -537,6 +539,10 @@ EXTERN int text_xpix(t_text *x, t_glist *glist);
 EXTERN int text_ypix(t_text *x, t_glist *glist);
 
 /* -------------------- functions on rtexts ------------------------- */
+#define RTEXT_DOWN 1
+#define RTEXT_DRAG 2
+#define RTEXT_DBL 3
+#define RTEXT_SHIFT 4
 
 // number in comment is the number in grep -w|wc
 EXTERN t_rtext *rtext_new(t_glist *glist, t_text *who); //5
@@ -556,6 +562,7 @@ EXTERN char *rtext_gettag(t_rtext *x); //47
 EXTERN void rtext_gettext(t_rtext *x, char **buf, int *bufsize); //9
 EXTERN void rtext_settext(t_rtext *x, char *buf, int bufsize); //1
 EXTERN void rtext_getseltext(t_rtext *x, char **buf, int *bufsize); //4
+EXTERN t_text *rtext_getowner(t_rtext *x);
 
 /* -------------------- functions on canvases ------------------------ */
 EXTERN t_class *canvas_class;
