@@ -1,4 +1,4 @@
-## Pd-L2Ork
+## Purr-Data
 
 **Note to Github users**: Please use our [**GitLab Repository**](https://git.purrdata.net/jwilkes/purr-data).
 
@@ -9,7 +9,9 @@ Maintainers:
 * Albert Graef <aggraef@gmail.com>
 * Jonathan Wilkes <jancsika@yahoo.com>
 
-[Mailing List](http://disis.music.vt.edu/cgi-bin/mailman/listinfo/l2ork-dev)
+Contact: [DISIS mailing list](http://disis.music.vt.edu/cgi-bin/mailman/listinfo/l2ork-dev)
+
+Contents:
 
 * [Downloads](#downloads)
 * [One Paragraph Overview](#one-paragraph-overview)
@@ -55,7 +57,7 @@ methods, as well as for realizing complex systems for large-scale projects.
 
 ### Goals
 
-Pd-L2ork has the following goals:
+Purr-Data has the following goals:
 
 1. Documentation.  We like documentation.  It's like code, except friendly.
 2. Be reliable.  Binary releases must be usable for performances and
@@ -81,48 +83,43 @@ For Ico Bukvic's original Pd-l2ork website see:
 
 <http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/>
 
-(Note that the latter link is more about "classic" Pd-L2Ork a.k.a. Pd-L2Ork 1.0,
-see below. But it also contains some information about Purr Data.)
-
 ### Relationship of Purr Data to Pure Data
 
-There are three maintained distributions of Pure Data:
+At the time of this writing, there are four maintained distributions of Pure
+Data, two of which (Purr Data, Pd-l2ork) belong to the Pd-extended lineage.
 
-1. Purr Data. This is the 2.0 version of Pd-l2ork. It ships with lots of
-   external libraries and uses a modern GUI written using HTML5.
-2. Pd-L2Ork 1.0, the version used by Ivica Bukvic for his laptop orchestra.
-   Pd-l2ork 1.0 uses tcl/tk (and tkpath) for the GUI. You can find it
-   [here](http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/).
+1. Purr Data. This started out as the 2.0 version of Pd-l2ork. It ships with
+   lots of external libraries and uses a modern GUI written using HTML5.
+2. Pd-l2ork is the version used by Ivica Bukvic for his laptop orchestra.
+   Pd-l2ork 1.0 used tcl/tk (and tkpath) for the GUI. Pd-l2ork 2.x is a fork
+   of an earlier Purr Data version which is developed separately. You can find
+   these [here](http://l2ork.music.vt.edu/main/make-your-own-l2ork/software/).
 3. Pure Data "Vanilla".  Miller Puckette's personal version which he hosts on
    his website and maintains.  It doesn't come with external libraries
    pre-installed, but it does include an interface you can use to search
    and install external libraries maintained and packaged by other developers.
+4. Plugdata. A new libpd-based distribution of Pure Data which can be run as a
+   plugin. See <https://plugdata.org/>.
 
 ### Downloads
 
-**Windows and OSX:**
+**Windows, Ubuntu, and Mac OSX:**
 
-Releases are done on GitHub:
-
-<https://github.com/jonwwilkes/purr-data/releases>
-
-This is where the packages first come out as soon as Jonathan Wilkes releases
-them. The same packages can also be dowloaded (usually shortly after release)
-on Albert Gräf's mirror, which also provides a website, wiki, additional
-documentation, and an up-to-date mirror of the source code repository:
+Releases are done on Albert Gräf's GitHub mirror, which also provides a
+website, wiki, additional documentation, and an up-to-date mirror of the
+source code repository.
 
 <https://github.com/agraef/purr-data/releases>
 
-**Linux:**
+**More Linux packages:**
 
 Packages for various Linux distributions (including Arch, Debian, Ubuntu, and
 Fedora) are available through the JGU package repositories maintained by
 Albert Gräf on the OBS (Open Build System). Detailed instructions can be found
 [here](https://github.com/agraef/purr-data/wiki/Installation#linux).
 
-You can also just go to the
-[OBS Download](https://software.opensuse.org/download/package?package=purr-data&project=home%3Aaggraef%3Apurr-data-jgu),
-pick your Linux system, and follow the instructions.
+You can also just go to the [OBS Download](https://software.opensuse.org/download/package?package=purr-data&project=home%3Aaggraef%3Apurr-data-jgu), pick your Linux system, and follow
+the instructions.
 
 ### Build Guide
 
@@ -262,7 +259,7 @@ since it will usually contain spaces, making the build fail.
 8. If there were no errors in the script, msys2 and Inno Setup are now installed.
 9. Open the directory "C:\msys64" and click `mingw64.exe`
 10. Download the source code *(3-6 minutes)*  
-   In the msys terminal window, issue the following command to create a new dire   ctory "purr-data" and clone the repository to it:
+In the msys terminal window, issue the following command to create a new directory "purr-data" and clone the repository to it:
 
         git clone https://git.purrdata.net/jwilkes/purr-data.git
 
@@ -286,7 +283,7 @@ since it will usually contain spaces, making the build fail.
    has yet to be written, you're doing it wrong.
 4. If working on something for the first time, ask to be mentored.
 5. If no one asked you to mentor them, don't teach.
-6. It is better to let small things go then to risk taking time away from
+6. It is better to let small things go than to risk taking time away from
    solving bigger problems.
 
 It is a bad idea to break this Code of Conduct *even if* no one complains
