@@ -414,7 +414,7 @@ static void vu_getrect(t_gobj *z, t_glist *glist,
     iemgui_label_getrect(x->x_gui, glist, xp1, yp1, xp2, yp2);
 
     /* In legacy mode we don't include the scale in the rect */
-    if (x->x_scale && !sys_legacy)
+    if (x->x_scale && !glist_legacy_check(glist))
     {
         //vu has custom scale all labels unlike other iemgui object
         end=x1+x->x_gui.x_w+4;

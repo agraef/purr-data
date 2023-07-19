@@ -19,6 +19,15 @@ life elsewhere. */
 void signal_setborrowed(t_signal *sig, t_signal *sig2);
 void signal_makereusable(t_signal *sig);
 
+static int symbol2resamplemethod(t_symbol*s)
+{
+    if      (s == gensym("hold"  )) return 1; /* up: sample and hold */
+    else if (s == gensym("lin"   )) return 2; /* up: linear interpolation */
+    else if (s == gensym("linear")) return 2; /* up: linear interpolation */
+    else if (s == gensym("pad"   )) return 0; /* up: zero pad */
+    return -1;  /* default: sample/hold unless version<0.44 (where it's zero-pad) */
+}
+
 /* ------------------------- vinlet -------------------------- */
 t_class *vinlet_class;
 
@@ -256,7 +265,7 @@ void vinlet_dspprolog(struct _vinlet *x, t_signal **parentsigs,
     }
 }
 
-static void *vinlet_newsig(t_symbol *s)
+static void *vinlet_newsig(t_symbol *s, int argc, t_atom *argv)
 {
     t_vinlet *x = (t_vinlet *)pd_new(vinlet_class);
     x->x_canvas = canvas_getcurrent();
@@ -266,22 +275,25 @@ static void *vinlet_newsig(t_symbol *s)
     x->x_directsignal = 0;
     x->x_fwdout = 0;
     outlet_new(&x->x_obj, &s_signal);
-    /* this line was in pd vanilla but I don't think it is necessary
-       inlet_new(&x->x_obj, (t_pd *)x->x_inlet, 0, 0); */
+    inlet_new(&x->x_obj, (t_pd *)x->x_inlet, 0, 0);
     resample_init(&x->x_updown);
 
     /* this should be thought over: 
      * it might prove hard to provide consistency between labeled up- & downsampling methods
-     * maybe indeces would be better...
+     * maybe indices would be better...
      *
      * up till now we provide several upsampling methods and 1 single downsampling method (no filtering !)
      */
-    if (s == gensym("hold"))x->x_updown.method=1;     /* up: sample and hold */
-    else if (s == gensym("lin"))x->x_updown.method=2; /* up: linear interpolation */
-    else x->x_updown.method=0;                        /* up: zero-padding */
-
-    if (s == gensym("fwd"))         /* turn on forwarding */
-        x->x_fwdout = outlet_new(&x->x_obj, 0);
+    x->x_updown.method = -1;
+    while(argc-->0)
+    {
+        int method;
+        s = atom_getsymbol(argv++);
+        method = symbol2resamplemethod(s);
+        if (method >= 0)
+            x->x_updown.method = method;
+    }
+    x->x_fwdout = outlet_new(&x->x_obj, 0);
     return (x);
 }
 
@@ -289,7 +301,7 @@ static void vinlet_setup(void)
 {
     vinlet_class = class_new(gensym("inlet"), (t_newmethod)vinlet_new,
         (t_method)vinlet_free, sizeof(t_vinlet), CLASS_NOINLET, A_DEFSYM, 0);
-    class_addcreator((t_newmethod)vinlet_newsig, gensym("inlet~"), A_DEFSYM, 0);
+    class_addcreator((t_newmethod)vinlet_newsig, gensym("inlet~"), A_GIMME, 0);
     class_addbang(vinlet_class, vinlet_bang);
     class_addpointer(vinlet_class, vinlet_pointer);
     class_addfloat(vinlet_class, vinlet_float);
@@ -553,9 +565,11 @@ void voutlet_dspepilog(struct _voutlet *x, t_signal **parentsigs,
                     re_parentvecsize);
             else
             {
-                dsp_add(voutlet_doepilog_resampling, 2, x, re_parentvecsize);
+                int method = (x->x_updown.method < 0 ?
+                    (pd_compatibilitylevel < 44 ? 0 : 1) : x->x_updown.method);
+                dsp_add(voutlet_doepilog_resampling, 2, x, (t_int)re_parentvecsize);
                 resampleto_dsp(&x->x_updown, outsig->s_vec, re_parentvecsize,
-                    parentvecsize, x->x_updown.method);
+                    parentvecsize, method);
             }
         }
     }
@@ -591,10 +605,7 @@ static void *voutlet_newsig(t_symbol *s)
      *
      * up till now we provide several upsampling methods and 1 single downsampling method (no filtering !)
      */
-    if (s == gensym("hold"))x->x_updown.method=1;        /* up: sample and hold */
-    else if (s == gensym("lin"))x->x_updown.method=2;    /* up: linear interpolation */
-    else if (s == gensym("linear"))x->x_updown.method=2; /* up: linear interpolation */
-    else x->x_updown.method=0;                           /* up: zero-padding; down: ignore samples inbetween */
+    x->x_updown.method = symbol2resamplemethod(s);
 
     return (x);
 }

@@ -542,7 +542,7 @@ static int envgen_newclick(t_gobj *z, struct _glist *glist,
         envgen_next_doodle(x, glist, xpos, ypos);
 
         glist_grab(x->w.glist, &x->x_obj.te_g, (t_glistmotionfn) envgen_motion,
-            (t_glistkeyfn) envgen_key, 0, xpos, ypos);
+            (t_glistkeyfn) envgen_key, xpos, ypos);
 
         x->resizing = 0;
         if (x->resizeable && (xpos > wxpos + x->w.width) &&

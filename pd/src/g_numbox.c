@@ -43,7 +43,7 @@ static void my_numbox_tick_reset(t_my_numbox *x)
         my_numbox_ftoa(x, 0);
         sys_queuegui(x, x->x_gui.x_glist, my_numbox_draw_update);
     }
-    glist_grab(x->x_gui.x_glist, 0, 0, 0, 0, 0, 0);
+    glist_grab(x->x_gui.x_glist, 0, 0, 0, 0, 0);
     x->x_focused = 0;
 }
 
@@ -624,8 +624,8 @@ static void my_numbox_motion(t_my_numbox *x, t_floatarg dx, t_floatarg dy)
 static void my_numbox_click(t_my_numbox *x, t_floatarg xpos, t_floatarg ypos,
                             t_floatarg shift, t_floatarg ctrl, t_floatarg alt)
 {
-    glist_grab(x->x_gui.x_glist, &x->x_gui.x_obj.te_g,
-        (t_glistmotionfn)my_numbox_motion, my_numbox_key, my_numbox_list, xpos, ypos);
+    glist_grabx(x->x_gui.x_glist, &x->x_gui.x_obj.te_g,
+        (t_glistmotionfn)my_numbox_motion, my_numbox_key, (t_glistkeynameafn)my_numbox_list, xpos, ypos);
 }
 
 static int my_numbox_newclick(t_gobj *z, struct _glist *glist,
@@ -849,7 +849,6 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
 {
     int i;
     int isKey = 0;
-    t_floatarg val;
 
     for (i=0; i < ac; i++)
     {
@@ -877,7 +876,7 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
             if (!strcmp("Up", av[1].a_w.w_symbol->s_name))
             {
                 //fprintf(stderr,"...Up\n");
-                if((x->x_buf[0] == 0 || x->x_buf == '>') && x->x_val != 0)
+                if((x->x_buf[0] == 0 || x->x_buf[0] == '>') && x->x_val != 0)
                     sprintf(x->x_buf, "%g", x->x_val+1);
                 else
                     sprintf(x->x_buf, "%g", atof(x->x_buf) + 1);
@@ -886,7 +885,7 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
             else if (!strcmp("ShiftUp", av[1].a_w.w_symbol->s_name))
             {
                 //fprintf(stderr,"...ShiftUp\n");
-                if((x->x_buf[0] == 0 || x->x_buf == '>') && x->x_val != 0)
+                if((x->x_buf[0] == 0 || x->x_buf[0] == '>') && x->x_val != 0)
                     sprintf(x->x_buf, "%g", x->x_val+0.01);
                 else
                     sprintf(x->x_buf, "%g", atof(x->x_buf) + 0.01);
@@ -895,7 +894,7 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
             else if (!strcmp("Down", av[1].a_w.w_symbol->s_name))
             {
                 //fprintf(stderr,"...Down\n");
-                if((x->x_buf[0] == 0 || x->x_buf == '>') && x->x_val != 0)
+                if((x->x_buf[0] == 0 || x->x_buf[0] == '>') && x->x_val != 0)
                     sprintf(x->x_buf, "%g", x->x_val-1);
                 else
                     sprintf(x->x_buf, "%g", atof(x->x_buf) - 1);
@@ -904,7 +903,7 @@ static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av)
             else if (!strcmp("ShiftDown", av[1].a_w.w_symbol->s_name))
             {
                 //fprintf(stderr,"...ShiftDown\n");
-                if((x->x_buf[0] == 0 || x->x_buf == '>') && x->x_val != 0)
+                if((x->x_buf[0] == 0 || x->x_buf[0] == '>') && x->x_val != 0)
                     sprintf(x->x_buf, "%g", x->x_val-0.01);
                 else
                     sprintf(x->x_buf, "%g", atof(x->x_buf) - 0.01);

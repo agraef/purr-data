@@ -227,6 +227,7 @@ struct _glist
     int gl_zoom;                /* current zoom level (-7..8) */
     t_float gl_zoom_hack;           /* stored zoom_hack used by declare */
     int gl_zoomflag;                /* canvas-local zoom flag (0/1) */
+    int gl_legacy;                  /* canvas-local legacy flag (0/1) */
     struct _glist *gl_next;         /* link in list of toplevels */
     t_canvasenvironment *gl_env;    /* root canvases and abstractions only */
     unsigned int gl_havewindow:1;   /* true if we own a window */
@@ -278,12 +279,19 @@ typedef void (*t_canvas_iterator)(t_canvas *x, void *data);
 // this is where all the classes capable of being controlled via preset should be defined
 
 // preset objects
-extern t_class *preset_hub_class;
-extern t_class *preset_node_class;
+/* ag NOTE: These are auxiliary classes defined in x_preset.c which are not in
+   the vanilla API. I made these static, so that they don't clash with
+   3rd-party externals. Instead we provide predicates to check for objects of
+   these classes, which is all the functionality that's needed elsewhere. */
+extern int __is_preset_hub_class(t_class *);
+extern int __is_preset_node_class(t_class *);
 
 // special case objects
-extern t_class *print_class;
-extern t_class *message_class;
+/* This comes from g_text.c and also needs to be kept static, like it is in
+   vanilla. (Otherwise it clashes with ELSE's message class.) */
+extern int __is_message_class(t_class *);
+/* There also used used to be print_class from x_interface.c here, but that
+   doesn't seem to be needed by the preset manager any more. */
 /*-----------------end universal preset stuff-------------------*/
 
 /* a data structure to describe a field in a pure datum */
@@ -480,6 +488,7 @@ EXTERN void glist_init(t_glist *x);
 EXTERN void glist_add(t_glist *x, t_gobj *g);
 EXTERN void glist_clear(t_glist *x);
 EXTERN t_canvas *glist_getcanvas(t_glist *x);
+EXTERN int glist_legacy_check(t_glist *x);
 EXTERN int glist_isselected(t_glist *x, t_gobj *y);
 EXTERN void glist_select(t_glist *x, t_gobj *y);
 EXTERN void glist_deselect(t_glist *x, t_gobj *y);
@@ -487,7 +496,11 @@ EXTERN void glist_noselect(t_glist *x);
 EXTERN void glist_selectall(t_glist *x);
 EXTERN void glist_delete(t_glist *x, t_gobj *y);
 EXTERN void glist_retext(t_glist *x, t_text *y);
+// vanilla-compatible
 EXTERN void glist_grab(t_glist *x, t_gobj *y, t_glistmotionfn motionfn,
+    t_glistkeyfn keyfn, int xpos, int ypos);
+// purr-data extension
+EXTERN void glist_grabx(t_glist *x, t_gobj *y, t_glistmotionfn motionfn,
     t_glistkeyfn keyfn, t_glistkeynameafn keynameafn,
     int xpos, int ypos);
 EXTERN int glist_isvisible(t_glist *x);
@@ -623,7 +636,7 @@ EXTERN void canvas_warning(t_canvas *x, int warid);
 
 /* ---- for parsing @pd_extra and other sys paths in filenames  --------------------- */
 
-EXTERN void sys_expandpathelems(const char *name, const char *result);
+EXTERN void sys_expandpathelems(const char *name, char *result);
 
 typedef void (*t_undofn)(t_canvas *canvas, void *buf,
     int action);        /* a function that does UNDO/REDO */

@@ -4483,7 +4483,7 @@ static int draw_click(t_gobj *z, t_glist *glist,
                         &draw_motion_scalar->sc_gobj);
                 else gpointer_setarray(&draw_motion_gpointer,
                         draw_motion_array, draw_motion_wp);
-                glist_grab(glist, z, draw_motion, 0, 0, xpix, ypix);
+                glist_grab(glist, z, draw_motion, 0, xpix, ypix);
                 //outlet_anything(x->x_obj.ob_outlet, gensym("click"), 0, 0);
             }
             //draw_notifyforscalar(x, glist, sc, gensym("mousedown"), 5, at);
@@ -4544,7 +4544,7 @@ static void scalar_spelunkforword(void* word_candidate, t_template* template,
 
 void draw_notify(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
-    char canvas_field_namebuf[20];
+    char canvas_field_namebuf[25];
     t_symbol *canvas_field_event;
     t_symbol *scalarsym = atom_getsymbolarg(0, argc--, argv++);
     t_symbol *drawcommand_sym = atom_getsymbolarg(0, argc--, argv++);
@@ -4701,7 +4701,7 @@ static int draw_click(t_gobj *z, t_glist *glist,
                 &draw_motion_scalar->sc_gobj);
         else gpointer_setarray(&draw_motion_gpointer,
                 draw_motion_array, draw_motion_wp);
-        glist_grab(glist, z, draw_motion, 0, 0, xpix, ypix);
+        glist_grab(glist, z, draw_motion, 0, xpix, ypix);
     }
     post("we got clicked");
     outlet_anything(x->x_obj.ob_outlet, gensym("click"), 0, 0);
@@ -4897,7 +4897,7 @@ static void event_anything(t_event *x, t_symbol *s, int argc, t_atom *argv)
 
 static void *event_new(void)
 {
-    char namebuf[20];
+    char namebuf[25];
     t_event *x = (t_event *)pd_new(event_class);
     t_canvas *c = canvas_getrootfor(canvas_getcurrent());
     if (c->gl_vec)
@@ -5483,7 +5483,7 @@ static int curve_click(t_gobj *z, t_glist *glist,
                 &curve_motion_scalar->sc_gobj);
         else gpointer_setarray(&curve_motion_gpointer,
                 curve_motion_array, curve_motion_wp);
-        glist_grab(glist, z, curve_motion, 0, 0, xpix, ypix);
+        glist_grab(glist, z, curve_motion, 0, xpix, ypix);
     }
     return (1);
 }
@@ -7513,7 +7513,7 @@ static int drawsymbol_click(t_gobj *z, t_glist *glist,
                     drawsymbol_motion_array, drawsymbol_motion_wp);
             /* ico@vt.edu 20200920: LATER consider also using keyname (currently 0) */
             glist_grab(glist, z, drawsymbol_motion, drawsymbol_key,
-                0, xpix, ypix);
+                xpix, ypix);
         }
         return (1);
     }
@@ -7944,7 +7944,7 @@ static int drawimage_click(t_gobj *z, t_glist *glist,
                     drawimage_motion_array, drawimage_motion_wp);
             /* ico@vt.edu 20200920: LATER consider also using keyname (currently 0) */
            glist_grab(glist, z, drawimage_motion, drawimage_key,
-                0, xpix, ypix);
+                xpix, ypix);
         }
         return (1);
     }

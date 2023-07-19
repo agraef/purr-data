@@ -27,7 +27,7 @@
 
 
 /* -------------------------- print ------------------------------ */
-t_class *print_class;
+static t_class *print_class;
 
 typedef struct _print
 {

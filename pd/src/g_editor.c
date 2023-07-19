@@ -267,7 +267,7 @@ int gobj_shouldvis(t_gobj *x, struct _glist *glist)
             ((t_glist *)ob)->gl_isgraph,
             glist->gl_goprect,
             (ob->te_type == T_TEXT ? 1:0));*/
-        if (sys_k12_mode && x->g_pd == preset_hub_class)
+        if (sys_k12_mode && __is_preset_hub_class(x->g_pd))
         {
             //fprintf(stderr, "glist_select do not select invised preset_hub "
             //                "in K12 mode\n");
@@ -481,7 +481,7 @@ void glist_select(t_glist *x, t_gobj *y)
 #ifdef PDL2ORK
         // exception: if we are in K12 mode and preset_hub is hidden,
         // do not select it
-        if (sys_k12_mode && y->g_pd == preset_hub_class)
+        if (sys_k12_mode && __is_preset_hub_class(y->g_pd))
         {
             //fprintf(stderr,"glist_select do not select invised preset_hub
             //in K12 mode\n");
@@ -646,7 +646,7 @@ void glist_selectall(t_glist *x)
 #ifdef PDL2ORK
             // exception: if we are in K12 mode and preset_hub is hidden,
             // do not select it
-            if (sys_k12_mode && y->g_pd == preset_hub_class)
+            if (sys_k12_mode && __is_preset_hub_class(y->g_pd))
             {
                 //fprintf(stderr,"glist_select do not select "
                 //               "invised preset_hub in K12 mode\n");
@@ -837,7 +837,7 @@ void canvas_disconnect(t_canvas *x,
                disconnect its invisible return node. We trust here that
                the object has been already connected to a valid object
                so we blindly disconnect first outlet with the first inlet */
-            if (pd_class(&t.tr_ob->ob_g.g_pd) == preset_node_class && t.tr_outno == 0)
+            if (__is_preset_node_class(pd_class(&t.tr_ob->ob_g.g_pd)) && t.tr_outno == 0)
             {
                 //fprintf(stderr,"gotta disconnect hidden one too...\n");
                 obj_disconnect(t.tr_ob2, 0, t.tr_ob, 0);
@@ -3729,7 +3729,7 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     //post("canvas_doclick %d", doit);
 
     t_gobj *y;
-    int shiftmod, runmode, ctrlmod, altmod, doublemod = 0, rightclick,
+    int shiftmod, runmode, ctrlmod, altmod, rightclick,
         in_text_resizing_hotspot, default_type;
     int x1=0, y1=0, x2=0, y2=0, clickreturned = 0;
     t_gobj *yclick = NULL;
@@ -3770,12 +3770,9 @@ void canvas_doclick(t_canvas *x, int xpos, int ypos, int which,
     if (doit && x->gl_editor->e_grab && x->gl_editor->e_keyfn)
     {
         (* x->gl_editor->e_keyfn) (x->gl_editor->e_grab, 0);
-        glist_grab(x, 0, 0, 0, 0, 0, 0);
+        glist_grab(x, 0, 0, 0, 0, 0);
     }
 
-    if (doit && !runmode && xpos == canvas_upx && ypos == canvas_upy &&
-        sys_getrealtime() - canvas_upclicktime < DCLICKINTERVAL)
-            doublemod = 1;
     x->gl_editor->e_lastmoved = 0;
     /* this was temporarily commented out on 5-23-2013 while fixing
        shift+click actions most likely I forgot to reenable it -- need
@@ -4660,9 +4657,9 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2,
     // we are connecting to is supported. If not, disallow connection
     // but only do so from the first outlet
     
-    if (pd_class(&y1->g_pd) == preset_node_class && closest1 == 0)
+    if (__is_preset_node_class(pd_class(&y1->g_pd)) && closest1 == 0)
     {
-        if (pd_class(&y2->g_pd) == message_class)
+        if (__is_message_class(pd_class(&y2->g_pd)))
         {
             error("preset_node does not work with messages.");
             return(1);
@@ -4678,8 +4675,8 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2,
     // now check if explicit user-made connection into preset_node
     // is other than message.
     // messages may be used to change node's operation
-    if (pd_class(&y2->g_pd) == preset_node_class &&
-        pd_class(&y1->g_pd) != message_class)
+    if (__is_preset_node_class(pd_class(&y2->g_pd)) &&
+        !__is_message_class(pd_class(&y1->g_pd)))
     {
         error("preset node only accepts messages "
               "as input to adjust its settings...\n");
@@ -4729,7 +4726,7 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2,
     // add auto-connect back to preset_node object
     // (by this time we know we are connecting only to legal objects
     // who have at least one outlet)
-    if (pd_class(&y1->g_pd) == preset_node_class && closest1 == 0)
+    if (__is_preset_node_class(pd_class(&y1->g_pd)) && closest1 == 0)
     {
         
         //fprintf(stderr,"gotta do auto-connect back to preset_node\n");
@@ -5057,15 +5054,15 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                             {
                                 do_count = 0;
                             }    
-                            if (pd_class(&tmp_ob1->ob_pd) == preset_node_class)
+                            if (__is_preset_node_class(pd_class(&tmp_ob1->ob_pd)))
                             {
-                                if (pd_class(&tmp_ob2->ob_pd) == message_class)
+                                if (__is_message_class(pd_class(&tmp_ob2->ob_pd)))
                                 {
                                     do_count = 0;
                                 }
                             }
-                            if (pd_class(&tmp_ob2->ob_pd) == preset_node_class
-                                && pd_class(&tmp_ob1->ob_pd) != message_class)
+                            if (__is_preset_node_class(pd_class(&tmp_ob2->ob_pd))
+                                && !__is_message_class(pd_class(&tmp_ob1->ob_pd)))
                             {
                                 do_count = 0;
                             }
@@ -5107,15 +5104,15 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                             {
                                 do_count = 0;
                             }    
-                            if (pd_class(&tmp_ob1->ob_pd) == preset_node_class)
+                            if (__is_preset_node_class(pd_class(&tmp_ob1->ob_pd)))
                             {
-                                if (pd_class(&tmp_ob2->ob_pd) == message_class)
+                                if (__is_message_class(pd_class(&tmp_ob2->ob_pd)))
                                 {
                                     do_count = 0;
                                 }
                             }
-                            if (pd_class(&tmp_ob2->ob_pd) == preset_node_class
-                                && pd_class(&tmp_ob1->ob_pd) != message_class)
+                            if (__is_preset_node_class(pd_class(&tmp_ob2->ob_pd))
+                                && !__is_message_class(pd_class(&tmp_ob1->ob_pd)))
                             {
                                 do_count = 0;
                             }
@@ -5490,6 +5487,8 @@ void canvas_mousedown_middle(t_canvas *x, t_floatarg xpos, t_floatarg ypos,
     }
 }
 
+static void canvas_announce_editmode(t_canvas *x, int edit);
+
     /* displace the selection by (dx, dy) pixels */
 void canvas_displaceselection(t_canvas *x, int dx, int dy)
 {
@@ -5824,9 +5823,7 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
                 CURSOR_RUNMODE_NOTHING : CURSOR_EDITMODE_NOTHING);
             x->gl_edit = down ? 0 : 1;
             x->gl_edit_save = !x->gl_edit;
-            gui_vmess("gui_canvas_set_editmode", "xi",
-                x,
-                x->gl_edit);
+            canvas_announce_editmode(x, x->gl_edit);
             if(x->gl_editor && x->gl_editor->gl_magic_glass)
             {
                 if (down)
@@ -7653,9 +7650,9 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
         /* now check for illegal connections between preset_node object
            and other non-supported objects from node's first outlet
            (node's second outlet is for status info) */
-    if (pd_class(&src->g_pd) == preset_node_class && outno == 0)
+    if (__is_preset_node_class(pd_class(&src->g_pd)) && outno == 0)
     {
-        if (pd_class(&sink->g_pd) == message_class)
+        if (__is_message_class(pd_class(&sink->g_pd)))
         {
             error("preset_node does not work with messages.");
             goto bad;
@@ -7690,7 +7687,7 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
         /* add auto-connect back to preset_node object
            (by this time we know we are connecting only to legal objects
            who have at least one outlet) */
-        if (pd_class(&objsrc->ob_pd) == preset_node_class && outno == 0)
+        if (__is_preset_node_class(pd_class(&objsrc->ob_pd)) && outno == 0)
         {
             //fprintf(stderr,
             //   "canvas_connect: gotta do auto-connect back to preset_node\n");
@@ -7701,9 +7698,9 @@ void canvas_connect(t_canvas *x, t_floatarg fwhoout, t_floatarg foutno,
             }
         }
         if (glist_isvisible(x) &&
-            (pd_class(&sink->g_pd) != preset_node_class ||
-            (pd_class(&sink->g_pd) == preset_node_class &&
-            pd_class(&src->g_pd) == message_class)))
+            (!__is_preset_node_class(pd_class(&sink->g_pd)) ||
+            (__is_preset_node_class(pd_class(&sink->g_pd)) &&
+            __is_message_class(pd_class(&src->g_pd)))))
         {
             //fprintf(stderr,"draw line\n");
             canvas_drawconnection(x, 0, 0, 0, 0, (t_int)oc, obj_issignaloutlet(objsrc, outno));
@@ -8337,18 +8334,36 @@ void canvas_editmode(t_canvas *x, t_floatarg fyesplease)
     if (glist_isvisible(x))
     {
         int edit = /*!glob_ctrl && */x->gl_edit;
-        gui_vmess("gui_canvas_set_editmode", "xi",
-            glist_getcanvas(x),
-            edit);
+        canvas_announce_editmode(glist_getcanvas(x), edit);
     }
+}
+
+// Dispatch editmode status to receiver (announce edit mode changes)
+static void canvas_dispatch_editmode(t_canvas *x, t_float state)
+{
+    char buf[MAXPDSTRING];
+    // The receiver takes the form <canvas>#editmode where <canvas> is the
+    // canvas id (hex code), so that only objects on the specific canvas will
+    // receive the message.
+    snprintf(buf, MAXPDSTRING-1, "x%lx#editmode", (unsigned long)x);
+    buf[MAXPDSTRING-1] = 0;
+    t_symbol *editmodesym = gensym(buf);
+    if (editmodesym->s_thing)
+        pd_float(editmodesym->s_thing, state);
+}
+
+static void canvas_announce_editmode(t_canvas *x, int edit)
+{
+  // announce to receivers
+  canvas_dispatch_editmode(x, edit);
+  // announce to gui
+  gui_vmess("gui_canvas_set_editmode", "xi", x, edit);
 }
 
 void canvas_query_editmode(t_canvas *x)
 {
   int edit = /*!glob_ctrl && */x->gl_edit;
-  gui_vmess("gui_canvas_set_editmode", "xi",
-            glist_getcanvas(x),
-            edit);
+  canvas_announce_editmode(glist_getcanvas(x), edit);
 }
 
 // jsarlo

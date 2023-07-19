@@ -25,8 +25,6 @@ to be different but are now unified except for some fossilized names.) */
 #endif
 
 t_garray *array_garray;
-t_class *preset_hub_class;
-t_class *preset_node_class;
 int array_joc;
 
 extern int do_not_redraw;
@@ -96,6 +94,18 @@ static int canvas_newargc;
 static t_atom *canvas_newargv;
 
 static t_ab_definition *canvas_newabsource = 0;
+
+int glist_legacy_check(t_glist *x)
+{
+  t_glist *gl = x;
+  // look for a nonzero legacy flag on the way up
+  // we always stop at the enclosing root or abstraction
+  while (!gl->gl_env && gl->gl_owner) {
+    if (gl->gl_legacy) return 1;
+    gl = gl->gl_owner;
+  }
+  return gl->gl_legacy;
+}
 
     /* maintain the list of visible toplevels for the GUI's "windows" menu */
 void canvas_updatewindowlist( void)
@@ -454,6 +464,7 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     int font = (owner ? owner->gl_font : sys_defaultfont);
     int zoom = 0;
     extern int sys_zoom;
+    extern int sys_legacy;
 
     glist_init(x);
     //x->gl_magic_glass = magicGlass_new(x);
@@ -581,6 +592,8 @@ t_canvas *canvas_new(void *dummy, t_symbol *sel, int argc, t_atom *argv)
     x->gl_font = sys_nearestfontsize(font);
     x->gl_zoom = zoom;
     x->gl_zoomflag = sys_zoom;
+    // inherit -legacy from the parent
+    x->gl_legacy = sys_legacy || (owner && owner->gl_legacy);
     pd_pushsym(&x->gl_pd);
 
     x->u_queue = canvas_undo_init(x);
@@ -639,6 +652,7 @@ t_glist *glist_addglist(t_glist *g, t_symbol *sym,
     t_float px1, t_float py1, t_float px2, t_float py2)
 {
     extern int sys_zoom;
+    extern int sys_legacy;
     static int gcount = 0;
     int zz;
     int menu = 0;
@@ -692,6 +706,8 @@ t_glist *glist_addglist(t_glist *g, t_symbol *sym,
     x->gl_zoom = 0;
     x->gl_zoom_hack = 0;
     x->gl_zoomflag = sys_zoom;
+    // inherit -legacy from the parent
+    x->gl_legacy = sys_legacy || (g && g->gl_legacy);
     x->gl_screenx1 = x->gl_screeny1 = 0;
     x->gl_screenx2 = 450;
     x->gl_screeny2 = 300;
@@ -1149,7 +1165,7 @@ void canvas_drawredrect(t_canvas *x, int doit)
 {
     if (doit)
     {
-        int x1=x->gl_xmargin, y1=x->gl_ymargin + sys_legacy;
+        int x1=x->gl_xmargin, y1=x->gl_ymargin + x->gl_legacy;
         int x2=x1+x->gl_pixwidth, y2=y1+x->gl_pixheight;
         gui_vmess("gui_canvas_drawredrect", "xiiii",
             glist_getcanvas(x),
@@ -1395,8 +1411,8 @@ static void canvas_drawlines(t_canvas *x)
     while (oc = linetraverser_next(&t))
     {
         issignal = (outlet_getsymbol(t.tr_outlet) == &s_signal ? 1 : 0);
-        if (!(pd_class(&t.tr_ob2->ob_g.g_pd) == preset_node_class &&
-              pd_class(&t.tr_ob->ob_g.g_pd) != message_class))
+        if (!(__is_preset_node_class(pd_class(&t.tr_ob2->ob_g.g_pd)) &&
+              !__is_message_class(pd_class(&t.tr_ob->ob_g.g_pd))))
             canvas_drawconnection(glist_getcanvas(x), t.tr_lx1, t.tr_ly1,
                 t.tr_lx2, t.tr_ly2, (t_int)oc, issignal);
     }
@@ -2935,6 +2951,10 @@ void canvas_declare(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
         {
             canvas_stdlib(e, atom_getsymbolarg(i+1, argc, argv)->s_name);
             i++;
+        }
+        else if (!strcmp(flag, "-legacy"))
+        {
+            x->gl_legacy = 1;
         }
         else if ((argc > i+1) && !strcmp(flag, "-zoom"))
         {

@@ -100,6 +100,7 @@ EXTERN int obj_nsiginlets(t_object *x);
 EXTERN int obj_nsigoutlets(t_object *x);
 EXTERN int obj_siginletindex(t_object *x, int m);
 EXTERN int obj_sigoutletindex(t_object *x, int m);
+EXTERN t_float *obj_findsignalscalar(t_object *x, int m);
 
 /* misc */
 EXTERN void glob_evalfile(t_pd *ignore, t_symbol *name, t_symbol *dir);

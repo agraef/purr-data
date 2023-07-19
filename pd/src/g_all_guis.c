@@ -430,7 +430,7 @@ void iemgui_label_getrect(t_iemgui x_gui, t_glist *x,
     int *xp1, int *yp1, int *xp2, int *yp2)
 {
     //fprintf(stderr,"gop_redraw = %d\n", gop_redraw);
-    if (!gop_redraw || sys_legacy)
+    if (!gop_redraw || glist_legacy_check(x))
     {
         //fprintf(stderr,"ignoring label\n");
         return;
@@ -1166,8 +1166,9 @@ void iemgui_label_draw_new(t_iemgui *x)
 {
     char col[8];
     t_canvas *canvas=glist_getcanvas(x->x_glist);
-    int x1=text_xpix(&x->x_obj, x->x_glist) + (sys_legacy ? x->legacy_x : 0);
-    int y1=text_ypix(&x->x_obj, x->x_glist) + (sys_legacy ? x->legacy_y : 0);
+    int legacy_flag = glist_legacy_check(x->x_glist);
+    int x1=text_xpix(&x->x_obj, x->x_glist) + (legacy_flag ? x->legacy_x : 0);
+    int y1=text_ypix(&x->x_obj, x->x_glist) + (legacy_flag ? x->legacy_y : 0);
     iemgui_getrect_legacy_label(x, &x1, &y1);
     sprintf(col, "#%6.6x", x->x_lcol);
     gui_vmess("gui_iemgui_label_new", "xxiissssi",
@@ -1185,6 +1186,7 @@ void iemgui_label_draw_new(t_iemgui *x)
 void iemgui_label_draw_move(t_iemgui *x)
 {
     t_canvas *canvas=glist_getcanvas(x->x_glist);
+    int legacy_flag = glist_legacy_check(x->x_glist);
     //int x1=text_xpix(&x->x_obj, x->x_glist)+x->legacy_x;
     //int y1=text_ypix(&x->x_obj, x->x_glist)+x->legacy_y;
     //iemgui_getrect_legacy_label(x, &x1, &y1);
@@ -1197,8 +1199,8 @@ void iemgui_label_draw_move(t_iemgui *x)
     gui_vmess("gui_iemgui_label_coords", "xxii",
         canvas,
         x,
-        x->x_ldx + (sys_legacy ? x->legacy_x : 0),
-        x->x_ldy + (sys_legacy ? x->legacy_y : 0));
+        x->x_ldx + (legacy_flag ? x->legacy_x : 0),
+        x->x_ldy + (legacy_flag ? x->legacy_y : 0));
 }
 
 void iemgui_label_draw_config(t_iemgui *x)
