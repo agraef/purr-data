@@ -104,6 +104,7 @@ lib_install:
 	install -p $(bin_src)/libvorbisenc-2.dll  $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libvorbisfile-3.dll  $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libmp3lame-0.dll  $(DESTDIR)$(bindir)/
+	install -p $(bin_src)/libmpg123-0.dll  $(DESTDIR)$(bindir)/
 ifneq ($(LIGHT),yes)
 	# I think these two are needed for zexy/matchbox and zexy/regex
 	install -p $(bin_src)/libsystre-0.dll $(DESTDIR)$(bindir)/
@@ -121,7 +122,6 @@ ifneq ($(LIGHT),yes)
 	install -p $(bin_src)/libportaudio.dll     $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libFLAC.dll     $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libgomp-1.dll     $(DESTDIR)$(bindir)/
-	install -p $(bin_src)/libssp-0.dll     $(DESTDIR)$(bindir)/
 	install -p $(bin_src)/libspeex-1.dll     $(DESTDIR)$(bindir)/
         # These are for Gem
 	install -p $(bin_src)/libftgl-2.dll $(DESTDIR)$(bindir)/
