@@ -47,7 +47,7 @@ The easiest way to get up and running on **Mac** and **Windows** is to use one o
 
 ### JGU Packages
 
-This is a collection of ready-made Linux packages for Arch Linux, Fedora, and recent Debian, Raspbian and Ubuntu releases, maintained by the Johannes Gutenberg University (JGU) at the [OBS](https://build.opensuse.org/project/show/home:aggraef:purr-data-jgu) (Open Build System). They offer the following advantages:
+This is a collection of ready-made Linux packages for Arch Linux, Fedora, and recent Debian, Raspbian and Ubuntu releases, maintained by Albert Gräf from the Johannes Gutenberg University (JGU) at the [OBS](https://build.opensuse.org/project/show/home:aggraef:purr-data-jgu) (Open Build System). They offer the following advantages:
 
 - Support for a wide range of different Linux systems, including the latest Debian/Ubuntu versions. We generally support the two most recent stable (or long term support) releases, as well as current (or rolling) releases.
 
