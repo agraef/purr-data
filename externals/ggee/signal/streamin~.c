@@ -49,7 +49,7 @@
 extern int close(int);
 #endif
 extern void sys_rmpollfn(int fd);
-extern sys_addpollfn(int fd, void* fn, void *ptr);
+extern int sys_addpollfn(int fd, void* fn, void *ptr);
 
 static void sys_sockerror(char *s)
 {
