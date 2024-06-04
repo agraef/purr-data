@@ -347,6 +347,8 @@ typedef void (*t_gotfn2)(void *x, void *arg1, void *arg2);
 #define mess2(x, s, a,b) ((*(t_gotfn2)getfn((x), (s)))((x), (a),(b)))
 typedef void (*t_gotfn3)(void *x, void *arg1, void *arg2, void *arg3);
 #define mess3(x, s, a,b,c) ((*(t_gotfn3)getfn((x), (s)))((x), (a),(b),(c)))
+typedef void (*t_gotfn3i)(void *x, void *arg1, int arg2, void *arg3);
+#define mess3i(x, s, a,b,c) ((*(t_gotfn3i)getfn((x), (s)))((x), (a),(b),(c)))
 typedef void (*t_gotfn4)(void *x,
     void *arg1, void *arg2, void *arg3, void *arg4);
 #define mess4(x, s, a,b,c,d) \
