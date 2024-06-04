@@ -45,7 +45,7 @@ void *sel_new(t_symbol *msg, short argc, t_atom *argv)
         outlet_new(&x->x_obj, gensym("signal"));
     }
     
-	x->matches = (t_double *) malloc(x->length * sizeof(double));
+	x->matches = (t_float *) malloc(x->length * sizeof(t_float));
 
 	for(i = 0; i < argc; i++){
 		x->matches[i] = (double)atom_getfloatarg(i,argc,argv);
@@ -97,7 +97,7 @@ t_int *sel_perform(t_int *w)
     
     // clean each outlet
 	for(j = 0; j < length; j++){
-		match_outlet = (t_double *) outs[j];
+		match_outlet = (t_float *) outs[j];
 		for(i = 0; i < n; i++){
 			match_outlet[i] = 0.0;
 		}
@@ -107,7 +107,7 @@ t_int *sel_perform(t_int *w)
 		if(inlet[i]){
 			for(j = 0; j < length; j++){
 				if( inlet[i] == matches[j]){
-					match_outlet = (t_double *) outs[j];
+					match_outlet = (t_float *) outs[j];
 					match_outlet[i] = 1.0; // always send a unity click
 				}
 			}

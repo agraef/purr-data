@@ -351,7 +351,7 @@ void sarec_attach_buffer(t_sarec *x)
 	t_garray *a; 
 	t_symbol *bufname = x->bufname;
 	int b_frames;
-	float *b_samples = x->b_samples;
+	t_word *b_samples = x->b_samples;
 	if (!(a = (t_garray *)pd_findbyclass(bufname, garray_class))) {
 		if (*bufname->s_name) pd_error(x, "%s: %s: no such array",OBJECT_NAME,bufname->s_name);
         x->b_valid = 0;

@@ -16,7 +16,7 @@ typedef struct _shoehorn
     double pio2;
     t_float *inarr;
     t_float **loc_invecs;
-    t_float *outs;
+    t_float **outs;
     double advFrac;
     double *pangains1;
     double *pangains2;

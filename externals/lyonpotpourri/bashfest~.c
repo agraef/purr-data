@@ -936,7 +936,7 @@ void bashfest_copy_to_MSP_buffer(t_bashfest *x, int slot)
 }
 void bashfest_deploy_dsp(t_bashfest *x)
 {
-    float *b_samples = x->b_samples;
+    float *b_samples = (float*)x->b_samples;
     long b_nchans = x->b_nchans;
     long b_frames = x->b_frames;
     t_event *events = x->events;
