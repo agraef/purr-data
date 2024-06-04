@@ -110,7 +110,7 @@ void protect_against_open_setup(void)
   protect_against_open_widgetbehavior.w_selectfn = NULL;
   protect_against_open_widgetbehavior.w_activatefn = NULL;
   protect_against_open_widgetbehavior.w_deletefn = NULL;
-  protect_against_open_widgetbehavior.w_visfn = protect_against_open_vis;
+  protect_against_open_widgetbehavior.w_visfn = (t_method)protect_against_open_vis;
   protect_against_open_widgetbehavior.w_clickfn = NULL;
 #if defined(PD_MAJOR_VERSION) && (PD_MINOR_VERSION >= 37)
 
