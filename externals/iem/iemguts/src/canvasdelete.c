@@ -48,7 +48,7 @@ static void canvasdelete_doit(t_canvasdelete *x)
   else {
     t_atom ap[1];
     SETFLOAT(ap, 1);
-    typedmess(x->x_gobj, gensym("menuclose"), 1, ap);
+    typedmess((t_pd*)x->x_gobj, gensym("menuclose"), 1, ap);
   }
 
 
@@ -83,7 +83,7 @@ static void *canvasdelete_new(t_floatarg f)
     depth--;
   }
 
-  x->x_glist = x->x_gobj = NULL;
+  x->x_glist = NULL; x->x_gobj = NULL;
   if (!depth) {
     x->x_glist = canvas;
     x->x_gobj=obj;

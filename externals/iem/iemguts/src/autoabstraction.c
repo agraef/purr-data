@@ -164,7 +164,7 @@ void autoabstraction_setup(void)
   iemguts_boilerplate("automatic abstraction creator", 0);
 #ifdef AUTOABSTRACTION_ENABLED
   autoabstraction_initialize();
-  sys_register_loader(autoabstraction_loader);
+  sys_register_loader((loader_t)autoabstraction_loader);
 #warning FIXME loader-0.47 mode!
 #else
   error("autoabstraction needs to be compiled against Pd 0.40 or higher,\n");
