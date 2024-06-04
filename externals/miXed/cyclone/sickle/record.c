@@ -155,7 +155,7 @@ loopover:
 	ch = nch;
 	while (ch--)
 	{
-	    t_word *vp = sic->s_vectors[ch];
+	    t_word *vp = (t_word*)sic->s_vectors[ch];
 	    if (vp)
 	    {
 		t_float *ip = (t_float *)(w[3 + ch]) + ndone;

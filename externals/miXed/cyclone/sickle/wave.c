@@ -43,7 +43,7 @@ static t_int *wave_perform(t_int *w)
 	t_float *sin = (t_float *)(w[4]);
 	t_float *ein = (t_float *)(w[5]);
 	int vecsize = sic->s_vecsize;
-	t_word **vectable = sic->s_vectors;
+	t_word **vectable = (t_word**)sic->s_vectors;
 	float ksr = sic->s_ksr;
 	int nointerp = x->x_nointerp;
 	int maxindex = (nointerp ? vecsize - 1 : vecsize - 3);

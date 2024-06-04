@@ -37,7 +37,7 @@ static t_int *index_perform(t_int *w)
 	t_index *x = (t_index *)sic;
 	t_float *xin = (t_float *)(w[3]);
 	int index, maxindex = sic->s_vecsize - 1;
-	t_word *vp = sic->s_vectors[x->x_effchannel];
+	t_word *vp = (t_word*)sic->s_vectors[x->x_effchannel];
 	if (vp)  /* handle array swapping on the fly via ft1 */
 	{
 	    while (nblock--)

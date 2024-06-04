@@ -393,7 +393,7 @@ static void funbuff_interptab(t_funbuff *x, t_symbol *s, t_floatarg f)
 {
     int vsz;
     t_word *vec;
-    if (vec = vefl_get(s, &vsz, 0, (t_pd *)x))
+    if (vec = (t_word*)vefl_get(s, &vsz, 0, (t_pd *)x))
     {
 	if (vsz > 2)
 	    funbuff_dointerp(x, f, vsz, vec);

@@ -31,7 +31,7 @@ static void cycle_gettable(t_cycle *x)
     if (x->x_name)
     {
 	int tabsize = 0;
-	t_word *table = vefl_get(x->x_name, &tabsize, 1, (t_pd *)x);
+	t_word *table = (t_word*)vefl_get(x->x_name, &tabsize, 1, (t_pd *)x);
 	/* CHECKED buffer is copied */
 	if (table)
 	{

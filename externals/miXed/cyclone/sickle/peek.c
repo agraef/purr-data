@@ -53,7 +53,7 @@ static void peek_float(t_peek *x, t_float f)
     t_arsic *sic = (t_arsic *)x;
     t_word *vp;
     arsic_validate(sic, 0);  /* LATER rethink (efficiency, and complaining) */
-    if (vp = sic->s_vectors[x->x_effchannel])
+    if (vp = (t_word*)sic->s_vectors[x->x_effchannel])
     {
 	int ndx = (int)f;
 	if (ndx >= 0 && ndx < sic->s_vecsize)
