@@ -125,8 +125,8 @@ static void mknob_draw_new(t_mknob *x, t_glist *glist)
         xpos,
         ypos,
         glist_istoplevel(glist),
-        !iemgui_has_snd(x),
-        !iemgui_has_rcv(x)
+        !iemgui_has_snd((t_iemgui*)x),
+        !iemgui_has_rcv((t_iemgui*)x)
     );
     mknob_draw_config(x, glist);
 }
@@ -169,10 +169,10 @@ static void mknob_save(t_gobj *z, t_binbuf *b)
                 atom_getsymbol(binbuf_getvec(x->x_gui.x_obj.te_binbuf)),
                 x->x_gui.x_w, x->x_gui.x_h,
                 (t_float)x->x_min, (t_float)x->x_max,
-                x->x_lin0_log1, iem_symargstoint(x),
+                x->x_lin0_log1, iem_symargstoint((t_iemgui*)x),
                 srl[0], srl[1], srl[2],
                 x->x_gui.x_ldx, x->x_gui.x_ldy,
-                iem_fstyletoint(x), x->x_gui.x_fontsize,
+                iem_fstyletoint((t_iemgui*)x), x->x_gui.x_fontsize,
                 bflcol[0], bflcol[1], bflcol[2],
                 x->x_val, x->x_steady);
     binbuf_addv(b, ";");
@@ -313,7 +313,7 @@ static void mknob_bang(t_mknob *x)
     if((out < 1.0e-10)&&(out > -1.0e-10))
         out = 0.0;
     outlet_float(x->x_gui.x_obj.ob_outlet, out);
-    if (iemgui_has_snd(x) && x->x_gui.x_snd->s_thing)
+    if (iemgui_has_snd((t_iemgui*)x) && x->x_gui.x_snd->s_thing)
         pd_float(x->x_gui.x_snd->s_thing, out);
 }
 
@@ -570,7 +570,7 @@ static void mknob_float(t_mknob *x, t_floatarg f)
     if (x->x_gui.x_put_in2out)
     {
         outlet_float(x->x_gui.x_obj.ob_outlet, out);
-        if (iemgui_has_snd(x) && x->x_gui.x_snd->s_thing)
+        if (iemgui_has_snd((t_iemgui*)x) && x->x_gui.x_snd->s_thing)
             pd_float(x->x_gui.x_snd->s_thing, out);
     }
 }
@@ -695,7 +695,7 @@ static void *mknob_new(t_symbol *s, int argc, t_atom *argv)
         iemgui_new_getnames(&x->x_gui, 6, argv);
         ldx = (int)atom_getintarg(9, argc, argv);
         ldy = (int)atom_getintarg(10, argc, argv);
-        iem_inttofstyle(x, atom_getintarg(11, argc, argv));
+        iem_inttofstyle((t_iemgui*)x, atom_getintarg(11, argc, argv));
         fs = (int)atom_getintarg(12, argc, argv);
         bflcol[0] = (int)atom_getintarg(13, argc, argv);
         bflcol[1] = (int)atom_getintarg(14, argc, argv);
@@ -730,7 +730,7 @@ static void *mknob_new(t_symbol *s, int argc, t_atom *argv)
     {
         x->x_gui.x_font_style = 0;
     }
-    if (iemgui_has_rcv(x)) pd_bind(&x->x_gui.x_obj.ob_pd, x->x_gui.x_rcv);
+    if (iemgui_has_rcv((t_iemgui*)x)) pd_bind(&x->x_gui.x_obj.ob_pd, x->x_gui.x_rcv);
     x->x_gui.x_ldx = ldx;
     x->x_gui.x_ldy = ldy;
     if(fs < 4)
@@ -757,7 +757,7 @@ static void *mknob_new(t_symbol *s, int argc, t_atom *argv)
 
 static void mknob_free(t_mknob *x)
 {
-    if (iemgui_has_rcv(x))
+    if (iemgui_has_rcv((t_iemgui*)x))
         pd_unbind(&x->x_gui.x_obj.ob_pd, x->x_gui.x_rcv);
     gfxstub_deleteforkey(x);
 }
