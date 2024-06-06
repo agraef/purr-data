@@ -180,6 +180,23 @@ var canvas_events = (function() {
             else
                 return is_canvas_obj(evt.target);
         },
+        target_is_ac_dropdown = function(evt) {
+            let ac = ac_dropdown();
+            if (!ac) {
+            return false;
+            }
+            let rect = ac.getBoundingClientRect();
+            let left = rect.left;
+            let right = rect.right;
+            let top = rect.top;
+            let bottom = rect.bottom;
+            
+            if (evt.clientX < left || evt.clientX > right ||
+            evt.clientY < top || evt.clientY > bottom) {
+            return false;
+            }
+            return true;
+        },
         text_to_normalized_svg_path = function(text) {
             text = text.slice(4).trim()  // draw
                        .slice(4).trim()  // path
@@ -562,7 +579,11 @@ var canvas_events = (function() {
                     caret_end();
                     return false;
                 }
-                if (textbox() !== evt.target && !target_is_scrollbar(evt)) {
+            if(target_is_ac_dropdown(evt)) {
+                evt.stopPropagation();
+                return false;
+            }
+            if (textbox() !== evt.target && !target_is_scrollbar(evt)) {
                     utils.create_obj();
                     // send a mousedown and mouseup event to Pd to instantiate
                     // the object

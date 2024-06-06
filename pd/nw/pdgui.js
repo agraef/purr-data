@@ -758,14 +758,45 @@ function update_autocomplete_selected(ac_dropdown, sel, new_sel) {
 function update_autocomplete_dd_arrowdown(ac_dropdown) {
     if (ac_dropdown !== null) {
         let sel = ac_dropdown.getAttribute("selected_item");
-        update_autocomplete_selected(ac_dropdown, sel, parseInt(sel) + 1);
+        let new_sel = parseInt(sel) + 1;
+
+        if (new_sel < ac_dropdown.children.length) {
+            update_autocomplete_selected(ac_dropdown, sel, new_sel);
+            let selected_element = ac_dropdown.children.item(new_sel);
+            let dropdown_height = ac_dropdown.offsetHeight;
+            let scroll_bottom = ac_dropdown.scrollTop + dropdown_height;
+            let element_bottom = selected_element.offsetTop + selected_element.offsetHeight;
+
+            if (element_bottom > scroll_bottom) {
+                ac_dropdown.scrollTop = (element_bottom - dropdown_height) + 4;
+            }
+        } else {
+            // Reached the end of the dropdown, cycle back to the beginning
+            update_autocomplete_selected(ac_dropdown, sel, 0);
+            ac_dropdown.scrollTop = 0;
+        }
     }
 }
 
 function update_autocomplete_dd_arrowup(ac_dropdown) {
     if (ac_dropdown !== null) {
         let sel = ac_dropdown.getAttribute("selected_item");
-        update_autocomplete_selected(ac_dropdown, sel, parseInt(sel) - 1);
+        let new_sel = parseInt(sel) - 1;
+
+        if (new_sel >= 0) {
+            update_autocomplete_selected(ac_dropdown, sel, new_sel);
+            let selected_element = ac_dropdown.children.item(new_sel);
+
+            if (selected_element.offsetTop < ac_dropdown.scrollTop) {
+                ac_dropdown.scrollTop = selected_element.offsetTop;
+            }
+        } else {
+        // Reached the beginning of the dropdown, cycle back to the end
+            let last_index = ac_dropdown.children.length - 1;
+            update_autocomplete_selected(ac_dropdown, sel, last_index);
+            let last_element = ac_dropdown.children.item(last_index);
+            ac_dropdown.scrollTop = last_element.offsetTop+4;
+        }
     }
 }
 
@@ -905,9 +936,6 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
 
     // record the complete results, we need them for tab completion
     let all_results = results;
-    // GB TODO: ideally we should be able to show all the results in a limited window with a scroll bar
-    let n = 8; // Maximum number of suggestions
-    if (results.length > n) results = results.slice(0,n);
 
     ac_dropdown().innerHTML = ""; // clear all old results
     if (results.length > 0) {

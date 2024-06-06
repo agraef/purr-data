@@ -782,6 +782,9 @@ input[type="color"] {
 
 /* GB: Autocomplete Dropdown style */
 #autocomplete_dropdown {
+    min-height: auto;
+    max-height: 200px;
+    overflow-y: scroll;
     background-color: #ebebec;
     border: 1px solid;
     padding: 1px;
