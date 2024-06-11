@@ -165,7 +165,7 @@ static void grid_draw_configure(t_grid *x, t_glist *glist)
         x->x_grid,
         x->x_xlines,
         x->x_ylines);
-    if (glist_isselected(glist, &x->x_obj))
+    if (glist_isselected(glist, (t_gobj*)&x->x_obj))
         grid_draw_select(x, glist);
     canvas_fixlinesfor( canvas, (t_text*)x );
 }
@@ -854,7 +854,7 @@ static t_grid *grid_new(t_symbol *s, int argc, t_atom *argv)
     // post( "grid_new name : %s width: %d height : %d",
     // x->x_name->s_name, x->x_width, x->x_height );
 
-    x->x_handle = scalehandle_new((t_object *)x, x->x_glist, 1,
+    x->x_handle = (t_pd*)scalehandle_new((t_object *)x, x->x_glist, 1,
         grid__clickhook, grid__motionhook);
 
     return (x);
