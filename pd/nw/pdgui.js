@@ -921,7 +921,19 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
             r.setAttribute("y", y);
             r.setAttribute("class", "border");
             r.setAttribute("idx", i);
-            r.textContent = f;
+
+            let parts = f.split(text);
+            let content = "";
+
+            for (let j = 0; j < parts.length; j++) {
+                if (j > 0) {
+                    content += `<span class="highlight">${text}</span>`;
+                }
+                content += parts[j];
+            }
+
+            r.innerHTML = content;
+
             ac_dropdown().appendChild(r);
         })
         ac_dropdown().setAttribute("selected_item", "-1");

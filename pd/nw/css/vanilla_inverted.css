@@ -789,3 +789,8 @@ input[type="color"] {
 #autocomplete_dropdown p.selected {
     background-color: #cfcfd0;
 }
+
+#autocomplete_dropdown p .highlight { 
+    font-weight: bold;
+    color: #e87216;
+}
