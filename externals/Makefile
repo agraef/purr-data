@@ -738,6 +738,11 @@ endif
 # default gemmacoswindow which doesn't work for me, YMMV.
 gem_window = --with-sdl2 --with-sdl2-LIBS="-L$(usrlocal)/lib -lSDL2" --with-defaultwindow=gemsdl2window
 
+# As of automake 1.16.5 from homebrew, libtool compilation of Objective C++
+# sources seem to be broken. As a work-around, the LIBTOOLFLAGS=--tag=CXX
+# setting appears to fix that.
+export LIBTOOLFLAGS = --tag=CXX
+
 $(gem_src)/Gem.pd_darwin: $(gem_src)/configure
 	cd $(gem_src) && ./configure \
 		CXXFLAGS="-DHAVE_S_STUFF_H $(CFLAGS_ADD)" \
