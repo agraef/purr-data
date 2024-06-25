@@ -6,6 +6,10 @@ var help_path, browser_doc, browser_path, browser_init;
 var autocomplete, autocomplete_prefix, autocomplete_relevance;
 var pd_engine_id;
 
+//Generate object descriptions by title for the autocompletion menu; 
+//calculated dynamically during index construction
+var ac_tooltip_descriptions = new Map();
+
 exports.autocomplete_enabled = function() {
     return autocomplete;
 }
@@ -359,6 +363,7 @@ function add_doc_details_to_index(filename, data) {
         "ref_related_objects": ref_rel_objs
         //"body": big_line,
     });
+    ac_tooltip_descriptions.set(title, desc);
 }
 
 // GB: This does an initial scan of help patches, recording filename, title and
@@ -542,6 +547,7 @@ function make_index() {
                 var desc = e[3] ? e[3] : null;
                 var rel_obj = e[4] ? e[4] : null;
                 var ref_rel_obj = e[5] ? e[5] : null;
+                ac_tooltip_descriptions.set(title, desc);
                 index.addDoc({
                     "id": filename,
                     "title": title,
@@ -769,12 +775,13 @@ function update_autocomplete_dd_arrowup(ac_dropdown) {
     }
 }
 
-function select_result_autocomplete_dd(textbox, ac_dropdown, last, offs, res, dir) {
+function select_result_autocomplete_dd(doc, textbox, ac_dropdown, last, offs, res, dir) {
     if (ac_dropdown !== null) {
+        delete_tooltip(doc);
         let sel = ac_dropdown.getAttribute("selected_item");
         if (sel > -1) {
             textbox.innerText = ac_dropdown.children.item(sel).innerText;
-            delete_autocomplete_dd(ac_dropdown);
+            delete_autocomplete_dd(doc, ac_dropdown);
             return [sel+offs, offs];
         } else {
 	    // We only come here if the user presses 'tab' and there is no
@@ -809,8 +816,38 @@ function select_result_autocomplete_dd(textbox, ac_dropdown, last, offs, res, di
     }
 }
 
+function create_tooltip(doc) {
+    let tooltip = doc.createElement("div");
+    tooltip.className = "tooltip";
+    tooltip.style.position = "absolute";
+    tooltip.style.visibility = "hidden";
+    tooltip.style.opacity = "0";
+    tooltip.style.zIndex = "1000";
+    tooltip.style.backgroundColor = "black";
+    tooltip.style.borderRadius="5px"
+    tooltip.style.color = "white";
+    tooltip.style.padding = "5px";
+    tooltip.style.fontSize = "12px";
+    tooltip.style.border = "2px solid black";
+    tooltip.style.textAlign = "center";
+    tooltip.style.width = "auto"; 
+    tooltip.style.maxWidth = "220px"; 
+    tooltip.style.wordWrap = "break-word"; 
+    doc.body.appendChild(tooltip);
+    return tooltip;
+}
+
+function delete_tooltip(doc) {
+    let tooltip = doc.querySelector(".tooltip");
+    if (tooltip) {
+        doc.body.removeChild(tooltip);
+    }
+}
+
+
 // GB: update autocomplete dropdown with new results
 function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
+    delete_tooltip(doc);
     ac_dropdown().setAttribute("searched_text", text);
     let title, arg, have_arg;
     if (obj_class === "obj") {
@@ -913,6 +950,7 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
     if (results.length > 0) {
         // for each result, make a paragraph child of autocomplete_dropdown
         let h = ac_dropdown().getAttribute("font_height");
+        let tooltip = create_tooltip(doc);
         results.forEach(function (f,i,a) {
             let y = h*(i+1);
             let r = doc.createElement("p");
@@ -934,11 +972,30 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
 
             r.innerHTML = content;
 
+            r.addEventListener("mouseover", function (e) {
+                let description = ac_tooltip_descriptions.get(f);
+                if (description) {
+                    tooltip.textContent = description;
+                    tooltip.style.top = `${e.clientY + 10}px`;
+                    tooltip.style.left = `${e.clientX}px`;
+                    tooltip.style.visibility = "visible";
+                    tooltip.style.opacity = "1";
+                } else {
+                    tooltip.style.visibility = "hidden";
+                    tooltip.style.opacity = "0";
+                }
+            });
+            
+            r.addEventListener("mouseout", function () {
+                tooltip.style.visibility = "hidden";
+                tooltip.style.opacity = "0";
+            });
+
             ac_dropdown().appendChild(r);
         })
         ac_dropdown().setAttribute("selected_item", "-1");
     } else { // if there is no suggestion candidate, the autocompletion dropdown should disappear
-        delete_autocomplete_dd (ac_dropdown());
+        delete_autocomplete_dd (doc, ac_dropdown());
     }
     return all_results;
 }
@@ -978,8 +1035,9 @@ function create_autocomplete_dd (doc, ac_dropdown, new_obj_element) {
     }
 }
 
-function delete_autocomplete_dd (ac_dropdown) {
+function delete_autocomplete_dd (doc, ac_dropdown) {
     if (ac_dropdown !== null) {
+        delete_tooltip(doc)
         ac_dropdown.parentNode.removeChild(ac_dropdown);
     }
 }

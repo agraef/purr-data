@@ -551,7 +551,7 @@ var canvas_events = (function() {
             },
             text_mousedown: function(evt) {
                 if (evt.target.parentNode === ac_dropdown()) {
-                    pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
+                    pdgui.select_result_autocomplete_dd(document, textbox(), ac_dropdown());
                     last_yanked = "";
                     // ag: Don't do the usual object instantiation thing if
                     // we've clicked on the autocompletion dropdown. This
@@ -607,7 +607,7 @@ var canvas_events = (function() {
                         if(ac_dropdown() === null || ac_dropdown().getAttribute("selected_item") === "-1") {
                             grow_svg_for_element(textbox());
                         } else { // else, if there is a selected item on autocompletion tool, the selected item is written on the box
-                            pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
+                            pdgui.select_result_autocomplete_dd(document, textbox(), ac_dropdown());
                             caret_end();
                             // No need to instantiate the object here,
                             // presumably the user wants to go on editing.
@@ -615,26 +615,26 @@ var canvas_events = (function() {
                         last_yanked = "";
                         break;
                     case 9: // tab
-                        [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed, last_offset, last_results, evt.shiftKey?-1:1);
+                        [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(document, textbox(), ac_dropdown(), last_completed, last_offset, last_results, evt.shiftKey?-1:1);
                         last_yanked = "";
                         caret_end();
                         break;
                     case 36:
                         if (evt.altKey) { // alt-home
-                            [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), 0, last_offset, last_results, 0);
+                            [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(document, textbox(), ac_dropdown(), 0, last_offset, last_results, 0);
                             last_yanked = "";
                             caret_end();
                         }
                         break;
                     case 35:
                         if (evt.altKey) { // alt-end
-                            [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_results.length-1, last_offset, last_results, 0);
+                            [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(document, textbox(), ac_dropdown(), last_results.length-1, last_offset, last_results, 0);
                             last_yanked = "";
                             caret_end();
                         }
                         break;
                     case 27: // esc
-                        pdgui.delete_autocomplete_dd(ac_dropdown());
+                        pdgui.delete_autocomplete_dd(document, ac_dropdown());
                         last_completed = last_offset = -1;
                         last_results = [];
                         if (last_yanked != "") {
@@ -652,7 +652,7 @@ var canvas_events = (function() {
                             last_completed = last_offset = -1;
                             last_results = [];
                             if (textbox().innerText === "") {
-                                pdgui.delete_autocomplete_dd(ac_dropdown());
+                                pdgui.delete_autocomplete_dd(document, ac_dropdown());
                                 last_yanked = "";
                             } else if (textbox().innerText === last_yanked) {
                                 // confirmed, really yank now
@@ -697,7 +697,7 @@ var canvas_events = (function() {
                             last_completed = last_offset = -1;
                             last_yanked = "";
                             if (textbox().innerText === "") {
-                                pdgui.delete_autocomplete_dd(ac_dropdown());
+                                pdgui.delete_autocomplete_dd(document, ac_dropdown());
                             } else {
                                 ac_repopulate();
                             }
