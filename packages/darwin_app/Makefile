@@ -205,8 +205,8 @@ dmg:
 	$(MAKE) -C $(packages_src) \
 		DESTDIR="/Volumes/$(VOLUME_NAME)/*.app/Contents/Resources" doc_format
 	chmod -R a-w /Volumes/$(VOLUME_NAME)/*.app/Contents/Resources
-# 3 retries
-	hdiutil detach `mount | grep $(VOLUME_NAME) | cut -d ' ' -f 1` || hdiutil detach `mount | grep $(VOLUME_NAME) | cut -d ' ' -f 1` || hdiutil detach `mount | grep $(VOLUME_NAME) | cut -d ' ' -f 1`
+# max 5 retries
+	nretries=5; volm=$$(mount | grep $(VOLUME_NAME) | cut -d ' ' -f 1); sleep 1; until [[ $$nretries -le 0 ]] || hdiutil detach $$volm; do echo "detach failed, retrying"; sleep 1; nretries=$$(expr $$nretries - 1); done
 	rm -f "$(PACKAGE_NAME).dmg"
 	hdiutil convert -format UDZO -o "$(PACKAGE_NAME).dmg" build.dmg
 	rm -f build.dmg
