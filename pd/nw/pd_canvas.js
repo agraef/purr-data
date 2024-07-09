@@ -550,7 +550,7 @@ var canvas_events = (function() {
                 return false;
             },
             text_mousedown: function(evt) {
-                if (evt.target.parentNode === ac_dropdown()) {
+                if (evt.target.parentNode === ac_dropdown() || (evt.target.tagName === 'SPAN' && evt.target.closest('p') && evt.target.closest('p').parentNode === ac_dropdown())) {
                     pdgui.select_result_autocomplete_dd(document, textbox(), ac_dropdown());
                     last_yanked = "";
                     // ag: Don't do the usual object instantiation thing if
