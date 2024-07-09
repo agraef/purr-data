@@ -600,10 +600,16 @@ exports.build_index = build_index;
 
 // normally, this doesn't actually rebuild the index, it just clears it, so
 // that it will be rebuilt the next time the help browser is opened
-function rebuild_index()
+function rebuild_index(clear_index = false)
 {
     index = init_elasticlunr();
     index_started = index_done = false;
+
+    if (clear_index) {
+        completion_list = [];
+        completion_index = new fuse(completion_list,autocomplete_index_options);
+    }
+
     try {
         fs.unlinkSync(expand_tilde(cache_name));
         fs.unlinkSync(expand_tilde(stamps_name));
@@ -618,6 +624,8 @@ function rebuild_index()
         post("clearing help index (reopen the browser to rebuild!)");
     }
 }
+
+exports.rebuild_index = rebuild_index;
 
 // this is called from the gui tab of the prefs dialog
 function update_browser(doc_flag, path_flag, ac_flag, ac_prefix_flag, ac_relevance_flag)
