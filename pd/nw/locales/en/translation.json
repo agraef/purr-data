@@ -455,7 +455,9 @@
         "browser_path": "help browser also searches the help path",
         "browser_path_tt": "Also scan help patches in the user-defined help path for searchable keywords (slower)",
         "browser_init": "prepare the help index at application start",
-        "browser_init_tt": "If checked, prepare the index for the help browser already when the application starts"
+        "browser_init_tt": "If checked, prepare the index for the help browser already when the application starts",
+        "reset_init": "clear completions",
+        "reset_init_tt": "If checked, clear the custom completions and arguments when resetting the index"
       }
     },
     "audio": {
@@ -495,7 +497,9 @@
     "cancel": "Cancel",
     "cancel_tt": "Cancel updating the preferences",
     "close": "Close",
-    "close_tt": "Close the preferences dialog"
+    "close_tt": "Close the preferences dialog",
+    "reset_index": "Reset indexes",
+    "reset_index_tt": "Reset the help and completion indexes"
   },
   "font": {
     "prop": {

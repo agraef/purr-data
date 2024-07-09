@@ -476,6 +476,14 @@ select {
               <span data-i18n="prefs.gui.browser.browser_init"></span>
             </label>
           </div>
+          <br/>
+          <label data-i18n="[title]prefs.gui.browser.reset_init_tt">
+            <input type="checkbox" id="reset_init" name="reset_init">
+            <span data-i18n="prefs.gui.browser.reset_init"></span>
+          </label>
+          <button type="button" onclick="reset_indexes()" data-i18n="[title]prefs.reset_index_tt">
+            <span data-i18n="prefs.reset_index"></span>
+          </button>
         </div>
 
         <div class="tab4">
@@ -535,10 +543,10 @@ select {
           <span data-i18n="prefs.ok"></span>
         </button>
         <button type="button" onClick="apply(false)" data-i18n="[title]prefs.apply_tt">
-        <span data-i18n="prefs.apply"></span>
+          <span data-i18n="prefs.apply"></span>
         </button>
         <button type="button" onClick="cancel()" data-i18n="[title]prefs.close_tt">
-        <span data-i18n="prefs.close"></span>
+          <span data-i18n="prefs.close"></span>
         </button>
       </div>
     </div>
@@ -561,6 +569,10 @@ var pd_midi_attrs;
 function ok() {
     apply(true);
     cancel();
+}
+
+function reset_indexes() {
+    pdgui.rebuild_index(get_bool_elem("reset_init"));
 }
 
 function gui_preset_change(elem) {
