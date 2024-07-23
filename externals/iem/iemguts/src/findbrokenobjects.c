@@ -100,7 +100,7 @@ static void fbo_iterate(t_findbrokenobjects*x, t_canvas*cnv, int verbose) {
     cls=pd_class(&g->g_pd);
     if (cls == canvas_class) {
       // this is just another abstraction, recurse into it
-      fbo_iterate(x, ob, verbose);
+      fbo_iterate(x, (t_canvas*)ob, verbose);
     } else if (cls == text_class) {
       t_binbuf*bb=ob->te_binbuf;
       t_atom*argv=binbuf_getvec(bb);

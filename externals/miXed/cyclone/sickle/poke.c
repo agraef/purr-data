@@ -55,7 +55,7 @@ static void poke_float(t_poke *x, t_float f)
     t_arsic *sic = (t_arsic *)x;
     t_word *vp;
     arsic_validate(sic, 0);  /* LATER rethink (efficiency, and complaining) */
-    if (vp = sic->s_vectors[x->x_effchannel])
+    if (vp = (t_word*)sic->s_vectors[x->x_effchannel])
     {
 	int ndx = (int)*x->x_indexptr;
 	if (ndx >= 0 && ndx < sic->s_vecsize)
@@ -88,7 +88,7 @@ static t_int *poke_perform(t_int *w)
     t_float *in1 = (t_float *)(w[3]);
     t_float *in2 = (t_float *)(w[4]);
     t_poke *x = (t_poke *)sic;
-    t_word *vp = sic->s_vectors[x->x_effchannel];
+    t_word *vp = (t_word*)sic->s_vectors[x->x_effchannel];
     if (vp && sic->s_playable)
     {
 	int vecsize = sic->s_vecsize;

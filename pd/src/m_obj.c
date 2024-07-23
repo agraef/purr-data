@@ -86,7 +86,7 @@ static int inlet_fwd(t_inlet *x, t_symbol *s, int argc, t_atom *argv)
     if(x->i_symfrom == &s_signal
         && zcheckgetfn(x->i_dest, gensym("fwd"), A_GIMME, A_NULL))
     {
-        mess3(x->i_dest, gensym("fwd"), s, argc, argv);
+        mess3i(x->i_dest, gensym("fwd"), s, argc, argv);
         return 1;
     }
     return 0;

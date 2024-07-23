@@ -30,7 +30,7 @@ static t_int *play_perform(t_int *w)
 	t_play *x = (t_play *)sic;
 	t_float *xin = (t_float *)(w[3]);
 	int vecsize = sic->s_vecsize;
-	t_word **vectable = sic->s_vectors;
+	t_word **vectable = (t_word**)sic->s_vectors;
 	float ksr = sic->s_ksr;
 	int nointerp = 0;
 	int maxindex = (nointerp ? vecsize - 1 : vecsize - 3);

@@ -234,7 +234,7 @@ static int mp3amp_decode_input(t_mp3amp *x)
     unsigned int a,b,c,d;
     unsigned long cheader;
     signed short int *p = (signed short int *) x->x_out;
-    t_int     pbytes;
+    int       pbytes;
     t_int     ret, totlength=0;
     t_int     pframes = 0;
 

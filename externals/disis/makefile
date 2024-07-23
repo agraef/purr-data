@@ -6,8 +6,6 @@ class.sources = disis_phasor~.c
 disis_munger~.class.sources = disis_munger.c ADSR.c
 define forLinux
     class.sources += disis_netsend.c disis_netreceive.c
-    disis_wiimote.class.sources = disis_wiimote.c
-    disis_wiimote.class.ldlibs = $(CWIID_LIB_STATIC) -lbluetooth -lpthread
 endef
 define forDarwin
     class.sources += disis_netsend.c disis_netreceive.c

@@ -117,7 +117,7 @@ static t_int *buffir_perform(t_int *w)
 	t_float *oin = (t_float *)(w[4]);
 	t_float *sin = (t_float *)(w[5]);
 	int vecsize = sic->s_vecsize;
-	t_word *vec = sic->s_vectors[0];  /* playable implies nonzero (mono) */
+	t_word *vec = (t_word*)sic->s_vectors[0];  /* playable implies nonzero (mono) */
 	int histsize = x->x_histsize;
 	while (nblock--)
 	{
