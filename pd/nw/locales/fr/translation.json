@@ -455,7 +455,11 @@
         "browser_path":    "Le navigateur d'Aide recherche également dans le chemin de l'Aide",
         "browser_path_tt": "Analyser également les Patches d'Aide dans le chemin d'Aide défini par l'utilisateur pour rechercher des mots clés consultables (plus lent)",
         "browser_init":    "Préparer l'index de l'Aide au démarrage de l'application",
-        "browser_init_tt": "Si cette case est cochée, préparez l'index pour le navigateur d'Aide dès le démarrage de l'application"
+        "browser_init_tt": "Si cette case est cochée, préparez l'index pour le navigateur d'Aide dès le démarrage de l'application",
+        "reset_init": "Effacer les complétions",
+        "reset_init_tt": "Si cette case est cochée, effacer les complétions et arguments personnalisés lors de la réinitialisation de l'index",
+        "reset_index": "Réinitialiser les index",
+        "reset_index_tt": "Réinitialiser les index d'aide et de complétion"
       }
     },
     "audio": {
