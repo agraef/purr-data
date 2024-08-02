@@ -77,7 +77,7 @@ static t_int *matrix_perform(t_int *w)
       memcpy(x, in, sizeof(t_float)*n);
       in = x;
     }
-  bzero(out, sizeof(t_float)*n); /* init output */
+  memset(out, 0, sizeof(t_float)*n); /* init output */
 
   for (j=0; j<n; j++)
       for (i=0; i<n; i++) 

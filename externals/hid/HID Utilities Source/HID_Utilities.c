@@ -290,7 +290,7 @@ static void hid_AddElement (CFTypeRef refElement, pRecElement * ppElementCurrent
 		// it preserves the structure of the lements as collections have children and elements are siblings to each other
 
 		// clear record
-		bzero(pElement,sizeof(recElement));
+		memset(pElement,0,sizeof(recElement));
 
 		// get element info
         pElement->type = elementType;
@@ -587,7 +587,7 @@ static pRecDevice hid_BuildDevice (io_object_t hidDevice)
         kern_return_t result = IORegistryEntryCreateCFProperties (hidDevice, &hidProperties, kCFAllocatorDefault, kNilOptions);
 
 		// clear record
-		bzero(pDevice, sizeof(recDevice));
+		memset(pDevice, 0, sizeof(recDevice));
 
         if ((result == KERN_SUCCESS) && (NULL != hidProperties))
         {

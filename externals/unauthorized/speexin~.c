@@ -118,7 +118,7 @@ int setsocketoptions(int sockfd)
 
 #ifdef _WIN32
     sockopt = 1;
-    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &sockopt, sizeof(int)) < 0)
+    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char*)&sockopt, sizeof(int)) < 0)
     {
         post("speexin~ : setsockopt SO_REUSEADDR failed");
         perror( "setsockopt" );

@@ -119,7 +119,7 @@ int setsocketoptions(int sockfd)
 
 #ifndef _MSC_VER
     sockopt = 1;
-    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &sockopt, sizeof(int)) < 0)
+    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char*)&sockopt, sizeof(int)) < 0)
     {
         post("mp3streamin~ : setsockopt SO_REUSEADDR failed");
         perror( "setsockopt" );
