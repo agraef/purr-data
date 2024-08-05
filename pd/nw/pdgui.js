@@ -6699,38 +6699,65 @@ function gui_raise_window(cid) {
     });
 }
 
-// Unfortunately DOM window.focus doesn't actually focus the window, so we
-// have to use the chrome API
 function gui_raise_pd_window() {
     pd_window.window.focus();
 }
 
 // ico@vt.edu 2022-11-09: reimplemented this function to make it
 // work with newer nw.js (should also work with older ones)
+
+// ag: reworked again to deal with all pesky corner cases were some
+// entries in the patchwin array may not actually point to existing
+// windows anymore
 function walk_window_list(cid, offset) {
-    /*
-    post("walk_window_list patchwin=" + patchwin +
-         " data[cid]=" + patchwin[cid] +
-         " length=" + Object.keys(patchwin).length +
-         " value_at_index_0=" + Object.keys(patchwin)[0]);
-    */
-    var i, next, match = -1;
-    var win_array_length = Object.keys(patchwin).length;
-    for (i = 0; i < win_array_length; i++) {
-        if (Object.keys(patchwin)[i] === cid) {
-            match = i;
-            break;
+    var keys = Object.keys(patchwin);
+    var len = keys.length;
+
+    function find_window(cid) {
+        for (var i = 0; i < len; i++) {
+            if (keys[i] === cid) {
+                return i;
+            }
         }
+        return -1;
     }
+
+    function next(i) {
+        // cycle through all indices
+        return ((i+offset) % len + len) % len;
+    }
+
+    function find_next_window(i) {
+        var found = false;
+        var count = 0;
+        while (!found && count < len) {
+            // check that the window actually exists
+            gui(keys[i]).get_nw_window(function(nw_win) {
+                found = true;
+            });
+            if (found) {
+                return i;
+            }
+            // if it doesn't, check the next one
+            i = next(i);
+            count++;
+        }
+        // if we come here, we cycled through all the entries and none
+        // of the windows still existed, bail out with failure
+        return -1;
+    }
+
+    var match = find_window(cid);
     if (match !== -1) {
-        next = (((match + offset) % win_array_length) // modulo...
-                + win_array_length) % win_array_length; // handle negatives
-        gui_raise_window(Object.keys(patchwin)[next]);
+        var next = find_next_window(next(match));
+        //post("match: "+match+" next: "+next+" cid: "+keys[next]);
+        gui_raise_window(keys[next]);
     } else if (cid === "pd_window" && Object.keys(patchwin).length > 0) {
-        // for Windows and Linux, fall back here if we are passing
-        // "pd_window" from the main window (see pd_m.win.nextwin in index.js)
-        gui_raise_window(Object.keys(patchwin)
-            [(offset === 1 ? 0 : Object.keys(patchwin).length - 1)])
+        // go to first or last window if invoked from the main window
+        var match = offset === 1 ? 0 : len-1;
+        next = find_next_window(match);
+        //post("match: : pd_window next: "+next+" cid: "+keys[next]);
+        gui_raise_window(keys[next]);
     } else {
         post("error: cannot find last focused window.");
     }
