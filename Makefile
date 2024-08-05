@@ -95,6 +95,16 @@ endif
 
 install_vars = DESTDIR=$(firstword $(wildcard $(CURDIR)/packages/*/build)) prefix=$(prefix)
 
+# You can set the nwjsver variable to indicate the nw.js version to build
+# against. This will also clear out any cached nw.js binaries beforehand.
+# Note that some nw.js versions for certain platforms have to be hard-coded,
+# so the nwjsver variable won't affect these, but it will still cause the
+# cache to be cleared and the binaries to be downloaded. See the tar_em_up.sh
+# script for details.
+ifneq ($(nwjsver),)
+env += nwjsver="$(nwjsver)"
+endif
+
 # You can set CFLAGS to whatever special compile options are needed. E.g., to
 # build the double precision version: CFLAGS = -DPD_FLOATSIZE=64
 CFLAGS =
