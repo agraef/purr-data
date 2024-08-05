@@ -6488,32 +6488,38 @@ function gui_raise_window(cid) {
 // Unfortunately DOM window.focus doesn't actually focus the window, so we
 // have to use the chrome API
 function gui_raise_pd_window() {
-    chrome.windows.getAll(function (w_array) {
-        chrome.windows.update(w_array[0].id, { focused: true });
-    });
+    pd_window.window.focus();
 }
 
-// Using the chrome app API, because nw.js doesn't seem
-// to let me get a list of the Windows
+// ico@vt.edu 2022-11-09: reimplemented this function to make it
+// work with newer nw.js (should also work with older ones)
 function walk_window_list(cid, offset) {
-    chrome.windows.getAll(function (w_array) {
-        chrome.windows.getLastFocused(function (w) {
-            var i, next, match = -1;
-            for (i = 0; i < w_array.length; i++) {
-                if (w_array[i].id === w.id) {
-                    match = i;
-                    break;
-                }
-            }
-            if (match !== -1) {
-                next = (((match + offset) % w_array.length) // modulo...
-                        + w_array.length) % w_array.length; // handle negatives
-                chrome.windows.update(w_array[next].id, { focused: true });
-            } else {
-                post("error: cannot find last focused window.");
-            }
-        });
-    })
+    /*
+    post("walk_window_list patchwin=" + patchwin +
+         " data[cid]=" + patchwin[cid] +
+         " length=" + Object.keys(patchwin).length +
+         " value_at_index_0=" + Object.keys(patchwin)[0]);
+    */
+    var i, next, match = -1;
+    var win_array_length = Object.keys(patchwin).length;
+    for (i = 0; i < win_array_length; i++) {
+        if (Object.keys(patchwin)[i] === cid) {
+            match = i;
+            break;
+        }
+    }
+    if (match !== -1) {
+        next = (((match + offset) % win_array_length) // modulo...
+                + win_array_length) % win_array_length; // handle negatives
+        gui_raise_window(Object.keys(patchwin)[next]);
+    } else if (cid === "pd_window" && Object.keys(patchwin).length > 0) {
+        // for Windows and Linux, fall back here if we are passing
+        // "pd_window" from the main window (see pd_m.win.nextwin in index.js)
+        gui_raise_window(Object.keys(patchwin)
+            [(offset === 1 ? 0 : Object.keys(patchwin).length - 1)])
+    } else {
+        post("error: cannot find last focused window.");
+    }
 }
 
 function raise_next(cid) {
