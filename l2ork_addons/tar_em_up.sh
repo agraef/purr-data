@@ -199,10 +199,12 @@ if [ ! -d "../pd/nw/nw" ]; then
 		nwjs_version="v0.14.7"
 	elif [ $os == "osx" ]; then
 		# ag: We need a recent version here to make the latest macOS
-		# versions work. Tested with Mojave (Intel), Monterey and
+		# versions work. 0.42.0 seems to be the last version which
+		# still renders at acceptable speeds while also working
+		# reasonably well on macOS. Tested with Big Sur (Intel) and
 		# Ventura (M1). NB: The Intel build also works on Apple
 		# Silicon using Rosetta 2.
-		nwjs_version="v0.71.0"
+		nwjs_version="v0.42.0"
 	else
 		# temporary kluge for rpi-- only 0.27.6 is available atm
 		if [ $arch == "arm" ]; then
@@ -210,10 +212,7 @@ if [ ! -d "../pd/nw/nw" ]; then
 		elif [ $arch == "arm64" ]; then
 			nwjs_version="v0.23.7"
 		else
-		# ag: Unfortunately, Linux exhibits a bunch of regressions
-		# with 0.71.0, so we keep the tried and true 0.28 version for
-		# now. 0.28.3 is the final point release in this series.
-			nwjs_version="v0.28.3"
+			nwjs_version="v0.42.0"
 		fi
 	fi
 
