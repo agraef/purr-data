@@ -51,6 +51,12 @@
 	<string>10.8.5</string>
 	<key>NSAppleScriptEnabled</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera access is required for live video input.</string>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Microphone access is required for audio input.</string>
 	<key>NSPrincipalClass</key>
 	<string>BrowserCrApplication</string>
 	<key>NSSupportsAutomaticGraphicsSwitching</key>

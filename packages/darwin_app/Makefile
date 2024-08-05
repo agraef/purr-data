@@ -177,6 +177,11 @@ package: dmg
 
 VOLUME_NAME = Purr-Data
 dmg:
+# ico@vt.edu 2022-10-10: sign the app, so that we can get the mic/camera
+# permission prompts (https://github.com/pd-l2ork/pd-l2ork/commit/4dd114f)
+	codesign --deep --sign "-" --entitlements "$(CWD)/purr-data.entitlements" "$(BUILD_BASE)/Purr-Data.app"
+# sign libs (@MovementGH, https://github.com/pd-l2ork/pd-l2ork/commit/5a99fac)
+	./sign-MacOSX-dependencies.sh $(PD_APP_CONTENTS)
 	rm -f build.dmg
 	hdiutil create -format UDRW -fs HFS+ -srcfolder "$(BUILD_BASE)" \
 		-volname $(VOLUME_NAME) build.dmg
