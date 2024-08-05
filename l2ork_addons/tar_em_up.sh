@@ -163,7 +163,18 @@ fi
 
 # Fetch the nw.js binary if we haven't already. We want to fetch it even
 # for building with no libs, so we do it regardless of the options
-#echo nwjs-sdk-v0.16.0-`uname | tr '[:upper:]' '[:lower:]'`
+
+# If the nwjsver env variable is set, it denotes the nw.js version for the
+# default Linux, Mac, and Windows builds. This cleans out any existing
+# binaries, and provides a quick way to switch nw.js versions without having
+# to edit this script. For the other platforms, or if the variable isn't set,
+# we use a hard-coded default, see below. (Even in that case you can set
+# nwjsver to have the cached binaries cleared beforehand.)
+
+if [ -n "$nwjsver" ]; then
+	rm -rf "../pd/nw/nw"
+fi
+
 if [ ! -d "../pd/nw/nw" ]; then
 	if [ `getconf LONG_BIT` -eq 32 ]; then
 		arch="ia32"
@@ -194,26 +205,28 @@ if [ ! -d "../pd/nw/nw" ]; then
 		ext="tar.gz"
 	fi
 
+	# Some of the nw.js versions are hard-coded for special support of
+	# legacy systems, or platforms for which there are no official
+	# binaries, so we have to use what we can get from 3rd parties. Some
+	# of these are quite old, so expect some gui regressions.
 	if [[ $osx_version == "10.8" ]]; then
 		# We need the lts version to be able to run on legacy systems.
 		nwjs_version="v0.14.7"
 	elif [ $os == "osx" ]; then
-		# ag: We need a recent version here to make the latest macOS
-		# versions work. 0.42.0 seems to be the last version which
-		# still renders at acceptable speeds while also working
-		# reasonably well on macOS. Tested with Big Sur (Intel) and
-		# Ventura (M1). NB: The Intel build also works on Apple
-		# Silicon using Rosetta 2.
-		nwjs_version="v0.42.0"
+		# ag: We need a fairly recent version here to make the build
+		# work on newer macOS versions. Note that at present only
+		# Intel builds are supported, but these should also work on
+		# Apple Silicon via Rosetta 2.
+		nwjs_version="v${nwjsver:-0.42.0}"
+	elif [ $arch == "arm" ]; then
+		# rpi-- only 0.27.6 is available atm
+		nwjs_version="v0.27.6"
+	elif [ $arch == "arm64" ]; then
+		# dito for rpi arm64-- 0.23.7 version
+		nwjs_version="v0.23.7"
 	else
-		# temporary kluge for rpi-- only 0.27.6 is available atm
-		if [ $arch == "arm" ]; then
-			nwjs_version="v0.27.6"
-		elif [ $arch == "arm64" ]; then
-			nwjs_version="v0.23.7"
-		else
-			nwjs_version="v0.42.0"
-		fi
+		# default for Linux and Windows
+		nwjs_version="v${nwjsver:-0.42.0}"
 	fi
 
 	nwjs="nwjs-sdk"
