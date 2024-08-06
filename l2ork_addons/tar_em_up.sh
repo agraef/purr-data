@@ -217,7 +217,7 @@ if [ ! -d "../pd/nw/nw" ]; then
 		# work on newer macOS versions. Note that at present only
 		# Intel builds are supported, but these should also work on
 		# Apple Silicon via Rosetta 2.
-		nwjs_version="v${nwjsver:-0.42.0}"
+		nwjs_version="v${nwjsver:-0.67.1}"
 	elif [ $arch == "arm" ]; then
 		# rpi-- only 0.27.6 is available atm
 		nwjs_version="v0.27.6"
@@ -226,7 +226,7 @@ if [ ! -d "../pd/nw/nw" ]; then
 		nwjs_version="v0.23.7"
 	else
 		# default for Linux and Windows
-		nwjs_version="v${nwjsver:-0.42.0}"
+		nwjs_version="v${nwjsver:-0.67.1}"
 	fi
 
 	nwjs="nwjs-sdk"

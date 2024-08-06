@@ -444,7 +444,7 @@ function nw_create_window(cid, type, width, height, xpos, ypos, attr_array) {
     gui.Window.open(my_file, {
         title: my_title,
         // ico@vt.edu: position in 0.46.2 overrides x and y below
-        position: pos,
+        //position: pos,
         focus: true,
         width: width,
         // We add 23 as a kludge to account for the menubar at the top of
