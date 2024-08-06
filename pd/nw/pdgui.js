@@ -5744,9 +5744,47 @@ function gui_pianoroll_erase_innards(cid, tag) {
     });
 }
 
-// pd-lua gfx helpers
+// pd-lua gfx helpers (ag@gmail.com)
 
-// draw a border rectangle
+// CAVEAT: This runs much slower in nw.js versions after 0.42.0. Devtools
+// performance measurements indicate that this is due to much larger scripting
+// overhead (i.e., JS execution), so there's not much we can do about it,
+// since these calls just need to be made in order to implement the API on the
+// pd-lua side.
+
+// I'm not sure why this is. It could be the NW2 update (seems likely, since
+// this happened during the nw.js 0.42 series), or dynamic JS execution just
+// got way slower in recent Chromium versions.
+
+// The TLDR is that you should use nw.js 0.42.0 if you can. Unfortunately,
+// that version crashes a lot on macOS, so we use a much later version there,
+// for which the performance hit on pd-lua graphics is substantial. If you run
+// into this, you'll have to dial down the frame rates of animations and/or
+// remove the number of graphical objects to make them work. Ordinary pd-lua
+// graphics should be fine if you don't redraw them too frequently.
+
+// create the graphics container (a gobj + a border rectangle)
+function gui_luagfx_new(cid, tag, xpos, ypos, width, height, is_toplevel) {
+    gui_gobj_new(cid, tag, "obj", xpos, ypos, is_toplevel, 0);
+    gui_luagfx_draw_border(cid, tag, width, height);
+}
+
+// clear the contents of the graphics container
+function gui_luagfx_clear(cid, tag, width, height) {
+    // get rid of all contents
+    gui(cid).get_gobj(tag, function(g) {
+        g.innerHTML = "";
+    });
+    // and redraw the border rectangle (might be a new size)
+    gui_luagfx_draw_border(cid, tag, width, height);
+}
+
+// this erases the gobj (completely removes it)
+function gui_luagfx_erase(cid, tag) {
+    gui_gobj_erase(cid, tag);
+}
+
+// draw a border rectangle in the usual style
 function gui_luagfx_draw_border(cid, tag, width, height) {
     gui(cid).get_gobj(tag)
     .append(function(frag) {
@@ -5761,13 +5799,15 @@ function gui_luagfx_draw_border(cid, tag, width, height) {
     });
 }
 
-// clear out everything inside the container
+// clear the contents, old version (we keep this around for backward
+// compatibility with pd-lua 2.1)
 function gui_luagfx_clear_contents(cid, tag) {
     gui(cid).get_gobj(tag, function(e) {
         e.innerHTML = "";
     });
 }
 
+// a bunch of drawing operations as required by the pd-lua graphics interface
 function gui_luagfx_fill_all(cid, tag, gfxtag, color, x1, y1, x2, y2) {
     gui(cid).get_gobj(tag)
     .append(function(frag) {
