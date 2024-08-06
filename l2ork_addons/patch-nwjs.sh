@@ -22,7 +22,7 @@
 # much the last nw.js version that is known to work properly with purr-data).
 
 # You can also invoke the script without the nw.js version argument, it will
-# then use the default version that our packages ship with (0.67.0 at the time
+# then use the default version that our packages ship with (0.55.0 at the time
 # of this writing). Or run ./patch-nwjs.sh -h to print some usage information.
 
 # The script also lets you edit the package.json file of the installed
@@ -68,12 +68,12 @@ case "$1" in
        echo "-h: print this message" 1>&2
        echo "-nw1: switch NW2 mode OFF (https://nwjs.io/blog/nw2-mode/)" 1>&2
        echo "-nw2: switch NW2 mode ON (this may slow down the application!)" 1>&2
-       echo "nwjs-version (x.y.z): nw.js version to be used (default: 0.67.0)" 1>&2
+       echo "nwjs-version (x.y.z): nw.js version to be used (default: 0.55.0)" 1>&2
        exit 0 ;;
 esac
 
 if [ -z "$nwopt" -a -z "$nwjs_version" ]; then
-    nwjs_version="0.67.0"
+    nwjs_version="0.55.0"
 fi
 
 os=`uname | tr '[:upper:]' '[:lower:]'`

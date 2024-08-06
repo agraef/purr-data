@@ -217,7 +217,10 @@ if [ ! -d "../pd/nw/nw" ]; then
 		# work on newer macOS versions. Note that at present only
 		# Intel builds are supported, but these should also work on
 		# Apple Silicon via Rosetta 2.
-		nwjs_version="v${nwjsver:-0.42.0}"
+		nwjs_version="v${nwjsver:-0.55.0}"
+	elif [[ $os == "win" || $os == "win64" ]]; then
+		# same version works on Windows, too
+		nwjs_version="v${nwjsver:-0.55.0}"
 	elif [ $arch == "arm" ]; then
 		# rpi-- only 0.27.6 is available atm
 		nwjs_version="v0.27.6"
@@ -225,8 +228,10 @@ if [ ! -d "../pd/nw/nw" ]; then
 		# dito for rpi arm64-- 0.23.7 version
 		nwjs_version="v0.23.7"
 	else
-		# default for Linux and Windows
-		nwjs_version="v${nwjsver:-0.42.0}"
+		# default for Linux -- same as Mac and Windows; note that
+		# anything past 0.55.0 suffers from the nwworkingdir bug which
+		# makes file dialogs open in the wrong locations
+		nwjs_version="v${nwjsver:-0.55.0}"
 	fi
 
 	nwjs="nwjs-sdk"
