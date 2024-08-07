@@ -3,7 +3,7 @@
 var pwd;
 var lib_dir;
 var help_path, browser_doc, browser_path, browser_init;
-var autocomplete, autocomplete_prefix, autocomplete_relevance;
+var autocomplete, autocomplete_prefix, autocomplete_relevance, autocomplete_tooltip_enabled;
 var pd_engine_id;
 
 //Generate object descriptions by title for the autocompletion menu; 
@@ -38,7 +38,7 @@ exports.defunkify_windows_path = defunkify_windows_path;
 
 function gui_set_browser_config(doc_flag, path_flag, init_flag,
                                 ac_flag, ac_prefix_flag, ac_relevance_flag,
-                                helppath) {
+                                ac_tooltip_flag, helppath) {
     // post("gui_set_browser_config: " + helppath.join(":"));
     browser_doc = doc_flag;
     browser_path = path_flag;
@@ -54,6 +54,7 @@ function gui_set_browser_config(doc_flag, path_flag, init_flag,
     autocomplete = ac_flag;
     autocomplete_prefix = ac_prefix_flag;
     autocomplete_relevance = ac_relevance_flag;
+    autocomplete_tooltip_enabled = ac_tooltip_flag;
     make_completion_index();
     // AG: Start building the keyword index for dialog_search.html. We do this
     // here so that we can be sure that lib_dir and help_path are known
@@ -618,12 +619,13 @@ function rebuild_index(clear_index = false)
 exports.rebuild_index = rebuild_index;
 
 // this is called from the gui tab of the prefs dialog
-function update_browser(doc_flag, path_flag, ac_flag, ac_prefix_flag, ac_relevance_flag)
+function update_browser(doc_flag, path_flag, ac_flag, ac_prefix_flag, ac_relevance_flag, ac_tooltip_flag)
 {
     var changed = ac_flag == 1 && autocomplete == 0;
     autocomplete = ac_flag;
     autocomplete_prefix = ac_prefix_flag;
     autocomplete_relevance = ac_relevance_flag;
+    autocomplete_tooltip_enabled = ac_tooltip_flag;
     doc_flag = doc_flag?1:0;
     path_flag = path_flag?1:0;
     if (browser_doc !== doc_flag) {
@@ -986,7 +988,10 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
     if (results.length > 0) {
         // for each result, make a paragraph child of autocomplete_dropdown
         let h = ac_dropdown().getAttribute("font_height");
-        let tooltip = create_tooltip(doc);
+        let tooltip;
+        if (autocomplete_tooltip_enabled) {
+            tooltip = create_tooltip(doc);
+        }
         results.forEach(function (f,i,a) {
             let y = h*(i+1);
             let r = doc.createElement("p");
@@ -1008,25 +1013,27 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
 
             r.innerHTML = content;
 
-            r.addEventListener("mouseover", function (e) {
-                let description = ac_tooltip_descriptions.get(f);
-                if (description) {
-                    tooltip.textContent = description;
-                    tooltip.style.top = `${e.clientY + 10}px`;
-                    tooltip.style.left = `${e.clientX}px`;
-                    tooltip.style.visibility = "visible";
-                    tooltip.style.opacity = "1";
-                } else {
+            if (autocomplete_tooltip_enabled) {
+                r.addEventListener("mouseover", function (e) {
+                    let description = ac_tooltip_descriptions.get(f);
+                    if (description) {
+                        tooltip.textContent = description;
+                        tooltip.style.top = `${e.clientY + 10}px`;
+                        tooltip.style.left = `${e.clientX}px`;
+                        tooltip.style.visibility = "visible";
+                        tooltip.style.opacity = "1";
+                    } else {
+                        tooltip.style.visibility = "hidden";
+                        tooltip.style.opacity = "0";
+                    }
+                });
+                
+                r.addEventListener("mouseout", function () {
                     tooltip.style.visibility = "hidden";
                     tooltip.style.opacity = "0";
-                }
-            });
+                });
+            }
             
-            r.addEventListener("mouseout", function () {
-                tooltip.style.visibility = "hidden";
-                tooltip.style.opacity = "0";
-            });
-
             ac_dropdown().appendChild(r);
         })
         ac_dropdown().setAttribute("selected_item", "-1");
@@ -7135,12 +7142,12 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
 
 function gui_gui_properties(dummy, name, show_grid, grid_size, save_zoom,
                             autocomplete, autocomplete_prefix, autocomplete_relevance,
-                            browser_doc, browser_path, browser_init,
+                            autocomplete_tooltip_enabled, browser_doc, browser_path, browser_init,
                             autopatch_yoffset) {
     if (dialogwin["prefs"] !== null) {
         dialogwin["prefs"].window.gui_prefs_callback(name, show_grid, grid_size,
             save_zoom, autocomplete, autocomplete_prefix, autocomplete_relevance,
-            browser_doc, browser_path, browser_init, autopatch_yoffset);
+            autocomplete_tooltip_enabled, browser_doc, browser_path, browser_init, autopatch_yoffset);
     }
 }
 
