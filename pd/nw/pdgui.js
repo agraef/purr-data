@@ -1837,17 +1837,16 @@ function gui_canvas_saveas(name, initfile, initdir, close_flag) {
     // latest nw.js on Linux at all (dialog comes up without a path under
     // which to save, "Save" doesn't work until you explicitly select one).
 
-    // Setting nwsaveas to initfile and nwworkingdir to initdir (as you'd
-    // expect) works for me on Linux, but it seems that specifying an absolute
-    // pathname for nwsaveas is necessary on Windows, and this also works on
-    // Linux. Cf. https://github.com/nwjs/nw.js/issues/3372 (which is still
-    // open at the time of this writing). -ag
+    // Older nw.js versions on some platforms required an absolute pathname to
+    // be specified here, but it appears that this is no longer needed, at
+    // least as of nw.js 0.42. We still keep this around for the older legacy
+    // nw.js versions being used on some platformas like the RPi. -ag
     input = build_file_dialog_string({
         style: "display: none;",
         type: "file",
         id: "saveDialog",
-        // using an absolute path here, see comment above
-        nwsaveas: check_nw_version("0.46") ? initfile : path.join(initdir, initfile),
+        // using an absolute path on older nw.js here, see comment above
+        nwsaveas: check_nw_version("0.42") ? initfile : path.join(initdir, initfile),
         nwworkingdir: initdir,
         accept: ".pd"
     });
