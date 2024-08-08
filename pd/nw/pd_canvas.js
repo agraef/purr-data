@@ -640,20 +640,6 @@ var canvas_events = (function() {
                         last_yanked = "";
                         caret_end();
                         break;
-                    case 36:
-                        if (evt.altKey) { // alt-home
-                            [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(document, textbox(), ac_dropdown(), 0, last_offset, last_results, 0);
-                            last_yanked = "";
-                            caret_end();
-                        }
-                        break;
-                    case 35:
-                        if (evt.altKey) { // alt-end
-                            [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(document, textbox(), ac_dropdown(), last_results.length-1, last_offset, last_results, 0);
-                            last_yanked = "";
-                            caret_end();
-                        }
-                        break;
                     case 27: // esc
                         pdgui.delete_autocomplete_dd(document, ac_dropdown());
                         last_completed = last_offset = -1;
