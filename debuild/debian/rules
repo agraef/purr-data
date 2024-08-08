@@ -4,7 +4,7 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-nwjsver = 0.28.3
+nwjsver = 0.67.1
 nwjspkg = nwjs-sdk-v$(nwjsver)-linux
 nwjsdir = nwjs-sdk-v$(nwjsver)-linux
 
