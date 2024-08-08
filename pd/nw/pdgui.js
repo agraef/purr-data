@@ -124,6 +124,7 @@ exports.nw_os_is_windows = nw_os_is_windows;
 
 // Keyword index (cf. dialog_search.html)
 
+var dns = require("dns");
 var fs = require("fs");
 var path = require("path");
 var dive = require("./dive.js"); // small module to recursively search dirs
@@ -2889,12 +2890,21 @@ function connect_as_client_to_secondary_instance(host, port, pd_engine_id) {
             next_command: ""
     };
     client.setNoDelay(true);
+    // We need to make sure that localhost is resolved to IPv4 here -- the
+    // default in later nw.js versions is to prefer IPv6 which causes issues
+    // on Linux and Windows.
+    dns.setDefaultResultOrder("ipv4first");
     client.connect(+port, host, function() {
         console.log("CONNECTED TO: " + host + ":" + port);
         secondary_pd_engines[pd_engine_id] = {
             socket: client
         }
         client.write("pd forward_files_from_secondary_instance;");
+    });
+    // Add some rudimentary error handling. At least we ought to tell the user
+    // what went wrong and where he can submit a bug report.
+    client.on("error", function (event) {
+	post("CONNECTION ERROR: "+event+"\nThis shouldn't happen. Please submit a bug report with the above error message at the Purr Data website.");
     });
     client.on("data", function(data) {
         // Terrible thing:
