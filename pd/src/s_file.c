@@ -44,7 +44,7 @@
 
 int sys_defeatrt, sys_autopatch_yoffset, sys_snaptogrid = 1, sys_gridsize = 10,
     sys_zoom, sys_autocomplete = 1, sys_autocomplete_prefix,
-    sys_autocomplete_relevance = 1, autocomplete_sys_tooltip_enabled = 1,
+    sys_autocomplete_relevance = 1, sys_autocomplete_tooltip_enabled = 1,
     sys_browser_doc = 1, sys_browser_path, sys_browser_init;
 t_symbol *sys_flags = &s_;
 void sys_doflags( void);
