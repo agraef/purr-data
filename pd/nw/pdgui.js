@@ -589,8 +589,8 @@ function rebuild_index()
     index = init_elasticlunr();
     index_started = index_done = false;
     try {
-        fs.unlink(expand_tilde(cache_name));
-        fs.unlink(expand_tilde(stamps_name));
+        fs.unlinkSync(expand_tilde(cache_name));
+        fs.unlinkSync(expand_tilde(stamps_name));
     } catch (err) {
         //console.log(err);
     }
