@@ -6,7 +6,7 @@ var help_path, browser_doc, browser_path, browser_init;
 var autocomplete, autocomplete_prefix, autocomplete_relevance, autocomplete_tooltip_enabled;
 var pd_engine_id;
 
-//Generate object descriptions by title for the autocompletion menu; 
+//Generate object descriptions by title for the autocompletion menu;
 //calculated dynamically during index construction
 var ac_tooltip_descriptions = new Map();
 
