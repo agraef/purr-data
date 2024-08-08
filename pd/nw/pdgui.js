@@ -1027,7 +1027,7 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
                         tooltip.style.opacity = "0";
                     }
                 });
-                
+
                 r.addEventListener("mouseout", function () {
                     tooltip.style.visibility = "hidden";
                     tooltip.style.opacity = "0";
