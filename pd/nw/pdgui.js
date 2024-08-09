@@ -1777,7 +1777,7 @@ function canvas_check_geometry(cid) {
     //var cnv_width = patchwin[cid].window.innerWidth,
     //    cnv_height = patchwin[cid].window.innerHeight;
     var cnv_width = win_w,
-        cnv_height = win_h - nw_menu_height;
+        cnv_height = win_h - nw_menu_offset;
     //post("canvas_check_geometry w=" + win_w + " h=" + win_h +
     //    " x=" + win_x + " y=" + win_y + " cnv_w=" + cnv_width + " cnv_h=" + cnv_height);
 
