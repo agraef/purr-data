@@ -5769,7 +5769,7 @@ function gui_luagfx_clear(cid, tag) {
 }
 
 // clear the contents, old version (we keep this around for backward
-// compatibility with pd-lua 2.1)
+// compatibility with pd-lua 0.12.1)
 function gui_luagfx_clear_contents(cid, tag) {
     gui(cid).get_gobj(tag, function(e) {
         e.innerHTML = "";
