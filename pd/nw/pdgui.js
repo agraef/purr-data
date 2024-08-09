@@ -5747,12 +5747,12 @@ function gui_pianoroll_erase_innards(cid, tag) {
 // pd-lua gfx helpers (ag@gmail.com)
 
 // create the graphics container (a gobj)
-function gui_luagfx_new(cid, tag, xpos, ypos, width, height, is_toplevel) {
+function gui_luagfx_new(cid, tag, xpos, ypos, is_toplevel) {
     gui_gobj_new(cid, tag, "obj", xpos, ypos, is_toplevel, 0);
 }
 
 // clear the contents of the graphics container
-function gui_luagfx_clear(cid, tag, width, height) {
+function gui_luagfx_clear(cid, tag) {
     // get rid of all contents
     gui(cid).get_gobj(tag, function(g) {
         g.innerHTML = "";
