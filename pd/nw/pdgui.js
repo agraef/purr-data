@@ -5746,10 +5746,9 @@ function gui_pianoroll_erase_innards(cid, tag) {
 
 // pd-lua gfx helpers (ag@gmail.com)
 
-// create the graphics container (a gobj + a border rectangle)
+// create the graphics container (a gobj)
 function gui_luagfx_new(cid, tag, xpos, ypos, width, height, is_toplevel) {
     gui_gobj_new(cid, tag, "obj", xpos, ypos, is_toplevel, 0);
-    gui_luagfx_draw_border(cid, tag, width, height);
 }
 
 // clear the contents of the graphics container
@@ -5757,28 +5756,6 @@ function gui_luagfx_clear(cid, tag, width, height) {
     // get rid of all contents
     gui(cid).get_gobj(tag, function(g) {
         g.innerHTML = "";
-    });
-    // and redraw the border rectangle (might be a new size)
-    gui_luagfx_draw_border(cid, tag, width, height);
-}
-
-// this erases the gobj (completely removes it)
-function gui_luagfx_erase(cid, tag) {
-    gui_gobj_erase(cid, tag);
-}
-
-// draw a border rectangle in the usual style
-function gui_luagfx_draw_border(cid, tag, width, height) {
-    gui(cid).get_gobj(tag)
-    .append(function(frag) {
-        // border rectangle
-        var r = create_item(cid, "rect", {
-            width: width,
-            height: height,
-            class: "border"
-        });
-        frag.appendChild(r);
-        return frag;
     });
 }
 
@@ -5790,19 +5767,26 @@ function gui_luagfx_clear_contents(cid, tag) {
     });
 }
 
+// this erases the gobj (completely removes it)
+function gui_luagfx_erase(cid, tag) {
+    gui_gobj_erase(cid, tag);
+}
+
 // a bunch of drawing operations as required by the pd-lua graphics interface
 function gui_luagfx_fill_all(cid, tag, gfxtag, color, x1, y1, x2, y2) {
     gui(cid).get_gobj(tag)
     .append(function(frag) {
-        var gx = create_item(cid, "rect", {
+        // border rectangle in the usual style with the given bg color
+        var r = create_item(cid, "rect", {
             x: x1,
             y: y1,
             width: x2 - x1,
             height: y2 - y1,
-            fill: color,
+            class: "border",
+            style: "fill: "+color+";",
             id: gfxtag
         });
-        frag.appendChild(gx);
+        frag.appendChild(r);
         return frag;
     });
 }
