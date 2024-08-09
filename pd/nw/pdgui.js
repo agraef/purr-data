@@ -5755,23 +5755,6 @@ function gui_pianoroll_erase_innards(cid, tag) {
 
 // pd-lua gfx helpers (ag@gmail.com)
 
-// CAVEAT: This runs much slower in nw.js versions after 0.42.0. Devtools
-// performance measurements indicate that this is due to much larger scripting
-// overhead (i.e., JS execution), so there's not much we can do about it,
-// since these calls just need to be made in order to implement the API on the
-// pd-lua side.
-
-// I'm not sure why this is. It could be the NW2 update (seems likely, since
-// this happened during the nw.js 0.42 series), or dynamic JS execution just
-// got way slower in recent Chromium versions.
-
-// The TLDR is that you should use nw.js 0.42.0 if you can. Unfortunately,
-// that version crashes a lot on macOS, so we use a much later version there,
-// for which the performance hit on pd-lua graphics is substantial. If you run
-// into this, you'll have to dial down the frame rates of animations and/or
-// remove the number of graphical objects to make them work. Ordinary pd-lua
-// graphics should be fine if you don't redraw them too frequently.
-
 // create the graphics container (a gobj + a border rectangle)
 function gui_luagfx_new(cid, tag, xpos, ypos, width, height, is_toplevel) {
     gui_gobj_new(cid, tag, "obj", xpos, ypos, is_toplevel, 0);
