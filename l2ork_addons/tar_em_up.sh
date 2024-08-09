@@ -218,6 +218,9 @@ if [ ! -d "../pd/nw/nw" ]; then
 		# Intel builds are supported, but these should also work on
 		# Apple Silicon via Rosetta 2.
 		nwjs_version="v${nwjsver:-0.67.1}"
+	elif [ $os == "win" || $os == "win64" ]; then
+		# same version works on Windows, too
+		nwjs_version="v${nwjsver:-0.67.1}"
 	elif [ $arch == "arm" ]; then
 		# rpi-- only 0.27.6 is available atm
 		nwjs_version="v0.27.6"
@@ -225,8 +228,9 @@ if [ ! -d "../pd/nw/nw" ]; then
 		# dito for rpi arm64-- 0.23.7 version
 		nwjs_version="v0.23.7"
 	else
-		# default for Linux and Windows
-		nwjs_version="v${nwjsver:-0.67.1}"
+		# default for Linux -- we use 0.42.0 there because of a
+		# regression with nwworkingdir in later versions
+		nwjs_version="v${nwjsver:-0.42.0}"
 	fi
 
 	nwjs="nwjs-sdk"

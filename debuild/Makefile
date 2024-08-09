@@ -50,7 +50,7 @@ debdist = purr-data-$(debversion)
 # nw.js sdk
 # NOTE: arm packages need some special-casing, since they are released
 # separately, and the version numbers do not always match up.
-nwjsver = 0.67.1
+nwjsver = 0.42.0
 nwjspkg = nwjs-sdk-v$(nwjsver)-linux
 nwjsver_arm = 0.27.6
 nwjspkg_arm = nwjs-sdk-v$(nwjsver_arm)-linux
