@@ -218,7 +218,7 @@ if [ ! -d "../pd/nw/nw" ]; then
 		# Intel builds are supported, but these should also work on
 		# Apple Silicon via Rosetta 2.
 		nwjs_version="v${nwjsver:-0.67.1}"
-	elif [ $os == "win" || $os == "win64" ]; then
+	elif [[ $os == "win" || $os == "win64" ]]; then
 		# same version works on Windows, too
 		nwjs_version="v${nwjsver:-0.67.1}"
 	elif [ $arch == "arm" ]; then
