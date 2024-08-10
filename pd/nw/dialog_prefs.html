@@ -463,6 +463,11 @@ select {
               <input type="checkbox" id="autocomplete_tooltip_enabled" name="autocomplete_tooltip_enabled">
               <span data-i18n="prefs.gui.autocomplete.autocomplete_tooltip_enabled"></span>
             </label>
+            <br/>
+            <label data-i18n="[title]prefs.gui.autocomplete.autocomplete_fuzzy_search_tt">
+              <input type="checkbox" id="autocomplete_fuzzy_search" name="autocomplete_fuzzy_search">
+              <span data-i18n="prefs.gui.autocomplete.autocomplete_fuzzy_search"></span>
+            </label>
             <br/><br/>
             <span data-i18n="prefs.gui.browser.browser_title"></span>
             <br/>
@@ -830,6 +835,7 @@ function apply(save_prefs) {
         get_bool_elem("autocomplete_prefix"),
         get_bool_elem("autocomplete_relevance"),
         get_bool_elem("autocomplete_tooltip_enabled"),
+        get_bool_elem("autocomplete_fuzzy_search"),
         get_bool_elem("browser_doc"),
         get_bool_elem("browser_path"),
         get_bool_elem("browser_init"),
@@ -844,6 +850,7 @@ function apply(save_prefs) {
         get_bool_elem("autocomplete_prefix"),
         get_bool_elem("autocomplete_relevance"),
         get_bool_elem("autocomplete_tooltip_enabled"),
+        get_bool_elem("autocomplete_fuzzy_search"),
     );
     // Update the grid on all open windows.
     pdgui.update_grid(get_bool_elem("show_grid"),
@@ -1104,7 +1111,7 @@ function autopatch_yoffset_toggle(checked) {
 
 function gui_prefs_callback(name, show_grid, grid_size, save_zoom,
     autocomplete, autocomplete_prefix, autocomplete_relevance,
-    autocomplete_tooltip_enabled, browser_doc, browser_path, browser_init, autopatch_yoffset) {
+    autocomplete_tooltip_enabled, autocomplete_fuzzy_search, browser_doc, browser_path, browser_init, autopatch_yoffset) {
     var s = document.getElementById("gui_preset");
 
     // ag: scan the css subdir for user-defined styles
@@ -1141,6 +1148,7 @@ function gui_prefs_callback(name, show_grid, grid_size, save_zoom,
     document.getElementById("autocomplete_prefix").checked = !!autocomplete_prefix;
     document.getElementById("autocomplete_relevance").checked = !!autocomplete_relevance;
     document.getElementById("autocomplete_tooltip_enabled").checked = !!autocomplete_tooltip_enabled;
+    document.getElementById("autocomplete_fuzzy_search").checked = !!autocomplete_fuzzy_search;
     document.getElementById("browser_doc").checked = !!browser_doc;
     document.getElementById("browser_path").checked = !!browser_path;
     document.getElementById("browser_init").checked = !!browser_init;
