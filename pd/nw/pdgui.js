@@ -26,11 +26,20 @@ function defunkify_windows_path(s) {
     return ret;
 }
 
-exports.set_pd_engine_id = function (id) {
-    pd_engine_id = id;
+function funkify_windows_path(s) {
+    var ret = s;
+    if (process.platform === "win32") {
+        ret = ret.replace(/\//g, "\\");
+    }
+    return ret;
 }
 
 exports.defunkify_windows_path = defunkify_windows_path;
+exports.funkify_windows_path = funkify_windows_path;
+
+exports.set_pd_engine_id = function (id) {
+    pd_engine_id = id;
+}
 
 function gui_set_browser_config(doc_flag, path_flag, init_flag,
                                 ac_flag, ac_prefix_flag, ac_relevance_flag,
