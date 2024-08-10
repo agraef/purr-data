@@ -448,7 +448,9 @@
         "autocomplete_relevance": "Trier les complétions par pertinence",
         "autocomplete_relevance_tt": "Affiche les complétions les plus pertinentes en premier (basé sur la fréquence d'utilisation)",
         "autocomplete_tooltip_enabled": "Affiche les info-bulles pour les objets",
-        "autocomplete_tooltip_enabled_tt": "Affiche les info-bulles des objets lorsque vous les survolez"
+        "autocomplete_tooltip_enabled_tt": "Affiche les info-bulles des objets lorsque vous les survolez",
+        "autocomplete_fuzzy_search": "Correspondance floue pour les autocomplétions",
+        "autocomplete_fuzzy_search_tt": "Afficher les complétions approximatifs à l'aide de la correspondance floue"
       },
       "browser": {
         "browser_title": "Paramètres du navigateur d'Aide (AVERTISSEMENT: les modifier peut affecter les temps de démarrage!)",

@@ -450,7 +450,7 @@
         "autocomplete_tooltip_enabled": "show tooltips for objects",
         "autocomplete_tooltip_enabled_tt": "Show tooltips for objects when hovering over them",
         "autocomplete_fuzzy_search": "fuzzy matching for autocompletions",
-        "autocomplete_fuzzy_search_tt": "Show approximate results using fuzzy matching for autocompletions"
+        "autocomplete_fuzzy_search_tt": "Show approximate completions using fuzzy matching"
       },
       "browser": {
         "browser_title": "Help browser settings (WARNING: changing these may affect startup times!)",

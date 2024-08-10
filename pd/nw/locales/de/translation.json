@@ -448,7 +448,9 @@
         "autocomplete_relevance": "Sortiere Vervollständigungen nach Relevanz",
         "autocomplete_relevance_tt": "Zeigt die relevantesten Vervollständigungen zuerst (basierend auf der Nutzungshäufigkeit)",
         "autocomplete_tooltip_enabled": "Tooltips für Objekte anzeigen",
-        "autocomplete_tooltip_enabled_tt": "Zeigt Tooltips für Objekte an, wenn Sie mit der Maus darüber fahren"
+        "autocomplete_tooltip_enabled_tt": "Zeigt Tooltips für Objekte an, wenn Sie mit der Maus darüber fahren",
+        "autocomplete_fuzzy_search": "Fuzzy-Matching für Autovervollständigungen",
+        "autocomplete_fuzzy_search_tt": "Zeigt ungefähre Vervollständigungen mithilfe von Fuzzy-Matching an"
       },
       "browser": {
         "browser_title": "Hilfe-Browser-Einstellungen (WARNUNG: Änderungen können Startup-Zeiten beeinflussen!)",
