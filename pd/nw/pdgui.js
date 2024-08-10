@@ -3,7 +3,7 @@
 var pwd;
 var lib_dir;
 var help_path, browser_doc, browser_path, browser_init;
-var autocomplete, autocomplete_prefix, autocomplete_relevance, autocomplete_tooltip_enabled;
+var autocomplete, autocomplete_prefix, autocomplete_relevance, autocomplete_tooltip_enabled, autocomplete_fuzzy_search;
 var pd_engine_id;
 
 //Generate object descriptions by title for the autocompletion menu;
@@ -38,7 +38,7 @@ exports.defunkify_windows_path = defunkify_windows_path;
 
 function gui_set_browser_config(doc_flag, path_flag, init_flag,
                                 ac_flag, ac_prefix_flag, ac_relevance_flag,
-                                ac_tooltip_flag, helppath) {
+                                ac_tooltip_flag, ac_fuzzy_search_flag, helppath) {
     // post("gui_set_browser_config: " + helppath.join(":"));
     browser_doc = doc_flag;
     browser_path = path_flag;
@@ -55,6 +55,7 @@ function gui_set_browser_config(doc_flag, path_flag, init_flag,
     autocomplete_prefix = ac_prefix_flag;
     autocomplete_relevance = ac_relevance_flag;
     autocomplete_tooltip_enabled = ac_tooltip_flag;
+    autocomplete_fuzzy_search = ac_fuzzy_search_flag;
     make_completion_index();
     // AG: Start building the keyword index for dialog_search.html. We do this
     // here so that we can be sure that lib_dir and help_path are known
@@ -619,13 +620,14 @@ function rebuild_index(clear_index = false)
 exports.rebuild_index = rebuild_index;
 
 // this is called from the gui tab of the prefs dialog
-function update_browser(doc_flag, path_flag, ac_flag, ac_prefix_flag, ac_relevance_flag, ac_tooltip_flag)
+function update_browser(doc_flag, path_flag, ac_flag, ac_prefix_flag, ac_relevance_flag, ac_tooltip_flag, ac_fuzzy_search_flag)
 {
     var changed = ac_flag == 1 && autocomplete == 0;
     autocomplete = ac_flag;
     autocomplete_prefix = ac_prefix_flag;
     autocomplete_relevance = ac_relevance_flag;
     autocomplete_tooltip_enabled = ac_tooltip_flag;
+    autocomplete_fuzzy_search = ac_fuzzy_search_flag;
     doc_flag = doc_flag?1:0;
     path_flag = path_flag?1:0;
     if (browser_doc !== doc_flag) {
@@ -650,7 +652,9 @@ let autocomplete_index_options = {
     useExtendedSearch : true,
     includeMatches : true,
     includeScore : true,
-    keys : ["title", "args.text"]
+    isCaseSensitive : false,
+    keys : ["title", "args.text"],
+    threshold : 0.3
 };
 let args_completion_field = {keys : ["args.text"]};
 let objs_completion_field = {keys : ["title"]};
@@ -677,13 +681,24 @@ function obj_exact_match(title) {
 
 function search_obj(title) {
     if (!autocomplete) return [];
+    let exact_match_results = [];
     // GB approaches: search objects that *contains* search _word_ (1st line) or patches that *begins with* _word_ (2nd line)
     // either should skip the result 'message' and 'text' thus messages and comments are not created the same way objects are
     if (!autocomplete_prefix) {
-        return completion_index.search({$and: [{"title": "'\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
+        exact_match_results = completion_index.search({$and: [{"title": "'\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
     } else {
-        return completion_index.search({$and: [{"title": "^\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
+        exact_match_results = completion_index.search({$and: [{"title": "^\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
     }
+
+    if (exact_match_results.length > 0) {
+        return exact_match_results;
+    }
+
+    if(autocomplete_fuzzy_search){
+        return completion_index.search({$and: [{ "title": title },{ "title": "!\"message\"" },{ "title": "!\"text\"" }]});
+    }
+
+    return [];
 }
 
 function arg_exact_match(title, arg) {
@@ -693,26 +708,48 @@ function arg_exact_match(title, arg) {
 function search_arg(title, arg) {
     if (!autocomplete) return [];
     // for the arguments, we are only interested on the obj that match exactly the 'title', so we return only the args from this obj
-    let results = completion_index.search({$and: [{"title": "=\"" + title + "\""}, {"args.text": "^\"" + arg + "\""}]});
-    if (results.length > 0) {
-        let args = results[0].item.args;
+    let exact_match_results = completion_index.search({$and: [{ "title": "=\"" + title + "\"" },{ "args.text": "^\"" + arg + "\"" }]});
+    if (exact_match_results.length > 0) {
+        let args = exact_match_results[0].item.args;
         // AG: Matched args are in matches.slice(1,), extract them.
         // This code originally just returned matches itself, which has the
         // text of all matched arguments, but not the occurrence data, and we
         // need the latter to sort based on relevance.
-        results = results[0].matches.slice(1,).map(a => args[a.refIndex]);
+        return exact_match_results[0].matches.slice(1).map(a => args[a.refIndex]);
     }
-    return results;
+
+    if(autocomplete_fuzzy_search){
+        let fuzzy_results = completion_index.search({$and: [{ "title": title },{ "args.text": arg }]});
+
+        if (fuzzy_results.length > 0) {
+            let args = fuzzy_results[0].item.args;
+            return fuzzy_results[0].matches.slice(1).map(a => args[a.refIndex]);
+        }
+    }
+    
+    return [];
 }
 
 function search_args(title) {
     // like above, but look up *all* arg completions for a given object
     if (!autocomplete) return [];
     // for the arguments, we are only interested on the obj that match exactly the 'title', so we return only the args from this obj
-    let results = obj_exact_match(title);
+    let exact_match_results = obj_exact_match(title);
     // item.args is live data from the fuse, make sure to take a shallow copy
     // with slice() which can be safely sorted in-place later
-    return (results.length > 0) ? results[0].item.args.slice() : [];
+    if (exact_match_results.length > 0) {
+        let args = exact_match_results[0].item.args.slice();
+        return args;
+    }
+
+    if(autocomplete_fuzzy_search){
+        let fuzzy_results = completion_index.search({$and: [{ "title": title },{ "title": "!\"message\"" },{ "title": "!\"text\"" }]});
+        if (fuzzy_results.length > 0) {
+            return fuzzy_results[0].item.args.slice();
+        }
+    }
+
+    return [];
 }
 
 function index_obj_completion(obj_or_msg, obj_or_msg_text) {
@@ -7142,12 +7179,12 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
 
 function gui_gui_properties(dummy, name, show_grid, grid_size, save_zoom,
                             autocomplete, autocomplete_prefix, autocomplete_relevance,
-                            autocomplete_tooltip_enabled, browser_doc, browser_path, browser_init,
+                            autocomplete_tooltip_enabled, autocomplete_fuzzy_search, browser_doc, browser_path, browser_init,
                             autopatch_yoffset) {
     if (dialogwin["prefs"] !== null) {
         dialogwin["prefs"].window.gui_prefs_callback(name, show_grid, grid_size,
             save_zoom, autocomplete, autocomplete_prefix, autocomplete_relevance,
-            autocomplete_tooltip_enabled, browser_doc, browser_path, browser_init, autopatch_yoffset);
+            autocomplete_tooltip_enabled, autocomplete_fuzzy_search, browser_doc, browser_path, browser_init, autopatch_yoffset);
     }
 }
 
