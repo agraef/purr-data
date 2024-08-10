@@ -327,10 +327,10 @@
         "viewbox_offsets": "Anzeigebox-Offsets",
         "arrays": "Feld-Optionen"
       },
-      "no_scroll": "Rollbalken verbergen (experimentell)",
-      "no_scroll_tt": "Rollbalken verbergen (experimentell)",
-      "no_menu": "Fenstermenü verbergen (experimentell)",
-      "no_menu_tt": "Fenstermenü verbergen (experimentell)",
+      "no_scroll": "Rollbalken verbergen",
+      "no_scroll_tt": "Rollbalken verbergen",
+      "no_menu": "Fenstermenü verbergen",
+      "no_menu_tt": "Fenstermenü verbergen",
       "gop": "Anzeige im übergeordneten Patch",
       "gop_tt": "Zeige den Inhalt dieses Patches in einem Rechteck im übergeordneten Patch",
       "hide_name": "Namen und Argumente verbergen",
@@ -432,7 +432,7 @@
         "footgun": "Fusspistole"
       },
       "grid": {
-        "show_grid": "Am Gitter ausrichten (experimentell)",
+        "show_grid": "Am Gitter ausrichten",
         "show_grid_tt": "Ausrichten am Gitter im Edit-Modus"
       },
       "zoom": {
@@ -441,7 +441,7 @@
       },
       "autocomplete": {
         "autocomplete_title": "Autovervollständigungs-Einstellungen",
-        "autocomplete": "Autovervollständigung von Objekt-Namen und Argumenten (experimentell)",
+        "autocomplete": "Autovervollständigung von Objekt-Namen und Argumenten",
         "autocomplete_tt": "Schlägt bei der Eingabe Vervollständigungen von Objekt-Namen und Argumenten vor",
         "autocomplete_prefix": "Vervollständigung per Objektnamens-Präfix",
         "autocomplete_prefix_tt": "Vervollständigung nur per Objektnamens-Präfix (statt Übereinstimmung irgendwo im Objektnamen)",

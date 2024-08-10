@@ -328,8 +328,8 @@
         "arrays": "Options du tableau"
       },
       "no_scroll":    "Cacher ascenseurs V/H (xptal)",
-      "no_scroll_tt": "Masquer les barres de défilement de la fenêtre (expérimental)",
-      "no_menu":    "Masquer le menu (expérimental)",
+      "no_scroll_tt": "Masquer les barres de défilement de la fenêtre",
+      "no_menu":    "Masquer le menu",
       "no_menu_tt": "Masquer le menu de la fenêtre",
       "gop":    "Graphique sur le Parent (GOP)",
       "gop_tt": "Afficher le contenu intérieur de ce canevas dans un rectangle sur le canevas conteneur",
@@ -432,7 +432,7 @@
         "footgun":   "Footgun"
       },
       "grid": {
-        "show_grid": "Aligner sur la grille (expérimental)",
+        "show_grid": "Aligner sur la grille",
         "show_grid_tt": "Accrocher à la grille en mode Édition"
       },
       "zoom": {
@@ -441,7 +441,7 @@
       },
       "autocomplete": {
         "autocomplete_title": "Paramètres d'autocomplétion",
-        "autocomplete": "autocompléter les noms et arguments des objets (expérimental)",
+        "autocomplete": "autocompléter les noms et arguments des objets",
         "autocomplete_tt": "Offre complétion pour les noms et arguments des objets au fur et à mesure de la saisie",
         "autocomplete_prefix": "complétion par le préfixe du nom de l'objet",
         "autocomplete_prefix_tt": "Complétion uniquement par le préfixe du nom de l'objet (ignorer les correspondances au milieu du nom des objets)",
