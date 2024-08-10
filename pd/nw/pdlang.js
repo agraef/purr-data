@@ -2,9 +2,13 @@
 
 var lang;
 
+// In newer nw.js versions navigator.language is something like "de-DE" rather
+// than just "de".
+let lang_dir = navigator.language.split("-")[0];
+
 try {
     // try the locale given by navigator.language
-    lang = require("./locales/" + navigator.language + "/translation.json");
+    lang = require("./locales/" + lang_dir + "/translation.json");
 } catch (e) {
     // if that fails then fall back to the default locale "en"
     lang = require("./locales/en/translation.json");
