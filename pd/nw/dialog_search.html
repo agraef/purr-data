@@ -451,7 +451,7 @@ function file_browser_click() {
     // open the file browser on whatever directory we visited last, or the
     // doc directory by default
     document.getElementById("file_browser").setAttribute("nwworkingdir",
-        current_dir);
+        pdgui.funkify_windows_path(current_dir));
     document.getElementById("file_browser").click();
 }
 
