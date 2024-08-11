@@ -88,16 +88,6 @@ function nw_window_focus_callback() {
     }
 }
 
-// This should be merged with the same function name in pd_canvas.js,
-// except that we're not saving the Pd Window zoomlevel anywhere
-function nw_window_zoom(delta) {
-    var z = gui.Window.get().zoomLevel;
-    z += delta;
-    if (z < 8 && z > -8) {
-        gui.Window.get().zoomLevel = z;
-    }
-}
-
 function connect() {
     var gui_path, file_path;
     if (have_args() && gui.App.argv.length > 1) {
@@ -338,9 +328,9 @@ function add_events() {
     document.addEventListener("wheel", function(evt) {
         if (pdgui.cmd_or_ctrl_key(evt)) {
             if (evt.deltaY < 0) {
-                nw_window_zoom(+1);
+                pdgui.nw_window_zoom("pd", +1);
             } else if (evt.deltaY > 0) {
-                nw_window_zoom(-1);
+                pdgui.nw_window_zoom("pd", -1);
             }
         }
     }, false);
@@ -660,12 +650,12 @@ function nw_create_pd_window_menus(gui, w) {
     // View menu
     minit(m.view.zoomin, {
         click: function () {
-            nw_window_zoom(+1);
+            pdgui.nw_window_zoom("pd", +1);
         }
     });
     minit(m.view.zoomout, {
         click: function () {
-            nw_window_zoom(-1);
+            pdgui.nw_window_zoom("pd", -1);
         }
     });
     minit(m.view.zoomreset, {

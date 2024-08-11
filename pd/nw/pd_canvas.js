@@ -26,16 +26,6 @@ function nw_window_blur_callback(name) {
     }
 }
 
-function nw_window_zoom(name, delta) {
-    var z = gui.Window.get().zoomLevel;
-    z += delta;
-    if (z < 8 && z > -8) {
-        gui.Window.get().zoomLevel = z;
-        pdgui.pdsend(name, "zoom", z);
-        pdgui.gui_canvas_get_scroll(name);
-    }
-}
-
 var canvas_events = (function() {
     var name,
         state,
@@ -1431,7 +1421,7 @@ var canvas_events = (function() {
                     });
                     if (pdgui.cmd_or_ctrl_key(evt)) {
                         // scroll up for zoom-in, down for zoom-out
-                        nw_window_zoom(name, -d.deltaY);
+                        pdgui.nw_window_zoom(name, -d.deltaY);
                     }
                     // Send a message on to Pd for the [mousewheel] legacy
                     // object (in the future we can refcount to prevent
@@ -2051,13 +2041,13 @@ function nw_create_patch_window_menus(gui, w, name) {
     minit(m.view.zoomin, {
         enabled: true,
         click: function () {
-            nw_window_zoom(name, +1);
+            pdgui.nw_window_zoom(name, +1);
         }
     });
     minit(m.view.zoomout, {
         enabled: true,
         click: function () {
-            nw_window_zoom(name, -1);
+            pdgui.nw_window_zoom(name, -1);
         }
     });
     minit(m.view.optimalzoom, {

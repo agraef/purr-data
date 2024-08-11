@@ -1285,6 +1285,8 @@ function nw_window_zoom(name, delta) {
     }
 }
 
+exports.nw_window_zoom = nw_window_zoom;
+
 (function () {
 
     var last_keydown = "";
