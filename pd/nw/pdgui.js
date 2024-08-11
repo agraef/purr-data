@@ -1272,6 +1272,19 @@ function cmd_or_ctrl_key(evt) {
 
 exports.cmd_or_ctrl_key = cmd_or_ctrl_key;
 
+function nw_window_zoom(name, delta) {
+    var w = name=="pd"?pd_window.nw.Window.get():patchwin[name];
+    var z = w.zoomLevel;
+    z += delta;
+    if (z < 8 && z > -8) {
+        w.zoomLevel = z;
+        if (name != "pd") {
+            pdsend(name, "zoom", z);
+            gui_canvas_get_scroll(name);
+        }
+    }
+}
+
 (function () {
 
     var last_keydown = "";
@@ -1378,9 +1391,27 @@ exports.cmd_or_ctrl_key = cmd_or_ctrl_key;
             case 17: hack = "Control"; break;
             case 18: hack = "Alt"; break;
 
-            // keycode 55 = 7 key (shifted = '/' on German keyboards)
+            /* Work-arounds for French azerty and German qwertz keyboards. The
+               problematic bindings are Ctrl - on the French and Shift+Ctrl /
+               on the German keyboard which aren't translated correctly by
+               nw.js, and thus won't work as-is. Instead of fiddling around
+               with pd_shortcuts.js, we just handle these right here.
+               NOTE: There's no way to detect the actual keyboard layout in
+               nw.js, so these are enabled all the time. This means that the
+               unshifted Ctrl+6 and the shifted Ctrl+7 keys aren't available
+               as menu shortcuts. If this bothers you then you can just
+               comment out the two case instructions below. */
+
+            // keycode 54 = 6 key ('-' a.k.a. zoomin on azerty keyboard)
+            case 54:
+                if (cmd_or_ctrl_key(evt) && !evt.shiftKey) {
+                    evt.preventDefault();
+                    nw_window_zoom(cid, -1);
+                }
+                break;
+            // keycode 55 = shifted 7 key ('/' a.k.a. dsp on on qwertz keyboard)
             case 55:
-                if (cmd_or_ctrl_key(evt)) {
+                if (cmd_or_ctrl_key(evt) && evt.shiftKey) {
                     evt.preventDefault();
                     pdsend("pd dsp 1");
                 }
