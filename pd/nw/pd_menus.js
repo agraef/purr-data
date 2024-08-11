@@ -537,6 +537,9 @@ function create_menu(gui, type) {
         //putMenu.append(m.put.graph = new gui.MenuItem());
         put_menu.append(m.put.array = new gui.MenuItem({
             label: l("menu.array"),
+            key: shortcuts.menu.array.key,
+            modifiers: shortcuts.menu.array.modifiers,
+            label: l("menu.array"),
             tooltip: l("menu.array_tt")
         }));
     }
