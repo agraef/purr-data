@@ -766,8 +766,6 @@ function add_events() {
 		    evt.target === button_elem2) &&
                    evt.keyCode === 10 || evt.keyCode === 13) {
         } else if (is_special_key(evt.keyCode)) {
-        } else if (evt.target !== input_elem) {
-            input_elem.focus();
         } else if (bookmark_shortcut(evt)) {
 	    // We assume here that current_dir is set and points to the
 	    // directory to be bookmarked.
@@ -779,6 +777,8 @@ function add_events() {
                 evt.stopPropagation();
                 pdgui.remove_dialogwin("search");
                 nw.Window.get().close(true);
+        } else if (evt.target !== input_elem) {
+            input_elem.focus();
         } else {
             // If we want to trigger a search on each keystroke we can do it
             // here.
