@@ -1296,6 +1296,7 @@ exports.nw_window_zoom = nw_window_zoom;
         var key_code = evt.keyCode,
             hack = null, // hack for non-printable ascii codes
             cmd_or_ctrl
+        //post("keydown: "+evt.key+" ("+evt.keyCode+")")
         switch(key_code) {
             case 8: // backspace
             case 9:
@@ -1395,15 +1396,23 @@ exports.nw_window_zoom = nw_window_zoom;
 
             /* Work-arounds for French azerty and German qwertz keyboards. The
                problematic bindings are Ctrl - on the French and Shift+Ctrl /
-               on the German keyboard which aren't translated correctly by
+               on the German keyboard, as well as Cmd + (keycode 187) on the
+               German MacBook keyboard, which aren't translated correctly by
                nw.js, and thus won't work as-is. Instead of fiddling around
                with pd_shortcuts.js, we just handle these right here.
                NOTE: There's no way to detect the actual keyboard layout in
                nw.js, so these are enabled all the time. This means that the
                unshifted Ctrl+6 and the shifted Ctrl+7 keys aren't available
                as menu shortcuts. If this bothers you then you can just
-               comment out the two case instructions below. */
+               comment out the code below. */
 
+            // keycode 187 = + key on the German Mac keyboard
+            case 187:
+                if (cmd_or_ctrl_key(evt) && !evt.shiftKey) {
+                    evt.preventDefault();
+                    nw_window_zoom(cid, +1);
+                }
+                break;
             // keycode 54 = 6 key ('-' a.k.a. zoomin on azerty keyboard)
             case 54:
                 if (cmd_or_ctrl_key(evt) && !evt.shiftKey) {
