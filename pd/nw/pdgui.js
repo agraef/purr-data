@@ -3478,10 +3478,10 @@ function gui_message_redraw_border(cid, tag, width, height) {
     });
 }
 
-function atom_border_points(width, height, is_dropdown) {
-    // For atom, angle the top-right corner.
-    // For dropdown, angle both top-right and bottom-right corners
-    var bottom_right_x = is_dropdown ? width - 4 : width;
+function atom_border_points(width, height, type) {
+    // For atom other than listbox, angle the top-right corner.
+    // For dropdown and listbox, angle both top-right and bottom-right corners
+    var bottom_right_x = type != 0 ? width - 4 : width;
     return  [0, 0,
             width - 4, 0,
             width, 4,
@@ -3513,7 +3513,7 @@ function gui_atom_draw_border(cid, tag, type, width, height) {
         });
            
         frag.appendChild(polygon);
-        if (type !== 0) { // dropdown
+        if (type > 0) { // dropdown
             // 1 = output index
             // 2 = output value
             // Let's make the two visually distinct so that the user can still
