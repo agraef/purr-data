@@ -2128,6 +2128,14 @@ function nw_create_patch_window_menus(gui, w, name) {
             pdgui.pdsend(name, "text 0");
         }
     });
+    minit(m.put.listbox, {
+        enabled: true,
+        click: function() {
+            update_live_box();
+            pdgui.pdsend(name, "dirty 1");
+            pdgui.pdsend(name, "listbox 0");
+        }
+    });
     minit(m.put.dropdown, {
         enabled: true,
         click: function() {

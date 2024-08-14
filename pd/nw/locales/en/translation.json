@@ -201,6 +201,8 @@
     "symbol_tt": "Add a box to type and display a symbol on the canvas",
     "comment": "Comment",
     "comment_tt": "Write a comment on the canvas",
+    "listbox": "Listbox",
+    "listbox_tt": "Add a box to type and display a listbox on the canvas",
     "dropdown": "Dropdown",
     "dropdown_tt": "Dropdown menu",
     "bang": "Bang",

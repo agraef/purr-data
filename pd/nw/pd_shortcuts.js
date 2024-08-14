@@ -49,6 +49,7 @@ exports.menu = {
   "number": { key: "3", modifiers: cmd_or_ctrl },
   "symbol": { key: "4", modifiers: cmd_or_ctrl },
   "comment": { key: "5", modifiers: cmd_or_ctrl },
+  "listbox": { key: "4", modifiers: cmd_or_ctrl_shift },
   "dropdown": { key: "6", modifiers: cmd_or_ctrl_shift },
   "bang": { key: "b", modifiers: cmd_or_ctrl_shift },
   "toggle": { key: "t", modifiers: cmd_or_ctrl_shift },
