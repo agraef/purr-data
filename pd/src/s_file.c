@@ -195,25 +195,18 @@ static int sys_getpreference(const char *key, char *value, int size)
 {
     HKEY hkey;
     DWORD bigsize = size;
-    LONG err = RegOpenKeyEx(HKEY_CURRENT_USER,
-        "Software\\Purr-Data", 0,  KEY_QUERY_VALUE, &hkey);
-    if (err != ERROR_SUCCESS)
-    {
-        err = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-            "Software\\Purr-Data", 0,  KEY_QUERY_VALUE, &hkey);
-        if (err != ERROR_SUCCESS)
-        {
-            return (0);
-	}
-    }
-    err = RegQueryValueEx(hkey, key, 0, 0, value, &bigsize);
-    if (err != ERROR_SUCCESS)
-    {
+    int rc = (RegOpenKeyEx(HKEY_CURRENT_USER,
+    "Software\\Purr-Data", 0,  KEY_QUERY_VALUE, &hkey) == ERROR_SUCCESS ||
+        // newer versions of Windows apparently have the registry key here
+        RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+        "Software\\WOW6432Node\\Purr-Data", 0,  KEY_QUERY_VALUE, &hkey) == ERROR_SUCCESS ||
+        RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+        "Software\\Purr-Data", 0,  KEY_QUERY_VALUE, &hkey) == ERROR_SUCCESS);
+    if (rc) {
+        rc = RegQueryValueEx(hkey, key, 0, 0, value, &bigsize) == ERROR_SUCCESS;
         RegCloseKey(hkey);
-        return (0);
     }
-    RegCloseKey(hkey);
-    return (1);
+    return rc;
 }
 
 static void sys_doneloadpreferences( void)
