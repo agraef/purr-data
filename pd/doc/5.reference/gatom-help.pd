@@ -1,4 +1,4 @@
-#N canvas 424 58 555 749 10;
+#N canvas 428 58 555 749 10;
 #X obj 0 725 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 #dcdcdc #404040 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header gatom 3 12 0 18
@@ -53,7 +53,7 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 98 369 list;
 #X text 98 399 symbol;
 #X text 98 429 set;
-#N canvas 98 96 430 514 Number_box_properties 0;
+#N canvas 100 96 430 514 Number_box_properties 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 #c4dcdc #000000 0;
 #X floatatom 70 102 12 0 0 0 - - -, f 12;
@@ -140,8 +140,6 @@ message it receives (except set).;
 #X text 100 667 Control-clicking (or command-clicking on a mac) toggles
 the value between 0 and the last nonzero value.;
 #X floatatom 59 675 5 0 0 0 - - -, f 5;
-#X text 100 633 You can shift-click a number box and drag to change
-the number by hundredths instead of ones.;
 #X text 61 118 The number box is called "Number" in the "Put" menu.
 ;
 #X text 67 277 To enter data simply click a number box or symbol box
@@ -156,9 +154,6 @@ number box or symbol box \, but clears a listbox.;
 #X text 168 558 - list box only: outputs a list \, symbol \, or number
 message for each message it receives (except set). Outputs bang for
 the empty list.;
-#X text 97 204 A list box allows you to display a list \, symvol \,
-or number \, or enter one using the mouse and keyboard. Unlike a number
-box you cannot change the value by clicking and dragging.;
 #X text 96 244 The list box is called "Listbox" in the "Put" menu.
 ;
 #X listbox 25 208 10 0 0 0 - - -, f 10;
@@ -167,9 +162,90 @@ box you cannot change the value by clicking and dragging.;
 #X msg 469 226 set foo 1 2 3;
 #X text 11 23 atom (number \, symbol \, and list boxes);
 #X listbox 420 9 20 0 0 0 - - -, f 20;
+#X text 97 204 A list box allows you to display a list \, symbol \,
+or number \, or enter one using the mouse and keyboard. You can also
+change the value of a number by clicking and dragging.;
+#X text 100 633 You can shift-click a number box (or a number in a
+listbox) and drag to change the number by hundredths instead of ones.
+;
+#N canvas 360 174 656 446 More_about_symbol_and_listbox 0;
+#X obj 1 1 cnv 15 650 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 #c4dcdc #000000 0;
+#X symbolatom 8 3 10 0 0 0 - - -, f 10;
+#X listbox 80 3 20 0 0 0 - - -, f 20;
+#X listbox 212 218 20 0 0 0 - - -, f 20;
+#X symbolatom 12 218 10 0 0 0 - - -, f 10;
+#X msg 102 38 set foo;
+#X msg 102 98 1 foo 2 3;
+#X msg 12 38 symbol bla;
+#X floatatom 12 68 5 0 0 0 - - -, f 5;
+#X msg 302 38 set foo;
+#X msg 302 98 1 foo 2 3;
+#X msg 212 38 symbol bla;
+#X floatatom 212 68 5 0 0 0 - - -, f 5;
+#X obj 212 108 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
+#000000 #000000;
+#X msg 302 128 list foo 2 3;
+#X msg 302 158 foo 2 3;
+#X obj 12 108 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc #000000
+#000000;
+#X msg 102 128 list foo 2 3;
+#X msg 102 158 foo 2 3;
+#X msg 102 68 set;
+#X msg 302 68 set;
+#X obj 12 258 print symbol;
+#X obj 212 258 print listbox;
+#X text 372 38 sets a symbol (both symbol and listbox);
+#X text 372 68 clears a listbox (no-op with symbol);
+#X text 402 111 list input (gives error with symbol);
+#X text 372 158 not a list -- gives error with both;
+#X msg 12 320 set foo;
+#X symbolatom 12 345 10 0 0 0 - - -, f 10;
+#X msg 210 320 set 1 2 foo bar;
+#X listbox 210 345 20 0 0 0 - - -, f 20;
+#X obj 12 291 loadbang;
+#X symbolatom 10 380 10 0 0 0 - symbox -, f 10;
+#X listbox 10 404 10 0 0 0 - - -, f 10;
+#X listbox 210 380 10 0 0 0 - listbox -, f 10;
+#X symbolatom 210 404 10 0 0 0 - - -, f 10;
+#X text 340 380 You can always send data from a symbol to a listbox
+\, but not the other way round \, unless the listbox contains a single
+symbol., f 46;
+#X text 340 340 You can ckick and drag numbers in a listbox \, like
+in a number box. Try it!, f 46;
+#X text 340 290 You can initialize both symbols and listboxes with
+loadbang and a set message \, or by sending data to a receiver (see
+below)., f 46;
+#X msg 83 380 \; symbox symbol bar \; listbox 4711;
+#X text 210 2 More about symbols and listboxes;
+#X connect 3 0 22 0;
+#X connect 4 0 21 0;
+#X connect 5 0 4 0;
+#X connect 6 0 4 0;
+#X connect 7 0 4 0;
+#X connect 8 0 4 0;
+#X connect 9 0 3 0;
+#X connect 10 0 3 0;
+#X connect 11 0 3 0;
+#X connect 12 0 3 0;
+#X connect 13 0 3 0;
+#X connect 14 0 3 0;
+#X connect 15 0 3 0;
+#X connect 16 0 4 0;
+#X connect 17 0 4 0;
+#X connect 18 0 4 0;
+#X connect 19 0 4 0;
+#X connect 20 0 3 0;
+#X connect 27 0 28 0;
+#X connect 29 0 30 0;
+#X connect 31 0 27 0;
+#X connect 31 0 29 0;
+#X connect 32 0 33 0;
+#X connect 34 0 35 0;
+#X restore 282 701 pd More_about_symbol_and_listbox;
 #X connect 13 0 14 0;
 #X connect 15 0 16 0;
 #X connect 24 0 26 0;
 #X connect 31 0 32 0;
-#X connect 49 0 50 0;
-#X connect 52 0 51 0;
+#X connect 47 0 48 0;
+#X connect 50 0 49 0;
