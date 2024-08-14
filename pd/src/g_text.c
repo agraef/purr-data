@@ -7,6 +7,7 @@
 /* all changes are labeled with      iemlib      */
 
 #include <stdlib.h>
+#include <ctype.h>
 #include "m_pd.h"
 #include "m_imp.h"
 #include "s_stuff.h"
@@ -889,8 +890,9 @@ typedef struct _gatom
     char a_shift;            /* was shift key down when dragging started? */
     char a_wherelabel;       /* 0-3 for left, right, above, below */
     t_symbol *a_expanded_to; /* a_symto after $0, $1, ...  expansion */
-    int a_shift_clicked;	 /* used to keep old text after \n. this is
-    							activated by shift+clicking no the object */
+    int a_click_pos;         /* character position when clicked */
+    int a_shift_clicked;     /* used to keep old text after \n. this is
+                                activated by shift+clicking no the object */
 } t_gatom;
 
     /* prepend "-" as necessary to avoid empty strings, so we can
@@ -938,8 +940,9 @@ static void gatom_retext(t_gatom *x, int senditup, int recolor)
         //post("gatom click off");
         gui_vmess("gui_gatom_activate", "xsi",
             canvas, rtext_gettag(y), 0);
-    	x->a_shift_clicked = 0;
-    	x->a_shift = 0;
+        x->a_shift_clicked = 0;
+        x->a_shift = 0;
+        x->a_click_pos = 0;
     }
     binbuf_clear(x->a_text.te_binbuf);
     binbuf_add(x->a_text.te_binbuf, 1, &x->a_atom);
@@ -1097,26 +1100,111 @@ static void gatom_list(t_gatom *x, t_symbol *s, int argc, t_atom *argv)
         pd_error(x, "gatom: need float or symbol");
 }
 
+// drag numbers in a listbox
+
+static char *clicked_number(t_gatom *a, double *d, int *p, int *q)
+{
+    static char token[MAXPDSTRING];
+    if (a->a_flavor == A_LIST) {
+        char *buf = a->a_atom.a_w.w_symbol->s_name;
+        int size = strlen(buf), pos = a->a_click_pos;
+        if (pos <= size) {
+            // find the token preceding pos
+            while (pos > 0 && !isspace(buf[pos-1])) pos--;
+            int endpos = pos;
+            while (endpos < size && !isspace(buf[endpos])) endpos++;
+            if (endpos > pos) {
+                strncpy(token, buf+pos, endpos-pos);
+                token[endpos-pos] = 0;
+                int n;
+                if (sscanf(token, "%lg%n", d, &n) == 1 && n == endpos-pos) {
+                    *p = pos; *q = endpos;
+                    return token;
+                }
+            }
+        }
+    }
+    return NULL;
+}
+
+static void update_symbol(t_gatom *x, t_symbol *s, int bang)
+{
+    x->a_atom.a_w.w_symbol = s;
+    gatom_retext(x, 1, 0);
+    if (bang) {
+        x->a_atomold = x->a_atom;
+        gatom_bang(x);
+    }
+    // we need to update the a_buf here, just in case
+    strcpy(x->a_buf, s->s_name);
+}
+
+static void change_clicked(t_gatom *x, double f, int p, int q, int bang)
+{
+    char token[MAXPDSTRING], buf[MAXPDSTRING], *s = x->a_atom.a_w.w_symbol->s_name;
+    snprintf(token, MAXPDSTRING, "%g", f);
+    int len = strlen(token);
+    memset(buf, 0, MAXPDSTRING);
+    strncpy(buf, s, p);
+    strncpy(buf+p, token, MAXPDSTRING-p);
+    strncpy(buf+p+len, s+q, MAXPDSTRING-p-len);
+    t_symbol *sym = gensym(buf);
+    if (sym != x->a_atom.a_w.w_symbol) {
+        update_symbol(x, sym, bang);
+    }
+}
+
+static double float_increment(double nval, t_floatarg d)
+{
+    nval = nval - d;
+    double trunc = 0.01 * (floor(100. * nval + 0.5));
+    if (trunc < nval + 0.0001 && trunc > nval - 0.0001) nval = trunc;
+    trunc = floor(nval + 0.5);
+    if (trunc < nval + 0.001 && trunc > nval - 0.001) nval = trunc;
+    return nval;
+}
+
+static double float_increment_100ths(double nval, t_floatarg d)
+{
+    nval = nval - 0.01 * d;
+    double trunc = 0.01 * (floor(100. * nval + 0.5));
+    if (trunc < nval + 0.0001 && trunc > nval - 0.0001) nval = trunc;
+    return nval;
+}
+
 static void gatom_motion(void *z, t_floatarg dx, t_floatarg dy)
 {
     t_gatom *x = (t_gatom *)z;
+    double nval;
+    int p, q;
     if (dy == 0) return;
-    if (x->a_atom.a_type == A_FLOAT)
+    if (x->a_flavor == A_LIST && clicked_number(x, &nval, &p, &q))
     {
         if (x->a_shift)
         {
-            double nval = x->a_atom.a_w.w_float - 0.01 * dy;
-            double trunc = 0.01 * (floor(100. * nval + 0.5));
-            if (trunc < nval + 0.0001 && trunc > nval - 0.0001) nval = trunc;
+            double nval2 = float_increment_100ths(nval, dy);
+            if (nval2 != nval)
+                change_clicked(x, nval2, p, q, 1);
+        }
+        else
+        {
+            double nval2 = float_increment(nval, dy);
+            if (nval2 != nval)
+              change_clicked(x, nval2, p, q, 1);
+        }
+    }
+    else if (x->a_atom.a_type == A_FLOAT)
+    {
+        if (x->a_shift)
+        {
+            nval = x->a_atom.a_w.w_float;
+            nval = float_increment_100ths(nval, dy);
             gatom_clipfloat(x, nval);
         }
         else
         {
-            double nval = x->a_atom.a_w.w_float - dy;
-            double trunc = 0.01 * (floor(100. * nval + 0.5));
-            if (trunc < nval + 0.0001 && trunc > nval - 0.0001) nval = trunc;
-            trunc = floor(nval + 0.5);
-            if (trunc < nval + 0.001 && trunc > nval - 0.001) nval = trunc;
+            nval = x->a_atom.a_w.w_float;
+            nval = float_increment(nval, dy);
             gatom_clipfloat(x, nval);
         }
     }
@@ -1139,10 +1227,6 @@ static void gatom_key(void *z, t_floatarg f)
         if (x->a_atom.a_type == A_FLOAT)
         {
             x->a_atom = x->a_atomold;
-            //if (x->a_buf[0]) x->a_atom.a_w.w_float = atof(x->a_buf);
-            //sprintf(x->a_buf, "%f", x->a_atom.a_w.w_float);
-            //post("got float f=<%f> s=<%s>", x->a_atom.a_w.w_float, x->a_buf);
-
             // ico@vt.edu 20200904:
             // we reset internal buffer since there is currently no graceful way
             // to handle conversion from float to string and back without loss
@@ -1152,17 +1236,17 @@ static void gatom_key(void *z, t_floatarg f)
         }
         else if (x->a_atom.a_type == A_SYMBOL)
         {
-            //post("gatom_key release");
-            // ico@vt.edu 20200923: we also check for empty a_buf to ensure that
-            // the ... is deleted. This was created when the object was originally
-            // clicked on below, but only if the current gatom is symbol type and
-            // is empty.
+            // ag: need to switch back to oldatom here in case we've modified
+            // numbers in a listbox with the cursor keys
+            if (x->a_flavor == A_LIST) x->a_atom = x->a_atomold;
+            // ico@vt.edu 20200923: we also check for empty a_buf to ensure
+            // that the ... is deleted. This was created when the object was
+            // originally clicked on below, but only if the current gatom is
+            // symbol type and is empty.
             if (x->a_buf[0] == 0 || strcmp(x->a_buf, x->a_atom.a_w.w_symbol->s_name))
             {
                 strcpy(x->a_buf, x->a_atom.a_w.w_symbol->s_name);
                 gatom_retext(x, 1, 1);
-                //post("gatom_key buf=<%s> s_name=<%s>", x->a_buf,
-                //    x->a_atom.a_w.w_symbol->s_name);
             }
             else
                 gatom_retext(x, 0, 1);
@@ -1253,6 +1337,8 @@ redraw:
 
 static void gatom_keyhandler(t_gatom *x, t_symbol *s, int argc, t_atom *argv)
 {
+    int p, q;
+    double nval;
     /* ico@vt.edu 20200904 like g_numbox.c, here we hijack list to capture
        keyname keypresses, so that we can use shift+backspace to delete
        entire text */
@@ -1285,6 +1371,26 @@ static void gatom_keyhandler(t_gatom *x, t_symbol *s, int argc, t_atom *argv)
                 gatom_retext(x, 1, 0);
             }
         }
+        // change numbers in listboxes
+        else if (x->a_flavor == A_LIST && argv[0].a_w.w_float == 1 && clicked_number(x, &nval, &p, &q)) {
+            if (!strcmp("Up", argv[1].a_w.w_symbol->s_name)) {
+                double nval2 = float_increment(nval, -1);
+                if (nval2 != nval)
+                    change_clicked(x, nval2, p, q, 0);
+            } else if (!strcmp("ShiftUp", argv[1].a_w.w_symbol->s_name)) {
+                double nval2 = float_increment_100ths(nval, -1);
+                if (nval2 != nval)
+                    change_clicked(x, nval2, p, q, 0);
+            } else if (!strcmp("Down", argv[1].a_w.w_symbol->s_name)) {
+                double nval2 = float_increment(nval, 1);
+                if (nval2 != nval)
+                    change_clicked(x, nval2, p, q, 0);
+            } else if (!strcmp("ShiftDown", argv[1].a_w.w_symbol->s_name)) {
+                double nval2 = float_increment_100ths(nval, 1);
+                if (nval2 != nval)
+                    change_clicked(x, nval2, p, q, 0);
+            }
+        }
     }
 }
 
@@ -1294,6 +1400,8 @@ static void gatom_click(t_gatom *x,
 {
 	//post("gatom_click %f %f", ctrl, alt);
     pd_bind(&x->a_text.ob_pd, gensym("#keyname_a"));
+    // zero-based position of clicked character (listbox)
+    x->a_click_pos = ((int)xpos - x->a_text.te_xpix) / sys_fontwidth(glist_getfont(x->a_glist));
 	//post("bind");
     if (x->a_text.te_width == 1)
     {
@@ -1494,6 +1602,7 @@ void canvas_atom(t_glist *gl, t_atomtype type,
     x->a_label = &s_;
     x->a_symfrom = &s_;
     x->a_symto = x->a_expanded_to = &s_;
+    x->a_click_pos = 0;
     x->a_shift_clicked = 0;
     if (type == A_FLOAT)
     {
