@@ -1222,8 +1222,6 @@ static void gatom_key(void *z, t_floatarg f)
     {
         // we're being notified that no more keys will come for this grab
     	//post("gatom_key end <%s> <%s>", x->a_buf, x->a_atom.a_w.w_symbol->s_name);
-    	pd_unbind(&x->a_text.ob_pd, gensym("#keyname_a"));
-    	//post("unbind <%s>", x->a_buf);
         if (x->a_atom.a_type == A_FLOAT)
         {
             x->a_atom = x->a_atomold;
@@ -1399,7 +1397,6 @@ static void gatom_click(t_gatom *x,
     t_floatarg alt)
 {
 	//post("gatom_click %f %f", ctrl, alt);
-    pd_bind(&x->a_text.ob_pd, gensym("#keyname_a"));
     // zero-based position of clicked character (listbox)
     x->a_click_pos = ((int)xpos - x->a_text.te_xpix) / sys_fontwidth(glist_getfont(x->a_glist));
 	//post("bind");
