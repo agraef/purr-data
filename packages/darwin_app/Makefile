@@ -59,6 +59,12 @@ all:
 	$(MAKE) -C $(packages_src) $(DEST_PATHS)
 
 install: darwin_app
+# Sanitize permissions.
+	chmod a+rx $(PD_APP_CONTENTS)/MacOS/nwjs
+	chmod -R go-w $(DESTDIR)*
+	chmod -R a+r $(DESTDIR)*
+	for x in dat osc pd pdf txt xml aif aiff gif png ppm xcf mp3 mid wav; do find $(DESTDIR) -type f -perm +111 -name \*.$$x -exec chmod a-x {} +; done
+	find $(DESTDIR) -type d -exec chmod a+x {} +
 
 #------------------------------------------------------------------------------#
 darwin_app: darwin_app_core extended_install darwin_app_embed_libs

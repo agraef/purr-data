@@ -62,7 +62,6 @@ install:
 # link pd-l2ork -> purr-data since our desktop files expect it
 	ln -sf pd-l2ork $(DESTDIR)/$(prefix)/bin/purr-data
 	$(MAKE) -C $(packages_src) $(DEST_PATHS) doc_format
-	find $(DESTDIR) -name \*.pd -print0 | xargs -0 chmod a-x
 	@echo " "
 	@echo "linux_make install succeeded!"
 
@@ -82,12 +81,21 @@ endif
 
 package: $(PACKAGE_TYPE)
 
+sanitize:
+# Sanitize permissions.
+	chmod -R go-w $(DESTDIR)*
+	chmod -R a+r $(DESTDIR)*
+	chmod a-x $(DESTDIR)$(prefix)/lib/pd-l2ork/default.settings
+	find $(DESTDIR)$(prefix)/lib/pd-l2ork/bin/nw -executable -not -type d -exec chmod a+x {} +
+	for x in dat osc pd pdf txt xml aif aiff gif png ppm xcf mp3 mid wav; do find $(DESTDIR) -executable -not -type d -name \*.$$x -exec chmod a-x {} +; done
+	find $(DESTDIR) -type d -exec chmod a+x {} +
 
 tarbz2: installer_settings installer_makefile installer_readme
 	mv $(DESTDIR)$(prefix) $(DESTDIR)$(PACKAGE_NAME)
 	cd $(DESTDIR) && \
 		tar cjf $(PACKAGE_NAME).tar.bz2  $(PACKAGE_NAME)
 	mv $(DESTDIR)$(PACKAGE_NAME) $(DESTDIR)$(prefix)
+	$(MAKE) sanitize
 
 # Any special staging for the "Burrito Supreme" installer goes here.
 debstage: $(bindir)
@@ -125,6 +133,7 @@ endif
 	install -d $(DESTDIR)/usr/share/emacs/site-lisp/
 	install -p -m0644 $(scripts_src)/pd-l2ork-mode.el \
 		$(DESTDIR)/usr/share/emacs/site-lisp/
+	$(MAKE) sanitize
 
 ifeq ($(PACKAGE_TYPE),deb)
 deb: DEB_BUILD_ARCH := $(shell dpkg-architecture -qDEB_BUILD_ARCH)
@@ -156,11 +165,12 @@ deb: debstage
 # add auto-generated dependencies
 	sed -i 's!^\(Depends:.*\)!\1 $(PACKAGE_DEPENDS)!' $(DESTDIR)/DEBIAN/control
 # sanitize permissions
-	chmod -R go-w $(DESTDIR)
-	chmod -R a+r $(DESTDIR)
-	find $(DESTDIR) -name \*.pd_linux | xargs chmod a-x
-	find $(DESTDIR) -name \*.pd | xargs chmod a-x
-	find $(DESTDIR) -type d | xargs chmod a+x
+# shouldn't be needed any more, as debstage already does this
+#	chmod -R go-w $(DESTDIR)
+#	chmod -R a+r $(DESTDIR)
+#	find $(DESTDIR) -name \*.pd_linux | xargs chmod a-x
+#	find $(DESTDIR) -name \*.pd | xargs chmod a-x
+#	find $(DESTDIR) -type d | xargs chmod a+x
 	fakeroot dpkg-deb --build $(DESTDIR) $(packages_src)/linux_make/$(PACKAGE_NAME).deb
 
 
