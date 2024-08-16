@@ -73,14 +73,6 @@ endif
 	sed -e 's/pd-l2ork/purr-data/g' < scripts/bash_completion/pd-l2ork > debian/purr-data/etc/bash_completion.d/purr-data
 # Edit the library paths in the default user.settings file.
 	cd debian/purr-data$(prefix)/lib/pd-l2ork && sed -e "s!/usr/lib/pd-l2ork!$(prefix)/lib/pd-l2ork!g" -i default.settings
-# Sanitize permissions.
-	cd debian/purr-data && chmod -R go-w * && chmod -R a+r * && chmod a-x .$(prefix)/lib/pd-l2ork/default.settings
-	find debian/purr-data$(prefix)/lib/pd-l2ork/bin/nw -executable -not -type d | xargs chmod a+x
-	find debian/purr-data -executable -name '*.pd_linux' | xargs chmod a-x
-	find debian/purr-data -executable -name '*.pd' | xargs chmod a-x
-	find debian/purr-data -executable -name '*.txt' | xargs chmod a-x
-	find debian/purr-data -executable -name '*.aif*' | xargs chmod a-x
-	find debian/purr-data -type d | xargs chmod a+x
 
 # NOTE: Older systems use dh_pysupport instead of dh_python2. See
 # http://deb.li/dhs2p.
