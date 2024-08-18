@@ -771,23 +771,45 @@ Source: build\lib\*.*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
 ;Source: build\tcl\*.*; DestDir: {app}\tcl; Flags: ignoreversion recursesubdirs
 
 [Code]
-function NextButtonClick(CurPageID: Integer): Boolean;
-var
-  ResultCode: Integer;
+
+function UninsName(): String;
+var Name: String; var i: Integer;
 begin
+  // not sure why, but it seems that this name keeps changing if the
+  // installation is done unattended (/SILENT /SUPPRESSMSGBOXES)
+  for i := 0 to 8 do begin // this may be overkill, but to be on the safe side
+    Name := ExpandConstant('{app}\unins00'+IntToStr(i)+'.exe');
+    if FileExists(Name) then begin
+      Result := Name;
+      Exit;
+    end;
+  end;
+  Result := '';
+end;
+
+function NextButtonClick(CurPageID: Integer): Boolean;
+var ResultCode: Integer; UninsCmd, AppDir, ErrMsg: String;
+begin
+  Result := True;
   case CurPageID of
     wpReady:
       begin
-        if FileExists(ExpandConstant('{app}\unins000.exe')) AND FileExists(ExpandConstant('{app}\bin\pd.exe')) then begin
-	  SuppressibleMsgBox('Found a previous version of Purr-Data at ' + ExpandConstant('{app} ') + #13#13 'The installer will first uninstall the old version. Your preferences will be preserved.', mbInformation, MB_OK, MB_OK);
-	  if not Exec(ExpandConstant('{app}\unins000.exe'), '/SILENT', '', SW_SHOWNORMAL, ewWaitUntilTerminated, ResultCode) then
-            MsgBox('Error:' #13#13 'The uninstall file could not be executed. ' + SysErrorMessage(ResultCode) + '.', mbError, MB_OK);
-	end;
+        UninsCmd := UninsName();
+        AppDir := ExpandConstant('{app}');
+        ErrMsg := 'Installation cannot proceed until ' + AppDir + ' is removed.';
+        if FileExists(ExpandConstant('{app}\bin\pd.exe')) then begin
+          SuppressibleMsgBox('Found a previous version of Purr-Data at ' + AppDir + #13#13 'The installer will first uninstall the old version. Your preferences will be preserved.', mbInformation, MB_OK, MB_OK);
+          Result := False;
+          if UninsCmd = '' then
+            MsgBox('Error:' #13#13 'The uninstall file could not be located. ' + ErrMsg, mbError, MB_OK)
+          else if not Exec(UninsCmd, '/SILENT', '', SW_SHOWNORMAL, ewWaitUntilTerminated, ResultCode) then
+            MsgBox('Error:' #13#13 'The uninstall file could not be executed. ' + SysErrorMessage(ResultCode) + '. ' + ErrMsg, mbError, MB_OK)
+          else
+            Result := True;
+        end;
         BringToFrontAndRestore();
-        SuppressibleMsgBox('Purr-Data will now be installed on your computer. Enjoy!', mbInformation, MB_OK, MB_OK);
+        if Result then SuppressibleMsgBox('Purr-Data will now be installed on your computer.', mbInformation, MB_OK, MB_OK);
       end;
   end;
-
-  Result := True;
 end;
 
