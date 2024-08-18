@@ -1,8 +1,8 @@
-#N canvas 427 38 555 619 10;
+#N canvas 428 38 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 #dcdcdc #404040 0;
-#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header midiin 3 12 0 18
-#c4dcdc #000000 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header midirealtimein 3
+12 0 18 #c4dcdc #000000 0;
 #X obj 0 441 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
 #dcdcdc #000000 0;
 #N canvas 487 284 494 344 META 0;
@@ -70,10 +70,8 @@ by Olaf Matthes);
 #X obj 364 572 pddp/pddplink all_about_midi_flags.pd -text all_about_midi_flags
 ;
 #X text 98 572 for an explanation of MIDI usage in Pd see:;
-#X obj 505 12 midiin;
-#X obj 225 153 midiin;
-#X floatatom 225 184 0 0 0 0 - - -;
-#X floatatom 258 184 0 0 0 0 - - -;
+#X floatatom 209 184 0 0 0 0 - - -;
+#X floatatom 290 184 0 0 0 0 - - -;
 #X text 164 230 This object is always omni and;
 #X text 163 246 outputs the port number instead;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
@@ -81,8 +79,10 @@ by Olaf Matthes);
 #X text 198 264 of the channel.;
 #X text 98 502 float;
 #X text 168 502 - port number;
-#X text 168 477 - raw MIDI byte;
 #X text 98 535 (none);
-#X text 11 23 raw MIDI input;
-#X connect 15 0 16 0;
-#X connect 15 1 17 0;
+#X obj 455 12 midirealtimein;
+#X obj 209 153 midirealtimein;
+#X text 11 23 realtime MIDI input;
+#X text 168 477 - raw MIDI byte (realtime MIDI messages only);
+#X connect 24 0 14 0;
+#X connect 24 1 15 0;
