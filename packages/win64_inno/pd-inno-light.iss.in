@@ -772,17 +772,19 @@ Source: build\lib\*.*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs
 
 [Code]
 function NextButtonClick(CurPageID: Integer): Boolean;
+var
+  ResultCode: Integer;
 begin
   case CurPageID of
     wpReady:
       begin
         if FileExists(ExpandConstant('{app}\unins000.exe')) AND FileExists(ExpandConstant('{app}\bin\pd.exe')) then begin
-	  MsgBox('Found a previous version of Purr-Data at ' + ExpandConstant('{app} ') + #13#13 'The installer will first uninstall the old version. Your preferences will be preserved.', mbInformation, MB_OK);
+	  SuppressibleMsgBox('Found a previous version of Purr-Data at ' + ExpandConstant('{app} ') + #13#13 'The installer will first uninstall the old version. Your preferences will be preserved.', mbInformation, MB_OK, MB_OK);
 	  if not Exec(ExpandConstant('{app}\unins000.exe'), '/SILENT', '', SW_SHOWNORMAL, ewWaitUntilTerminated, ResultCode) then
             MsgBox('Error:' #13#13 'The uninstall file could not be executed. ' + SysErrorMessage(ResultCode) + '.', mbError, MB_OK);
 	end;
         BringToFrontAndRestore();
-        MsgBox('Purr-Data will now be installed on your computer. Enjoy!', mbInformation, MB_OK);
+        SuppressibleMsgBox('Purr-Data will now be installed on your computer. Enjoy!', mbInformation, MB_OK, MB_OK);
       end;
   end;
 
