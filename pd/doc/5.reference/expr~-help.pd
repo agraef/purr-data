@@ -17,7 +17,7 @@ for Pd version 0.42.;
 #X text 12 105 OUTLET_N signal;
 #X text 12 45 DESCRIPTION expression evaluation of signal data (vector)
 ;
-#X text 12 165 WEBSITE http://crca.ucsd.edu/~syadegar/expr.html;
+#X text 12 165 WEBSITE https://yadegari.org/expr/expr.html;
 #X text 12 185 RELEASE_DATE 1999;
 #X text 12 25 LICENSE GPL v2;
 #X restore 500 597 pd META;
@@ -42,7 +42,7 @@ for Pd version 0.42.;
 -162280 0;
 #X text 98 252 float;
 #X text 98 343 symbol;
-#X obj 273 572 pddplink http://crca.ucsd.edu/~syadegar/expr.html;
+#X obj 273 572 pddplink https://yadegari.org/expr/expr.html;
 #X text 273 555 Expr family of objects by Shahrokh Yadegari;
 #X obj 506 11 expr~;
 #X obj 18 159 print~;

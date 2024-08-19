@@ -138,7 +138,7 @@ specified by the left inlet.;
 #X restore 169 397 pd expr_and_symbols;
 #X obj 21 74 expr 1;
 #X text 168 426 - float is the only type of output.;
-#X obj 273 577 pddplink http://crca.ucsd.edu/~syadegar/expr.html;
+#X obj 273 577 pddplink https://yadegari.org/expr/expr.html;
 #X text 273 563 Expr family of objects by Shahrokh Yadegari;
 #N canvas 91 55 428 501 expr_weirdness 0;
 #X obj 42 98 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc #000000
@@ -257,7 +257,7 @@ use in [expr~] are listed below:;
 14 #dcdcdc #404040 0;
 #N canvas 490 291 494 344 META 0;
 #X text 12 125 LIBRARY internal;
-#X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
+#X text 12 165 WEBSITE https://yadegari.org/expr/expr.html;
 #X text 12 145 AUTHOR Shahrokh Yadegari;
 #X text 12 205 HELP_PATCH_AUTHORS Updated for Pd 0.35 test 26 and expr*
 0.4. Jonathan Wilkes revised the patch to conform to the PDDP template

@@ -8,7 +8,7 @@
 #N canvas 487 280 494 344 META 0;
 #X text 12 140 LIBRARY internal;
 #X text 12 160 AUTHOR Shahrokh Yadegari;
-#X text 12 180 WEBSITE http://crca.ucsd.edu/~syadegar/expr.html;
+#X text 12 180 WEBSITE https://yadegari.org/expr/expr.html;
 #X text 13 220 HELP_PATCH_AUTHORS Updated for Pd 0.35 test 26 and expr*
 0.4. Jonathan Wilkes revised the patch to conform to the PDDP template
 for Pd version 0.42.;
@@ -42,7 +42,7 @@ level);
 -162280 0;
 #X text 98 265 float;
 #X text 98 344 symbol;
-#X obj 143 577 pddplink http://crca.ucsd.edu/~syadegar/expr.html;
+#X obj 143 577 pddplink https://yadegari.org/expr/expr.html;
 #X text 143 563 Expr family of objects by Shahrokh Yadegari;
 #X text 98 203 signal;
 #X text 98 245 signal;
