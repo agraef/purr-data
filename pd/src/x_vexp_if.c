@@ -801,7 +801,7 @@ expr_setup(void)
         class_addmethod(expr_tilde_class, nullfn, gensym("signal"), 0);
         CLASS_MAINSIGNALIN(expr_tilde_class, t_expr, exp_f);
         class_addmethod(expr_tilde_class,(t_method)expr_dsp, gensym("dsp"), 0);
-        class_sethelpsymbol(expr_tilde_class, gensym("expr"));
+        class_sethelpsymbol(expr_tilde_class, gensym("expr~"));
         class_addmethod(expr_tilde_class,(t_method)expr_version,
                                                         gensym("version"), 0);
         /*
@@ -824,7 +824,7 @@ expr_setup(void)
                                                         gensym("verbose"), 0);
         class_addmethod(fexpr_tilde_class,(t_method)expr_version,
                                                         gensym("version"), 0);
-        class_sethelpsymbol(fexpr_tilde_class, gensym("expr"));
+        class_sethelpsymbol(fexpr_tilde_class, gensym("fexpr~"));
 
 }
 
