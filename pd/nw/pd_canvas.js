@@ -199,7 +199,7 @@ var canvas_events = (function() {
             text = text.replace(/(\$@)/g, "\\$@");
 
             // escape "," and ";"
-            text = text.replace(/(?!\\)(,|;)/g, " \\$1 ");
+            text = text.replace(/(?<!\\)(,|;)/g, " \\$1 ");
 
             // filter consecutive ascii32
             text = text.replace(/\u0020+/g, " ");
