@@ -120,10 +120,23 @@ if [[ $os == "win" || $os == "win64" ]]; then
 elif [[ $os == "osx" ]]; then
     targetdir="/Applications/Purr-Data.app"
     nwjsconfig="$HOME/Library/Application Support/purr-data"
-else
+elif [ -d /opt/purr-data/lib/pd-l2ork/bin ]; then
     targetdir="/opt/purr-data/lib/pd-l2ork/bin"
     nwjsconfig="$HOME/.config/purr-data"
+elif [ -d /usr/lib/pd-l2ork/bin ]; then
+    targetdir="/usr/lib/pd-l2ork/bin"
+    nwjsconfig="$HOME/.config/purr-data"
+else
+    echo 1>&2 "Couldn't find a Purr Data installation in /opt/purr-data or /usr. Exiting."
+    exit 1
 fi
+
+if [ ! -d "$targetdir" ]; then
+    echo 1>&2 "Couldn't find the Purr Data installation in $targetdir. Exiting."
+    exit 1
+fi
+
+echo "Found a Purr Data installation in $targetdir."
 
 if [ -n "$nwjs_version" ]; then
 
@@ -222,12 +235,14 @@ fi #  -n "$nwjs_version"
 
 if [[ $os == "osx" ]]; then
     targetdir="/Applications/Purr-Data.app/Contents/Resources/app.nw"
-    # Mac sed has its peculiarities...
-    sed="sed -i ''"
-else
-    # GNU sed
-    sed="sed -i"
 fi
+
+# Apparently this is the *only* portable way for sed in-place editing across
+# both Linux and BSD/Mac. We need to remember to remove the bak file, though.
+sed_i () {
+    sed -i.bak "$1" "$2"
+    rm -f "$2.bak"
+}
 
 pkgfile="$targetdir/package.json"
 
@@ -247,11 +262,11 @@ fi
 case "$nwopt" in
     nw1) echo "Turning NW2 mode OFF (https://nwjs.io/blog/nw2-mode/).";
 	 echo "You may be prompted to enter your administrator password.";
-	 $sed 's/"--proxy-server=/"--disable-features=nw2 --proxy-server=/' package.json;;
+	 sed_i 's/"--proxy-server=/"--disable-features=nw2 --proxy-server=/' package.json;;
     nw2) echo "Turning NW2 mode ON (https://nwjs.io/blog/nw2-mode/).";
 	 echo "You may be prompted to enter your administrator password.";
 	 echo "WARNING: This may SLOW DOWN the application's user interface.";
-	 $sed 's/"--disable-features=nw2 /"/' package.json;;
+	 sed_i 's/"--disable-features=nw2 /"/' package.json;;
 esac
 
 if [[ $os == "win" || $os == "win64" ]]; then
