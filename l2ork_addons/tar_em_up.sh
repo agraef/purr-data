@@ -372,15 +372,23 @@ then
 	if [[ $os == "win" || $os == "win64" ]]; then
 		echo "Making Windows package..."
 		echo `pwd`
-		make install INCREMENTAL=$INCREMENTAL LIGHT=$LIGHT && make package
+		make install INCREMENTAL=$INCREMENTAL LIGHT=$LIGHT
+		# copy the patch-nwjs.sh script
+		cp ../../l2ork_addons/patch-nwjs.sh build/bin
+		make package
 	elif [[ $os == "osx" ]]; then
 		echo "Making OSX package (dmg)..."
 		echo `pwd`
-		make install INCREMENTAL=$INCREMENTAL LIGHT=$LIGHT && make package
+		make install INCREMENTAL=$INCREMENTAL LIGHT=$LIGHT
+		# copy the patch-nwjs.sh script
+		cp ../../l2ork_addons/patch-nwjs.sh build/Purr-Data.app/Contents/Resources/app.nw/bin
+		make package
 	else
 		# create images folder
-		mkdir -p ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/images
+		mkdir -p build$inst_dir/lib/pd-l2ork/extra/images
 		make install prefix=$inst_dir
+		# copy the patch-nwjs.sh script
+		cp ../../l2ork_addons/patch-nwjs.sh build$inst_dir/bin
 	fi
 	echo "copying pd-l2ork-specific externals..."
 	# patch_name
