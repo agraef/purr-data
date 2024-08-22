@@ -1,11 +1,11 @@
-#N canvas 428 36 555 619 10;
-#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
-14 -228856 -66577 0;
+#N canvas 428 58 555 749 10;
+#X obj 0 725 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 #dcdcdc #404040 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header gatom 3 12 0 18
--204280 -1 0;
-#X obj 0 231 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
--228856 -1 0;
-#N canvas 486 289 494 344 META 0;
+#c4dcdc #000000 0;
+#X obj 0 311 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#dcdcdc #000000 0;
+#N canvas 993 318 494 344 META 0;
 #X text 12 115 LIBRARY internal;
 #X text 12 155 WEBSITE http://crca.ucsd.edu/~msp/;
 #X text 12 35 LICENSE SIBSD;
@@ -16,45 +16,46 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 75 INLET_0 float bang symbol set;
 #X text 12 95 OUTLET_0 float;
 #X text 12 175 RELEASE_DATE 1997;
-#X text 12 55 DESCRIPTION atom (number box and symbol box);
 #X text 12 5 KEYWORDS control storage GUI nonlocal symbol_op;
-#X restore 500 597 pd META;
-#X obj 0 396 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
-13 -228856 -1 0;
-#X obj 0 470 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
-0 13 -228856 -1 0;
-#X obj 0 499 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
-0 13 -228856 -1 0;
-#X text 98 474 (none);
-#N canvas 214 517 428 109 Related_objects 0;
+#X text 12 55 DESCRIPTION atom (number \, symbol \, and list boxes)
+;
+#X restore 500 727 pd META;
+#X obj 0 486 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 #dcdcdc #000000 0;
+#X obj 0 600 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 #dcdcdc #000000 0;
+#X obj 0 629 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 #dcdcdc #000000 0;
+#X text 98 604 (none);
+#N canvas 215 517 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
+14 #c4dcdc #000000 0;
 #X text 47 1 Related Objects;
 #X floatatom 9 3 5 0 0 0 - - -, f 5;
 #X obj 21 42 float;
 #X obj 61 42 list;
 #X obj 102 45 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
--262144 -1 -1 0 256 0;
+#fcfcfc #000000 #000000 0 256 0;
 #X obj 169 42 drawnumber;
-#X restore 102 597 pd Related_objects;
-#X obj 78 240 cnv 17 3 145 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
-#X text 98 404 float;
-#X obj 78 405 cnv 17 3 52 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
-#X floatatom 401 9 5 0 0 0 - - -, f 5;
+#X restore 102 727 pd Related_objects;
+#X obj 78 320 cnv 17 3 145 empty \$0-pddp.cnv.let.0 0 5 9 0 16 #dcdcdc
+#9c9c9c 0;
+#X text 98 494 float;
+#X obj 78 495 cnv 17 3 102 empty \$0-pddp.cnv.let.0 0 5 9 0 16 #dcdcdc
+#9c9c9c 0;
+#X floatatom 311 9 5 0 0 0 - - -, f 5;
 #X floatatom 25 58 0 0 0 0 - - -;
 #X floatatom 25 96 0 0 0 0 - - -;
 #X msg 469 76 set 45;
 #X floatatom 469 104 0 0 0 0 - - -;
-#X text 98 239 bang;
-#X text 98 259 float;
-#X text 98 289 list;
-#X text 98 309 symbol;
-#X text 98 339 set;
-#N canvas 98 96 430 514 Number_box_properties 0;
+#X text 98 319 bang;
+#X text 98 339 float;
+#X text 98 369 list;
+#X text 98 399 symbol;
+#X text 98 429 set;
+#N canvas 100 96 430 514 Number_box_properties 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
+14 #c4dcdc #000000 0;
 #X floatatom 70 102 12 0 0 0 - - -, f 12;
 #X floatatom 71 223 1 0 0 0 - - -, f 1;
 #X text 50 2 Properties for gatom;
@@ -72,8 +73,8 @@ TIME. In a production patch \, you'll want to set a specific width.
 ;
 #X floatatom 70 143 0 0 0 0 - - -;
 #X text 148 143 width = 0 characters (read below);
-#X text 69 240 A width of one gives a clickable toggle switch a la Max.
-;
+#X text 69 240 A width of one gives a clickable toggle switch a la
+Max.;
 #X text 88 223 width = 1 character: toggle between 0 and 1;
 #X text 19 260 limits;
 #X floatatom 71 282 5 0 127 0 - - -, f 5;
@@ -104,17 +105,15 @@ to "gatom-help-snd";
 to "Number_box_7" when using non-local send and receive names. If you
 want to use both \, see the [nbx] object:;
 #X obj 71 626 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
--262144 -1 -1 0 256 0;
+#fcfcfc #000000 #000000 0 256 0;
 #X floatatom 13 3 5 0 0 0 - - -, f 5;
 #X connect 27 0 31 0;
 #X connect 29 0 28 0;
-#X restore 102 571 pd Number_box_properties;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X restore 102 701 pd Number_box_properties;
+#X obj 4 727 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X symbolatom 25 138 10 0 0 0 - - -, f 10;
-#X text 11 23 atom (number box and symbol box);
-#X symbolatom 481 9 10 0 0 0 - - -, f 10;
-#X text 445 9 and;
+#X symbolatom 351 9 10 0 0 0 - - -, f 10;
 #X symbolatom 25 174 10 0 0 0 - - -, f 10;
 #X text 61 52 A number box allows you to display a number or enter
 a number using the mouse and keyboard. When a number arrives at the
@@ -126,33 +125,127 @@ or enter one using the mouse and keyboard. Unlike a number box you
 cannot change the value by clicking and dragging.;
 #X text 96 174 The symbol box is called "Symbol" in the "Put" menu.
 ;
-#X text 168 239 - sends the current value to the outlet.;
+#X text 168 319 - sends the current value to the outlet.;
 #X msg 469 156 set foo;
 #X symbolatom 469 180 10 0 0 0 - - -, f 10;
-#X text 168 309 - symbol box only: an incoming symbol is displayed
+#X text 168 399 - symbol box only: an incoming symbol is displayed
 and output. (Number box will display and output zero.);
-#X text 168 259 - number box only: sets the current value and outputs
+#X text 168 339 - number box only: sets the current value and outputs
 it. (Symbol box will display 'float' and output 'symbol float'.);
-#X text 168 289 - a list will be truncated to the first item.;
-#X text 168 339 - displays the incoming value without outputting it
-(e.g. \, "set 23" will cause a number box to display 23). Sending a
-set message without a value does not change the current value of a
-number box or symbol box.;
-#X text 168 404 - number box only: outputs a float for each message
+#X text 168 494 - number box only: outputs a float for each message
 it receives (except set).;
-#X text 98 434 symbol;
-#X text 168 434 - symbol box only: outputs a symbol message for each
+#X text 98 524 symbol;
+#X text 168 524 - symbol box only: outputs a symbol message for each
 message it receives (except set).;
-#X text 100 537 Control-clicking (or command-clicking on a mac) toggles
+#X text 100 667 Control-clicking (or command-clicking on a mac) toggles
 the value between 0 and the last nonzero value.;
-#X floatatom 59 545 5 0 0 0 - - -, f 5;
-#X text 100 503 You can shift-click a number box and drag to change
-the number by hundredths instead of ones.;
+#X floatatom 59 675 5 0 0 0 - - -, f 5;
 #X text 61 118 The number box is called "Number" in the "Put" menu.
 ;
-#X text 67 197 To enter data simply click a number box or symbol box
+#X text 67 277 To enter data simply click a number box or symbol box
 and begin typing. Then click "Enter" to finish and output it.;
+#X text 168 371 - list box only: an incoming list \, symbol \, or number
+is displayed and output.;
+#X text 168 429 - displays the incoming value without outputting it
+(e.g. \, "set 23" will cause a number box to display 23). Sending a
+set message without a value does not change the current value of a
+number box or symbol box \, but clears a listbox.;
+#X text 98 558 list;
+#X text 168 558 - list box only: outputs a list \, symbol \, or number
+message for each message it receives (except set). Outputs bang for
+the empty list.;
+#X text 96 244 The list box is called "Listbox" in the "Put" menu.
+;
+#X listbox 25 208 10 0 0 0 - - -, f 10;
+#X listbox 25 244 10 0 0 0 - - -, f 10;
+#X listbox 469 251 10 0 0 0 - - -, f 10;
+#X msg 469 226 set foo 1 2 3;
+#X text 11 23 atom (number \, symbol \, and list boxes);
+#X listbox 420 9 20 0 0 0 - - -, f 20;
+#X text 97 204 A list box allows you to display a list \, symbol \,
+or number \, or enter one using the mouse and keyboard. You can also
+change the value of a number by clicking and dragging.;
+#X text 100 633 You can shift-click a number box (or a number in a
+listbox) and drag to change the number by hundredths instead of ones.
+;
+#N canvas 360 174 656 446 More_about_symbol_and_listbox 0;
+#X obj 1 1 cnv 15 650 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 #c4dcdc #000000 0;
+#X symbolatom 8 3 10 0 0 0 - - -, f 10;
+#X listbox 80 3 20 0 0 0 - - -, f 20;
+#X listbox 212 218 20 0 0 0 - - -, f 20;
+#X symbolatom 12 218 10 0 0 0 - - -, f 10;
+#X msg 102 38 set foo;
+#X msg 102 98 1 foo 2 3;
+#X msg 12 38 symbol bla;
+#X floatatom 12 68 5 0 0 0 - - -, f 5;
+#X msg 302 38 set foo;
+#X msg 302 98 1 foo 2 3;
+#X msg 212 38 symbol bla;
+#X floatatom 212 68 5 0 0 0 - - -, f 5;
+#X obj 212 108 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
+#000000 #000000;
+#X msg 302 128 list foo 2 3;
+#X msg 302 158 foo 2 3;
+#X obj 12 108 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc #000000
+#000000;
+#X msg 102 128 list foo 2 3;
+#X msg 102 158 foo 2 3;
+#X msg 102 68 set;
+#X msg 302 68 set;
+#X obj 12 258 print symbol;
+#X obj 212 258 print listbox;
+#X text 372 38 sets a symbol (both symbol and listbox);
+#X text 372 68 clears a listbox (no-op with symbol);
+#X text 402 111 list input (gives error with symbol);
+#X text 372 158 not a list -- gives error with both;
+#X msg 12 320 set foo;
+#X symbolatom 12 345 10 0 0 0 - - -, f 10;
+#X msg 210 320 set 1 2 foo bar;
+#X listbox 210 345 20 0 0 0 - - -, f 20;
+#X obj 12 291 loadbang;
+#X symbolatom 10 380 10 0 0 0 - symbox -, f 10;
+#X listbox 10 404 10 0 0 0 - - -, f 10;
+#X listbox 210 380 10 0 0 0 - listbox -, f 10;
+#X symbolatom 210 404 10 0 0 0 - - -, f 10;
+#X text 340 380 You can always send data from a symbol to a listbox
+\, but not the other way round \, unless the listbox contains a single
+symbol., f 46;
+#X text 340 340 You can ckick and drag numbers in a listbox \, like
+in a number box. Try it!, f 46;
+#X text 340 290 You can initialize both symbols and listboxes with
+loadbang and a set message \, or by sending data to a receiver (see
+below)., f 46;
+#X msg 83 380 \; symbox symbol bar \; listbox 4711;
+#X text 210 2 More about symbols and listboxes;
+#X connect 3 0 22 0;
+#X connect 4 0 21 0;
+#X connect 5 0 4 0;
+#X connect 6 0 4 0;
+#X connect 7 0 4 0;
+#X connect 8 0 4 0;
+#X connect 9 0 3 0;
+#X connect 10 0 3 0;
+#X connect 11 0 3 0;
+#X connect 12 0 3 0;
+#X connect 13 0 3 0;
+#X connect 14 0 3 0;
+#X connect 15 0 3 0;
+#X connect 16 0 4 0;
+#X connect 17 0 4 0;
+#X connect 18 0 4 0;
+#X connect 19 0 4 0;
+#X connect 20 0 3 0;
+#X connect 27 0 28 0;
+#X connect 29 0 30 0;
+#X connect 31 0 27 0;
+#X connect 31 0 29 0;
+#X connect 32 0 33 0;
+#X connect 34 0 35 0;
+#X restore 282 701 pd More_about_symbol_and_listbox;
 #X connect 13 0 14 0;
 #X connect 15 0 16 0;
-#X connect 24 0 28 0;
-#X connect 33 0 34 0;
+#X connect 24 0 26 0;
+#X connect 31 0 32 0;
+#X connect 47 0 48 0;
+#X connect 50 0 49 0;

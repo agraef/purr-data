@@ -201,6 +201,8 @@
     "symbol_tt": "Ajouter un objet Symbole au canevas (pour affichage)",
     "comment":    "Commentaire",
     "comment_tt": "Ajouter un object Commentaire au canevas",
+    "listbox": "Listbox",
+    "listbox_tt": "Ajouter un objet Zone de liste au canevas (pour affichage)",
     "dropdown":    "Menu Dropdown",
     "dropdown_tt": "Ajouter un objet Menu Dropdown au canevas (menu déroulant vers le bas)",
     "bang":    "Bang",
