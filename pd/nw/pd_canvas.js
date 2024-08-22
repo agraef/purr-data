@@ -170,6 +170,23 @@ var canvas_events = (function() {
             else
                 return is_canvas_obj(evt.target);
         },
+        target_is_ac_dropdown = function(evt) {
+            let ac = ac_dropdown();
+            if (!ac) {
+                return false;
+            }
+            let rect = ac.getBoundingClientRect();
+            let left = rect.left;
+            let right = rect.right;
+            let top = rect.top;
+            let bottom = rect.bottom;
+
+            if (evt.clientX < left || evt.clientX > right ||
+                evt.clientY < top || evt.clientY > bottom) {
+                return false;
+            }
+            return true;
+        },
         text_to_normalized_svg_path = function(text) {
             text = text.slice(4).trim()  // draw
                        .slice(4).trim()  // path
@@ -540,8 +557,8 @@ var canvas_events = (function() {
                 return false;
             },
             text_mousedown: function(evt) {
-                if (evt.target.parentNode === ac_dropdown()) {
-                    pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
+                if (evt.target.parentNode === ac_dropdown() || (evt.target.tagName === 'SPAN' && evt.target.closest('p') && evt.target.closest('p').parentNode === ac_dropdown())) {
+                    pdgui.select_result_autocomplete_dd(document, textbox(), ac_dropdown());
                     last_yanked = "";
                     // ag: Don't do the usual object instantiation thing if
                     // we've clicked on the autocompletion dropdown. This
@@ -550,6 +567,10 @@ var canvas_events = (function() {
                     evt.stopPropagation();
                     //evt.preventDefault();
                     caret_end();
+                    return false;
+                }
+                if(target_is_ac_dropdown(evt)) {
+                    evt.stopPropagation();
                     return false;
                 }
                 if (textbox() !== evt.target && !target_is_scrollbar(evt)) {
@@ -597,7 +618,7 @@ var canvas_events = (function() {
                         if(ac_dropdown() === null || ac_dropdown().getAttribute("selected_item") === "-1") {
                             grow_svg_for_element(textbox());
                         } else { // else, if there is a selected item on autocompletion tool, the selected item is written on the box
-                            pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
+                            pdgui.select_result_autocomplete_dd(document, textbox(), ac_dropdown());
                             caret_end();
                             // No need to instantiate the object here,
                             // presumably the user wants to go on editing.
@@ -605,26 +626,12 @@ var canvas_events = (function() {
                         last_yanked = "";
                         break;
                     case 9: // tab
-                        [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed, last_offset, last_results, evt.shiftKey?-1:1);
+                        [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(document, textbox(), ac_dropdown(), last_completed, last_offset, last_results, evt.shiftKey?-1:1);
                         last_yanked = "";
                         caret_end();
                         break;
-                    case 36:
-                        if (evt.altKey) { // alt-home
-                            [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), 0, last_offset, last_results, 0);
-                            last_yanked = "";
-                            caret_end();
-                        }
-                        break;
-                    case 35:
-                        if (evt.altKey) { // alt-end
-                            [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_results.length-1, last_offset, last_results, 0);
-                            last_yanked = "";
-                            caret_end();
-                        }
-                        break;
                     case 27: // esc
-                        pdgui.delete_autocomplete_dd(ac_dropdown());
+                        pdgui.delete_autocomplete_dd(document, ac_dropdown());
                         last_completed = last_offset = -1;
                         last_results = [];
                         if (last_yanked != "") {
@@ -642,7 +649,7 @@ var canvas_events = (function() {
                             last_completed = last_offset = -1;
                             last_results = [];
                             if (textbox().innerText === "") {
-                                pdgui.delete_autocomplete_dd(ac_dropdown());
+                                pdgui.delete_autocomplete_dd(document, ac_dropdown());
                                 last_yanked = "";
                             } else if (textbox().innerText === last_yanked) {
                                 // confirmed, really yank now
@@ -687,7 +694,7 @@ var canvas_events = (function() {
                             last_completed = last_offset = -1;
                             last_yanked = "";
                             if (textbox().innerText === "") {
-                                pdgui.delete_autocomplete_dd(ac_dropdown());
+                                pdgui.delete_autocomplete_dd(document, ac_dropdown());
                             } else {
                                 ac_repopulate();
                             }

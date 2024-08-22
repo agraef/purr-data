@@ -446,7 +446,11 @@
         "autocomplete_prefix": "match completions by object name prefix",
         "autocomplete_prefix_tt": "Only list completions whose prefix matches (rather than matches anywhere in object names)",
         "autocomplete_relevance": "sort completions by relevance",
-        "autocomplete_relevance_tt": "List most relevant completions first (based on how frequently they are used)"
+        "autocomplete_relevance_tt": "List most relevant completions first (based on how frequently they are used)",
+        "autocomplete_tooltip_enabled": "show tooltips for objects",
+        "autocomplete_tooltip_enabled_tt": "Show tooltips for objects when hovering over them",
+        "autocomplete_fuzzy_search": "fuzzy matching for autocompletions",
+        "autocomplete_fuzzy_search_tt": "Show approximate completions using fuzzy matching"
       },
       "browser": {
         "browser_title": "Help browser settings (WARNING: changing these may affect startup times!)",
@@ -455,7 +459,11 @@
         "browser_path": "help browser also searches the help path",
         "browser_path_tt": "Also scan help patches in the user-defined help path for searchable keywords (slower)",
         "browser_init": "prepare the help index at application start",
-        "browser_init_tt": "If checked, prepare the index for the help browser already when the application starts"
+        "browser_init_tt": "If checked, prepare the index for the help browser already when the application starts",
+        "reset_init": "clear completions",
+        "reset_init_tt": "If checked, clear the custom completions and arguments when resetting the index",
+        "reset_index": "Reset indexes",
+        "reset_index_tt": "Reset the help and completion indexes"
       }
     },
     "audio": {

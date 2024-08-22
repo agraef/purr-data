@@ -3,8 +3,12 @@
 var pwd;
 var lib_dir;
 var help_path, browser_doc, browser_path, browser_init;
-var autocomplete, autocomplete_prefix, autocomplete_relevance;
+var autocomplete, autocomplete_prefix, autocomplete_relevance, autocomplete_tooltip_enabled, autocomplete_fuzzy_search;
 var pd_engine_id;
+
+//Generate object descriptions by title for the autocompletion menu;
+//calculated dynamically during index construction
+var ac_tooltip_descriptions = new Map();
 
 exports.autocomplete_enabled = function() {
     return autocomplete;
@@ -43,7 +47,7 @@ exports.set_pd_engine_id = function (id) {
 
 function gui_set_browser_config(doc_flag, path_flag, init_flag,
                                 ac_flag, ac_prefix_flag, ac_relevance_flag,
-                                helppath) {
+                                ac_tooltip_flag, ac_fuzzy_search_flag, helppath) {
     // post("gui_set_browser_config: " + helppath.join(":"));
     browser_doc = doc_flag;
     browser_path = path_flag;
@@ -59,6 +63,8 @@ function gui_set_browser_config(doc_flag, path_flag, init_flag,
     autocomplete = ac_flag;
     autocomplete_prefix = ac_prefix_flag;
     autocomplete_relevance = ac_relevance_flag;
+    autocomplete_tooltip_enabled = ac_tooltip_flag;
+    autocomplete_fuzzy_search = ac_fuzzy_search_flag;
     make_completion_index();
     // AG: Start building the keyword index for dialog_search.html. We do this
     // here so that we can be sure that lib_dir and help_path are known
@@ -369,6 +375,7 @@ function add_doc_details_to_index(filename, data) {
         "ref_related_objects": ref_rel_objs
         //"body": big_line,
     });
+    ac_tooltip_descriptions.set(title, desc);
 }
 
 // GB: This does an initial scan of help patches, recording filename, title and
@@ -552,6 +559,7 @@ function make_index() {
                 var desc = e[3] ? e[3] : null;
                 var rel_obj = e[4] ? e[4] : null;
                 var ref_rel_obj = e[5] ? e[5] : null;
+                ac_tooltip_descriptions.set(title, desc);
                 index.addDoc({
                     "id": filename,
                     "title": title,
@@ -594,10 +602,16 @@ exports.build_index = build_index;
 
 // normally, this doesn't actually rebuild the index, it just clears it, so
 // that it will be rebuilt the next time the help browser is opened
-function rebuild_index()
+function rebuild_index(clear_index = false)
 {
     index = init_elasticlunr();
     index_started = index_done = false;
+
+    if (clear_index) {
+        completion_list = [];
+        completion_index = new fuse(completion_list,autocomplete_index_options);
+    }
+
     try {
         fs.unlinkSync(expand_tilde(cache_name));
         fs.unlinkSync(expand_tilde(stamps_name));
@@ -613,13 +627,17 @@ function rebuild_index()
     }
 }
 
+exports.rebuild_index = rebuild_index;
+
 // this is called from the gui tab of the prefs dialog
-function update_browser(doc_flag, path_flag, ac_flag, ac_prefix_flag, ac_relevance_flag)
+function update_browser(doc_flag, path_flag, ac_flag, ac_prefix_flag, ac_relevance_flag, ac_tooltip_flag, ac_fuzzy_search_flag)
 {
     var changed = ac_flag == 1 && autocomplete == 0;
     autocomplete = ac_flag;
     autocomplete_prefix = ac_prefix_flag;
     autocomplete_relevance = ac_relevance_flag;
+    autocomplete_tooltip_enabled = ac_tooltip_flag;
+    autocomplete_fuzzy_search = ac_fuzzy_search_flag;
     doc_flag = doc_flag?1:0;
     path_flag = path_flag?1:0;
     if (browser_doc !== doc_flag) {
@@ -644,7 +662,9 @@ let autocomplete_index_options = {
     useExtendedSearch : true,
     includeMatches : true,
     includeScore : true,
-    keys : ["title", "args.text"]
+    isCaseSensitive : false,
+    keys : ["title", "args.text"],
+    threshold : 0.3
 };
 let args_completion_field = {keys : ["args.text"]};
 let objs_completion_field = {keys : ["title"]};
@@ -671,13 +691,24 @@ function obj_exact_match(title) {
 
 function search_obj(title) {
     if (!autocomplete) return [];
+    let exact_match_results = [];
     // GB approaches: search objects that *contains* search _word_ (1st line) or patches that *begins with* _word_ (2nd line)
     // either should skip the result 'message' and 'text' thus messages and comments are not created the same way objects are
     if (!autocomplete_prefix) {
-        return completion_index.search({$and: [{"title": "'\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
+        exact_match_results = completion_index.search({$and: [{"title": "'\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
     } else {
-        return completion_index.search({$and: [{"title": "^\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
+        exact_match_results = completion_index.search({$and: [{"title": "^\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
     }
+
+    if (exact_match_results.length > 0) {
+        return exact_match_results;
+    }
+
+    if(autocomplete_fuzzy_search){
+        return completion_index.search({$and: [{ "title": title },{ "title": "!\"message\"" },{ "title": "!\"text\"" }]});
+    }
+
+    return [];
 }
 
 function arg_exact_match(title, arg) {
@@ -687,26 +718,48 @@ function arg_exact_match(title, arg) {
 function search_arg(title, arg) {
     if (!autocomplete) return [];
     // for the arguments, we are only interested on the obj that match exactly the 'title', so we return only the args from this obj
-    let results = completion_index.search({$and: [{"title": "=\"" + title + "\""}, {"args.text": "^\"" + arg + "\""}]});
-    if (results.length > 0) {
-        let args = results[0].item.args;
+    let exact_match_results = completion_index.search({$and: [{ "title": "=\"" + title + "\"" },{ "args.text": "^\"" + arg + "\"" }]});
+    if (exact_match_results.length > 0) {
+        let args = exact_match_results[0].item.args;
         // AG: Matched args are in matches.slice(1,), extract them.
         // This code originally just returned matches itself, which has the
         // text of all matched arguments, but not the occurrence data, and we
         // need the latter to sort based on relevance.
-        results = results[0].matches.slice(1,).map(a => args[a.refIndex]);
+        return exact_match_results[0].matches.slice(1).map(a => args[a.refIndex]);
     }
-    return results;
+
+    if(autocomplete_fuzzy_search){
+        let fuzzy_results = completion_index.search({$and: [{ "title": title },{ "args.text": arg }]});
+
+        if (fuzzy_results.length > 0) {
+            let args = fuzzy_results[0].item.args;
+            return fuzzy_results[0].matches.slice(1).map(a => args[a.refIndex]);
+        }
+    }
+    
+    return [];
 }
 
 function search_args(title) {
     // like above, but look up *all* arg completions for a given object
     if (!autocomplete) return [];
     // for the arguments, we are only interested on the obj that match exactly the 'title', so we return only the args from this obj
-    let results = obj_exact_match(title);
+    let exact_match_results = obj_exact_match(title);
     // item.args is live data from the fuse, make sure to take a shallow copy
     // with slice() which can be safely sorted in-place later
-    return (results.length > 0) ? results[0].item.args.slice() : [];
+    if (exact_match_results.length > 0) {
+        let args = exact_match_results[0].item.args.slice();
+        return args;
+    }
+
+    if(autocomplete_fuzzy_search){
+        let fuzzy_results = completion_index.search({$and: [{ "title": title },{ "title": "!\"message\"" },{ "title": "!\"text\"" }]});
+        if (fuzzy_results.length > 0) {
+            return fuzzy_results[0].item.args.slice();
+        }
+    }
+
+    return [];
 }
 
 function index_obj_completion(obj_or_msg, obj_or_msg_text) {
@@ -768,23 +821,55 @@ function update_autocomplete_selected(ac_dropdown, sel, new_sel) {
 function update_autocomplete_dd_arrowdown(ac_dropdown) {
     if (ac_dropdown !== null) {
         let sel = ac_dropdown.getAttribute("selected_item");
-        update_autocomplete_selected(ac_dropdown, sel, parseInt(sel) + 1);
+        let new_sel = parseInt(sel) + 1;
+
+        if (new_sel < ac_dropdown.children.length) {
+            update_autocomplete_selected(ac_dropdown, sel, new_sel);
+            let selected_element = ac_dropdown.children.item(new_sel);
+            let dropdown_height = ac_dropdown.offsetHeight;
+            let scroll_bottom = ac_dropdown.scrollTop + dropdown_height;
+            let element_bottom = selected_element.offsetTop + selected_element.offsetHeight;
+
+            if (element_bottom > scroll_bottom) {
+                ac_dropdown.scrollTop = (element_bottom - dropdown_height) + 4;
+            }
+        } else {
+            // Reached the end of the dropdown, cycle back to the beginning
+            update_autocomplete_selected(ac_dropdown, sel, 0);
+            ac_dropdown.scrollTop = 0;
+        }
     }
 }
 
 function update_autocomplete_dd_arrowup(ac_dropdown) {
     if (ac_dropdown !== null) {
         let sel = ac_dropdown.getAttribute("selected_item");
-        update_autocomplete_selected(ac_dropdown, sel, parseInt(sel) - 1);
+        let new_sel = parseInt(sel) - 1;
+
+        if (new_sel >= 0) {
+            update_autocomplete_selected(ac_dropdown, sel, new_sel);
+            let selected_element = ac_dropdown.children.item(new_sel);
+
+            if (selected_element.offsetTop < ac_dropdown.scrollTop) {
+                ac_dropdown.scrollTop = selected_element.offsetTop;
+            }
+        } else {
+        // Reached the beginning of the dropdown, cycle back to the end
+            let last_index = ac_dropdown.children.length - 1;
+            update_autocomplete_selected(ac_dropdown, sel, last_index);
+            let last_element = ac_dropdown.children.item(last_index);
+            ac_dropdown.scrollTop = last_element.offsetTop+4;
+        }
     }
 }
 
-function select_result_autocomplete_dd(textbox, ac_dropdown, last, offs, res, dir) {
+function select_result_autocomplete_dd(doc, textbox, ac_dropdown, last, offs, res, dir) {
     if (ac_dropdown !== null) {
+        delete_tooltip(doc);
         let sel = ac_dropdown.getAttribute("selected_item");
         if (sel > -1) {
             textbox.innerText = ac_dropdown.children.item(sel).innerText;
-            delete_autocomplete_dd(ac_dropdown);
+            delete_autocomplete_dd(doc, ac_dropdown);
             return [sel+offs, offs];
         } else {
 	    // We only come here if the user presses 'tab' and there is no
@@ -819,8 +904,38 @@ function select_result_autocomplete_dd(textbox, ac_dropdown, last, offs, res, di
     }
 }
 
+function create_tooltip(doc) {
+    let tooltip = doc.createElement("div");
+    tooltip.className = "tooltip";
+    tooltip.style.position = "absolute";
+    tooltip.style.visibility = "hidden";
+    tooltip.style.opacity = "0";
+    tooltip.style.zIndex = "1000";
+    tooltip.style.backgroundColor = "black";
+    tooltip.style.borderRadius="5px"
+    tooltip.style.color = "white";
+    tooltip.style.padding = "5px";
+    tooltip.style.fontSize = "12px";
+    tooltip.style.border = "2px solid black";
+    tooltip.style.textAlign = "center";
+    tooltip.style.width = "auto"; 
+    tooltip.style.maxWidth = "220px"; 
+    tooltip.style.wordWrap = "break-word"; 
+    doc.body.appendChild(tooltip);
+    return tooltip;
+}
+
+function delete_tooltip(doc) {
+    let tooltip = doc.querySelector(".tooltip");
+    if (tooltip) {
+        doc.body.removeChild(tooltip);
+    }
+}
+
+
 // GB: update autocomplete dropdown with new results
 function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
+    delete_tooltip(doc);
     ac_dropdown().setAttribute("searched_text", text);
     let title, arg, have_arg;
     if (obj_class === "obj") {
@@ -915,14 +1030,15 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
 
     // record the complete results, we need them for tab completion
     let all_results = results;
-    // GB TODO: ideally we should be able to show all the results in a limited window with a scroll bar
-    let n = 8; // Maximum number of suggestions
-    if (results.length > n) results = results.slice(0,n);
 
     ac_dropdown().innerHTML = ""; // clear all old results
     if (results.length > 0) {
         // for each result, make a paragraph child of autocomplete_dropdown
         let h = ac_dropdown().getAttribute("font_height");
+        let tooltip;
+        if (autocomplete_tooltip_enabled) {
+            tooltip = create_tooltip(doc);
+        }
         results.forEach(function (f,i,a) {
             let y = h*(i+1);
             let r = doc.createElement("p");
@@ -931,12 +1047,45 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
             r.setAttribute("y", y);
             r.setAttribute("class", "border");
             r.setAttribute("idx", i);
-            r.textContent = f;
+
+            let parts = f.split(text);
+            let content = "";
+
+            for (let j = 0; j < parts.length; j++) {
+                if (j > 0) {
+                    content += `<span class="highlight">${text}</span>`;
+                }
+                content += parts[j];
+            }
+
+            r.innerHTML = content;
+
+            if (autocomplete_tooltip_enabled) {
+                r.addEventListener("mouseover", function (e) {
+                    let description = ac_tooltip_descriptions.get(f);
+                    if (description) {
+                        tooltip.textContent = description;
+                        tooltip.style.top = `${e.clientY + 10}px`;
+                        tooltip.style.left = `${e.clientX}px`;
+                        tooltip.style.visibility = "visible";
+                        tooltip.style.opacity = "1";
+                    } else {
+                        tooltip.style.visibility = "hidden";
+                        tooltip.style.opacity = "0";
+                    }
+                });
+
+                r.addEventListener("mouseout", function () {
+                    tooltip.style.visibility = "hidden";
+                    tooltip.style.opacity = "0";
+                });
+            }
+            
             ac_dropdown().appendChild(r);
         })
         ac_dropdown().setAttribute("selected_item", "-1");
     } else { // if there is no suggestion candidate, the autocompletion dropdown should disappear
-        delete_autocomplete_dd (ac_dropdown());
+        delete_autocomplete_dd (doc, ac_dropdown());
     }
     return all_results;
 }
@@ -976,8 +1125,9 @@ function create_autocomplete_dd (doc, ac_dropdown, new_obj_element) {
     }
 }
 
-function delete_autocomplete_dd (ac_dropdown) {
+function delete_autocomplete_dd (doc, ac_dropdown) {
     if (ac_dropdown !== null) {
+        delete_tooltip(doc)
         ac_dropdown.parentNode.removeChild(ac_dropdown);
     }
 }
@@ -7287,12 +7437,12 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
 
 function gui_gui_properties(dummy, name, show_grid, grid_size, save_zoom,
                             autocomplete, autocomplete_prefix, autocomplete_relevance,
-                            browser_doc, browser_path, browser_init,
+                            autocomplete_tooltip_enabled, autocomplete_fuzzy_search, browser_doc, browser_path, browser_init,
                             autopatch_yoffset) {
     if (dialogwin["prefs"] !== null) {
         dialogwin["prefs"].window.gui_prefs_callback(name, show_grid, grid_size,
             save_zoom, autocomplete, autocomplete_prefix, autocomplete_relevance,
-            browser_doc, browser_path, browser_init, autopatch_yoffset);
+            autocomplete_tooltip_enabled, autocomplete_fuzzy_search, browser_doc, browser_path, browser_init, autopatch_yoffset);
     }
 }
 
