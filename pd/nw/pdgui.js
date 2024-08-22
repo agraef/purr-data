@@ -5748,6 +5748,227 @@ function gui_pianoroll_erase_innards(cid, tag) {
     });
 }
 
+// pd-lua gfx helpers (ag@gmail.com)
+
+// create the graphics container (a gobj)
+function gui_luagfx_new(cid, tag, xpos, ypos, is_toplevel) {
+    gui_gobj_new(cid, tag, "obj", xpos, ypos, is_toplevel, 0);
+}
+
+// clear the contents of the graphics container
+function gui_luagfx_clear(cid, tag) {
+    // get rid of all contents
+    gui(cid).get_gobj(tag, function(g) {
+        g.innerHTML = "";
+    });
+}
+
+// clear the contents, old version (we keep this around for backward
+// compatibility with pd-lua 0.12.1)
+function gui_luagfx_clear_contents(cid, tag) {
+    gui(cid).get_gobj(tag, function(e) {
+        e.innerHTML = "";
+    });
+}
+
+// this erases the gobj (completely removes it)
+function gui_luagfx_erase(cid, tag) {
+    gui_gobj_erase(cid, tag);
+}
+
+// a bunch of drawing operations as required by the pd-lua graphics interface
+function gui_luagfx_fill_all(cid, tag, gfxtag, color, x1, y1, x2, y2) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        // border rectangle in the usual style with the given bg color
+        var r = create_item(cid, "rect", {
+            x: x1,
+            y: y1,
+            width: x2 - x1,
+            height: y2 - y1,
+            class: "border",
+            style: "fill: "+color+";",
+            id: gfxtag
+        });
+        frag.appendChild(r);
+        return frag;
+    });
+}
+
+function gui_luagfx_fill_rect(cid, tag, gfxtag, color, width, x1, y1, x2, y2) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var gx = create_item(cid, "rect", {
+            x: x1,
+            y: y1,
+            width: x2 - x1,
+            height: y2 - y1,
+            fill: color,
+            "stroke-width": width,
+            id: gfxtag
+        });
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
+function gui_luagfx_stroke_rect(cid, tag, gfxtag, color, width, x1, y1, x2, y2) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var gx = create_item(cid, "rect", {
+            x: x1,
+            y: y1,
+            width: x2 - x1,
+            height: y2 - y1,
+            fill: "none",
+            stroke: color,
+            "stroke-width": width,
+            id: gfxtag
+        });
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
+function gui_luagfx_fill_rounded_rect(cid, tag, gfxtag, color, width, x1, y1, x2, y2, rx, ry) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var gx = create_item(cid, "rect", {
+            x: x1,
+            y: y1,
+            width: x2 - x1,
+            height: y2 - y1,
+            rx: rx,
+            ry: ry,
+            fill: color,
+            "stroke-width": width,
+            id: gfxtag
+        });
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
+function gui_luagfx_stroke_rounded_rect(cid, tag, gfxtag, color, width, x1, y1, x2, y2, rx, ry) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var gx = create_item(cid, "rect", {
+            x: x1,
+            y: y1,
+            width: x2 - x1,
+            height: y2 - y1,
+            rx: rx,
+            ry: ry,
+            fill: "none",
+            stroke: color,
+            "stroke-width": width,
+            id: gfxtag
+        });
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
+function gui_luagfx_fill_ellipse(cid, tag, gfxtag, color, width, x1, y1, x2, y2) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var gx = create_item(cid, "ellipse", {
+            cx: (x2 - x1) * 0.5 + x1,
+            cy: (y2 - y1) * 0.5 + y1,
+            rx: (x2 - x1) * 0.5,
+            ry: (y2 - y1) * 0.5,
+            fill: color,
+            "stroke-width": width,
+            id: gfxtag
+        });
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
+function gui_luagfx_stroke_ellipse(cid, tag, gfxtag, color, width, x1, y1, x2, y2) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var gx = create_item(cid, "ellipse", {
+            cx: (x2 - x1) * 0.5 + x1,
+            cy: (y2 - y1) * 0.5 + y1,
+            rx: (x2 - x1) * 0.5,
+            ry: (y2 - y1) * 0.5,
+            fill: "none",
+            stroke: color,
+            "stroke-width": width,
+            id: gfxtag
+        });
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
+function gui_luagfx_draw_line(cid, tag, gfxtag, color, width, x1, y1, x2, y2) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var gx = create_item(cid, "line", {
+            x1: x1,
+            y1: y1,
+            x2: x2,
+            y2: y2,
+            stroke: color,
+            "stroke-width": width,
+            id: gfxtag
+        });
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
+function gui_luagfx_draw_text(cid, tag, gfxtag, color, width, font_height, x, y, text) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        // Check gui_text_new for some black magic being used here.
+        var gx = create_item(cid, "text", {
+            transform: "translate(" + x + ")",
+            y: y + font_height,
+            width: width,
+            "font-size": font_height + "px",
+            fill: color,
+            id: gfxtag
+        });
+        // fill svg_text with tspan content by splitting on "\n"
+        text_to_tspans(cid, gx, text);
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
+function gui_luagfx_fill_path(cid, tag, gfxtag, color, width, path) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var gx = create_item(cid, "path", {
+            d: path.join(" "),
+            fill: color,
+            "stroke-width": width,
+            id: gfxtag
+        });
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
+function gui_luagfx_stroke_path(cid, tag, gfxtag, color, width, path) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var gx = create_item(cid, "path", {
+            d: path.join(" "),
+            fill: "none",
+            stroke: color,
+            "stroke-width": width,
+            id: gfxtag
+        });
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
 // mknob from moonlib
 function gui_mknob_new(cid, tag, x, y, is_toplevel, show_in, show_out,
     is_footils_knob) {

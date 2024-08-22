@@ -10,6 +10,14 @@ behavior for "gobjs" appears at the end of this file.  */
 #include "m_imp.h"
 #include <stdio.h>
 
+#ifdef _WIN32
+# include <malloc.h> /* MSVC or mingw on windows */
+#elif defined(__linux__) || defined(__APPLE__)
+# include <alloca.h> /* linux, mac, mingw, cygwin */
+#else
+# include <stdlib.h> /* BSDs for example */
+#endif
+
 union inletunion
 {
     t_symbol *iu_symto;
@@ -86,7 +94,12 @@ static int inlet_fwd(t_inlet *x, t_symbol *s, int argc, t_atom *argv)
     if(x->i_symfrom == &s_signal
         && zcheckgetfn(x->i_dest, gensym("fwd"), A_GIMME, A_NULL))
     {
-        mess3i(x->i_dest, gensym("fwd"), s, argc, argv);
+        t_atom *argvec = (t_atom *)alloca((argc+1) * sizeof(t_atom));
+        int i;
+        SETSYMBOL(argvec, s);
+        for (i = 0; i < argc; i++)
+          argvec[i+1] = argv[i];
+        typedmess(x->i_dest, gensym("fwd"), argc+1, argvec);
         return 1;
     }
     return 0;
