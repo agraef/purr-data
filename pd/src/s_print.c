@@ -220,15 +220,15 @@ void verbose(int level, const char *fmt, ...)
     char buf[MAXPDSTRING];
     va_list ap;
     if(level>sys_verbose)return;
-    dopost("verbose(");
-    postfloat((t_float)level);
-    dopost("):");
     
     va_start(ap, fmt);
     vsnprintf(buf, MAXPDSTRING-1, fmt, ap);
     va_end(ap);
     strcat(buf, "\n");
-    dopost(buf);
+
+        /* log levels for verbose() traditionally start at -3,
+        so we have to adjust it before passing it on to dologpost() */
+    dologpost(NULL, level + 3, buf);
 }
 
     /* here's the good way to log errors -- keep a pointer to the
