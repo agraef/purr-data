@@ -395,7 +395,9 @@
       "audio": "Audio",
       "audio_tt": "configure the audio devices",
       "midi": "MIDI",
-      "midi_tt": "configure MIDI devices"
+      "midi_tt": "configure MIDI devices",
+      "issue": "Issue",
+      "issue_tt": "report an issue/feedback"
     },
     "startup": {
       "flags": "startup flags",
@@ -483,6 +485,18 @@
       "input_title_tt": "hardware devices used to get audio into Pd",
       "output_title": "Output Devices",
       "output_title_tt": "hardware devices to send audio from Pd"
+    },
+    "issue":{
+      "title_tt": "give a short title for the issue",
+      "title": "Title",
+      "description": "Description",
+      "description_tt": "Describe the issue you are experiencing",
+      "submit": "Submit",
+      "submit_tt": "Submit the issue to the Purr-Data issue tracker",
+      "steps_to_reproduce": "Steps to Reproduce",
+      "steps_to_reproduce_tt": "List the steps to reproduce the issue",
+      "environment_details": "Environment Details",
+      "environment_details_tt": "List the environment details where the issue occurred"
     },
     "midi": {
       "api": "midi api",

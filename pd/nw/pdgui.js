@@ -5,6 +5,8 @@ var lib_dir;
 var help_path, browser_doc, browser_path, browser_init;
 var autocomplete, autocomplete_prefix, autocomplete_relevance, autocomplete_tooltip_enabled, autocomplete_fuzzy_search;
 var pd_engine_id;
+var on_issue_tab;
+
 
 //Generate object descriptions by title for the autocompletion menu;
 //calculated dynamically during index construction
@@ -7966,11 +7968,30 @@ function gui_find_lowest_and_arrange(cid, reference_element_tag, objtag) {
     });
 }
 
+
+
+function set_on_issue_tab(val) {
+    on_issue_tab = val;
+}
+
+function submit_issue(issue_title, issue_description, steps_to_reproduce, environment_details) {
+    var body = `%23%23 Description:%0A${issue_description}%0A%0A` +
+               `%23%23 Steps to Reproduce:%0A${steps_to_reproduce}%0A%0A` +
+               `%23%23 Environment Details:%0A${environment_details}`;
+
+    var url = `https://github.com/agraef/purr-data/issues/new?title=${issue_title}&body=${body}`;
+
+    nw.Shell.openExternal(url);
+} 
+
+exports.set_on_issue_tab = set_on_issue_tab;
+exports.submit_issue = submit_issue;
+
 // Bindings for dialog menu of iemgui, canvas, etc.
 exports.dialog_bindings = function(did) {
     var dwin = dialogwin[did].window;
     dwin.document.onkeydown = function(evt) {
-        if (evt.keyCode === 13) { // enter
+        if (evt.keyCode === 13  && !on_issue_tab) { // enter
             dwin.ok();
         } else if (evt.keyCode === 27) { // escape
             dwin.cancel();
