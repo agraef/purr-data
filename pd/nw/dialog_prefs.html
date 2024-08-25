@@ -82,7 +82,7 @@ select {
                onclick="check_tabs()"
                class="tab5 prefs_tab"/>
         <label for="issue_tab_radio" data-i18n="[title]prefs.heading.issue_tt">
-          <span data-i18n="prefs.heading.issue">Issue</span>
+          <span data-i18n="prefs.heading.issue"></span>
         </label>
 
         <div class="tab1">
@@ -558,43 +558,44 @@ select {
                      style="width: 96%">
             </label>
           </div>
+        </div>
 
-          <div class="tab5">
-            <div class="tab_settings">
-              
-              <h4>Submit issue/feedback on GitHub (login required)
-              </h4>
-              
-              <label data-i18n="[title]prefs.issue.title_tt">
-                <span data-i18n="prefs.issue.title">Issue Title</span>
-                <br/>
-                <input style="width: 50vw;" type="text" id="issue_title" name="issue_title">
-              </label>
+        <div class="tab5">
+          <div class="tab_settings">
+            <label data-i18n="[title]prefs.issue.title_tt">
+              <span data-i18n="prefs.issue.title">Issue Title</span>
               <br/>
-          
-              <label data-i18n="[title]prefs.issue.description_tt">
-                <span data-i18n="prefs.issue.description">Description</span>
-                <br/>
-                <textarea id="issue_description" style="width: 96.5vw; height: 12vw; resize: none;" name="issue_description" placeholder="* What happened? Describe the unexpected behavior.&#10;* Expected behavior: What did you expect to happen?.&#10;* Any other feedbacks?"></textarea>
-              </label>
+              <input style="width: 50vw;" type="text" id="issue_title" name="issue_title">
+            </label>
+            <br/>
+
+            <label data-i18n="[title]prefs.issue.description_tt">
+              <span data-i18n="prefs.issue.description">Description</span>
               <br/>
-    
-              <label data-i18n="[title]prefs.issue.steps_to_reproduce_tt">
-                <span data-i18n="prefs.issue.steps_to_reproduce">Steps to Reproduce</span>
-                <br/>
-                <textarea id="steps_to_reproduce" style="width: 96.5vw; height: 12vw; resize: none;" name="steps_to_reproduce" placeholder="1. Step 1: [Detail the first step]&#10;2. Step 2: [Detail the second step]&#10;..."></textarea>
-              </label>
+              <textarea id="issue_description" style="width: 96.5vw; height: 18vh; resize: none;" name="issue_description" placeholder="* What happened? Describe the unexpected behavior.&#10;* Expected behavior: What did you expect to happen?.&#10;* Any other feedbacks?"></textarea>
+            </label>
+            <br/>
+
+            <label data-i18n="[title]prefs.issue.steps_to_reproduce_tt">
+              <span data-i18n="prefs.issue.steps_to_reproduce">Steps to Reproduce</span>
               <br/>
-          
-              <label data-i18n="[title]prefs.issue.environment_details_tt">
-                <span data-i18n="prefs.issue.environment_details">Environment Details</span>
-                <br/>
-                <textarea id="environment_details" style="width: 96.5vw; height: 12vw; resize: none;" name="environment_details" placeholder="* OS: e.g., Windows 10, macOS 11.2, etc.&#10;* Purr Data Version: e.g., v1.0.0"></textarea>
-              </label>
+              <textarea id="steps_to_reproduce" style="width: 96.5vw; height: 18vh; resize: none;" name="steps_to_reproduce" placeholder="1. Step 1: [Detail the first step]&#10;2. Step 2: [Detail the second step]&#10;..."></textarea>
+            </label>
+            <br/>
+
+            <label data-i18n="[title]prefs.issue.environment_details_tt">
+              <span data-i18n="prefs.issue.environment_details">Environment Details</span>
               <br/>
-          
-              <button type="button" onclick="submit_issue()" data-i18n="[title]prefs.issue.submit_tt">
-                <span data-i18n="prefs.issue.submit">Submit Issue</span>
+    <textarea id="environment_details" style="width: 96.5vw; height: 18vh; resize: none;" name="environment_details" placeholder="* OS: e.g., Windows 11, macOS 13.6, Ubuntu 24.04, etc.&#10;* Purr Data Version: e.g., 2.19.4"></textarea>
+            </label>
+            <br/>
+
+            <div class="submit_buttons prefs_buttons">
+              <button type="button" onClick="submit_issue()" data-i18n="[title]prefs.issue.submit_tt">
+                <span data-i18n="prefs.issue.submit"></span>
+              </button>
+              <button type="button" onClick="cancel()" data-i18n="[title]prefs.close_tt">
+                <span data-i18n="prefs.close"></span>
               </button>
             </div>
           </div>
@@ -638,6 +639,23 @@ function reset_indexes() {
     pdgui.rebuild_index(get_bool_elem("reset_init"));
 }
 
+function get_input_field_value(id) {
+    return document.getElementById(id).value;
+}
+
+function clear_input_field_value(id) {
+    return document.getElementById(id).value = "";
+}
+
+function check_issue() {
+    var issue_title = get_input_field_value("issue_title");
+    var issue_description = get_input_field_value("issue_description");
+    var steps_to_reproduce = get_input_field_value("steps_to_reproduce");
+    var environment_details = get_input_field_value("environment_details");
+    var proceed = !issue_title && !issue_description && !steps_to_reproduce && !environment_details;
+    return proceed || confirm(pdgui.get_local_string("prefs.issue.confirm"));
+}
+
 function submit_issue() {
     var issue_title = get_input_field_value("issue_title");
     var issue_description = get_input_field_value("issue_description");
@@ -645,7 +663,7 @@ function submit_issue() {
     var environment_details = get_input_field_value("environment_details");
 
     if (!issue_title || !issue_description) {
-        alert("Issue Title, and Description are required fields.");
+        alert(pdgui.get_local_string("prefs.issue.warning"));
         return;
     }
 
@@ -657,15 +675,22 @@ function submit_issue() {
 
     pdgui.submit_issue(encoded_issue_title, encoded_issue_description, encoded_steps_to_reproduce, encoded_environment_details);
 
+    // clear all fields so that the user doesn't accidentally submit the same
+    // report twice
+    clear_input_field_value("issue_title");
+    clear_input_field_value("issue_description");
+    clear_input_field_value("steps_to_reproduce");
+    clear_input_field_value("environment_details");
 }
 
 function check_tabs() {
-  pdgui.set_on_issue_tab(document.getElementById("issue_tab_radio").checked);
-  if (document.getElementById("issue_tab_radio").checked) {
-    document.getElementById("buttons").style.display = "none";
-  } else {
-    document.getElementById("buttons").style.display = "block";
-  }
+    var issue_tab_checked = document.getElementById("issue_tab_radio").checked;
+    pdgui.set_on_issue_tab(issue_tab_checked);
+    if (issue_tab_checked) {
+        document.getElementById("buttons").style.display = "none";
+    } else {
+        document.getElementById("buttons").style.display = "block";
+    }
 }
 
 function gui_preset_change(elem) {
@@ -950,6 +975,7 @@ function apply(save_prefs) {
 }
 
 function cancel() {
+    if (!check_issue()) return;
     var i, attrs, gfxstub;
     // There seems to be a bug in nwjs 0.13 beta3 that doesn't call the
     // "close" event below. This has the symptom of making it impossible

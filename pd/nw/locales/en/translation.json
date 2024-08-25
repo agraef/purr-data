@@ -396,8 +396,8 @@
       "audio_tt": "configure the audio devices",
       "midi": "MIDI",
       "midi_tt": "configure MIDI devices",
-      "issue": "Issue",
-      "issue_tt": "report an issue/feedback"
+      "issue": "Feedback",
+      "issue_tt": "submit feedback or report an issue"
     },
     "startup": {
       "flags": "startup flags",
@@ -486,18 +486,6 @@
       "output_title": "Output Devices",
       "output_title_tt": "hardware devices to send audio from Pd"
     },
-    "issue":{
-      "title_tt": "give a short title for the issue",
-      "title": "Title",
-      "description": "Description",
-      "description_tt": "Describe the issue you are experiencing",
-      "submit": "Submit",
-      "submit_tt": "Submit the issue to the Purr-Data issue tracker",
-      "steps_to_reproduce": "Steps to Reproduce",
-      "steps_to_reproduce_tt": "List the steps to reproduce the issue",
-      "environment_details": "Environment Details",
-      "environment_details_tt": "List the environment details where the issue occurred"
-    },
     "midi": {
       "api": "midi api",
       "api_tt": "midi backend or server used to communicate with midi devices",
@@ -509,6 +497,20 @@
       "input_title_tt": "hardware devices used to get midi data into Pd",
       "output_title": "Output Devices",
       "output_title_tt": "hardware devices to send midi data from Pd"
+    },
+    "issue":{
+      "title": "Title",
+      "title_tt": "Please provide a short title for your feedback",
+      "description": "Description",
+      "description_tt": "Describe the issue you are experiencing",
+      "submit": "Submit",
+      "submit_tt": "Submit your feedback to the Purr-Data issue tracker (login required)",
+      "warning": "Title and Description are required fields.",
+      "confirm": "Your feedback will be lost. Close anyway?",
+      "steps_to_reproduce": "Steps to Reproduce",
+      "steps_to_reproduce_tt": "List the steps to reproduce the issue",
+      "environment_details": "Environment Details",
+      "environment_details_tt": "Details about your operating system, Purr-Data version, etc."
     },
     "ok": "Ok",
     "ok_tt": "Update the preferences and close the dialog",
