@@ -5,6 +5,8 @@ var lib_dir;
 var help_path, browser_doc, browser_path, browser_init;
 var autocomplete, autocomplete_prefix, autocomplete_relevance, autocomplete_tooltip_enabled, autocomplete_fuzzy_search;
 var pd_engine_id;
+var on_issue_tab;
+
 
 //Generate object descriptions by title for the autocompletion menu;
 //calculated dynamically during index construction
@@ -934,7 +936,7 @@ function delete_tooltip(doc) {
 
 
 // GB: update autocomplete dropdown with new results
-function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
+function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text, textbox) {
     delete_tooltip(doc);
     ac_dropdown().setAttribute("searched_text", text);
     let title, arg, have_arg;
@@ -1028,8 +1030,24 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
         results = results.map(a => a.item.title);
     }
 
+    if (results.length === 0) {
+        textbox.style.textDecoration = 'underline';
+        textbox.style.textDecorationColor = 'red';
+        textbox.style.textDecorationStyle = 'wavy';
+        textbox.style.textUnderlinePosition = 'under'
+    } else {
+        textbox.style.textDecoration = 'none';
+    }
+
     // record the complete results, we need them for tab completion
     let all_results = results;
+
+    let n = 12; // Maximum number of suggestions
+    if (results.length < n){
+        ac_dropdown().style.overflowY = 'hidden'; // Remove scrollbar
+    } else{
+        ac_dropdown().style.overflowY = 'scroll'; // Show scrollbar
+    }
 
     ac_dropdown().innerHTML = ""; // clear all old results
     if (results.length > 0) {
@@ -7740,6 +7758,7 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
             width_spec > 0 ? width_spec + "ch" : "60ch");
         //p.style.setProperty("width", -width_spec - 2 + "px");
         p.style.setProperty("-webkit-padding-after", "1px");
+        p.style.setProperty("padding-bottom", "4px")
         p.style.setProperty("min-width",
             width_spec == 0 ? "3ch" :
                 (is_gop == 1 ? width_spec - 3 + "px" :
@@ -8224,11 +8243,30 @@ function gui_find_lowest_and_arrange(cid, reference_element_tag, objtag) {
     });
 }
 
+
+
+function set_on_issue_tab(val) {
+    on_issue_tab = val;
+}
+
+function submit_issue(issue_title, issue_description, steps_to_reproduce, environment_details) {
+    var body = `%23%23 Description:%0A${issue_description}%0A%0A` +
+               `%23%23 Steps to Reproduce:%0A${steps_to_reproduce}%0A%0A` +
+               `%23%23 Environment Details:%0A${environment_details}`;
+
+    var url = `https://github.com/agraef/purr-data/issues/new?title=${issue_title}&body=${body}`;
+
+    nw.Shell.openExternal(url);
+} 
+
+exports.set_on_issue_tab = set_on_issue_tab;
+exports.submit_issue = submit_issue;
+
 // Bindings for dialog menu of iemgui, canvas, etc.
 exports.dialog_bindings = function(did) {
     var dwin = dialogwin[did].window;
     dwin.document.onkeydown = function(evt) {
-        if (evt.keyCode === 13) { // enter
+        if (evt.keyCode === 13  && !on_issue_tab) { // enter
             dwin.ok();
         } else if (evt.keyCode === 27) { // escape
             dwin.cancel();
