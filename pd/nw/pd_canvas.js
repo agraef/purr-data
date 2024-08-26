@@ -352,7 +352,7 @@ var canvas_events = (function() {
             if (obj_class === "obj") { // autocomplete only works for objects
                 pdgui.create_autocomplete_dd(document, ac_dropdown(), textbox());
                 if (ac_dropdown().getAttribute("searched_text") !== textbox().innerText) {
-                    last_results = pdgui.repopulate_autocomplete_dd(document, ac_dropdown, obj_class, textbox().innerText);
+                    last_results = pdgui.repopulate_autocomplete_dd(document, ac_dropdown, obj_class, textbox().innerText, textbox());
                     last_offset = 0;
                 }
             }
