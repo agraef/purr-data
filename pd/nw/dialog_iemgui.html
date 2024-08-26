@@ -615,8 +615,8 @@ function register_window_id(gfxstub, attr_object) {
             new_attrs[attr] = old_attrs[attr];
         }
     }
-    console.log("attr object is " + attr_object.toString() +
-        " and its type is " + attr_object.type);
+    //console.log("attr object is " + attr_object.toString() +
+    //    " and its type is " + attr_object.type);
     add_events(gfxstub);
     pdgui.gui_check_for_dialog_appearance_inconsistencies(gfxstub);
 
@@ -642,11 +642,6 @@ function register_window_id(gfxstub, attr_object) {
     pdgui.resize_window(pd_object_callback);
 }
 
-function tr_text(id) {
-    var elem = document.getElementById("iem.prop." + id);
-    elem.textContent = l("iem.prop." + id);
-}
-
 // Stop-gap translator
 function translate_form() {
     var i
@@ -667,7 +662,7 @@ function populate_form(attr_object) {
         // Unhide the span with the class with the same name as the id
         var prop_group = document.getElementsByClassName(attr)[0];
         if (prop_group !== undefined) {
-            console.log("the thing here is " + attr);
+            //console.log("the thing here is " + attr);
             prop_group.classList.remove("hidden");
         }
         // iemguis use the string 'empty' for null because of

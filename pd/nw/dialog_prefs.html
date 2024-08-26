@@ -12,6 +12,11 @@ select {
   height: 1.6em;
 }
 
+.tab_settings span {
+    display: inline-block;
+    text-align: left;
+}
+
 #in1, #in2, #in3, #in4, #out1, #out2, #out3, #out4 {
   width: 100%;
 }
@@ -29,7 +34,7 @@ select {
       <table id="titlebar">
         <tr>
           <td style="width: 100%;">
-            <div id="titlebar_title">Pd-L2Ork Properties</div>
+            <div id="titlebar_title">Purr-Data Properties</div>
           </td>
           <td id="titlebar_buttons_td">
             <div class="titlebar_buttons">
@@ -104,7 +109,14 @@ select {
                 <input type="text"
                        id="rate"
                        name="rate"
+                       style="width: 50px;"
                        onchange="attr_change(this);">
+		<button type="button"
+			onclick="rate_change('44100');">44.1k</button>
+		<button type="button"
+			onclick="rate_change('48000');">48k</button>
+		<button type="button"
+			onclick="rate_change('96000');">96k</button>
               </td>
             </tr>
             <tr data-i18n="[title]prefs.audio.blocksize_tt">
@@ -130,6 +142,7 @@ select {
                 <input type="text"
                        id="advance"
                        name="advance"
+                       style="width: 50px;"
                        onchange="attr_change(this);">
               </td>
             </tr>
@@ -279,14 +292,14 @@ select {
         <div class="tab2">
           <div class="tab_settings midi_api_container">
             <label data-i18n="[title]prefs.midi.api_tt">
-              <span data-i18n="prefs.midi.api"></span>
+              <span id="midi_api_span" data-i18n="prefs.midi.api"></span>
               <select id="midi_api" onchange="change_api(this);">
               </select>
             </label>
           </div>
           <div class="tab_settings alsa_midi">
             <label data-i18n="[title]prefs.midi.alsa_in_ports_tt">
-              <span data-i18n="prefs.midi.alsa_in_ports"></span>
+              <span id="alsa_in_ports_span" data-i18n="prefs.midi.alsa_in_ports"></span>
               <input type="text"
                      id="alsa_in_ports"
                      name="alsa_in_ports"
@@ -822,6 +835,12 @@ function attr_change(elem) {
     attr[attr.indexOf(id) + 1] = elem.value;
 }
 
+function rate_change(x) {
+    var elem = document.getElementById("rate");
+    elem.value = x;
+    attr_change(elem);
+}
+
 function alsa_ports_change(elem, type) {
     var attr, dummy, i, len;
     attr = pd_midi_attrs;
@@ -1123,8 +1142,10 @@ function audio_prefs_callback(attrs) {
     populate_devs("in", attrs);
     populate_devs("out", attrs);
 
-    set_devs("in", get_attr("pd-indevs", attrs));
-    set_devs("out", get_attr("pd-outdevs", attrs));
+    var indevs = get_attr("sys-indevs", attrs);
+    var outdevs = get_attr("sys-outdevs", attrs);
+    set_devs("in", get_attr("pd-indevs", attrs), indevs.length, -1);
+    set_devs("out", get_attr("pd-outdevs", attrs), outdevs.length, -1);
 
     // Set chans after the devs (because they may
     // have the side-effect of setting the dev to 'None')
@@ -1140,10 +1161,22 @@ function audio_prefs_callback(attrs) {
     pdgui.resize_window(pd_object_callback);
 }
 
-function set_devs(type, devs) {
+/* ag: This function now has some extra arguments n (the number of devices)
+ * and nodev (device index denoting the "None" device), so that we can
+ * properly detect and fix invalid device indices when changing audio and
+ * midi apis on the fly. */
+function set_devs(type, devs, n, nodev) {
     var i;
     for (i = 0; i < devs.length; i++) {
-        document.getElementById(type + (i+1)).value = devs[i];
+        var elem = document.getElementById(type + (i+1));
+        /* ag: To be on the safe side, take care of stale dev numbers no
+           longer in the valid range, by setting these to nodev a.k.a.
+           "None". To complicate things, audio devices are numbered 0..n-1,
+           with nodev = -1, whereas MIDI devices are numbered 1..n, with
+           nodev = 0. Oh well. At least we can assume that we don't get any
+           bogus negative indices in the devs array. I hope. */
+        var d = devs[i];
+        elem.value = d <= n+nodev ? d : nodev;
     }
 }
 
@@ -1202,8 +1235,10 @@ function midi_prefs_callback(attrs) {
             .style.setProperty("display", "none");
         populate_midi_devs("in", attrs);
         populate_midi_devs("out", attrs);
-        set_devs("midi_in", get_attr("pd-indevs", attrs));
-        set_devs("midi_out", get_attr("pd-outdevs", attrs));
+        var indevs = get_attr("midi-indev-names", attrs);
+        var outdevs = get_attr("midi-outdev-names", attrs);
+        set_devs("midi_in", get_attr("pd-indevs", attrs), indevs.length, 0);
+        set_devs("midi_out", get_attr("pd-outdevs", attrs), outdevs.length, 0);
     }
     pdgui.resize_window(pd_object_callback);
 }
@@ -1216,6 +1251,39 @@ function grid_toggle(checked) {
 function autopatch_yoffset_toggle(checked) {
     document.getElementById("autopatch_yoffset_value").disabled = !checked;
     document.getElementById("autopatch_yoffset").checked = checked;
+}
+
+// ag: Give the Audio and MIDI tabs a much-needed beauty treatment.
+function prefs_beautifier() {
+    // I don't understand why select always ends up looking smaller than input
+    // at the same px width, so we patch them up. Adding insult to injury, the
+    // precise amount also depends on the nw.js version. The larger width is
+    // required at least for 0.46+ (this might require bisecting to determine
+    // the exact version.)
+    var el1 = document.getElementById("blocksize");
+    var el2 = document.getElementById("audio_api");
+    if (!el1 || !el2) {
+	// this shouldn't happen, but...
+    } else if (pdgui.check_nw_version("0.46")) {
+        el1.style.width = "58px";
+        el2.style.minWidth = "58px";
+    } else {
+        el1.style.width = "54px";
+        el2.style.minWidth = "54px";
+    }
+    // Also patch up the MIDI tab which looks all higgledy-piggledy for the
+    // ALSA API by default. NOTE: We'd really like to use el.clientWidth here,
+    // but this always yields 0px for some reason, so instead we guestimate
+    // the required width of the span elements based on locale.
+    el1 = document.getElementById("midi_api_span");
+    el2 = document.getElementById("alsa_in_ports_span");
+    //var w = Math.max(el1.clientWidth, el2.clientWidth); // not working
+    var lang = navigator.language.split("-")[0];
+    // If these translations ever change, these values will have to be
+    // adjusted accordingly.
+    var w = lang=="fr" ? 100 : lang=="de" ? 70 : 80;
+    el1.style.width = w+"px";
+    el2.style.width = w+"px";
 }
 
 function gui_prefs_callback(name, show_grid, grid_size, save_zoom,
@@ -1269,6 +1337,8 @@ function gui_prefs_callback(name, show_grid, grid_size, save_zoom,
     } else {
         autopatch_yoffset_toggle(false);
     }
+
+    prefs_beautifier();
 }
 
 // startup settings
@@ -1514,11 +1584,6 @@ function register_window_id(gfxstub, attr_arrays) {
     document.getElementsByClassName("container")[0].style.setProperty("display", "inline");
 }
 
-function tr_text(id) {
-    var elem = document.getElementById("iem.prop." + id);
-    elem.textContent = l("iem.prop." + id);
-}
-
 // Stop-gap translator
 function translate_form() {
     var elements = document.querySelectorAll("[data-i18n]"),
@@ -1530,32 +1595,6 @@ function translate_form() {
             elements[i].title = l(data.slice(7));
         } else {
             elements[i].textContent = l(data);
-        }
-    }
-}
-
-function populate_form(attr_array) {
-    // First, let's put the translated text for the form labels:
-    var i;
-    for(i = 0; i < attr_array.length; i+=2) {
-        // Unhide the span with the class with the same name as the id
-        var prop_group = document.getElementsByClassName(attr_array[i])[0];
-        if (prop_group !== undefined) {
-            console.log("the thing here is " + attr_array[i]);
-            prop_group.classList.remove("hidden");
-        } else {
-            pdgui.post("Error: couldn't find iemgui prop group for " + attr_array[i]);
-        }
-
-        var elem = document.getElementsByName(attr_array[i]);
-        if (elem.length > 0) {
-            if (elem[0].type === "checkbox") {
-                // The attr here is a string, so we need to
-                // force it to number, hence the "+" below
-                elem[0].checked = +attr_array[i+1];
-            } else {
-                elem[0].value = attr_array[i+1];
-            }
         }
     }
 }

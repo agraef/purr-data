@@ -346,7 +346,7 @@ function add_events() {
             // reset value so that we can open the same file twice
             evt.target.value = null;
             pdgui.file_dialog_callback(file_string);
-            console.log("tried to openpanel something");
+            //console.log("tried to openpanel something");
         }, false
     );
     document.querySelector("#savepanel_dialog").addEventListener("change",
@@ -355,7 +355,7 @@ function add_events() {
             // reset value so that we can open the same file twice
             evt.target.value = null;
             pdgui.file_dialog_callback(file_string);
-            console.log("tried to savepanel something");
+            //console.log("tried to savepanel something");
         }, false
     );
 
@@ -541,7 +541,7 @@ function nw_create_pd_window_menus(gui, w) {
                 // reset value so that we can open the same file twice
                 chooser.value = null;
                 pdgui.menu_open(file_array);
-                console.log("tried to open something");
+                //console.log("tried to open something");
             };
             chooser.click();
         }

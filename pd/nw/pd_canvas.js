@@ -1338,7 +1338,7 @@ var canvas_events = (function() {
                     pdgui.saveas_callback(name, evt.target.value, 0);
                     // reset value so that we can open the same file twice
                     evt.target.value = null;
-                    console.log("tried to save something");
+                    //console.log("tried to save something");
                 }, false
             );
 
@@ -1377,7 +1377,7 @@ var canvas_events = (function() {
                     // For now, however, we just turn off its default behavior
                     // and control it with a bunch of complicated callbacks.
 
-                    console.log("got a context menu evt...");
+                    //console.log("got a context menu evt...");
                     evt.stopPropagation()
                     evt.preventDefault();
                 },
@@ -1458,7 +1458,7 @@ var canvas_events = (function() {
                     // reset value so that we can open the same file twice
                     evt.target.value = null;
                     pdgui.file_dialog_callback(file_string);
-                    console.log("tried to openpanel something");
+                    //console.log("tried to openpanel something");
                 }, false
             );
             document.querySelector("#savepanel_dialog")
@@ -1467,7 +1467,7 @@ var canvas_events = (function() {
                     // reset value so that we can open the same file twice
                     evt.target.value = null;
                     pdgui.file_dialog_callback(file_string);
-                    console.log("tried to savepanel something");
+                    //console.log("tried to savepanel something");
                 }, false
             );
             document.querySelector("#canvas_find_text")
@@ -1779,7 +1779,7 @@ function nw_create_patch_window_menus(gui, w, name) {
                 // reset value so that we can open the same file twice
                 this.value = null;
                 pdgui.menu_open(file_array);
-                console.log("tried to open something");
+                //console.log("tried to open something");
             };
             chooser.click();
         }
