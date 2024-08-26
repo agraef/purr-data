@@ -1007,8 +1007,10 @@ function audio_prefs_callback(attrs) {
     populate_devs("in", attrs);
     populate_devs("out", attrs);
 
-    set_devs("in", get_attr("pd-indevs", attrs));
-    set_devs("out", get_attr("pd-outdevs", attrs));
+    var indevs = get_attr("sys-indevs", attrs);
+    var outdevs = get_attr("sys-outdevs", attrs);
+    set_devs("in", get_attr("pd-indevs", attrs), indevs.length, -1);
+    set_devs("out", get_attr("pd-outdevs", attrs), outdevs.length, -1);
 
     // Set chans after the devs (because they may
     // have the side-effect of setting the dev to 'None')
@@ -1024,10 +1026,22 @@ function audio_prefs_callback(attrs) {
     pdgui.resize_window(pd_object_callback);
 }
 
-function set_devs(type, devs) {
+/* ag: This function now has some extra arguments n (the number of devices)
+ * and nodev (device index denoting the "None" device), so that we can
+ * properly detect and fix invalid device indices when changing audio and
+ * midi apis on the fly. */
+function set_devs(type, devs, n, nodev) {
     var i;
     for (i = 0; i < devs.length; i++) {
-        document.getElementById(type + (i+1)).value = devs[i];
+        var elem = document.getElementById(type + (i+1));
+        /* ag: To be on the safe side, take care of stale dev numbers no
+           longer in the valid range, by setting these to nodev a.k.a.
+           "None". To complicate things, audio devices are numbered 0..n-1,
+           with nodev = -1, whereas MIDI devices are numbered 1..n, with
+           nodev = 0. Oh well. At least we can assume that we don't get any
+           bogus negative indices in the devs array. I hope. */
+        var d = devs[i];
+        elem.value = d <= n+nodev ? d : nodev;
     }
 }
 
@@ -1086,8 +1100,10 @@ function midi_prefs_callback(attrs) {
             .style.setProperty("display", "none");
         populate_midi_devs("in", attrs);
         populate_midi_devs("out", attrs);
-        set_devs("midi_in", get_attr("pd-indevs", attrs));
-        set_devs("midi_out", get_attr("pd-outdevs", attrs));
+        var indevs = get_attr("midi-indev-names", attrs);
+        var outdevs = get_attr("midi-outdev-names", attrs);
+        set_devs("midi_in", get_attr("pd-indevs", attrs), indevs.length, 0);
+        set_devs("midi_out", get_attr("pd-outdevs", attrs), outdevs.length, 0);
     }
     pdgui.resize_window(pd_object_callback);
 }
