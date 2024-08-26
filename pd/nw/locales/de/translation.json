@@ -397,7 +397,9 @@
       "audio": "Audio",
       "audio_tt": "konfiguriere die Audio-Geräte",
       "midi": "MIDI",
-      "midi_tt": "konfiguriere die MIDI-Geräte"
+      "midi_tt": "konfiguriere die MIDI-Geräte",
+      "issue": "Feedback",
+      "issue_tt": "Feedback abgeben oder ein Problem melden"
     },
     "startup": {
       "flags": "Startup-Flags",
@@ -497,6 +499,20 @@
       "input_title_tt": "Hardware-Geräte für die MIDI-Eingabe von Pd",
       "output_title": "Ausgabe-Geräte",
       "output_title_tt": "Hardware-Geräte für die MIDI-Ausgabe von Pd"
+    },
+    "issue":{
+      "title": "Titel",
+      "title_tt": "Bitte geben Sie einen kurzen Titel für Ihr Feedback ein",
+      "description": "Beschreibung",
+      "description_tt": "Beschreiben Sie das Problem, das bei Ihnen auftritt",
+      "submit": "Absenden",
+      "submit_tt": "Senden Sie Ihr Feedback an den Purr-Data Issue Tracker (Anmeldung erforderlich)",
+      "warning": "Titel und Beschreibung sind Pflichtfelder.",
+      "confirm": "Ihr Feedback geht verloren. Trotzdem schließen?",
+      "steps_to_reproduce": "Schritte zum Reproduzieren",
+      "steps_to_reproduce_tt": "Listen Sie die Schritte auf, um das Problem zu reproduzieren",
+      "environment_details": "Umgebungsdetails",
+      "environment_details_tt": "Details zu Ihrem Betriebssystem, Purr-Data-Version usw."
     },
     "ok": "Ok",
     "ok_tt": "Aktualisiere die Einstellungen und schließe den Dialog",

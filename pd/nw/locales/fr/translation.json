@@ -397,7 +397,9 @@
       "audio":    "Audio",
       "audio_tt": "Configurer les dispositifs Audio",
       "midi":    "MIDI",
-      "midi_tt": "Configurer les dispositifs MIDI"
+      "midi_tt": "Configurer les dispositifs MIDI",
+      "issue": "Commentaires",
+      "issue_tt": "Soumettre des commentaires ou signaler un problème"
     },
     "startup": {
       "flags":    "Indicateurs de démarrage",
@@ -497,6 +499,20 @@
       "input_title_tt": "Périphériques matériels utilisés pour recevoir des données MIDI dans Pd",
       "output_title":    "Dispositifs de sortie",
       "output_title_tt": "Périphériques matériels utilisés pour envoyer des données MIDI depuis Pd"
+    },
+    "issue":{
+      "title": "Titre",
+      "title_tt": "Veuillez fournir un titre court pour vos commentaires",
+      "description": "Description",
+      "description_tt": "Décrivez le problème que vous rencontrez",
+      "submit": "Soumettre",
+      "submit_tt": "Soumettez vos commentaires au système de suivi des problèmes Purr-Data (connexion requise)",
+      "warning": "Le titre et la description sont des champs obligatoires.",
+      "confirm": "Vos commentaires seront perdus. Fermer quand même ?",
+      "steps_to_reproduce": "Étapes pour reproduire",
+      "steps_to_reproduce_tt": "Répertoriez les étapes pour reproduire le problème",
+      "environment_details": "Détails de l'environnement",
+      "environment_details_tt": "Détails sur votre système d'exploitation, la version de Purr-Data, etc."
     },
     "ok": "OK",
     "ok_tt": "Mettre à jour les Préférences et fermer la fenêtre de dialogue",
