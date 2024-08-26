@@ -1431,11 +1431,6 @@ function register_window_id(gfxstub, attr_arrays) {
     document.getElementsByClassName("container")[0].style.setProperty("display", "inline");
 }
 
-function tr_text(id) {
-    var elem = document.getElementById("iem.prop." + id);
-    elem.textContent = l("iem.prop." + id);
-}
-
 // Stop-gap translator
 function translate_form() {
     var elements = document.querySelectorAll("[data-i18n]"),
@@ -1447,32 +1442,6 @@ function translate_form() {
             elements[i].title = l(data.slice(7));
         } else {
             elements[i].textContent = l(data);
-        }
-    }
-}
-
-function populate_form(attr_array) {
-    // First, let's put the translated text for the form labels:
-    var i;
-    for(i = 0; i < attr_array.length; i+=2) {
-        // Unhide the span with the class with the same name as the id
-        var prop_group = document.getElementsByClassName(attr_array[i])[0];
-        if (prop_group !== undefined) {
-            console.log("the thing here is " + attr_array[i]);
-            prop_group.classList.remove("hidden");
-        } else {
-            pdgui.post("Error: couldn't find iemgui prop group for " + attr_array[i]);
-        }
-
-        var elem = document.getElementsByName(attr_array[i]);
-        if (elem.length > 0) {
-            if (elem[0].type === "checkbox") {
-                // The attr here is a string, so we need to
-                // force it to number, hence the "+" below
-                elem[0].checked = +attr_array[i+1];
-            } else {
-                elem[0].value = attr_array[i+1];
-            }
         }
     }
 }

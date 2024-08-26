@@ -436,7 +436,7 @@ function finish_index() {
                 a.join("\n"), {mode: 0o644});
         }
     } catch (err) {
-        console.log(err);
+        //console.log(err);
     }
     var t = new Date().getTime() / 1000;
     post("finished " + (have_cache?"building":"loading") + " help index (" +
@@ -1848,7 +1848,7 @@ function gui_canvas_saveas(name, initfile, initdir, close_flag) {
         saveas_callback(name, this.value, close_flag);
         // reset value so that we can open the same file twice
         this.value = null;
-        console.log("tried to save something");
+        //console.log("tried to save something");
     }
     chooser.click();
 }
@@ -2781,7 +2781,7 @@ function gui_canvas_new(cid, width, height, geometry, grid, grid_size_value,
    to do its "vis" function. The result will be a flood of messages
    back from Pd to the GUI to draw these objects */
 function canvas_map(name) {
-    console.log("canvas mapping " + name + "...");
+    //console.log("canvas mapping " + name + "...");
     pdsend(name + " map 1");
 }
 
@@ -6619,7 +6619,7 @@ function file_dialog(cid, type, target, start_path) {
         // reset value so that we can open the same file twice
         file_dialog_callback(this.value);
         this.value = null;
-        console.log("openpanel/savepanel called");
+        //console.log("openpanel/savepanel called");
     };
     win.window.setTimeout(function() {
         input_elem.click(); },
@@ -6837,11 +6837,13 @@ function gui_canvas_dialog(did, attr_arrays) {
     // Convert array of arrays to an array of objects
     for (i = 0; i < attr_arrays.length; i++) {
         attr_arrays[i] = attr_array_to_object(attr_arrays[i]);
+        /*
         for (prop in attr_arrays[i]) {
             if (attr_arrays[i].hasOwnProperty(prop)) {
                 console.log("array: prop is " + prop);
             }
         }
+        */
     }
     var has_array = (attr_arrays.length > 1 ? 1 : 0);
     /*
