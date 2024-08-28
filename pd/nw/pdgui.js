@@ -936,7 +936,7 @@ function delete_tooltip(doc) {
 
 
 // GB: update autocomplete dropdown with new results
-function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text, textbox) {
+function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
     delete_tooltip(doc);
     ac_dropdown().setAttribute("searched_text", text);
     let title, arg, have_arg;
@@ -1028,15 +1028,6 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text, textbox) 
             }
         });
         results = results.map(a => a.item.title);
-    }
-
-    if (results.length === 0) {
-        textbox.style.textDecoration = 'underline';
-        textbox.style.textDecorationColor = 'red';
-        textbox.style.textDecorationStyle = 'wavy';
-        textbox.style.textUnderlinePosition = 'under'
-    } else {
-        textbox.style.textDecoration = 'none';
     }
 
     // record the complete results, we need them for tab completion
@@ -7760,7 +7751,6 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
             width_spec > 0 ? width_spec + "ch" : "60ch");
         //p.style.setProperty("width", -width_spec - 2 + "px");
         p.style.setProperty("-webkit-padding-after", "1px");
-        p.style.setProperty("padding-bottom", "4px")
         p.style.setProperty("min-width",
             width_spec == 0 ? "3ch" :
                 (is_gop == 1 ? width_spec - 3 + "px" :
