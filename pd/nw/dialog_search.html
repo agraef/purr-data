@@ -807,19 +807,24 @@ function add_events() {
                 nw.Window.get().close(true);
         } else if (evt.target !== input_elem) {
             input_elem.focus();
-        } else {
-            // If we want to trigger a search on each keystroke we can do it
-            // here.
         }
 
     });
+    // ag: The incremental search happens here, triggered by keyup and search
+    // (a.k.a. Enter?). NOTE: We need to re-focus the input element on each
+    // keystroke, since the doc_search() makes it loose focus (I think) when
+    // the results view is re-generated.
     document.getElementById("search_text").addEventListener("keyup",
         function() {
+            var input_elem = document.getElementById("search_text");
             doc_search();
+            input_elem.focus();
     });
     document.getElementById("search_text").addEventListener("search",
         function() {
+            var input_elem = document.getElementById("search_text");
             doc_search();
+            input_elem.focus();
     });
 }
 
