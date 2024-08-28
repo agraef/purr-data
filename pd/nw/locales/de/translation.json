@@ -282,6 +282,12 @@
       "highlight": "Alle hervorheben"
     }
   },
+  "browser": {
+    "find": {
+      "placeholder": "Suche im Browser",
+      "highlight": "Alle hervorheben"
+    }
+  },
   "canvas": {
     "paste_clipboard_prompt": "Warnung: Sie sind dabei, Pd-Code einzufügen, der außerhalb von Pd erstellt wurde. Möchten Sie fortfahren?",
     "save_dialog": {

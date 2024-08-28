@@ -279,7 +279,13 @@
   "pd_window": {
     "find": {
       "placeholder": "Chercher dans la Console",
-      "highlight": "Surligner toutes les occurrences"
+      "highlight": "Surligner toutes"
+    }
+  },
+  "browser": {
+    "find": {
+      "placeholder": "Chercher dans le Navigateur",
+      "highlight": "Surligner toutes"
     }
   },
   "canvas": {

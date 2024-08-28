@@ -747,7 +747,7 @@ function add_events() {
 
     // Find bar
     var find_bar = document.getElementById("console_find_text");
-    find_bar.placeholder = "Search in Console";
+    find_bar.placeholder = l("browser.find.placeholder");
     find_bar.addEventListener("keydown",
         function(evt) {
             if (find_bar_shortcut(evt)) {

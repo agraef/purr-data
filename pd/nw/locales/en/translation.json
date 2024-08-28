@@ -282,6 +282,12 @@
       "highlight": "Highlight All"
     }
   },
+  "browser": {
+    "find": {
+      "placeholder": "Search in Browser",
+      "highlight": "Highlight All"
+    }
+  },
   "canvas": {
     "paste_clipboard_prompt": "Warning: you are about to paste Pd code that came from somewhere outside of Pd. Do you want to continue?",
     "save_dialog": {
