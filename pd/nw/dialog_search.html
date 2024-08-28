@@ -427,13 +427,25 @@ function clear_results() {
 }
 
 function display_directory_callback(err, files) {
-    var doc, doc_path;
+    var doc, doc_path, is_dir;
     if (err) {
         pdgui.post("Search Engine: " + err);
     } else {
         files.forEach(function (f, i, a) {
-            if (filetypes.indexOf(path.extname(f)) !== -1) {
-                doc_path = path.join(current_dir, f);
+            doc_path = path.join(current_dir, f);
+            try {
+                is_dir = fs.lstatSync(doc_path).isDirectory();
+            } catch (err) {
+                is_dir = false;
+            }
+            if (is_dir) {
+                doc = {
+                    id: doc_path,
+                    title: f+"/",
+                    description: null
+                };
+                display_doc(doc);
+            } else if (filetypes.indexOf(path.extname(f)) !== -1) {
                 doc = index.documentStore.getDoc(doc_path) || {
                     id: doc_path,
                     title: path.basename(f, ".pd"),
@@ -823,14 +835,27 @@ function display_no_results() {
     toc_bookmark_update(current_dir);
 }
 
+function doc_open(name) {
+    var is_dir;
+    try {
+        is_dir = fs.lstatSync(name).isDirectory();
+    } catch (err) {
+        is_dir = false;
+    }
+    if (is_dir) {
+        display_directory(name);
+    } else {
+        pdgui.doc_open(path.dirname(name), path.basename(name));
+    }
+}
+
 function display_doc(doc) {
     var div = document.createElement("div"),
         a = document.createElement("a"),
         results_elem = document.getElementById("results"),
         header;
-    a.href = "javascript: pdgui.doc_open('" +
-         pdgui.defunkify_windows_path(path.dirname(doc.id)) + "', '" +
-         pdgui.defunkify_windows_path(path.basename(doc.id)) + "');"
+    a.href = "javascript: doc_open('" +
+         pdgui.defunkify_windows_path(doc.id) + "');"
     a.textContent = doc.title;
     // set title to path for tooltip
     a.title = doc.id;
@@ -851,9 +876,8 @@ function display_doc(doc) {
             let link_rel_obj = rel_obj;
             // for the objects with a help patch, add a link to its -help.pd
             if (ref_rel_objs[i]) {
-                let ref_rel_obj = "javascript: pdgui.doc_open('" +
-                      pdgui.defunkify_windows_path(path.dirname(ref_rel_objs[i])) + "', '" +
-                      pdgui.defunkify_windows_path(path.basename(ref_rel_objs[i])) + "');";
+                let ref_rel_obj = "javascript: doc_open('" +
+                      pdgui.defunkify_windows_path(ref_rel_objs[i]) + "');";
                 link_rel_obj = rel_obj.link(ref_rel_obj);
             }
             p_rel_objs.innerHTML += " " + link_rel_obj;
