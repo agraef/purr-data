@@ -464,6 +464,12 @@ function display_directory(dir) {
     fs.readdir(dir, display_directory_callback);
     toc_bookmark_update(dir);
     toc_bookmark_status(!is_doc);
+    // update the search field accordingly; use a relative path if that
+    // makes sense, and canonicalize
+    var rel = canonical_path(path.relative(pdgui.get_lib_dir(), dir));
+    dir = canonical_path(dir);
+    dir = dir.length <= rel.length ? dir : rel;
+    document.getElementById("search_text").value = dir;
 }
 
 function file_browser_click() {
@@ -485,12 +491,6 @@ function file_browser_callback(elem) {
         var dir = path.dirname(doc);
         pdgui.doc_open(defunkify(dir), defunkify(path.basename(doc)));
         display_directory(defunkify(dir));
-        // update the search field accordingly; use a relative path if that
-        // makes sense, and canonicalize
-        var rel = canonical_path(path.relative(pdgui.get_lib_dir(), dir));
-        dir = canonical_path(dir);
-        dir = dir.length <= rel.length ? dir : rel;
-        document.getElementById("search_text").value = dir;
     }
 }
 
