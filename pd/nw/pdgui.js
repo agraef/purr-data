@@ -2555,7 +2555,7 @@ function open_textfile(target) {
 // Think about renaming this and pd_doc_open...
 
 // Open a file-- html, text, or Pd.
-function doc_open (dir, basename) {
+function doc_open (dir, basename, f) {
     // normalize to get rid of extra slashes, ".." and "."
     var norm_path = path.normalize(dir);
     if (basename.slice(-4) === ".txt"
@@ -2568,7 +2568,7 @@ function doc_open (dir, basename) {
 
     } else {
         pdsend("pd open", enquote(defunkify_windows_path(basename)),
-            enquote(defunkify_windows_path(norm_path)));
+               enquote(defunkify_windows_path(norm_path)), f?f:0);
     }
 }
 
@@ -2578,8 +2578,8 @@ function doc_open (dir, basename) {
 exports.doc_open = doc_open;
 
 // Open a file relative to the main directory where "doc/" and "extra/" live
-function pd_doc_open(dir, basename) {
-    doc_open(path.join(lib_dir, dir), basename);
+function pd_doc_open(dir, basename, f) {
+    doc_open(path.join(lib_dir, dir), basename, f);
 }
 
 exports.pd_doc_open = pd_doc_open;

@@ -45,6 +45,7 @@ void glob_forward_files_from_secondary_instance(void);
 void glob_recent_files(t_pd *dummy);
 void glob_add_recent_file(t_pd *dummy, t_symbol *s);
 void glob_clear_recent_files(t_pd *dummy);
+void glob_open(t_pd *ignore, t_symbol *name, t_symbol *dir, t_floatarg f);
 
 void alsa_resync( void);
 
@@ -163,8 +164,8 @@ void glob_init(void)
         gensym("forward_files_from_secondary_instance"), 0);
     class_addmethod(glob_pdobject, (t_method)glob_setfilename, 
         gensym("filename"), A_SYMBOL, A_SYMBOL, 0);
-    class_addmethod(glob_pdobject, (t_method)glob_evalfile, gensym("open"),
-        A_SYMBOL, A_SYMBOL, 0);
+    class_addmethod(glob_pdobject, (t_method)glob_open, gensym("open"),
+        A_SYMBOL, A_SYMBOL, A_DEFFLOAT, 0);
     class_addmethod(glob_pdobject, (t_method)glob_quit, gensym("quit"),
         A_DEFFLOAT, 0);
     class_addmethod(glob_pdobject, (t_method)glob_verifyquit,

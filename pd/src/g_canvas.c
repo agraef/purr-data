@@ -3712,3 +3712,21 @@ void canvas_add_for_class(t_class *c)
     canvas_readwrite_for_class(c);
     /* g_graph_setup_class(c); */
 }
+
+    /* open a file as if from an open dialog from the GUI.  If the optional
+    argument "f" is nonzero, first check if the file is already open and if
+    so, just "vis" it.  This would be useful if you want merely to make sure a
+    patch is open, but don't want more than one copy. */
+void glob_open(t_pd *ignore, t_symbol *name, t_symbol *dir, t_floatarg f)
+{
+    t_glist *gl;
+    if (f != 0)
+        for (gl = pd_getcanvaslist(); gl; gl = gl->gl_next)
+            if (name == gl->gl_name && gl->gl_env && gl->gl_env->ce_dir == dir)
+    {
+            /* don't reopen already-open document, just vis it */
+        canvas_vis(gl, 1);
+        return;
+    }
+    glob_evalfile(ignore, name, dir);
+}

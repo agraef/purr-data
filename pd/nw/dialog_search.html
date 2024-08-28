@@ -489,7 +489,7 @@ function file_browser_callback(elem) {
     if (doc !== "") {
         var defunkify = pdgui.defunkify_windows_path;
         var dir = path.dirname(doc);
-        pdgui.doc_open(defunkify(dir), defunkify(path.basename(doc)));
+        pdgui.doc_open(defunkify(dir), defunkify(path.basename(doc)), 1);
         display_directory(defunkify(dir));
     }
 }
@@ -845,7 +845,7 @@ function doc_open(name) {
     if (is_dir) {
         display_directory(name);
     } else {
-        pdgui.doc_open(path.dirname(name), path.basename(name));
+        pdgui.doc_open(path.dirname(name), path.basename(name), 1);
     }
 }
 
