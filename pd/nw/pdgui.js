@@ -2561,14 +2561,15 @@ function doc_open (dir, basename, f) {
     if (basename.slice(-4) === ".txt"
         || basename.slice(-2) === ".c") {
         open_textfile(path.join(norm_path, basename));
-    } else if (basename.slice(-5) === ".html"
-               || basename.slice(-4) === ".htm"
-               || basename.slice(-4) === ".pdf") {
-        open_html(path.join(norm_path, basename));
-
-    } else {
+    } else if (basename.slice(-3) === ".pd") {
+        // ag: We only try to open .pd files as patches here. Previously, we'd
+        // try to open pretty much anything, which isn't a good idea. Guess
+        // what happens if you try to open an mp3 file as a patch?
         pdsend("pd open", enquote(defunkify_windows_path(basename)),
                enquote(defunkify_windows_path(norm_path)), f?f:0);
+    } else {
+        // ag: Fall back to the desktop's default action for anything else.
+        open_html(path.join(norm_path, basename));
     }
 }
 
