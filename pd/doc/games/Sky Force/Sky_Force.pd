@@ -1,4 +1,4 @@
-#N canvas 696 109 722 565 10;
+#N canvas 696 108 722 566 10;
 #N canvas 432 388 645 451 SpaceCraft 0;
 #X obj 10 40 gemhead;
 #X obj 10 300 translateXYZ;
@@ -532,7 +532,7 @@
 #X obj 290 280 pix_texture;
 #X msg 360 230 env \$1;
 #X obj 360 210 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 290 370 translateXYZ -2 1 0;
 #X msg 360 190 2;
 #X msg 320 160 open Art/Enemy1.png;
@@ -707,7 +707,7 @@
 #X obj 280 290 pix_texture;
 #X msg 350 240 env \$1;
 #X obj 350 220 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 280 380 translateXYZ -2 1 0;
 #X msg 350 200 2;
 #X msg 310 170 open Art/Enemy1.png;
@@ -876,7 +876,7 @@
 #X obj 360 300 pix_texture;
 #X msg 430 250 env \$1;
 #X obj 430 230 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 360 390 translateXYZ -2 1 0;
 #X msg 430 210 2;
 #X msg 390 180 open Art/Enemy1.png;
@@ -1045,7 +1045,7 @@
 #X obj 260 350 pix_texture;
 #X msg 330 300 env \$1;
 #X obj 330 280 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 260 440 translateXYZ -2 1 0;
 #X msg 330 260 2;
 #X msg 290 230 open Art/Enemy1.png;
@@ -1344,7 +1344,7 @@
 #X obj 270 300 pix_texture;
 #X msg 340 250 env \$1;
 #X obj 340 230 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 270 390 translateXYZ -2 1 0;
 #X msg 340 210 2;
 #X msg 300 180 open Art/Enemy1.png;
@@ -1513,7 +1513,7 @@
 #X obj 270 350 pix_texture;
 #X msg 340 300 env \$1;
 #X obj 340 280 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 270 440 translateXYZ -2 1 0;
 #X msg 340 260 2;
 #X msg 300 230 open Art/Enemy1.png;
@@ -2207,7 +2207,7 @@
 #X obj 280 310 pix_texture;
 #X msg 350 260 env \$1;
 #X obj 350 240 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 280 400 translateXYZ -2 1 0;
 #X msg 350 220 2;
 #X msg 310 190 open Art/Enemy1.png;
@@ -2376,7 +2376,7 @@
 #X obj 270 320 pix_texture;
 #X msg 340 270 env \$1;
 #X obj 340 250 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 270 410 translateXYZ -2 1 0;
 #X msg 340 230 2;
 #X msg 300 200 open Art/Enemy1.png;
@@ -2545,7 +2545,7 @@
 #X obj 290 340 pix_texture;
 #X msg 360 290 env \$1;
 #X obj 360 270 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 290 430 translateXYZ -2 1 0;
 #X msg 360 250 2;
 #X msg 320 220 open Art/Enemy1.png;
@@ -2714,7 +2714,7 @@
 #X obj 270 310 pix_texture;
 #X msg 340 260 env \$1;
 #X obj 340 240 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 270 400 translateXYZ -2 1 0;
 #X msg 340 220 2;
 #X msg 300 190 open Art/Enemy1.png;
@@ -2883,7 +2883,7 @@
 #X obj 250 340 pix_texture;
 #X msg 320 290 env \$1;
 #X obj 320 270 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 250 430 translateXYZ -2 1 0;
 #X msg 320 250 2;
 #X msg 280 220 open Art/Enemy1.png;
@@ -3052,7 +3052,7 @@
 #X obj 290 330 pix_texture;
 #X msg 360 280 env \$1;
 #X obj 360 260 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 290 420 translateXYZ -2 1 0;
 #X msg 360 240 2;
 #X msg 320 210 open Art/Enemy1.png;
@@ -4094,7 +4094,7 @@
 #X connect 12 0 11 0;
 #X restore 30 110 pd collide;
 #X obj 50 140 tgl 24 0 empty empty hit? 28 7 1 10 #fcfcfc #000000 #000000
-0 1;
+1 1;
 #X obj 130 110 loadbang;
 #X obj 73 232 tgl 15 0 empty empty empty 17 7 0 10 #fcfcfc #000000
 #000000 0 1;
@@ -4116,7 +4116,7 @@
 #X obj 280 290 pix_texture;
 #X msg 350 240 env \$1;
 #X obj 350 220 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 280 380 translateXYZ -2 1 0;
 #X msg 350 200 2;
 #X msg 310 170 open Art/Enemy1.png;
@@ -6107,7 +6107,7 @@
 #X connect 12 0 11 0;
 #X restore 30 110 pd collide;
 #X obj 50 140 tgl 24 0 empty empty hit? 28 7 1 10 #fcfcfc #000000 #000000
-0 1;
+1 1;
 #X obj 130 110 loadbang;
 #X obj 73 232 tgl 15 0 empty empty empty 17 7 0 10 #fcfcfc #000000
 #000000 0 1;
@@ -6129,7 +6129,7 @@
 #X obj 290 300 pix_texture;
 #X msg 360 250 env \$1;
 #X obj 360 230 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 290 390 translateXYZ -2 1 0;
 #X msg 360 210 2;
 #X msg 320 180 open Art/Enemy1.png;
@@ -6248,7 +6248,7 @@
 #X connect 12 0 11 0;
 #X restore 30 110 pd collide;
 #X obj 50 140 tgl 24 0 empty empty hit? 28 7 1 10 #fcfcfc #000000 #000000
-0 1;
+1 1;
 #X obj 130 110 loadbang;
 #X obj 73 232 tgl 15 0 empty empty empty 17 7 0 10 #fcfcfc #000000
 #000000 0 1;
@@ -6270,7 +6270,7 @@
 #X obj 280 310 pix_texture;
 #X msg 350 260 env \$1;
 #X obj 350 240 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 280 400 translateXYZ -2 1 0;
 #X msg 350 220 2;
 #X msg 310 190 open Art/Enemy1.png;
@@ -6389,7 +6389,7 @@
 #X connect 12 0 11 0;
 #X restore 30 110 pd collide;
 #X obj 50 140 tgl 24 0 empty empty hit? 28 7 1 10 #fcfcfc #000000 #000000
-0 1;
+1 1;
 #X obj 130 110 loadbang;
 #X obj 73 232 tgl 15 0 empty empty empty 17 7 0 10 #fcfcfc #000000
 #000000 0 1;
@@ -6411,7 +6411,7 @@
 #X obj 280 310 pix_texture;
 #X msg 350 260 env \$1;
 #X obj 350 240 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 280 400 translateXYZ -2 1 0;
 #X msg 350 220 2;
 #X msg 310 190 open Art/Enemy1.png;
@@ -6530,7 +6530,7 @@
 #X connect 12 0 11 0;
 #X restore 30 110 pd collide;
 #X obj 50 140 tgl 24 0 empty empty hit? 28 7 1 10 #fcfcfc #000000 #000000
-0 1;
+1 1;
 #X obj 130 110 loadbang;
 #X obj 73 232 tgl 15 0 empty empty empty 17 7 0 10 #fcfcfc #000000
 #000000 0 1;
@@ -6552,7 +6552,7 @@
 #X obj 260 300 pix_texture;
 #X msg 330 250 env \$1;
 #X obj 330 230 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 260 390 translateXYZ -2 1 0;
 #X msg 330 210 2;
 #X msg 290 180 open Art/Enemy1.png;
@@ -6671,7 +6671,7 @@
 #X connect 12 0 11 0;
 #X restore 30 110 pd collide;
 #X obj 50 140 tgl 24 0 empty empty hit? 28 7 1 10 #fcfcfc #000000 #000000
-0 1;
+1 1;
 #X obj 130 110 loadbang;
 #X obj 73 232 tgl 15 0 empty empty empty 17 7 0 10 #fcfcfc #000000
 #000000 0 1;
@@ -6693,7 +6693,7 @@
 #X obj 280 300 pix_texture;
 #X msg 350 250 env \$1;
 #X obj 350 230 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 280 390 translateXYZ -2 1 0;
 #X msg 350 210 2;
 #X msg 310 180 open Art/Enemy1.png;
@@ -6812,7 +6812,7 @@
 #X connect 12 0 11 0;
 #X restore 30 110 pd collide;
 #X obj 50 140 tgl 24 0 empty empty hit? 28 7 1 10 #fcfcfc #000000 #000000
-0 1;
+1 1;
 #X obj 130 110 loadbang;
 #X obj 73 232 tgl 15 0 empty empty empty 17 7 0 10 #fcfcfc #000000
 #000000 0 1;
@@ -6834,7 +6834,7 @@
 #X obj 260 300 pix_texture;
 #X msg 330 250 env \$1;
 #X obj 330 230 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 260 390 translateXYZ -2 1 0;
 #X msg 330 210 2;
 #X msg 290 180 open Art/Enemy1.png;
@@ -6953,7 +6953,7 @@
 #X connect 12 0 11 0;
 #X restore 30 110 pd collide;
 #X obj 50 140 tgl 24 0 empty empty hit? 28 7 1 10 #fcfcfc #000000 #000000
-0 1;
+1 1;
 #X obj 130 110 loadbang;
 #X obj 73 232 tgl 15 0 empty empty empty 17 7 0 10 #fcfcfc #000000
 #000000 0 1;
@@ -6975,7 +6975,7 @@
 #X obj 270 300 pix_texture;
 #X msg 340 250 env \$1;
 #X obj 340 230 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 270 390 translateXYZ -2 1 0;
 #X msg 340 210 2;
 #X msg 300 180 open Art/Enemy1.png;
@@ -7094,7 +7094,7 @@
 #X connect 12 0 11 0;
 #X restore 30 110 pd collide;
 #X obj 50 140 tgl 24 0 empty empty hit? 28 7 1 10 #fcfcfc #000000 #000000
-0 1;
+1 1;
 #X obj 130 110 loadbang;
 #X obj 73 232 tgl 15 0 empty empty empty 17 7 0 10 #fcfcfc #000000
 #000000 0 1;
@@ -7116,7 +7116,7 @@
 #X obj 260 320 pix_texture;
 #X msg 330 270 env \$1;
 #X obj 330 250 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 260 410 translateXYZ -2 1 0;
 #X msg 330 230 2;
 #X msg 290 200 open Art/Enemy1.png;
@@ -7235,7 +7235,7 @@
 #X connect 12 0 11 0;
 #X restore 30 110 pd collide;
 #X obj 50 140 tgl 24 0 empty empty hit? 28 7 1 10 #fcfcfc #000000 #000000
-0 1;
+1 1;
 #X obj 130 110 loadbang;
 #X obj 73 232 tgl 15 0 empty empty empty 17 7 0 10 #fcfcfc #000000
 #000000 0 1;
@@ -7257,7 +7257,7 @@
 #X obj 280 310 pix_texture;
 #X msg 350 260 env \$1;
 #X obj 350 240 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 280 400 translateXYZ -2 1 0;
 #X msg 350 220 2;
 #X msg 310 190 open Art/Enemy1.png;
@@ -7376,7 +7376,7 @@
 #X connect 12 0 11 0;
 #X restore 30 110 pd collide;
 #X obj 50 140 tgl 24 0 empty empty hit? 28 7 1 10 #fcfcfc #000000 #000000
-0 1;
+1 1;
 #X obj 130 110 loadbang;
 #X obj 73 232 tgl 15 0 empty empty empty 17 7 0 10 #fcfcfc #000000
 #000000 0 1;
@@ -7398,7 +7398,7 @@
 #X obj 270 300 pix_texture;
 #X msg 340 250 env \$1;
 #X obj 340 230 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 270 390 translateXYZ -2 1 0;
 #X msg 340 210 2;
 #X msg 300 180 open Art/Enemy1.png;
@@ -7517,7 +7517,7 @@
 #X connect 12 0 11 0;
 #X restore 30 110 pd collide;
 #X obj 50 140 tgl 24 0 empty empty hit? 28 7 1 10 #fcfcfc #000000 #000000
-0 1;
+1 1;
 #X obj 130 110 loadbang;
 #X obj 73 232 tgl 15 0 empty empty empty 17 7 0 10 #fcfcfc #000000
 #000000 0 1;
@@ -7539,7 +7539,7 @@
 #X obj 270 310 pix_texture;
 #X msg 340 260 env \$1;
 #X obj 340 240 hradio 15 1 0 6 empty empty empty 0 -6 0 8 #fcfcfc #000000
-#000000 2;
+#000000 0;
 #X obj 270 400 translateXYZ -2 1 0;
 #X msg 340 220 2;
 #X msg 300 190 open Art/Enemy1.png;
@@ -15044,8 +15044,11 @@
 #X obj 280 255 send start;
 #X floatatom 330 120 5 0 0 0 - - -, f 5;
 #X obj 253 139 sel 101 114;
+#X msg 60 200 \; pd-Sky_Force.pd vis 1;
+#X obj 100 160 receive start;
 #X connect 1 0 0 0;
 #X connect 2 0 5 0;
+#X connect 2 0 13 0;
 #X connect 3 0 1 0;
 #X connect 3 0 4 0;
 #X connect 5 0 0 0;
@@ -15055,6 +15058,7 @@
 #X connect 12 0 8 0;
 #X connect 12 0 9 0;
 #X connect 12 1 7 0;
+#X connect 14 0 13 0;
 #X restore 40 450 pd gem;
 #N canvas 705 235 389 349 Game_overScreen 0;
 #X msg 20 170 set 57;
@@ -15960,6 +15964,38 @@ a goalkeeper in front of the goal you are the last line of defense
 #X text 70 370 KEEP THE PATCH IN FOCUS FOR GAME TO TAKE INPUTS;
 #X obj 550 450 loadbang;
 #X text 90 300 E -Start R- Reset, f 42;
+#N canvas 846 168 685 531 License 0;
+#X text 50 80 Permission is hereby granted \, free of charge \, to
+any person obtaining a copy of this software and associated documentation
+files (the "Software") \, to deal in the Software without restriction
+\, including without limitation the rights to use \, copy \, modify
+\, merge \, publish \, distribute \, sublicense \, and/or sell copies
+of the Software \, and to permit persons to whom the Software is furnished
+to do so \, subject to the following conditions:, f 86;
+#X text 60 180 1.)Acknowledgment of Third-Party Assets: Parts of this
+software include art and sound assets that are either created by me
+\, the developer \, or sourced from publicly available art and Pixabay.
+Users of this software acknowledge that some assets are not original
+and have been obtained from public domain sources or Pixabay., f 86
+;
+#X text 60 250 2.)Non-Exclusive License for Public Domain and Pixabay
+Assets: Any art or sound assets not created by me but used under public
+domain or Pixabay terms are provided "as is \, " without any warranty
+of any kind \, express or implied \, including but not limited to the
+warranties of merchantability \, fitness for a particular purpose \,
+and non-infringement. Users are responsible for ensuring compliance
+with the terms under which these assets are provided., f 86;
+#X text 60 340 3.)No Warranty: THE SOFTWARE IS PROVIDED "AS IS \, "
+WITHOUT WARRANTY OF ANY KIND \, EXPRESS OR IMPLIED \, INCLUDING BUT
+NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY \, FITNESS FOR A PARTICULAR
+PURPOSE \, AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM \, DAMAGES \, OR OTHER LIABILITY \,
+WHETHER IN AN ACTION OF CONTRACT \, TORT \, OR OTHERWISE \, ARISING
+FROM \, OUT OF \, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE., f 86;
+#X text 50 40 Copyright (c) [2024] [Sushant Sudan], f 86;
+#X text 50 440 End of License, f 86;
+#X restore 310 530 pd License;
 #X connect 12 0 44 0;
 #X connect 14 0 13 0;
 #X connect 15 0 16 0;

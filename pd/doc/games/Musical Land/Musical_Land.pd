@@ -1,4 +1,4 @@
-#N canvas 656 132 718 550 10;
+#N canvas 744 129 720 552 10;
 #N canvas 48 72 1438 670 beat-sequencer 0;
 #X obj 329 -361 metro;
 #X obj 329 -336 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
@@ -3516,7 +3516,7 @@
 #X connect 349 0 329 0;
 #X connect 350 0 339 0;
 #X restore 170 470 pd SandRed_Tiles;
-#N canvas 820 176 454 307 gem 0;
+#N canvas 512 252 456 309 gem 0;
 #X obj 30 150 gemwin;
 #X msg 70 120 destroy;
 #X msg 30 90 dimen 750 750 \, create \, 1;
@@ -3526,13 +3526,17 @@
 #X obj 251 242 send start;
 #X obj 261 212 send reset;
 #X obj 251 167 sel 101 114;
+#X msg 50 200 \; pd-Musical_Land.pd vis 1;
+#X obj 80 160 receive start;
 #X connect 1 0 0 0;
 #X connect 2 0 0 0;
 #X connect 3 0 2 0;
+#X connect 3 0 9 0;
 #X connect 4 0 1 0;
 #X connect 5 0 8 0;
 #X connect 8 0 6 0;
 #X connect 8 1 7 0;
+#X connect 10 0 9 0;
 #X restore 40 440 pd gem;
 #N canvas 868 160 314 210 GameLogic 0;
 #X floatatom 77 87 5 0 0 0 - - -, f 5;
@@ -4664,6 +4668,8 @@
 0;
 #X text 30 320 NOTE;
 #X text 140 20 Musical Land;
+#X text 30 70 Welcome to the land of music here beats control time
+and space, f 63;
 #X text 30 90 Live in it and experience it for yourself the musical
 beat ambience of this land we have got a world made of Sand and Water
 , f 65;
@@ -4697,11 +4703,41 @@ vice versa, f 67;
 #X text 60 340 KEEP THE PATCH IN FOCUS FOR GAME TO TAKE INPUTS;
 #X obj 560 400 loadbang;
 #X text 80 260 E -Start R - Reset, f 42;
-#X text 30 70 Welcome to the land of music where beats control time
-and space, f 63;
+#N canvas 846 168 685 531 License 0;
+#X text 50 80 Permission is hereby granted \, free of charge \, to
+any person obtaining a copy of this software and associated documentation
+files (the "Software") \, to deal in the Software without restriction
+\, including without limitation the rights to use \, copy \, modify
+\, merge \, publish \, distribute \, sublicense \, and/or sell copies
+of the Software \, and to permit persons to whom the Software is furnished
+to do so \, subject to the following conditions:, f 86;
+#X text 60 180 1.)Acknowledgment of Third-Party Assets: Parts of this
+software include art and sound assets that are either created by me
+\, the developer \, or sourced from publicly available art and Pixabay.
+Users of this software acknowledge that some assets are not original
+and have been obtained from public domain sources or Pixabay., f 86
+;
+#X text 60 250 2.)Non-Exclusive License for Public Domain and Pixabay
+Assets: Any art or sound assets not created by me but used under public
+domain or Pixabay terms are provided "as is \, " without any warranty
+of any kind \, express or implied \, including but not limited to the
+warranties of merchantability \, fitness for a particular purpose \,
+and non-infringement. Users are responsible for ensuring compliance
+with the terms under which these assets are provided., f 86;
+#X text 60 340 3.)No Warranty: THE SOFTWARE IS PROVIDED "AS IS \, "
+WITHOUT WARRANTY OF ANY KIND \, EXPRESS OR IMPLIED \, INCLUDING BUT
+NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY \, FITNESS FOR A PARTICULAR
+PURPOSE \, AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM \, DAMAGES \, OR OTHER LIABILITY \,
+WHETHER IN AN ACTION OF CONTRACT \, TORT \, OR OTHERWISE \, ARISING
+FROM \, OUT OF \, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE., f 86;
+#X text 50 40 Copyright (c) [2024] [Sushant Sudan], f 86;
+#X text 50 440 End of License, f 86;
+#X restore 300 440 pd License;
 #X connect 12 0 15 0;
 #X connect 13 0 14 0;
 #X connect 16 0 17 0;
 #X connect 18 0 19 0;
-#X connect 40 0 41 0;
-#X connect 44 0 40 0;
+#X connect 41 0 42 0;
+#X connect 45 0 41 0;
