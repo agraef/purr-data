@@ -436,28 +436,33 @@ function clear_results() {
 }
 
 function display_directory_callback(err, files) {
-    var doc, doc_path, is_dir;
     if (err) {
         pdgui.post("Search Engine: " + err);
     } else {
-        files.forEach(function (f, i, a) {
-            doc_path = path.join(current_dir, f);
-            try {
-                is_dir = fs.lstatSync(doc_path).isDirectory();
-            } catch (err) {
-                is_dir = false;
-            }
-            if (is_dir) {
+        // sort filenames alphabetically, directories first
+        files = files.map(f => {
+            const p = path.join(current_dir, f);
+            const d = fs.lstatSync(p).isDirectory();
+            return {
+                name: f,
+                path: p,
+                is_dir: d
+            };
+        }).sort((a, b) => b.is_dir - a.is_dir || a.name - b.name);
+        // create a doc entry for each item
+        files.forEach(function (f) {
+            var doc;
+            if (f.is_dir) {
                 doc = {
-                    id: doc_path,
-                    title: f+"/",
+                    id: f.path,
+                    title: f.name+"/",
                     description: null
                 };
                 display_doc(doc);
-            } else if (filetypes.indexOf(path.extname(f)) !== -1) {
-                doc = index.documentStore.getDoc(doc_path) || {
-                    id: doc_path,
-                    title: path.basename(f, ".pd"),
+            } else if (filetypes.indexOf(path.extname(f.name)) !== -1) {
+                doc = index.documentStore.getDoc(f.path) || {
+                    id: f.path,
+                    title: path.basename(f.name, ".pd"),
                     description: null
                 };
                 display_doc(doc);
