@@ -1,4 +1,4 @@
-#N canvas 800 140 709 525 10;
+#N canvas 76 123 711 527 10;
 #X obj 480 20 cnv 15 174 118 empty empty empty 20 12 0 14 #fc0400 #404040
 0;
 #X obj 490 30 cnv 15 156 99 empty empty empty 20 12 0 14 #fcfcfc #404040
@@ -2878,18 +2878,22 @@
 #X connect 63 0 58 0;
 #X connect 64 0 56 0;
 #X restore 32 377 pd Game_overScreen;
-#N canvas 536 226 450 301 gem 0;
+#N canvas 536 225 450 303 gem 0;
 #X obj 30 150 gemwin;
 #X msg 70 120 destroy;
 #X msg 30 90 dimen 750 750 \, create \, 1;
 #X obj 30 60 receive open;
 #X obj 130 60 receive close;
 #X obj 130 120 send reset;
+#X obj 100 170 receive start;
+#X msg 60 210 \; pd-Comet_Blast.pd vis 1;
 #X connect 1 0 0 0;
 #X connect 2 0 0 0;
 #X connect 3 0 2 0;
+#X connect 3 0 7 0;
 #X connect 4 0 1 0;
 #X connect 4 0 5 0;
+#X connect 6 0 7 0;
 #X restore 32 297 pd gem;
 #X obj 480 210 cnv 15 174 118 empty empty empty 20 12 0 14 #fc0400
 #404040 0;
@@ -2949,6 +2953,38 @@ into a living nightmare;
 #X text 520 340 Controlling MUSIC;
 #X obj 540 380 loadbang;
 #X text 130 -40 COMET BLAST;
+#N canvas 846 168 685 531 License 0;
+#X text 50 80 Permission is hereby granted \, free of charge \, to
+any person obtaining a copy of this software and associated documentation
+files (the "Software") \, to deal in the Software without restriction
+\, including without limitation the rights to use \, copy \, modify
+\, merge \, publish \, distribute \, sublicense \, and/or sell copies
+of the Software \, and to permit persons to whom the Software is furnished
+to do so \, subject to the following conditions:, f 86;
+#X text 60 180 1.)Acknowledgment of Third-Party Assets: Parts of this
+software include art and sound assets that are either created by me
+\, the developer \, or sourced from publicly available art and Pixabay.
+Users of this software acknowledge that some assets are not original
+and have been obtained from public domain sources or Pixabay., f 86
+;
+#X text 60 250 2.)Non-Exclusive License for Public Domain and Pixabay
+Assets: Any art or sound assets not created by me but used under public
+domain or Pixabay terms are provided "as is \, " without any warranty
+of any kind \, express or implied \, including but not limited to the
+warranties of merchantability \, fitness for a particular purpose \,
+and non-infringement. Users are responsible for ensuring compliance
+with the terms under which these assets are provided., f 86;
+#X text 60 340 3.)No Warranty: THE SOFTWARE IS PROVIDED "AS IS \, "
+WITHOUT WARRANTY OF ANY KIND \, EXPRESS OR IMPLIED \, INCLUDING BUT
+NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY \, FITNESS FOR A PARTICULAR
+PURPOSE \, AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM \, DAMAGES \, OR OTHER LIABILITY \,
+WHETHER IN AN ACTION OF CONTRACT \, TORT \, OR OTHERWISE \, ARISING
+FROM \, OUT OF \, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE., f 86;
+#X text 50 40 Copyright (c) [2024] [Sushant Sudan], f 86;
+#X text 50 440 End of License, f 86;
+#X restore 120 310 pd License;
 #X connect 13 0 11 0;
 #X connect 14 0 12 0;
 #X connect 16 0 15 0;
