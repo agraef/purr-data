@@ -162,29 +162,6 @@ static void pddplink_activate(t_gobj *z, t_glist *glist, int state)
     rtext_activate(y, state);
     x->x_rtextactive = state;
     if (!state) {
-        /* Big workaround for pddplink without the -box option...
-
-           After this call, Pd calls text_setto to see if it needs to
-           instantiate the object. For nearly all t_text objects, the
-           object doesn't get rebuilt if the text inside the box remains
-           the same. Instead, it just calls rtext_senditup which (eventually)
-           sends a message to the GUI to simply supply new text for the
-           current object. (It shouldn't do this if the text hasn't actually
-           changed, but that's another story...).
-
-           Anyway, since pddplink has this weird widget behavior, the text
-           displayed is different than the text we typed in the box-- hence
-           the x->x_vistext member here. So if we happened to edit the box
-           without changing the text, rtext_senditup would update the link 
-           to be "pddplink foo" instead of just "foo".
-
-           To prevent this, we just zero out the object's te_binbuf to ensure
-           that text_setto re-instantiates. That ensures the correct text is
-           printed for the link */
-        t_binbuf *b = binbuf_new();
-        t_binbuf *old = x->x_ob.te_binbuf;
-        x->x_ob.te_binbuf = b;
-        binbuf_free(old);
         /* ico@vt.edu 20200906: this is ugly but necessary because otherwise 
            the object only activates correctly (reverts to its active link)
            every other time when being deselected
@@ -425,8 +402,6 @@ static void *pddplink_new(t_symbol *s, int ac, t_atom *av)
 
 void pddplink_setup(void)
 {
-    t_symbol *dirsym;
-
     pddplink_class = class_new(gensym("pddplink"),
 			       (t_newmethod)pddplink_new,
 			       (t_method)pddplink_free,
@@ -444,8 +419,4 @@ void pddplink_setup(void)
     class_addmethod(pddplinkbox_class, (t_method)pddplink_click,
 		    gensym("click"),
 		    A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, A_FLOAT, 0);
-
-    dirsym = pddplink_class->c_externdir;  /* FIXME */
-    /* The pddplink.tcl file is no longer needed */
-    //sys_vgui("source {%s/pddplink.tcl}\n", dirsym->s_name);
 }
