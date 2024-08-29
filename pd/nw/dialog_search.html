@@ -16,7 +16,15 @@ var index;
 
 pdgui.skin.apply(window);
 
+// file types to be shown in the directory display and the search results
 var filetypes = [".pd", ".txt", ".htm", ".html", ".pdf"];
+
+// mimetypes for the file picker. This affords us a bit more flexibility than
+// using rigid file extensions, and we can also add a lot more types for
+// various kinds of media (images, video, etc.). FIXME: audio/aiff and
+// audio/midi don't seem to be recognized for some reason, so we also add the
+// corresponding extensions.
+var mimetypes = filetypes.concat(["text/plain", "text/markdown", "text/html", "application/pdf", "image/gif", "image/jpeg", "image/png", "image/tiff", "audio/aac", "audio/aiff", ".aif", ".aiff", "audio/flac", "audio/midi", ".mid", ".midi", "audio/mp4", "audio/mpeg", "audio/ogg", "audio/opus", "audio/wav", "audio/webm", "video/jpeg", "video/mpeg", "video/ogg", "video/quicktime", "video/webm"]);
 
 // Table of Contents to start with
 /* NOTE: A section title is indicated by an entry consisting just of the title
@@ -841,7 +849,7 @@ function register_window_id(id, attrs) {
         l("search.search_placeholder");
     add_events();
     // set file types for the file dialog
-    document.getElementById("file_browser").accept = filetypes.join(",");
+    document.getElementById("file_browser").accept = mimetypes.join(",");
     document.getElementById("results").textContent = l("search.building_index");
     document.getElementById("search_text").disabled = true;
     document.getElementById("file_browser").setAttribute("nwworkingdir",
