@@ -529,7 +529,7 @@ text {
 .xlet_selected {
     stroke: orange !important;
     fill: orange;
-    -webkit-animation: fizzle 0.4s linear 1;
+    /* -webkit-animation: fizzle 0.4s linear 1; */
 }
 
 #console_find {

@@ -423,7 +423,7 @@ text {
 .xlet_selected {
     stroke: gray !important;
     fill: gray;
-    -webkit-animation: fizzle 0.5s linear 1;
+    /* -webkit-animation: fizzle 0.5s linear 1; */
 }
 
 #console_find {

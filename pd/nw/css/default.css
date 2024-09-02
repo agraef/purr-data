@@ -550,11 +550,11 @@ text.activated {
    for every pixel we move inside an xlet. */
 @-webkit-keyframes fizzle {
     0% {
-        stroke-width: 12;
+        stroke-width: 5;
         stroke-opacity: 1;
     }
     100% {
-        stroke-width: 5;
+        stroke-width: 1;
         stroke-opacity: 1;
     }
 }
@@ -564,7 +564,7 @@ text.activated {
     stroke: #e87216;
     fill: #e87216;
     stroke-width: 5;
-    -webkit-animation: fizzle 0.1s ease-in 1;
+    -webkit-animation: fizzle 0.5s ease-in 1;
 }
 
 .xlet_disabled {

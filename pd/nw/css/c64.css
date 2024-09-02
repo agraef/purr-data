@@ -417,7 +417,7 @@ text {
 .xlet_selected {
     stroke: #cc9933 !important;
     fill: #7569d7;
-    -webkit-animation: fizzle 0.5s linear 1;
+    /* -webkit-animation: fizzle 0.5s linear 1; */
 }
 
 #console_find {
