@@ -42,7 +42,7 @@ for Pd version 0.42.;
 -162280 0;
 #X text 98 252 float;
 #X text 98 343 symbol;
-#X obj 273 572 pddplink https://yadegari.org/expr/expr.html;
+#X obj 273 572 pddplink ../8.topics/expr.htm;
 #X text 273 555 Expr family of objects by Shahrokh Yadegari;
 #X obj 506 11 expr~;
 #X obj 18 159 print~;
