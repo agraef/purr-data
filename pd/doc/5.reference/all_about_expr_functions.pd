@@ -1,4 +1,4 @@
-#N canvas 435 60 448 545 10;
+#N canvas 436 60 448 565 10;
 #X obj 1 1 cnv 15 445 20 empty \$0-pddp.cnv.header expr_operators_and_functions
 20 10 1 18 #fcbcc4 #202020 0;
 #X obj 407 2 pddp/pddplink http://puredata.info/dev/pddp -text pddp
@@ -64,7 +64,7 @@
 #000000 #000000;
 #X obj 22 2014 bng 12 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
 #000000 #000000;
-#X floatatom 36 2041 0 0 0 0 - - -;
+#X floatatom 36 2081 0 0 0 0 - - -;
 #X text 185 1972 size of an array;
 #X text 185 1991 sum of all elements in an array;
 #X text 138 772 minimum;
@@ -265,11 +265,10 @@
 #X text 148 688 than or equal to the lower boundary.;
 #X text 149 1340 power of 2;
 #X text 149 1327 multiply floating-point number by integral;
-#X text 217 2012 sum of an array within boundaries;
-#X obj 35 2171 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
+#X obj 35 2211 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
 #000000 #000000;
-#X floatatom 35 2235 5 0 0 0 - - -, f 5;
-#X obj 35 2190 symbol \$0-expr-array;
+#X floatatom 35 2275 5 0 0 0 - - -, f 5;
+#X obj 35 2230 symbol \$0-expr-array;
 #X obj 36 1993 expr sum("expr_array");
 #X text 109 1920 Note: The array name in [expr] must be in quotes;
 #X text 146 1933 when using these functions.;
@@ -278,7 +277,7 @@
 #X text 19 37 The following operators and functions are available as
 arguments to the [expr] \, [expr~] \, and [fexpr~] objects.;
 #X text 7 82 Operators (from highest to lowest precedence);
-#X obj 1 2268 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+#X obj 1 2388 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 #e0e0e0 #202020 0;
 #N canvas 375 387 494 164 META 0;
 #X text 12 105 HELP_PATCH_AUTHORS Dave Sabine \, May 5 \, 2003 . Jonathan
@@ -288,13 +287,13 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 45 DESCRIPTION complete list of functions and operators
 for expr family objects;
 #X text 12 25 KEYWORDS expr expr~ fexpr~ all_about_pd;
-#X restore 392 2270 pd META;
+#X restore 392 2390 pd META;
 #N canvas 218 414 428 140 Related_objects 0;
 #X obj 0 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 #fcbcc4 #202020 0;
 #X text 6 1 [expr] Functions and Operators- Related Objects;
-#X restore 103 2270 pd Related_objects;
-#X obj 6 2270 pddp/pddplink all_about.pd -text All About Pd;
+#X restore 103 2390 pd Related_objects;
+#X obj 6 2390 pddp/pddplink all_about.pd -text All About Pd;
 #X obj 36 1229 expr erf(a);
 #X text 149 1227 error function;
 #X obj 36 1249 expr erfc(a);
@@ -356,21 +355,36 @@ for expr family objects;
 #X obj 36 958 expr copysign(a \, b);
 #X text 167 958 copy sign of a number;
 #X text 167 938 floating point remainder;
-#X obj 35 2212 expr size($s1);
+#X obj 35 2252 expr size($s1);
 #X obj 36 2013 expr Sum("expr_array" \, 0 \, 6);
 #N canvas 736 383 450 300 (subpatch) 0;
 #X array \$0-expr-array 11 float 3 black black;
 #A 0 -0.707106 0 0.707106 1 0.707108 2.65359e-06 -0.707104 -1 -0.70711
 -5.30718e-06 0.707103;
 #X coords 0 1 11 -1 80 60 1;
-#X restore 260 2180 graph;
-#X text 19 2065 Note: the quotation marks inside the parentheses are
+#X restore 260 2220 graph;
+#X text 19 2105 Note: the quotation marks inside the parentheses are
 *not* required when using a variable \, like $s2. When using array/table
 names like "array-name" or "\$0-table" \, use a variable-- otherwise
 the dash and the \$0 will get interpreted as an operator and a value
 \, respectively.;
-#X text 19 2136 For a table name like "\$0-expr-array" \, send the
+#X text 19 2176 For a table name like "\$0-expr-array" \, send the
 array name as a message:;
+#X obj 22 2034 bng 12 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
+#000000 #000000;
+#X obj 22 2054 bng 12 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
+#000000 #000000;
+#X obj 36 2033 expr avg("expr_array");
+#X obj 36 2053 expr Avg("expr_array" \, 0 \, 6);
+#X text 185 2031 average of all elements in an array;
+#X text 217 2052 average within boundaries;
+#X text 217 2012 sum within boundaries;
+#X obj 1 2305 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 #fcbcc4 #202020 0;
+#X text 7 2305 Acoustic and String Functions;
+#X obj 20 2362 pddplink ../8.topics/expr.htm;
+#X text 20 2330 These are new in expr 0.57 / 0.58 and still need to
+be documented here. Please check the html manual for details:;
 #X connect 2 0 4 0;
 #X connect 3 0 5 0;
 #X connect 6 0 12 0;
@@ -386,8 +400,8 @@ array name as a message:;
 #X connect 17 0 91 0;
 #X connect 18 0 93 0;
 #X connect 19 0 95 0;
-#X connect 20 0 211 0;
-#X connect 21 0 213 0;
+#X connect 20 0 210 0;
+#X connect 21 0 212 0;
 #X connect 22 0 31 0;
 #X connect 23 0 97 0;
 #X connect 24 0 180 0;
@@ -399,8 +413,8 @@ array name as a message:;
 #X connect 31 0 12 0;
 #X connect 32 0 12 0;
 #X connect 34 0 181 0;
-#X connect 35 0 201 0;
-#X connect 36 0 258 0;
+#X connect 35 0 200 0;
+#X connect 36 0 257 0;
 #X connect 46 0 48 0;
 #X connect 47 0 49 0;
 #X connect 71 0 72 0;
@@ -486,36 +500,40 @@ array name as a message:;
 #X connect 179 0 50 0;
 #X connect 180 0 12 0;
 #X connect 181 0 37 0;
-#X connect 198 0 200 0;
-#X connect 200 0 257 0;
-#X connect 201 0 37 0;
-#X connect 211 0 26 0;
-#X connect 213 0 26 0;
-#X connect 215 0 218 0;
-#X connect 216 0 220 0;
-#X connect 217 0 223 0;
-#X connect 218 0 26 0;
-#X connect 220 0 26 0;
-#X connect 223 0 26 0;
+#X connect 197 0 199 0;
+#X connect 199 0 256 0;
+#X connect 200 0 37 0;
+#X connect 210 0 26 0;
+#X connect 212 0 26 0;
+#X connect 214 0 217 0;
+#X connect 215 0 219 0;
+#X connect 216 0 222 0;
+#X connect 217 0 26 0;
+#X connect 219 0 26 0;
+#X connect 222 0 26 0;
+#X connect 223 0 226 0;
 #X connect 224 0 227 0;
 #X connect 225 0 228 0;
-#X connect 226 0 229 0;
+#X connect 226 0 108 0;
 #X connect 227 0 108 0;
 #X connect 228 0 108 0;
-#X connect 229 0 108 0;
-#X connect 233 0 234 0;
-#X connect 236 0 237 0;
-#X connect 238 0 245 0;
-#X connect 239 0 240 0;
-#X connect 241 0 246 0;
-#X connect 242 0 243 0;
-#X connect 244 0 247 0;
+#X connect 232 0 233 0;
+#X connect 235 0 236 0;
+#X connect 237 0 244 0;
+#X connect 238 0 239 0;
+#X connect 240 0 245 0;
+#X connect 241 0 242 0;
+#X connect 243 0 246 0;
+#X connect 244 0 12 0;
 #X connect 245 0 12 0;
 #X connect 246 0 12 0;
-#X connect 247 0 12 0;
-#X connect 251 0 252 0;
-#X connect 252 0 12 0;
-#X connect 253 0 254 0;
-#X connect 254 0 12 0;
-#X connect 257 0 199 0;
-#X connect 258 0 37 0;
+#X connect 250 0 251 0;
+#X connect 251 0 12 0;
+#X connect 252 0 253 0;
+#X connect 253 0 12 0;
+#X connect 256 0 198 0;
+#X connect 257 0 37 0;
+#X connect 261 0 263 0;
+#X connect 262 0 264 0;
+#X connect 263 0 37 0;
+#X connect 264 0 37 0;
