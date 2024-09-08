@@ -2310,6 +2310,11 @@ function nw_create_patch_window_menus(gui, w, name) {
             pdgui.pd_doc_open("doc/1.manual", "index.htm");
         }
     });
+    minit(m.help.tutorial, {
+        click: function() {
+            pdgui.pd_doc_open("doc/about", "Purr-Data-Intro.pdf");
+        }
+    });
     minit(m.help.browser, {
         click: pdgui.open_search
     });

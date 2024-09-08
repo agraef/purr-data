@@ -261,6 +261,8 @@
     "about_tt": "Get information about this version of Pd",
     "manual": "Manual",
     "manual_tt": "Open the HTML manual for Pd",
+    "tutorial": "Purr-Data Tutorial",
+    "tutorial_tt": "Open the PDF tutorial for new Purr-Data users",
     "browser": "Help Browser",
     "browser_tt": "Open a help browser to search for documentation and objects",
     "intro": "Quick Reference",

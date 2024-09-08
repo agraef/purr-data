@@ -635,6 +635,10 @@ function create_menu(gui, type) {
         label: l("menu.manual"),
         tooltip: l("menu.manual_tt")
     }));
+    help_menu.append(m.help.tutorial = new gui.MenuItem({
+        label: l("menu.tutorial"),
+        tooltip: l("menu.tutorial_tt")
+    }));
     help_menu.append(m.help.browser = new gui.MenuItem({
         label: l("menu.browser"),
         key: shortcuts.menu.browser.key,

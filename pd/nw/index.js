@@ -742,6 +742,11 @@ function nw_create_pd_window_menus(gui, w) {
             pdgui.pd_doc_open("doc/1.manual", "index.htm");
         }
     });
+    minit(m.help.tutorial, {
+        click: function() {
+            pdgui.pd_doc_open("doc/about", "Purr-Data-Intro.pdf");
+        }
+    });
     minit(m.help.browser, {
         click: pdgui.open_search
     });
