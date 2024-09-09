@@ -467,7 +467,8 @@ function display_directory_callback(err, files) {
                     description: null
                 };
                 display_doc(doc);
-            } else if (filetypes.indexOf(path.extname(f.name)) !== -1) {
+            } else if (filetypes.indexOf(path.extname(f.name)) !== -1 &&
+                       path.basename(f.name, "-meta.pd") !== path.basename(current_dir)) {
                 doc = index.documentStore.getDoc(f.path) || {
                     id: f.path,
                     title: path.basename(f.name, ".pd"),
