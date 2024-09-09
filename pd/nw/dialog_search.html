@@ -481,6 +481,8 @@ function display_directory_callback(err, files) {
 
 function display_directory(dir) {
     current_dir = dir;
+    // must preserve the trailing slash in user input
+    var trailing_slash = dir.slice(-1) == "/" ? "/" : "";
     var is_doc = current_dir === path.join(pdgui.get_lib_dir(), "doc");
     clear_results();
     fs.readdir(dir, display_directory_callback);
@@ -491,6 +493,7 @@ function display_directory(dir) {
     var rel = canonical_path(path.relative(pdgui.get_lib_dir(), dir));
     dir = canonical_path(dir);
     dir = dir.length <= rel.length ? dir : rel;
+    dir = dir + trailing_slash;
     document.getElementById("search_text").value = dir;
 }
 
