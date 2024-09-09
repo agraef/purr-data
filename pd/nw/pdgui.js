@@ -1750,7 +1750,7 @@ function do_post(object_id, selector, string, type, loglevel) {
     // argument directly from s_print.c. Probably a remnant from the Tcl/Tk
     // days, but I won't touch that C code, so we must unescape those here.
     string = string.replace(/\\([\\{};])/g, "$1");
-    current_string = current_string + (selector ? selector : "") + string;
+    current_string = current_string + string;
     my_p = pd_window.document.getElementById("p1");
     // We can get posts from Pd that are build incrementally, with the final
     // message having a "\n" at the end. So we test for that.

@@ -27,8 +27,31 @@ static char* strnescape(char *dest, const char *src, size_t len)
         int c = src[ptin];
         if (c == '\\' || c == '{' || c == '}' || c == ';')
             dest[ptout++] = '\\';
-        dest[ptout] = src[ptin];
+        if (ptout < len - 1)
+            dest[ptout] = c;
+        else {
+            // ag 20240909: prevent buffer overflow, roll back and bail out.
+            // NOTE: We need to reserve an extra character for any trailing \n
+            // here (see below), and we don't want to keep any partial escapes
+            // hanging aroung, so we bail out a bit early for ptout < len - 1
+            // already (see above).
+            dest[ptout-1] = 0;
+            break;
+        }
         if (c==0) break;
+    }
+
+    if (src[ptin] != 0) {
+        // ag 20240909: The output is truncated, make sure that we save any
+        // trailing newline at least, in order to prevent garbled messages.
+        int c;
+        while (src[ptin] != 0) c = src[ptin++];
+        if (c == '\n') {
+            // we can safely assert len>1 here
+            dest[len-2] = c;
+            // terminating 0 will be added below
+            ptout = len-1;
+        }
     }
 
     if(ptout < len)
@@ -121,23 +144,9 @@ static void dopost(const char *s)
     else
     {
         char upbuf[MAXPDSTRING];
-        int ptin = 0, ptout = 0, len = strlen(s);
-        //static int heldcr = 0;
-        //if (heldcr)
-        //    upbuf[ptout++] = '\n', heldcr = 0;
-        for (; ptin < len && ptout < MAXPDSTRING-3;
-            ptin++, ptout++)
-        {
-            int c = s[ptin];
-            if (c == '\\' || c == '{' || c == '}' || c == ';')
-                upbuf[ptout++] = '\\';
-            upbuf[ptout] = s[ptin];
-        }
-        //if (ptout && upbuf[ptout-1] == '\n')
-        //    upbuf[--ptout] = 0, heldcr = 1;
-        upbuf[ptout] = 0;
 //        sys_vgui("pdtk_post {%s}\n", upbuf);
-        gui_vmess("gui_post", "s", upbuf);
+        gui_vmess("gui_post", "s",
+                  strnescape(upbuf, s, MAXPDSTRING));
     }
 }
 
