@@ -6973,17 +6973,29 @@ function file_dialog(cid, type, target, start_path) {
         pd_window;
     input_span = win.window.document.querySelector("#" + query_string);
     // We have to use an absolute path here because of a bug in nw.js 0.14.7
+    // ag 20240912: When figuring out a default location, get_pd_opendir()
+    // seems to be a better choice than just pwd. It also matches vanilla's
+    // behavior AFAICT.
     if (!path.isAbsolute(start_path)) {
-        start_path = path.join(pwd, start_path);
+        start_path = path.join(get_pd_opendir(), start_path);
+    }
+    // ag 20240912: Make sure that what we have is actually a directory,
+    // otherwise it's better to fall back to a known location.
+    try {
+        var stat = fs.lstatSync(start_path);
+        if (!stat.isDirectory()) start_path = get_pd_opendir();
+    } catch (e) {
+        start_path = get_pd_opendir();
+    }
+    // handle Windows path names
+    if(nw_os_is_windows) {
+        start_path = start_path.replace(/\//g, '\\');
     }
     // We also have to inject html into the dom because of a bug in nw.js
     // 0.14.7. For some reason we can't just change the value of nwworkingdir--
     // it just doesn't work. So this requires us to have the parent <span>
     // around the <input>. Then when we change the innerHTML of the span the
     // new value for nwworkingdir magically works.
-    if(nw_os_is_windows) {
-        start_path = start_path.replace(/\//g, '\\');
-    }
     dialog_options = {
         style: "display: none;",
         type: "file",
