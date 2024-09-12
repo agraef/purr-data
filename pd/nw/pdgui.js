@@ -6987,10 +6987,6 @@ function file_dialog(cid, type, target, start_path) {
     } catch (e) {
         start_path = get_pd_opendir();
     }
-    // handle Windows path names
-    if(nw_os_is_windows) {
-        start_path = start_path.replace(/\//g, '\\');
-    }
     // We also have to inject html into the dom because of a bug in nw.js
     // 0.14.7. For some reason we can't just change the value of nwworkingdir--
     // it just doesn't work. So this requires us to have the parent <span>
@@ -7001,7 +6997,7 @@ function file_dialog(cid, type, target, start_path) {
         type: "file",
         id: type === "open" ? "openpanel_dialog" : "savepanel_dialog",
         // using an absolute path here, see comment above
-        nwworkingdir: start_path
+        nwworkingdir: funkify_windows_path(start_path)
     };
     if (type !== "open") {
         dialog_options.nwsaveas = "";
