@@ -950,6 +950,12 @@ static void gatom_retext(t_gatom *x, int senditup, int recolor)
         sys_queuegui(x, x->a_glist, gatom_redraw);
 }
 
+static void gatom_setabuf(t_gatom *x, const char *s)
+{
+    strncpy(x->a_buf, s, ATOMBUFSIZE-2);
+    x->a_buf[ATOMBUFSIZE-1] = 0;
+}
+
 static void gatom_set(t_gatom *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom oldatom = x->a_atom;
@@ -991,7 +997,7 @@ static void gatom_set(t_gatom *x, t_symbol *s, int argc, t_atom *argv)
     {
         x->a_buf[0] = 0;
     } else {
-        strcpy(x->a_buf, x->a_atom.a_w.w_symbol->s_name);
+        gatom_setabuf(x, x->a_atom.a_w.w_symbol->s_name);
     }
 }
 
@@ -1136,7 +1142,7 @@ static void update_symbol(t_gatom *x, t_symbol *s, int bang)
         gatom_bang(x);
     }
     // we need to update the a_buf here, just in case
-    strcpy(x->a_buf, s->s_name);
+    gatom_setabuf(x, s->s_name);
 }
 
 static void change_clicked(t_gatom *x, double f, int p, int q, int bang)
@@ -1243,7 +1249,7 @@ static void gatom_key(void *z, t_floatarg f)
             // symbol type and is empty.
             if (x->a_buf[0] == 0 || strcmp(x->a_buf, x->a_atom.a_w.w_symbol->s_name))
             {
-                strcpy(x->a_buf, x->a_atom.a_w.w_symbol->s_name);
+                gatom_setabuf(x, x->a_atom.a_w.w_symbol->s_name);
                 gatom_retext(x, 1, 1);
             }
             else
