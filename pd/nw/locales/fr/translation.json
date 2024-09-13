@@ -494,7 +494,9 @@
       "input_title":    "Dispositifs d'entrée",
       "input_title_tt": "Périphériques matériels utilisés pour recevoir l'Audio dans Pd",
       "output_title":    "Dispositifs de sortie",
-      "output_title_tt": "Périphériques matériels utilisés pour envoyer l'Audio depuis Pd"
+      "output_title_tt": "Périphériques matériels utilisés pour envoyer l'Audio depuis Pd",
+      "refresh_audiodevs": "Actualiser",
+      "refresh_audiodevs_tt": "Actualiser la liste des périphériques audio"
     },
     "midi": {
       "api": "API MIDI",
@@ -506,7 +508,9 @@
       "input_title":    "Dispositifs d'entrée",
       "input_title_tt": "Périphériques matériels utilisés pour recevoir des données MIDI dans Pd",
       "output_title":    "Dispositifs de sortie",
-      "output_title_tt": "Périphériques matériels utilisés pour envoyer des données MIDI depuis Pd"
+      "output_title_tt": "Périphériques matériels utilisés pour envoyer des données MIDI depuis Pd",
+      "refresh_mididevs": "Actualiser",
+      "refresh_mididevs_tt": "Actualiser la liste des périphériques MIDI"
     },
     "issue":{
       "title": "Titre",
