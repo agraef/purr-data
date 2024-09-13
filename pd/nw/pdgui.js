@@ -7346,7 +7346,7 @@ function gui_pd_dsp(state) {
 
 function open_prefs() {
     if (!dialogwin["prefs"]) {
-        create_window("prefs", "prefs", 486, 532, 0, 0, null);
+        create_window("prefs", "prefs", 486, 548+26*nw_os_is_osx, 0, 0, null);
     } else {
         dialog_raise("prefs");
     }
