@@ -148,6 +148,7 @@ void sys_get_midi_apis2(t_binbuf *buf);
 
 void sys_reopen_midi( void);
 void sys_close_midi( void);
+void sys_xclose_midi( void);
 EXTERN void sys_putmidimess(int portno, int a, int b, int c);
 EXTERN void sys_putmidibyte(int portno, int a);
 EXTERN void sys_poll_midi(void);
