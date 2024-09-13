@@ -987,6 +987,19 @@ void glob_audio_setapi(void *dummy, t_floatarg f)
     }
 }
 
+void glob_audio_refresh(void *dummy)
+{
+    sys_close_audio();
+#if 0
+        /* bash device params back to default */
+    audio_naudioindev = audio_naudiooutdev = 1;
+    audio_audioindev[0] = audio_audiooutdev[0] = DEFAULTAUDIODEV;
+    audio_audiochindev[0] = audio_audiochoutdev[0] = SYS_DEFAULTCH;
+#endif
+    sys_reopen_audio();
+    glob_audio_properties(0, 0);
+}
+
     /* start or stop the audio hardware */
 void sys_set_audio_state(int onoff)
 {

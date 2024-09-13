@@ -494,7 +494,9 @@
       "input_title": "Input Devices",
       "input_title_tt": "hardware devices used to get audio into Pd",
       "output_title": "Output Devices",
-      "output_title_tt": "hardware devices to send audio from Pd"
+      "output_title_tt": "hardware devices to send audio from Pd",
+      "refresh_audiodevs": "Refresh",
+      "refresh_audiodevs_tt": "refresh the list of audio devices"
     },
     "midi": {
       "api": "midi api",
@@ -506,7 +508,9 @@
       "input_title": "Input Devices",
       "input_title_tt": "hardware devices used to get midi data into Pd",
       "output_title": "Output Devices",
-      "output_title_tt": "hardware devices to send midi data from Pd"
+      "output_title_tt": "hardware devices to send midi data from Pd",
+      "refresh_mididevs": "Refresh",
+      "refresh_mididevs_tt": "refresh the list of midi devices"
     },
     "issue":{
       "title": "Title",

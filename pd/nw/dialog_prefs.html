@@ -287,6 +287,10 @@ select {
               </td>
             </tr>
           </table>
+          <br/>
+          <button type="button" onclick="refresh_audiodevs()" data-i18n="[title]prefs.audio.refresh_audiodevs_tt">
+            <span data-i18n="prefs.audio.refresh_audiodevs"></span>
+          </button>
         </div>
 
         <div class="tab2">
@@ -407,6 +411,10 @@ select {
               </tr>
             </table>
           </div>
+          <br/>
+          <button type="button" onclick="refresh_mididevs()" data-i18n="[title]prefs.midi.refresh_mididevs_tt">
+            <span data-i18n="prefs.midi.refresh_mididevs"></span>
+          </button>
         </div>
 
         <div class="tab3">
@@ -1020,6 +1028,14 @@ function change_api(elem) {
     } else {
         pdgui.pdsend("pd midi-setapi", value);
     }
+}
+
+function refresh_audiodevs() {
+    pdgui.pdsend("pd audio-refresh");
+}
+
+function refresh_mididevs() {
+    pdgui.pdsend("pd midi-refresh");
 }
 
 function get_attr(name, attrs) {

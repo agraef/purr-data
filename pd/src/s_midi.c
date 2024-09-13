@@ -683,6 +683,21 @@ void glob_midi_setapi(void *dummy, t_floatarg f)
     glob_midi_properties(0, (midi_nmidiindev > 1 || midi_nmidioutdev > 1));
 }
 
+void glob_midi_refresh(void *dummy)
+{
+#ifdef USEAPI_ALSA
+    if (sys_midiapi == API_ALSA)
+        sys_alsa_close_midi();
+    else
+#endif
+        sys_close_midi();
+    sys_reopen_midi();
+#ifdef USEAPI_ALSA
+    midi_alsa_setndevs(midi_nmidiindev, midi_nmidioutdev);
+#endif
+    glob_midi_properties(0, (midi_nmidiindev > 1 || midi_nmidioutdev > 1));
+}
+
 extern t_class *glob_pdobject;
 
     /* start a midi settings dialog window */
