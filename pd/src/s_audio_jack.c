@@ -98,7 +98,7 @@ static int process (jack_nframes_t nframes, void *arg)
         for (j = 0; j < outport_count;  j++)
         {
             out = jack_port_get_buffer (output_port[j], nframes);
-            memset(out, 0, sizeof (float) * nframes); 
+            memset(out, 0, sizeof (jack_default_audio_sample_t) * nframes); 
         }
         memset(jack_outbuf,0,sizeof(jack_outbuf));
         jack_filled = 0;
