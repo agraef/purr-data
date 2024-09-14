@@ -915,18 +915,39 @@ pm_fns_node pm_macosx_out_dictionary = {
 };
 
 
+/* We do nothing with callbacks, but generating the callbacks also
+ * updates CoreMIDI state. Callback may not be essential, but calling
+ * the CFRunLoopRunInMode is necessary.
+ */
+void cm_notify(const MIDINotification *msg, void *refCon)
+{
+    /*  for debugging, trace change notifications:
+    const char *descr[] = {
+        "undefined (0)",
+        "kMIDIMsgSetupChanged",
+        "kMIDIMsgObjectAdded",
+        "kMIDIMsgObjectRemoved",
+        "kMIDIMsgPropertyChanged",
+        "kMIDIMsgThruConnectionsChanged",
+        "kMIDIMsgSerialPortOwnerChanged",
+        "kMIDIMsgIOError"};
+
+    printf("MIDI Notify, messageID %d (%s)\n", (int) msg->messageID,
+           descr[(int) msg->messageID]);
+    */
+    return;
+}
+
+
 PmError pm_macosxcm_init(void)
 {
     ItemCount numInputs, numOutputs, numDevices;
     MIDIEndpointRef endpoint;
-    int i;
-    OSStatus macHostError;
+    OSStatus macHostError = noErr;
     char *error_text;
 
     /* Determine the number of MIDI devices on the system */
     numDevices = MIDIGetNumberOfDevices();
-    numInputs = MIDIGetNumberOfSources();
-    numOutputs = MIDIGetNumberOfDestinations();
 
     /* Return prematurely if no devices exist on the system
        Note that this is not an error. There may be no devices.
@@ -939,11 +960,22 @@ PmError pm_macosxcm_init(void)
 
 
     /* Initialize the client handle */
-    macHostError = MIDIClientCreate(CFSTR("PortMidi"), NULL, NULL, &client);
+    if (client == NULL_REF) {
+        macHostError = MIDIClientCreate(CFSTR("PortMidi"), &cm_notify, NULL,
+                                        &client);
+    } else {
+        for (int i = 0; i < 100; i++) {
+            // look for any changes before scanning for devices
+            CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, true);
+            if (i % 5 == 0) Pt_Sleep(1);  /* insert 20 delays */
+        }
+    }
     if (macHostError != noErr) {
         error_text = "MIDIClientCreate() in pm_macosxcm_init()";
         goto error_return;
     }
+    numInputs = MIDIGetNumberOfSources();
+    numOutputs = MIDIGetNumberOfDestinations();
 
     /* Create the input port */
     macHostError = MIDIInputPortCreate(client, CFSTR("Input port"), readProc,
@@ -952,7 +984,7 @@ PmError pm_macosxcm_init(void)
         error_text = "MIDIInputPortCreate() in pm_macosxcm_init()";
         goto error_return;
     }
-        
+
     /* Create the output port */
     macHostError = MIDIOutputPortCreate(client, CFSTR("Output port"), &portOut);
     if (macHostError != noErr) {
@@ -961,7 +993,7 @@ PmError pm_macosxcm_init(void)
     }
 
     /* Iterate over the MIDI input devices */
-    for (i = 0; i < numInputs; i++) {
+    for (int i = 0; i < numInputs; i++) {
         endpoint = MIDIGetSource(i);
         if (endpoint == NULL_REF) {
             continue;
@@ -970,14 +1002,14 @@ PmError pm_macosxcm_init(void)
         /* set the first input we see to the default */
         if (pm_default_input_device_id == -1)
             pm_default_input_device_id = pm_descriptor_index;
-        
+
         /* Register this device with PortMidi */
         pm_add_device("CoreMIDI", cm_get_full_endpoint_name(endpoint),
                       TRUE, (void *) (long) endpoint, &pm_macosx_in_dictionary);
     }
 
     /* Iterate over the MIDI output devices */
-    for (i = 0; i < numOutputs; i++) {
+    for (int i = 0; i < numOutputs; i++) {
         endpoint = MIDIGetDestination(i);
         if (endpoint == NULL_REF) {
             continue;
@@ -996,7 +1028,7 @@ PmError pm_macosxcm_init(void)
     
 error_return:
     pm_hosterror = macHostError;
-    sprintf(pm_hosterror_text, "Host error %ld: %s\n", (long) macHostError, 
+    sprintf(pm_hosterror_text, "Host error %ld: %s\n", (long) macHostError,
             error_text);
     pm_macosxcm_term(); /* clear out any opened ports */
     return pmHostError;
@@ -1004,7 +1036,8 @@ error_return:
 
 void pm_macosxcm_term(void)
 {
-    if (client != NULL_REF) MIDIClientDispose(client);
+    /* docs say do not explicitly dispose of client
+       if (client != NULL_REF) MIDIClientDispose(client); */
     if (portIn != NULL_REF) MIDIPortDispose(portIn);
     if (portOut != NULL_REF) MIDIPortDispose(portOut);
 }
