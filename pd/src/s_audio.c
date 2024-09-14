@@ -420,6 +420,22 @@ void sys_close_audio(void)
     audio_callback_is_open = 0;
 }
 
+    /* extended close audio: make sure that devices are rescanned when opening
+       again, for backends which need it (specifically, portaudio needs to be
+       forced to properly reinitialize to update its device list) */
+void sys_xclose_audio( void)
+{
+#ifdef USEAPI_PORTAUDIO
+    void pa_fini_audio(void);
+    int pa_opened = audio_isopen() && sys_audioapiopened == API_PORTAUDIO;
+    sys_close_audio();
+    if (pa_opened)
+        pa_fini_audio();
+#else
+    sys_close_audio();
+#endif
+}
+
     /* open audio using whatever parameters were last used */
 void sys_reopen_audio( void)
 {
@@ -989,7 +1005,7 @@ void glob_audio_setapi(void *dummy, t_floatarg f)
 
 void glob_audio_refresh(void *dummy)
 {
-    sys_close_audio();
+    sys_xclose_audio();
 #if 0
         /* bash device params back to default */
     audio_naudioindev = audio_naudiooutdev = 1;
