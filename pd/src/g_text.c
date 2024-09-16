@@ -1232,7 +1232,6 @@ static void gatom_key(void *z, t_floatarg f)
 {
     t_gatom *x = (t_gatom *)z;
     int c = f;
-    //post("gatom_key %f %d", f, x->a_shift);
     int len = strlen(x->a_buf);
     t_atom at;
     char sbuf[ATOMBUFSIZE + 4];
@@ -1248,7 +1247,6 @@ static void gatom_key(void *z, t_floatarg f)
     if (c == 0)
     {
         // we're being notified that no more keys will come for this grab
-    	//post("gatom_key end <%s> <%s>", x->a_buf, x->a_atom.a_w.w_symbol->s_name);
         if (x->a_atom.a_type == A_FLOAT)
         {
             x->a_atom = x->a_atomold;
@@ -1289,9 +1287,6 @@ static void gatom_key(void *z, t_floatarg f)
     {
         if (x->a_atom.a_type == A_FLOAT) {
             if (x->a_buf[0]) x->a_atom.a_w.w_float = atof(x->a_buf);
-            //sprintf(x->a_buf, "%f", x->a_atom.a_w.w_float);
-            //post("got float f=<%f> s=<%s>", x->a_atom.a_w.w_float, x->a_buf);
-
             // ico@vt.edu 20200904:
             // we reset internal buffer since there is currently no graceful way
             // to handle conversion from float to string and back without loss
@@ -1305,13 +1300,12 @@ static void gatom_key(void *z, t_floatarg f)
         x->a_atomold = x->a_atom;
         gatom_bang(x);
         gatom_retext(x, 1, 0);
-        /* ico@vt.edu 20200904: We prevent deleting of internal buffer,
-		   so that we can keep adding to the existing text unless we click
-		   the second time in which case we will always start with an
-		   empty symbol
-		*/
-		if (!x->a_shift_clicked)
-        	x->a_buf[0] = 0;
+        /* ico@vt.edu 20200904: We prevent deleting of internal buffer, so
+           that we can keep adding to the existing text unless we click the
+           second time in which case we will always start with an empty symbol
+        */
+        if (!x->a_shift_clicked)
+            x->a_buf[0] = 0;
         /* We want to keep grabbing the keyboard after hitting "Enter", so
            we're commenting the following out */
         //glist_grab(x->a_glist, 0, 0, 0, 0, 0);
