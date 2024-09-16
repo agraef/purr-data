@@ -78,8 +78,17 @@ t_symbol *atom_getsymbolarg(int which, int argc, t_atom *argv)
 /* convert an atom into a string, in the reverse sense of binbuf_text (q.v.)
 * special attention is paid to symbols containing the special characters
 * ';', ',', '$', and '\'; these are quoted with a preceding '\', except that
-* the '$' only gets quoted at the beginning of the string.
+* the '$' only gets quoted if followed by a digit.
 */
+
+// ag 20240916 XXXFIXME: Option to suppress escaping spaces. This flag is
+// normally 1 (enable backslash-quoting of space characters), but at present
+// we need to disable it for listboxes because these use spaces as a
+// delimiter. It's a kludge to have this as a global variable, but turning it
+// into a parameter would be even clumsier and require changes in public APIs,
+// which we don't want. Thus, this will have to do until we fix our listbox
+// implementation to make it work with symbols containing spaces.
+int atom_quote_spaces = 1;
 
 void atom_string(t_atom *a, char *buf, unsigned int bufsize)
 {
@@ -98,17 +107,19 @@ void atom_string(t_atom *a, char *buf, unsigned int bufsize)
         else  strcat(buf, "+");
         break;
     case A_SYMBOL:
+    case A_DOLLSYM:
     {
         char *sp;
         unsigned int len;
-        int quote;
-        if(!strcmp(a->a_w.w_symbol->s_name, "$@")) /* JMZ: #@ quoting */
+        int quote, a_sym = a->a_type == A_SYMBOL;
+        if(a_sym && !strcmp(a->a_w.w_symbol->s_name, "$@")) /* JMZ: #@ quoting */
             quote=1;
         else
         {
             for (sp = a->a_w.w_symbol->s_name, len = 0, quote = 0; *sp; sp++, len++)
-                if (*sp == ';' || *sp == ',' || *sp == '\\' || 
-                    (*sp == '$' && sp[1] >= '0' && sp[1] <= '9'))
+                if (*sp == ';' || *sp == ',' || *sp == '\\' ||
+                    (atom_quote_spaces && *sp == ' ') ||
+                    (a_sym && *sp == '$' && sp[1] >= '0' && sp[1] <= '9'))
                     quote = 1;
         }
         if (quote)
@@ -118,7 +129,8 @@ void atom_string(t_atom *a, char *buf, unsigned int bufsize)
             while (bp < ep && *sp)
             {
                 if (*sp == ';' || *sp == ',' || *sp == '\\' ||
-                    (*sp == '$' && ((sp[1] >= '0' && sp[1] <= '9')||sp[1]=='@')))
+                    (atom_quote_spaces && *sp == ' ') ||
+                    (a_sym && *sp == '$' && ((sp[1] >= '0' && sp[1] <= '9') || sp[1]=='@')))
                         *bp++ = '\\';
                 *bp++ = *sp++;
             }
@@ -147,10 +159,6 @@ void atom_string(t_atom *a, char *buf, unsigned int bufsize)
         {
             sprintf(buf, "$%d", a->a_w.w_index);
         }
-        break;
-    case A_DOLLSYM:
-        strncpy(buf, a->a_w.w_symbol->s_name, bufsize);
-        buf[bufsize-1] = 0;
         break;
     default:
         bug("atom_string");
