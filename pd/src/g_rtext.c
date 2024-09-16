@@ -427,14 +427,26 @@ void rtext_retext(t_rtext *x)
     t_text *text = x->x_text;
     t_freebytes(x->x_buf, x->x_bufsize);
     binbuf_gettext(text->te_binbuf, &x->x_buf, &x->x_bufsize);
+    t_atom *atomp = binbuf_getvec(text->te_binbuf);
+    int natom = binbuf_getnatom(text->te_binbuf);
+    int bufsize = x->x_bufsize;
+    /* special case: for symbol and listbox gatoms, get rid of an extra
+       trailing backslash, which is an artifact of applying atom_string() in
+       binbuf_gettext(). Note that the trailing backslash itself will be
+       removed later, this happens in gatom_key(). */
+    if (bufsize > 4 && text->te_type == T_ATOM &&
+        natom == 1 && atomp->a_type == A_SYMBOL &&
+        strncmp(x->x_buf+bufsize-5, "\\\\...", 5) == 0) {
+        // the rest of the code seems to assume that the buffer ends in a
+        // space character, so we re-add one at the end
+        strncpy(x->x_buf+bufsize-5, "\\... ", 5);
+        bufsize--;
+    }
     /* special case: for number boxes, try to pare the number down
        to the specified width of the box. */
     if (text->te_width > 0 && text->te_type == T_ATOM &&
-        x->x_bufsize > text->te_width)
+        bufsize > text->te_width)
     {
-        t_atom *atomp = binbuf_getvec(text->te_binbuf);
-        int natom = binbuf_getnatom(text->te_binbuf);
-        int bufsize = x->x_bufsize;
         if (natom == 1 && atomp->a_type == A_FLOAT)
         {
             /* try to reduce size by dropping decimal digits */

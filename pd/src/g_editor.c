@@ -5629,12 +5629,12 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     else gotkeysym = gensym("?");
     //fflag = (av[0].a_type == A_FLOAT ? av[0].a_w.w_float : 0);
     keynum = (av[1].a_type == A_FLOAT ? av[1].a_w.w_float : 0);
+#if 0 // ag 20240916: allow backslashes typed by the user.
     if (keynum == '\\')
     {
         post("keycode %d: dropped", (int)keynum);
         return;
     }
-#if 0
     post("keynum %d, down %d, gotkeysym %s",
         (int)keynum, down, gotkeysym->s_name);
 #endif

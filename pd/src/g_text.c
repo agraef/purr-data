@@ -1236,6 +1236,15 @@ static void gatom_key(void *z, t_floatarg f)
     int len = strlen(x->a_buf);
     t_atom at;
     char sbuf[ATOMBUFSIZE + 4];
+    if (len > 0 && x->a_buf[len-1] == '\\') {
+        // ag 20240916: Get rid of a trailing backslash. We don't keep the
+        // backslash itself in the buffer after it has served its purpose of
+        // escaping the following character (which is about to be processed).
+        // Rather, escaping special characters will be done automatically as
+        // needed, when the gatom gets sent to the GUI, which happens in
+        // rtext_retext().
+        x->a_buf[--len] = 0;
+    }
     if (c == 0)
     {
         // we're being notified that no more keys will come for this grab
