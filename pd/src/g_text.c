@@ -1269,12 +1269,8 @@ static void gatom_key(void *z, t_floatarg f)
             // originally clicked on below, but only if the current gatom is
             // symbol type and is empty.
             if (x->a_buf[0] == 0 || strcmp(x->a_buf, x->a_atom.a_w.w_symbol->s_name))
-            {
                 gatom_setabuf(x, x->a_atom.a_w.w_symbol->s_name);
-                gatom_retext(x, 1, 1);
-            }
-            else
-                gatom_retext(x, 0, 1);
+            gatom_retext(x, 1, 1);
         }
         return;
     }
