@@ -25,29 +25,6 @@
 
 #define DOLLARALL -0x7fffffff /* sentinel value for "$@" dollar arg */
 
-/* escape characters for saving */
-static char* strnescape(char *dest, const char *src, size_t outlen)
-{
-    int ptin = 0;
-    unsigned ptout = 0;
-    for(; ptout < outlen; ptin++, ptout++)
-    {
-        int c = src[ptin];
-        if (c == ' ' || c=='\t')
-            dest[ptout++] = '\\';
-        dest[ptout] = src[ptin];
-        if (c==0) break;
-    }
-
-    if(ptout < outlen)
-        dest[ptout]=0;
-    else
-        dest[outlen-1]=0;
-
-    return dest;
-}
-
-
 struct _binbuf
 {
     int b_n;
@@ -1097,7 +1074,7 @@ int binbuf_write(t_binbuf *x, char *filename, char *dir, int crflag)
             /* estimate how many characters will be needed.  Printing out
             symbols may need extra characters for inserting backslashes. */
         if (ap->a_type == A_SYMBOL || ap->a_type == A_DOLLSYM)
-            length = 80 + strlen(ap->a_w.w_symbol->s_name);
+            length = 80 + (int)strlen(ap->a_w.w_symbol->s_name);
         else length = 40;
         if (ep - bp < length)
         {
@@ -1112,11 +1089,8 @@ int binbuf_write(t_binbuf *x, char *filename, char *dir, int crflag)
             bp > sbuf && bp[-1] == ' ') bp--;
         if (!crflag || ap->a_type != A_SEMI)
         {
-            char bp2[WBUFSIZE];
-            atom_string(ap, bp2, WBUFSIZE);
-            strnescape(bp, bp2, (ep-bp)-2);
-            //atom_string(ap, bp, (ep-bp)-2);
-            length = strlen(bp);
+            atom_string(ap, bp, (unsigned int)((ep-bp)-2));
+            length = (int)strlen(bp);
             bp += length;
             ncolumn += length;
         }
