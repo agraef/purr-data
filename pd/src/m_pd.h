@@ -392,7 +392,7 @@ EXTERN t_float atom_getfloatarg(int which, int argc, t_atom *argv);
 EXTERN t_int atom_getintarg(int which, int argc, t_atom *argv);
 EXTERN t_symbol *atom_getsymbolarg(int which, int argc, t_atom *argv);
 
-EXTERN void atom_string(t_atom *a, char *buf, unsigned int bufsize);
+EXTERN void atom_string(const t_atom *a, char *buf, unsigned int bufsize);
 
 /* ------------------  binbufs --------------- */
 

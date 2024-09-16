@@ -163,7 +163,7 @@ void sys_putmidibyte(int portno, int byte)
 void sys_poll_midi(void)
 {
     int i, throttle = 100;
-    int did = 1, maxfd = 0;
+    int did = 1;
     while (did)
     {
         did = 0;
@@ -204,7 +204,7 @@ void sys_close_midi()
 
 void midi_oss_init(void)
 {
-    int fd, devno;
+    int devno;
     struct stat statbuf;
     char namebuf[80];
 

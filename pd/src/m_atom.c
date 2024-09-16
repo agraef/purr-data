@@ -90,7 +90,7 @@ t_symbol *atom_getsymbolarg(int which, int argc, t_atom *argv)
 // implementation to make it work with symbols containing spaces.
 int atom_quote_spaces = 1;
 
-void atom_string(t_atom *a, char *buf, unsigned int bufsize)
+void atom_string(const t_atom *a, char *buf, unsigned int bufsize)
 {
     char tbuf[30];
     switch(a->a_type)

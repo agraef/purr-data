@@ -426,7 +426,8 @@ void binbuf_restore(t_binbuf *x, int argc, t_atom *argv)
     {
         if (argv->a_type == A_SYMBOL)
         {
-            char *str = argv->a_w.w_symbol->s_name, *str2;
+            char *str = argv->a_w.w_symbol->s_name;
+            const char *str2;
             if (!strcmp(str, ";")) SETSEMI(ap);
             else if (!strcmp(str, ",")) SETCOMMA(ap);
             else if (!strcmp(str, "$@")) /* JMZ: $@ expansion */

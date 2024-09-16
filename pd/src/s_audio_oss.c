@@ -237,7 +237,7 @@ static int oss_setchannels(int fd, int wantchannels, char *devname)
         }
     }
     param = wantchannels;
-whynot:    
+
     while (param > 1)
     {
         int save = param;
