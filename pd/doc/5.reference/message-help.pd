@@ -206,7 +206,7 @@ next begins.;
 out of [receive msg2r];
 #X msg 201 441 \; pd dsp 1;
 #X msg 25 441 dsp 1;
-#X obj 25 468 s dsp;
+#X obj 25 468 s pd;
 #X text 85 451 is the same as;
 #X text 22 396 For messages to a single named-object \, however \,
 it is probably clearer to use a message box and a [send] object \,
