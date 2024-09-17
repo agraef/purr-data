@@ -691,13 +691,15 @@ t_symbol *binbuf_realizedollsym(t_symbol *s, int ac, t_atom *av, int tonew)
 t_pd *pd_mess_from_responder(t_pd *x);
 static void binbuf_error(t_pd *x, const char *fmt, ...)
 {
+    char buf[MAXPDSTRING];
     va_list ap;
     va_start(ap, fmt);
-    if (x)
-        pd_error(pd_mess_from_responder(x), fmt, ap);
-    else
-        error(fmt, ap);
+    vsnprintf(buf, MAXPDSTRING, fmt, ap);
     va_end(ap);
+    if (x)
+        pd_error(pd_mess_from_responder(x), "%s", buf);
+    else
+        error("%s", buf);
 }
 
 void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)

@@ -747,8 +747,8 @@ t_class *dwt_class, *idwt_class, *dwt16_class, *idwt16_class;
 
 static void dwt_reset(t_dwt *x)
 {
-  bzero(x->x_ctl.c_update, 16*sizeof(t_float));
-  bzero(x->x_ctl.c_predict, 16*sizeof(t_float));
+  memset(x->x_ctl.c_update, 0, 16*sizeof(t_float));
+  memset(x->x_ctl.c_predict, 0, 16*sizeof(t_float));
 
     x->x_ctl.c_update[7] = .25;
     x->x_ctl.c_update[8] = .25;

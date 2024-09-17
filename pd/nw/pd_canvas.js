@@ -26,16 +26,6 @@ function nw_window_blur_callback(name) {
     }
 }
 
-function nw_window_zoom(name, delta) {
-    var z = gui.Window.get().zoomLevel;
-    z += delta;
-    if (z < 8 && z > -8) {
-        gui.Window.get().zoomLevel = z;
-        pdgui.pdsend(name, "zoom", z);
-        pdgui.gui_canvas_get_scroll(name);
-    }
-}
-
 var canvas_events = (function() {
     var name,
         state,
@@ -180,6 +170,23 @@ var canvas_events = (function() {
             else
                 return is_canvas_obj(evt.target);
         },
+        target_is_ac_dropdown = function(evt) {
+            let ac = ac_dropdown();
+            if (!ac) {
+                return false;
+            }
+            let rect = ac.getBoundingClientRect();
+            let left = rect.left;
+            let right = rect.right;
+            let top = rect.top;
+            let bottom = rect.bottom;
+
+            if (evt.clientX < left || evt.clientX > right ||
+                evt.clientY < top || evt.clientY > bottom) {
+                return false;
+            }
+            return true;
+        },
         text_to_normalized_svg_path = function(text) {
             text = text.slice(4).trim()  // draw
                        .slice(4).trim()  // path
@@ -209,7 +216,7 @@ var canvas_events = (function() {
             text = text.replace(/(\$@)/g, "\\$@");
 
             // escape "," and ";"
-            text = text.replace(/(?!\\)(,|;)/g, " \\$1 ");
+            text = text.replace(/(?<!\\)(,|;)/g, " \\$1 ");
 
             // filter consecutive ascii32
             text = text.replace(/\u0020+/g, " ");
@@ -550,8 +557,8 @@ var canvas_events = (function() {
                 return false;
             },
             text_mousedown: function(evt) {
-                if (evt.target.parentNode === ac_dropdown()) {
-                    pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
+                if (evt.target.parentNode === ac_dropdown() || (evt.target.tagName === 'SPAN' && evt.target.closest('p') && evt.target.closest('p').parentNode === ac_dropdown())) {
+                    pdgui.select_result_autocomplete_dd(document, textbox(), ac_dropdown());
                     last_yanked = "";
                     // ag: Don't do the usual object instantiation thing if
                     // we've clicked on the autocompletion dropdown. This
@@ -560,6 +567,10 @@ var canvas_events = (function() {
                     evt.stopPropagation();
                     //evt.preventDefault();
                     caret_end();
+                    return false;
+                }
+                if(target_is_ac_dropdown(evt)) {
+                    evt.stopPropagation();
                     return false;
                 }
                 if (textbox() !== evt.target && !target_is_scrollbar(evt)) {
@@ -607,7 +618,7 @@ var canvas_events = (function() {
                         if(ac_dropdown() === null || ac_dropdown().getAttribute("selected_item") === "-1") {
                             grow_svg_for_element(textbox());
                         } else { // else, if there is a selected item on autocompletion tool, the selected item is written on the box
-                            pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown());
+                            pdgui.select_result_autocomplete_dd(document, textbox(), ac_dropdown());
                             caret_end();
                             // No need to instantiate the object here,
                             // presumably the user wants to go on editing.
@@ -615,26 +626,12 @@ var canvas_events = (function() {
                         last_yanked = "";
                         break;
                     case 9: // tab
-                        [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_completed, last_offset, last_results, evt.shiftKey?-1:1);
+                        [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(document, textbox(), ac_dropdown(), last_completed, last_offset, last_results, evt.shiftKey?-1:1);
                         last_yanked = "";
                         caret_end();
                         break;
-                    case 36:
-                        if (evt.altKey) { // alt-home
-                            [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), 0, last_offset, last_results, 0);
-                            last_yanked = "";
-                            caret_end();
-                        }
-                        break;
-                    case 35:
-                        if (evt.altKey) { // alt-end
-                            [last_completed, last_offset] = pdgui.select_result_autocomplete_dd(textbox(), ac_dropdown(), last_results.length-1, last_offset, last_results, 0);
-                            last_yanked = "";
-                            caret_end();
-                        }
-                        break;
                     case 27: // esc
-                        pdgui.delete_autocomplete_dd(ac_dropdown());
+                        pdgui.delete_autocomplete_dd(document, ac_dropdown());
                         last_completed = last_offset = -1;
                         last_results = [];
                         if (last_yanked != "") {
@@ -652,7 +649,7 @@ var canvas_events = (function() {
                             last_completed = last_offset = -1;
                             last_results = [];
                             if (textbox().innerText === "") {
-                                pdgui.delete_autocomplete_dd(ac_dropdown());
+                                pdgui.delete_autocomplete_dd(document, ac_dropdown());
                                 last_yanked = "";
                             } else if (textbox().innerText === last_yanked) {
                                 // confirmed, really yank now
@@ -697,7 +694,7 @@ var canvas_events = (function() {
                             last_completed = last_offset = -1;
                             last_yanked = "";
                             if (textbox().innerText === "") {
-                                pdgui.delete_autocomplete_dd(ac_dropdown());
+                                pdgui.delete_autocomplete_dd(document, ac_dropdown());
                             } else {
                                 ac_repopulate();
                             }
@@ -1341,7 +1338,7 @@ var canvas_events = (function() {
                     pdgui.saveas_callback(name, evt.target.value, 0);
                     // reset value so that we can open the same file twice
                     evt.target.value = null;
-                    console.log("tried to save something");
+                    //console.log("tried to save something");
                 }, false
             );
 
@@ -1380,7 +1377,7 @@ var canvas_events = (function() {
                     // For now, however, we just turn off its default behavior
                     // and control it with a bunch of complicated callbacks.
 
-                    console.log("got a context menu evt...");
+                    //console.log("got a context menu evt...");
                     evt.stopPropagation()
                     evt.preventDefault();
                 },
@@ -1431,7 +1428,7 @@ var canvas_events = (function() {
                     });
                     if (pdgui.cmd_or_ctrl_key(evt)) {
                         // scroll up for zoom-in, down for zoom-out
-                        nw_window_zoom(name, -d.deltaY);
+                        pdgui.nw_window_zoom(name, -d.deltaY);
                     }
                     // Send a message on to Pd for the [mousewheel] legacy
                     // object (in the future we can refcount to prevent
@@ -1461,7 +1458,7 @@ var canvas_events = (function() {
                     // reset value so that we can open the same file twice
                     evt.target.value = null;
                     pdgui.file_dialog_callback(file_string);
-                    console.log("tried to openpanel something");
+                    //console.log("tried to openpanel something");
                 }, false
             );
             document.querySelector("#savepanel_dialog")
@@ -1470,7 +1467,7 @@ var canvas_events = (function() {
                     // reset value so that we can open the same file twice
                     evt.target.value = null;
                     pdgui.file_dialog_callback(file_string);
-                    console.log("tried to savepanel something");
+                    //console.log("tried to savepanel something");
                 }, false
             );
             document.querySelector("#canvas_find_text")
@@ -1768,7 +1765,7 @@ function nw_create_patch_window_menus(gui, w, name) {
                 style: "display: none;",
                 type: "file",
                 id: "fileDialog",
-                nwworkingdir: pdgui.get_pd_opendir(),
+                nwworkingdir: pdgui.funkify_windows_path(pdgui.get_pd_opendir()),
                 multiple: null,
                 // These are copied from pd_filetypes in pdgui.js
                 accept: ".pd,.pat,.mxt,.mxb,.help"
@@ -1782,7 +1779,7 @@ function nw_create_patch_window_menus(gui, w, name) {
                 // reset value so that we can open the same file twice
                 this.value = null;
                 pdgui.menu_open(file_array);
-                console.log("tried to open something");
+                //console.log("tried to open something");
             };
             chooser.click();
         }
@@ -2051,13 +2048,13 @@ function nw_create_patch_window_menus(gui, w, name) {
     minit(m.view.zoomin, {
         enabled: true,
         click: function () {
-            nw_window_zoom(name, +1);
+            pdgui.nw_window_zoom(name, +1);
         }
     });
     minit(m.view.zoomout, {
         enabled: true,
         click: function () {
-            nw_window_zoom(name, -1);
+            pdgui.nw_window_zoom(name, -1);
         }
     });
     minit(m.view.optimalzoom, {
@@ -2136,6 +2133,14 @@ function nw_create_patch_window_menus(gui, w, name) {
             update_live_box();
             pdgui.pdsend(name, "dirty 1");
             pdgui.pdsend(name, "text 0");
+        }
+    });
+    minit(m.put.listbox, {
+        enabled: true,
+        click: function() {
+            update_live_box();
+            pdgui.pdsend(name, "dirty 1");
+            pdgui.pdsend(name, "listbox 0");
         }
     });
     minit(m.put.dropdown, {
@@ -2285,19 +2290,19 @@ function nw_create_patch_window_menus(gui, w, name) {
     });
     minit(m.media.test, {
         click: function() {
-            pdgui.pd_doc_open("doc/7.stuff/tools", "testtone.pd");
+            pdgui.pd_doc_open("doc/7.stuff/tools", "testtone.pd", 1);
         }
     });
     minit(m.media.loadmeter, {
         click: function() {
-            pdgui.pd_doc_open("doc/7.stuff/tools", "load-meter.pd");
+            pdgui.pd_doc_open("doc/7.stuff/tools", "load-meter.pd", 1);
         }
     });
 
     // Help menu
     minit(m.help.about, {
         click: function() {
-            pdgui.pd_doc_open("doc/about", "about.pd");
+            pdgui.pd_doc_open("doc/about", "about.pd", 1);
         }
     });
     minit(m.help.manual, {
@@ -2305,12 +2310,17 @@ function nw_create_patch_window_menus(gui, w, name) {
             pdgui.pd_doc_open("doc/1.manual", "index.htm");
         }
     });
+    minit(m.help.tutorial, {
+        click: function() {
+            pdgui.pd_doc_open("doc/about", "Purr-Data-Intro.pdf");
+        }
+    });
     minit(m.help.browser, {
         click: pdgui.open_search
     });
     minit(m.help.intro, {
         click: function() {
-            pdgui.pd_doc_open("doc/5.reference", "help-intro.pd");
+            pdgui.pd_doc_open("doc/5.reference", "help-intro.pd", 1);
         }
     });
     minit(m.help.l2ork_list, {

@@ -76,6 +76,8 @@ static void helplink_displace(t_gobj *z, t_glist *glist, int dx, int dy)
     {
         t_rtext *y = glist_findrtext(glist, t);
         rtext_displace(y, dx, dy);
+        // ag: need to redraw the cord as well
+        canvas_fixlinesfor(glist_getcanvas(glist), t);
     }
 }
 
@@ -84,11 +86,14 @@ static void helplink_displace_withtag(t_gobj *z, t_glist *glist, int dx, int dy)
     t_text *t = (t_text *)z;
     t->te_xpix += dx;
     t->te_ypix += dy;
-    /*if (glist_isvisible(glist))
+    if (glist_isvisible(glist))
     {
+        /*
         t_rtext *y = glist_findrtext(glist, t);
         rtext_displace(y, dx, dy);
-    }*/
+        */
+        canvas_fixlinesfor(glist_getcanvas(glist), t);
+    }
 }
 
 static void helplink_select(t_gobj *z, t_glist *glist, int state)
@@ -105,21 +110,6 @@ static void helplink_select(t_gobj *z, t_glist *glist, int state)
             gui_vmess("gui_gobj_deselect", "xs",
                 glist, rtext_gettag(y));
         }
-    }
-}
-
-static void helplink_activate(t_gobj *z, t_glist *glist, int state)
-{
-    t_helplink *x = (t_helplink *)z;
-    t_rtext *y = glist_findrtext(glist, (t_text *)x);
-    rtext_activate(y, state);
-    x->x_rtextactive = state;
-    if (!state) {
-        /* Big workaround... see comment in pddplink.c */
-        t_binbuf *b = binbuf_new();
-        t_binbuf *old = x->x_ob.te_binbuf;
-        x->x_ob.te_binbuf = b;
-        binbuf_free(old);
     }
 }
 
@@ -155,6 +145,26 @@ static void helplink_vis(t_gobj *z, t_glist *glist, int vis)
             gui_vmess("gui_gobj_erase", "xs",
                 glist_getcanvas(glist),
                 rtext_gettag(y));
+        }
+    }
+}
+
+static void helplink_activate(t_gobj *z, t_glist *glist, int state)
+{
+    t_helplink *x = (t_helplink *)z;
+    t_rtext *y = glist_findrtext(glist, (t_text *)x);
+    rtext_activate(y, state);
+    x->x_rtextactive = state;
+    if (!state) {
+        /* ico@vt.edu 20200906: this is ugly but necessary because otherwise 
+           the object only activates correctly (reverts to its active link)
+           every other time when being deselected
+        */
+        helplink_vis(z, glist, 0);
+        helplink_vis(z, glist, 1);
+        if (glist_isvisible(glist)) {
+                t_text *t = (t_text *)z;
+                canvas_fixlinesfor(glist_getcanvas(glist), t);
         }
     }
 }

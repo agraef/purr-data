@@ -30,9 +30,11 @@ void glob_findinstance(t_pd *dummy, t_symbol*s);
 void glob_audio_properties(t_pd *dummy, t_floatarg flongform);
 void glob_audio_dialog(t_pd *dummy, t_symbol *s, int argc, t_atom *argv);
 void glob_audio_setapi(t_pd *dummy, t_floatarg f);
+void glob_audio_refresh(t_pd *dummy);
 void glob_midi_properties(t_pd *dummy, t_floatarg flongform);
 void glob_midi_dialog(t_pd *dummy, t_symbol *s, int argc, t_atom *argv);
 void glob_midi_setapi(t_pd *dummy, t_floatarg f);
+void glob_midi_refresh(t_pd *dummy);
 void glob_start_path_dialog(t_pd *dummy, t_floatarg flongform);
 void glob_path_dialog(t_pd *dummy, t_symbol *s, int argc, t_atom *argv);
 void glob_addtopath(t_pd *dummy, t_symbol *path, t_float saveit);
@@ -45,6 +47,7 @@ void glob_forward_files_from_secondary_instance(void);
 void glob_recent_files(t_pd *dummy);
 void glob_add_recent_file(t_pd *dummy, t_symbol *s);
 void glob_clear_recent_files(t_pd *dummy);
+void glob_open(t_pd *ignore, t_symbol *name, t_symbol *dir, t_floatarg f);
 
 void alsa_resync( void);
 
@@ -82,7 +85,7 @@ static void glob_perf(t_pd *dummy, float f)
 
 extern int sys_snaptogrid, sys_gridsize, sys_zoom,
     sys_autocomplete, sys_autocomplete_prefix, sys_autocomplete_relevance,
-    sys_browser_doc, sys_browser_path, sys_browser_init,
+    sys_autocomplete_tooltip_enabled, sys_autocomplete_fuzzy_search, sys_browser_doc, sys_browser_path, sys_browser_init,
     sys_autopatch_yoffset;
 extern t_symbol *sys_gui_preset;
 static void glob_gui_prefs(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
@@ -94,6 +97,8 @@ static void glob_gui_prefs(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
     sys_autocomplete = !!atom_getintarg(0, argc--, argv++);
     sys_autocomplete_prefix = !!atom_getintarg(0, argc--, argv++);
     sys_autocomplete_relevance = !!atom_getintarg(0, argc--, argv++);
+    sys_autocomplete_tooltip_enabled = !!atom_getintarg(0, argc--, argv++);
+    sys_autocomplete_fuzzy_search = !!atom_getintarg(0, argc--, argv++);
     sys_browser_doc = !!atom_getintarg(0, argc--, argv++);
     sys_browser_path = !!atom_getintarg(0, argc--, argv++);
     sys_browser_init = !!atom_getintarg(0, argc--, argv++);
@@ -103,7 +108,7 @@ static void glob_gui_prefs(t_pd *dummy, t_symbol *s, int argc, t_atom *argv)
 /* just the gui-preset, the save-zoom toggle and various help browser options for now */
 static void glob_gui_properties(t_pd *dummy)
 {
-    gui_vmess("gui_gui_properties", "xsiiiiiiiiii",
+    gui_vmess("gui_gui_properties", "xsiiiiiiiiiiii",
         dummy,
         sys_gui_preset->s_name,
         sys_snaptogrid,
@@ -112,6 +117,8 @@ static void glob_gui_properties(t_pd *dummy)
         sys_autocomplete,
         sys_autocomplete_prefix,
         sys_autocomplete_relevance,
+        sys_autocomplete_tooltip_enabled,
+        sys_autocomplete_fuzzy_search,
         sys_browser_doc,
         sys_browser_path,
         sys_browser_init,
@@ -159,8 +166,8 @@ void glob_init(void)
         gensym("forward_files_from_secondary_instance"), 0);
     class_addmethod(glob_pdobject, (t_method)glob_setfilename, 
         gensym("filename"), A_SYMBOL, A_SYMBOL, 0);
-    class_addmethod(glob_pdobject, (t_method)glob_evalfile, gensym("open"),
-        A_SYMBOL, A_SYMBOL, 0);
+    class_addmethod(glob_pdobject, (t_method)glob_open, gensym("open"),
+        A_SYMBOL, A_SYMBOL, A_DEFFLOAT, 0);
     class_addmethod(glob_pdobject, (t_method)glob_quit, gensym("quit"),
         A_DEFFLOAT, 0);
     class_addmethod(glob_pdobject, (t_method)glob_verifyquit,
@@ -183,8 +190,12 @@ void glob_init(void)
         gensym("audio-dialog"), A_GIMME, 0);
     class_addmethod(glob_pdobject, (t_method)glob_audio_setapi,
         gensym("audio-setapi"), A_FLOAT, 0);
+    class_addmethod(glob_pdobject, (t_method)glob_audio_refresh,
+        gensym("audio-refresh"), 0);
     class_addmethod(glob_pdobject, (t_method)glob_midi_setapi,
         gensym("midi-setapi"), A_FLOAT, 0);
+    class_addmethod(glob_pdobject, (t_method)glob_midi_refresh,
+        gensym("midi-refresh"), 0);
     class_addmethod(glob_pdobject, (t_method)glob_midi_properties,
         gensym("midi-properties"), A_DEFFLOAT, 0);
     class_addmethod(glob_pdobject, (t_method)glob_midi_dialog,

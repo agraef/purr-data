@@ -12,6 +12,11 @@ select {
   height: 1.6em;
 }
 
+.tab_settings span {
+    display: inline-block;
+    text-align: left;
+}
+
 #in1, #in2, #in3, #in4, #out1, #out2, #out3, #out4 {
   width: 100%;
 }
@@ -29,7 +34,7 @@ select {
       <table id="titlebar">
         <tr>
           <td style="width: 100%;">
-            <div id="titlebar_title">Pd-L2Ork Properties</div>
+            <div id="titlebar_title">Purr-Data Properties</div>
           </td>
           <td id="titlebar_buttons_td">
             <div class="titlebar_buttons">
@@ -42,6 +47,7 @@ select {
         <input type="radio"
                name="prefs_radio_group"
                id="audio_tab_radio"
+               onclick="check_tabs()"
                class="tab1 prefs_tab"
                checked="checked" />
         <label for="audio_tab_radio" data-i18n="[title]prefs.heading.audio_tt">
@@ -51,6 +57,7 @@ select {
         <input type="radio"
                name="prefs_radio_group"
                id="midi_tab_radio"
+               onclick="check_tabs()"
                class="tab2 prefs_tab"/>
         <label for="midi_tab_radio" data-i18n="[title]prefs.heading.midi_tt">
           <span data-i18n="prefs.heading.midi"></span>
@@ -59,6 +66,7 @@ select {
         <input type="radio"
                name="prefs_radio_group"
                id="gui_tab_radio"
+               onclick="check_tabs()"
                class="tab3 prefs_tab"/>
         <label for="gui_tab_radio" data-i18n="[title]prefs.heading.gui_tt">
           <span data-i18n="prefs.heading.gui"></span>
@@ -67,9 +75,19 @@ select {
         <input type="radio"
                name="prefs_radio_group"
                id="startup_tab_radio"
+               onclick="check_tabs()"
                class="tab4 prefs_tab"/>
         <label for="startup_tab_radio" data-i18n="[title]prefs.heading.startup_tt">
           <span data-i18n="prefs.heading.startup"></span>
+        </label>
+
+        <input type="radio"
+               name="prefs_radio_group"
+               id="issue_tab_radio"
+               onclick="check_tabs()"
+               class="tab5 prefs_tab"/>
+        <label for="issue_tab_radio" data-i18n="[title]prefs.heading.issue_tt">
+          <span data-i18n="prefs.heading.issue"></span>
         </label>
 
         <div class="tab1">
@@ -91,7 +109,14 @@ select {
                 <input type="text"
                        id="rate"
                        name="rate"
+                       style="width: 50px;"
                        onchange="attr_change(this);">
+		<button type="button"
+			onclick="rate_change('44100');">44.1k</button>
+		<button type="button"
+			onclick="rate_change('48000');">48k</button>
+		<button type="button"
+			onclick="rate_change('96000');">96k</button>
               </td>
             </tr>
             <tr data-i18n="[title]prefs.audio.blocksize_tt">
@@ -117,6 +142,7 @@ select {
                 <input type="text"
                        id="advance"
                        name="advance"
+                       style="width: 50px;"
                        onchange="attr_change(this);">
               </td>
             </tr>
@@ -261,19 +287,23 @@ select {
               </td>
             </tr>
           </table>
+          <br/>
+          <button type="button" onclick="refresh_audiodevs()" data-i18n="[title]prefs.audio.refresh_audiodevs_tt">
+            <span data-i18n="prefs.audio.refresh_audiodevs"></span>
+          </button>
         </div>
 
         <div class="tab2">
           <div class="tab_settings midi_api_container">
             <label data-i18n="[title]prefs.midi.api_tt">
-              <span data-i18n="prefs.midi.api"></span>
+              <span id="midi_api_span" data-i18n="prefs.midi.api"></span>
               <select id="midi_api" onchange="change_api(this);">
               </select>
             </label>
           </div>
           <div class="tab_settings alsa_midi">
             <label data-i18n="[title]prefs.midi.alsa_in_ports_tt">
-              <span data-i18n="prefs.midi.alsa_in_ports"></span>
+              <span id="alsa_in_ports_span" data-i18n="prefs.midi.alsa_in_ports"></span>
               <input type="text"
                      id="alsa_in_ports"
                      name="alsa_in_ports"
@@ -381,6 +411,10 @@ select {
               </tr>
             </table>
           </div>
+          <br/>
+          <button type="button" onclick="refresh_mididevs()" data-i18n="[title]prefs.midi.refresh_mididevs_tt">
+            <span data-i18n="prefs.midi.refresh_mididevs"></span>
+          </button>
         </div>
 
         <div class="tab3">
@@ -458,6 +492,16 @@ select {
               <input type="checkbox" id="autocomplete_relevance" name="autocomplete_relevance">
               <span data-i18n="prefs.gui.autocomplete.autocomplete_relevance"></span>
             </label>
+            <br/>
+            <label data-i18n="[title]prefs.gui.autocomplete.autocomplete_tooltip_enabled_tt">
+              <input type="checkbox" id="autocomplete_tooltip_enabled" name="autocomplete_tooltip_enabled">
+              <span data-i18n="prefs.gui.autocomplete.autocomplete_tooltip_enabled"></span>
+            </label>
+            <br/>
+            <label data-i18n="[title]prefs.gui.autocomplete.autocomplete_fuzzy_search_tt">
+              <input type="checkbox" id="autocomplete_fuzzy_search" name="autocomplete_fuzzy_search">
+              <span data-i18n="prefs.gui.autocomplete.autocomplete_fuzzy_search"></span>
+            </label>
             <br/><br/>
             <span data-i18n="prefs.gui.browser.browser_title"></span>
             <br/>
@@ -476,6 +520,14 @@ select {
               <span data-i18n="prefs.gui.browser.browser_init"></span>
             </label>
           </div>
+          <br/>
+          <label data-i18n="[title]prefs.gui.browser.reset_init_tt">
+            <input type="checkbox" id="reset_init" name="reset_init">
+            <span data-i18n="prefs.gui.browser.reset_init"></span>
+          </label>
+          <button type="button" onclick="reset_indexes()" data-i18n="[title]prefs.gui.browser.reset_index_tt">
+            <span data-i18n="prefs.gui.browser.reset_index"></span>
+          </button>
         </div>
 
         <div class="tab4">
@@ -528,17 +580,58 @@ select {
             </label>
           </div>
         </div>
+
+        <div class="tab5">
+          <div class="tab_settings">
+            <label data-i18n="[title]prefs.issue.title_tt">
+              <span data-i18n="prefs.issue.title">Issue Title</span>
+              <br/>
+              <input style="width: 50vw;" type="text" id="issue_title" name="issue_title">
+            </label>
+            <br/>
+
+            <label data-i18n="[title]prefs.issue.description_tt">
+              <span data-i18n="prefs.issue.description">Description</span>
+              <br/>
+              <textarea id="issue_description" style="width: 96.5vw; height: 18vh; resize: none;" name="issue_description" placeholder="* What happened? Describe the unexpected behavior.&#10;* Expected behavior: What did you expect to happen?.&#10;* Any other feedbacks?"></textarea>
+            </label>
+            <br/>
+
+            <label data-i18n="[title]prefs.issue.steps_to_reproduce_tt">
+              <span data-i18n="prefs.issue.steps_to_reproduce">Steps to Reproduce</span>
+              <br/>
+              <textarea id="steps_to_reproduce" style="width: 96.5vw; height: 18vh; resize: none;" name="steps_to_reproduce" placeholder="1. Step 1: [Detail the first step]&#10;2. Step 2: [Detail the second step]&#10;..."></textarea>
+            </label>
+            <br/>
+
+            <label data-i18n="[title]prefs.issue.environment_details_tt">
+              <span data-i18n="prefs.issue.environment_details">Environment Details</span>
+              <br/>
+    <textarea id="environment_details" style="width: 96.5vw; height: 18vh; resize: none;" name="environment_details" placeholder="* OS: e.g., Windows 11, macOS 13.6, Ubuntu 24.04, etc.&#10;* Purr Data Version: e.g., 2.19.4"></textarea>
+            </label>
+            <br/>
+
+            <div class="submit_buttons prefs_buttons">
+              <button type="button" onClick="submit_issue()" data-i18n="[title]prefs.issue.submit_tt">
+                <span data-i18n="prefs.issue.submit"></span>
+              </button>
+              <button type="button" onClick="cancel()" data-i18n="[title]prefs.close_tt">
+                <span data-i18n="prefs.close"></span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="submit_buttons prefs_buttons">
+      <div class="submit_buttons prefs_buttons" id="buttons">
         <button type="button" onClick="ok()" data-i18n="[title]prefs.ok_tt">
           <span data-i18n="prefs.ok"></span>
         </button>
         <button type="button" onClick="apply(false)" data-i18n="[title]prefs.apply_tt">
-        <span data-i18n="prefs.apply"></span>
+          <span data-i18n="prefs.apply"></span>
         </button>
         <button type="button" onClick="cancel()" data-i18n="[title]prefs.close_tt">
-        <span data-i18n="prefs.close"></span>
+          <span data-i18n="prefs.close"></span>
         </button>
       </div>
     </div>
@@ -561,6 +654,64 @@ var pd_midi_attrs;
 function ok() {
     apply(true);
     cancel();
+}
+
+function reset_indexes() {
+    pdgui.rebuild_index(get_bool_elem("reset_init"));
+}
+
+function get_input_field_value(id) {
+    return document.getElementById(id).value;
+}
+
+function clear_input_field_value(id) {
+    return document.getElementById(id).value = "";
+}
+
+function check_issue() {
+    var issue_title = get_input_field_value("issue_title");
+    var issue_description = get_input_field_value("issue_description");
+    var steps_to_reproduce = get_input_field_value("steps_to_reproduce");
+    var environment_details = get_input_field_value("environment_details");
+    var proceed = !issue_title && !issue_description && !steps_to_reproduce && !environment_details;
+    return proceed || confirm(pdgui.get_local_string("prefs.issue.confirm"));
+}
+
+function submit_issue() {
+    var issue_title = get_input_field_value("issue_title");
+    var issue_description = get_input_field_value("issue_description");
+    var steps_to_reproduce = get_input_field_value("steps_to_reproduce");
+    var environment_details = get_input_field_value("environment_details");
+
+    if (!issue_title || !issue_description) {
+        alert(pdgui.get_local_string("prefs.issue.warning"));
+        return;
+    }
+
+    // encode the values for URL use
+    var encoded_issue_title = encodeURIComponent(issue_title);
+    var encoded_issue_description = encodeURIComponent(issue_description);
+    var encoded_steps_to_reproduce = encodeURIComponent(steps_to_reproduce);
+    var encoded_environment_details = encodeURIComponent(environment_details);
+
+    pdgui.submit_issue(encoded_issue_title, encoded_issue_description, encoded_steps_to_reproduce, encoded_environment_details);
+
+    // clear all fields so that the user doesn't accidentally submit the same
+    // report twice
+    clear_input_field_value("issue_title");
+    clear_input_field_value("issue_description");
+    clear_input_field_value("steps_to_reproduce");
+    clear_input_field_value("environment_details");
+}
+
+function check_tabs() {
+    var issue_tab_checked = document.getElementById("issue_tab_radio").checked;
+    pdgui.set_on_issue_tab(issue_tab_checked);
+    if (issue_tab_checked) {
+        document.getElementById("buttons").style.display = "none";
+    } else {
+        document.getElementById("buttons").style.display = "block";
+    }
 }
 
 function gui_preset_change(elem) {
@@ -692,6 +843,12 @@ function attr_change(elem) {
     attr[attr.indexOf(id) + 1] = elem.value;
 }
 
+function rate_change(x) {
+    var elem = document.getElementById("rate");
+    elem.value = x;
+    attr_change(elem);
+}
+
 function alsa_ports_change(elem, type) {
     var attr, dummy, i, len;
     attr = pd_midi_attrs;
@@ -812,6 +969,8 @@ function apply(save_prefs) {
         get_bool_elem("autocomplete"),
         get_bool_elem("autocomplete_prefix"),
         get_bool_elem("autocomplete_relevance"),
+        get_bool_elem("autocomplete_tooltip_enabled"),
+        get_bool_elem("autocomplete_fuzzy_search"),
         get_bool_elem("browser_doc"),
         get_bool_elem("browser_path"),
         get_bool_elem("browser_init"),
@@ -824,7 +983,9 @@ function apply(save_prefs) {
         get_bool_elem("browser_path"),
         get_bool_elem("autocomplete"),
         get_bool_elem("autocomplete_prefix"),
-        get_bool_elem("autocomplete_relevance")
+        get_bool_elem("autocomplete_relevance"),
+        get_bool_elem("autocomplete_tooltip_enabled"),
+        get_bool_elem("autocomplete_fuzzy_search"),
     );
     // Update the grid on all open windows.
     pdgui.update_grid(get_bool_elem("show_grid"),
@@ -841,6 +1002,7 @@ function apply(save_prefs) {
 }
 
 function cancel() {
+    if (!check_issue()) return;
     var i, attrs, gfxstub;
     // There seems to be a bug in nwjs 0.13 beta3 that doesn't call the
     // "close" event below. This has the symptom of making it impossible
@@ -866,6 +1028,14 @@ function change_api(elem) {
     } else {
         pdgui.pdsend("pd midi-setapi", value);
     }
+}
+
+function refresh_audiodevs() {
+    pdgui.pdsend("pd audio-refresh");
+}
+
+function refresh_mididevs() {
+    pdgui.pdsend("pd midi-refresh");
 }
 
 function get_attr(name, attrs) {
@@ -988,8 +1158,10 @@ function audio_prefs_callback(attrs) {
     populate_devs("in", attrs);
     populate_devs("out", attrs);
 
-    set_devs("in", get_attr("pd-indevs", attrs));
-    set_devs("out", get_attr("pd-outdevs", attrs));
+    var indevs = get_attr("sys-indevs", attrs);
+    var outdevs = get_attr("sys-outdevs", attrs);
+    set_devs("in", get_attr("pd-indevs", attrs), indevs.length, -1);
+    set_devs("out", get_attr("pd-outdevs", attrs), outdevs.length, -1);
 
     // Set chans after the devs (because they may
     // have the side-effect of setting the dev to 'None')
@@ -1005,10 +1177,22 @@ function audio_prefs_callback(attrs) {
     pdgui.resize_window(pd_object_callback);
 }
 
-function set_devs(type, devs) {
+/* ag: This function now has some extra arguments n (the number of devices)
+ * and nodev (device index denoting the "None" device), so that we can
+ * properly detect and fix invalid device indices when changing audio and
+ * midi apis on the fly. */
+function set_devs(type, devs, n, nodev) {
     var i;
     for (i = 0; i < devs.length; i++) {
-        document.getElementById(type + (i+1)).value = devs[i];
+        var elem = document.getElementById(type + (i+1));
+        /* ag: To be on the safe side, take care of stale dev numbers no
+           longer in the valid range, by setting these to nodev a.k.a.
+           "None". To complicate things, audio devices are numbered 0..n-1,
+           with nodev = -1, whereas MIDI devices are numbered 1..n, with
+           nodev = 0. Oh well. At least we can assume that we don't get any
+           bogus negative indices in the devs array. I hope. */
+        var d = devs[i];
+        elem.value = d <= n+nodev ? d : nodev;
     }
 }
 
@@ -1067,8 +1251,10 @@ function midi_prefs_callback(attrs) {
             .style.setProperty("display", "none");
         populate_midi_devs("in", attrs);
         populate_midi_devs("out", attrs);
-        set_devs("midi_in", get_attr("pd-indevs", attrs));
-        set_devs("midi_out", get_attr("pd-outdevs", attrs));
+        var indevs = get_attr("midi-indev-names", attrs);
+        var outdevs = get_attr("midi-outdev-names", attrs);
+        set_devs("midi_in", get_attr("pd-indevs", attrs), indevs.length, 0);
+        set_devs("midi_out", get_attr("pd-outdevs", attrs), outdevs.length, 0);
     }
     pdgui.resize_window(pd_object_callback);
 }
@@ -1083,9 +1269,42 @@ function autopatch_yoffset_toggle(checked) {
     document.getElementById("autopatch_yoffset").checked = checked;
 }
 
+// ag: Give the Audio and MIDI tabs a much-needed beauty treatment.
+function prefs_beautifier() {
+    // I don't understand why select always ends up looking smaller than input
+    // at the same px width, so we patch them up. Adding insult to injury, the
+    // precise amount also depends on the nw.js version. The larger width is
+    // required at least for 0.46+ (this might require bisecting to determine
+    // the exact version.)
+    var el1 = document.getElementById("blocksize");
+    var el2 = document.getElementById("audio_api");
+    if (!el1 || !el2) {
+	// this shouldn't happen, but...
+    } else if (pdgui.check_nw_version("0.46")) {
+        el1.style.width = "58px";
+        el2.style.minWidth = "58px";
+    } else {
+        el1.style.width = "54px";
+        el2.style.minWidth = "54px";
+    }
+    // Also patch up the MIDI tab which looks all higgledy-piggledy for the
+    // ALSA API by default. NOTE: We'd really like to use el.clientWidth here,
+    // but this always yields 0px for some reason, so instead we guestimate
+    // the required width of the span elements based on locale.
+    el1 = document.getElementById("midi_api_span");
+    el2 = document.getElementById("alsa_in_ports_span");
+    //var w = Math.max(el1.clientWidth, el2.clientWidth); // not working
+    var lang = navigator.language.split("-")[0];
+    // If these translations ever change, these values will have to be
+    // adjusted accordingly.
+    var w = lang=="fr" ? 100 : lang=="de" ? 70 : 80;
+    el1.style.width = w+"px";
+    el2.style.width = w+"px";
+}
+
 function gui_prefs_callback(name, show_grid, grid_size, save_zoom,
     autocomplete, autocomplete_prefix, autocomplete_relevance,
-    browser_doc, browser_path, browser_init, autopatch_yoffset) {
+    autocomplete_tooltip_enabled, autocomplete_fuzzy_search, browser_doc, browser_path, browser_init, autopatch_yoffset) {
     var s = document.getElementById("gui_preset");
 
     // ag: scan the css subdir for user-defined styles
@@ -1121,6 +1340,8 @@ function gui_prefs_callback(name, show_grid, grid_size, save_zoom,
     document.getElementById("autocomplete").checked = !!autocomplete;
     document.getElementById("autocomplete_prefix").checked = !!autocomplete_prefix;
     document.getElementById("autocomplete_relevance").checked = !!autocomplete_relevance;
+    document.getElementById("autocomplete_tooltip_enabled").checked = !!autocomplete_tooltip_enabled;
+    document.getElementById("autocomplete_fuzzy_search").checked = !!autocomplete_fuzzy_search;
     document.getElementById("browser_doc").checked = !!browser_doc;
     document.getElementById("browser_path").checked = !!browser_path;
     document.getElementById("browser_init").checked = !!browser_init;
@@ -1132,6 +1353,8 @@ function gui_prefs_callback(name, show_grid, grid_size, save_zoom,
     } else {
         autopatch_yoffset_toggle(false);
     }
+
+    prefs_beautifier();
 }
 
 // startup settings
@@ -1377,11 +1600,6 @@ function register_window_id(gfxstub, attr_arrays) {
     document.getElementsByClassName("container")[0].style.setProperty("display", "inline");
 }
 
-function tr_text(id) {
-    var elem = document.getElementById("iem.prop." + id);
-    elem.textContent = l("iem.prop." + id);
-}
-
 // Stop-gap translator
 function translate_form() {
     var elements = document.querySelectorAll("[data-i18n]"),
@@ -1393,32 +1611,6 @@ function translate_form() {
             elements[i].title = l(data.slice(7));
         } else {
             elements[i].textContent = l(data);
-        }
-    }
-}
-
-function populate_form(attr_array) {
-    // First, let's put the translated text for the form labels:
-    var i;
-    for(i = 0; i < attr_array.length; i+=2) {
-        // Unhide the span with the class with the same name as the id
-        var prop_group = document.getElementsByClassName(attr_array[i])[0];
-        if (prop_group !== undefined) {
-            console.log("the thing here is " + attr_array[i]);
-            prop_group.classList.remove("hidden");
-        } else {
-            pdgui.post("Error: couldn't find iemgui prop group for " + attr_array[i]);
-        }
-
-        var elem = document.getElementsByName(attr_array[i]);
-        if (elem.length > 0) {
-            if (elem[0].type === "checkbox") {
-                // The attr here is a string, so we need to
-                // force it to number, hence the "+" below
-                elem[0].checked = +attr_array[i+1];
-            } else {
-                elem[0].value = attr_array[i+1];
-            }
         }
     }
 }

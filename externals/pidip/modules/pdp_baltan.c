@@ -81,7 +81,7 @@ static void pdp_baltan_process_yv12(t_pdp_baltan *x)
        x->x_pixels = size;
        x->x_planebuf = (int*)getbytes(x->x_pixels*PLANES*sizeof(int));
        post("pdp_baltan : allocated plane buffer (size=%d)", x->x_pixels*PLANES*sizeof(int) );
-       bzero(x->x_planebuf, x->x_pixels*PLANES*sizeof(int));
+       memset(x->x_planebuf, 0, x->x_pixels*PLANES*sizeof(int));
        x->x_plane = 0;
        if ( !x->x_planebuf ) 
        {

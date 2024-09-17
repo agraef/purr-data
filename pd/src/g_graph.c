@@ -1308,9 +1308,12 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
             //fprintf(stderr,"done\n");
             gop_redraw = 0;
         }
-        /* reselect it upon redrawing if it was selected before */
+        // redraw the iolets
         glist_drawiofor(parent_glist, &x->gl_obj, 1,
             tag, x1, y1, x2, y2);
+        // also get the cords fixed in case their positions have changed
+        canvas_fixlinesfor(parent_glist, &x->gl_obj);
+        /* reselect it upon redrawing if it was selected before */
         if (glist_isselected(parent_glist, gr))
             gobj_select(gr, parent_glist, 1);
         // here we check for changes in scrollbar because of legacy

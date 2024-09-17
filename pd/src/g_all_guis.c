@@ -153,6 +153,7 @@ static t_symbol *color2symbol(int col)
     {
         if (!color_format_warned)
         {
+#if 0
             post("warning: saving iemgui colors as hex symbol. These colors "
                  "are readable in Pd Vanilla since 0.47, but they are not "
                  "readable in Purr Data version 2.12.0 or earlier. "
@@ -164,6 +165,11 @@ static t_symbol *color2symbol(int col)
             post("|");
             post("[send pd]");
             post("");
+#else
+            // ag 20240915: I think that everybody got the memo by now, so
+            // just a quick and unobtrusive reminder should be enough.
+            post("warning: saving iemgui colors as hex symbol. For older Pd versions use: [; pd compatibility 0.47(");
+#endif
             color_format_warned = 1;    
         }
         snprintf(colname, MAXPDSTRING-1, "#%06x", col);

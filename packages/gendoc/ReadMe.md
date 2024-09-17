@@ -38,7 +38,7 @@ If you want to use PDP on Mac OS X, you may have to install X11. For details see
 @darwin@
 
 @mingw@
-The latest Windows packages are available as Inno Setup installers on [GitHub](https://github.com/agraef/purr-data/releases). Double-click the installer and follow the instructions. If you have a prior Purr Data installation, the installer will prompt you to first remove it. If your existing installation is much older, it is always a good idea to do this, in order to prevent garbled installations which mix files and registry entries of both versions.
+The latest Windows packages are available as Inno Setup installers on [GitHub](https://github.com/agraef/purr-data/releases). Double-click the installer and follow the instructions. If you have a prior Purr Data installation, the installer will first remove it before installing the new package. No need to worry, your custom preferences will be preserved in the process.
 
 [ASIO4ALL](https://www.asio4all.com/) is a cost-free [ASIO](https://en.wikipedia.org/wiki/Audio_Stream_Input/Output) audio driver. If you have it installed then you can enable it in Purr Data by choosing the **ASIO** option in the **Audio** tab of the Preferences dialog. Using ASIO4ALL will often give you lower latency and generally better audio performance.
 @mingw@

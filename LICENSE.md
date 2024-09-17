@@ -1,6 +1,6 @@
-# Pd-l2ork Copyright and Terms of Use
+# Purr-Data Copyright and Terms of Use
 
-Pd, as well as this compilation of Pd-related software known as Purr Data
+Pd, as well as this compilation of Pd-related software known as Purr-Data
 a.k.a. Pd-l2ork 2.x, is copyrighted software by various authors, but it is
 distributed as open-source software, which means that it can be used freely
 and without any costs under the appropriate license terms, as detailed below.
@@ -32,21 +32,21 @@ for details.
 Copyright (c) by various authors, please see the included license files for
 details
 
-Pd-l2ork includes a large number of bundled abstractions and externals by
+Purr-Data includes a large number of bundled abstractions and externals by
 various authors. These can be found in the abstractions, externals and Gem
-subdirectories in the source, and in the extra subdirectory of the Pd-l2ork
+subdirectories in the source, and in the extra subdirectory of the Purr-Data
 library directory of the installed application. Each of these items has its
 own open-source license under which it is distributed (mostly different
 variations of the BSD license or the GPL), so please check the corresponding
 license files in the source or the extra directory of the installed package
 for license information pertaining to each of the different software modules.
 
-## Pd-l2ork License
+## Purr-Data License
 
 Copyright (c) by Hans-Christoph Steiner, Ico Bukvic, Jonathan Wilkes and
 others
 
-Purr Data (by Jonathan Wilkes) is based on Pd-l2ork (by Ico Bukvic) which in
+Purr-Data (by Jonathan Wilkes) is based on Pd-l2ork (by Ico Bukvic) which in
 turn is based on Pd-extended (by Hans-Christoph Steiner), which is licensed
 under the GPL (GNU Public License) version 3, replicated below. Please note
 that this license applies to all parts of this package which are *not*

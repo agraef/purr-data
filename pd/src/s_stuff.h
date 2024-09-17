@@ -98,6 +98,7 @@ EXTERN void sys_set_audio_settings_reopen(int naudioindev, int *audioindev,
     int srate, int advance, int callback, int blocksize);
 void sys_reopen_audio( void);
 void sys_close_audio(void);
+void sys_xclose_audio( void);
     /* return true if the interface prefers always being open (ala jack) : */
 EXTERN int audio_shouldkeepopen( void);
 EXTERN int audio_isopen( void);     /* true if audio interface is open */
@@ -148,6 +149,7 @@ void sys_get_midi_apis2(t_binbuf *buf);
 
 void sys_reopen_midi( void);
 void sys_close_midi( void);
+void sys_xclose_midi( void);
 EXTERN void sys_putmidimess(int portno, int a, int b, int c);
 EXTERN void sys_putmidibyte(int portno, int a);
 EXTERN void sys_poll_midi(void);

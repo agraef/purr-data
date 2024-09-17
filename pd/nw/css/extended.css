@@ -407,7 +407,7 @@ text {
 .xlet_selected {
     stroke: blue !important;
     fill: blue;
-    -webkit-animation: fizzle 0.5s linear 1;
+    /* -webkit-animation: fizzle 0.5s linear 1; */
 }
 
 #console_find {
@@ -666,7 +666,7 @@ div.y2 {
 }
 
 /* This matches tabs displaying to their associated radio inputs */
-.tab1:checked ~ .tab1, .tab2:checked ~ .tab2, .tab3:checked ~ .tab3, .tab4:checked ~ .tab4 {
+.tab1:checked ~ .tab1, .tab2:checked ~ .tab2, .tab3:checked ~ .tab3, .tab4:checked ~ .tab4, .tab5:checked ~ .tab5{
     display: table;
     padding: 8px;
     line-height: 20px;
@@ -764,6 +764,9 @@ input[type="color"] {
 
 /* GB: Autocomplete Dropdown style */
 #autocomplete_dropdown {
+    min-height: auto;
+    max-height: 200px;
+    overflow-y: scroll;
     background-color: #ebebec;
     border: 1px solid;
     padding: 1px;
@@ -776,4 +779,9 @@ input[type="color"] {
 
 #autocomplete_dropdown p.selected {
     background-color: #cfcfd0;
+}
+
+#autocomplete_dropdown p .highlight { 
+    font-weight: bold;
+    color: #e87216;
 }

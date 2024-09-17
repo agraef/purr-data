@@ -3,8 +3,14 @@
 var pwd;
 var lib_dir;
 var help_path, browser_doc, browser_path, browser_init;
-var autocomplete, autocomplete_prefix, autocomplete_relevance;
+var autocomplete, autocomplete_prefix, autocomplete_relevance, autocomplete_tooltip_enabled, autocomplete_fuzzy_search;
 var pd_engine_id;
+var on_issue_tab;
+
+
+//Generate object descriptions by title for the autocompletion menu;
+//calculated dynamically during index construction
+var ac_tooltip_descriptions = new Map();
 
 exports.autocomplete_enabled = function() {
     return autocomplete;
@@ -26,15 +32,24 @@ function defunkify_windows_path(s) {
     return ret;
 }
 
+function funkify_windows_path(s) {
+    var ret = s;
+    if (process.platform === "win32") {
+        ret = ret.replace(/\//g, "\\");
+    }
+    return ret;
+}
+
+exports.defunkify_windows_path = defunkify_windows_path;
+exports.funkify_windows_path = funkify_windows_path;
+
 exports.set_pd_engine_id = function (id) {
     pd_engine_id = id;
 }
 
-exports.defunkify_windows_path = defunkify_windows_path;
-
 function gui_set_browser_config(doc_flag, path_flag, init_flag,
                                 ac_flag, ac_prefix_flag, ac_relevance_flag,
-                                helppath) {
+                                ac_tooltip_flag, ac_fuzzy_search_flag, helppath) {
     // post("gui_set_browser_config: " + helppath.join(":"));
     browser_doc = doc_flag;
     browser_path = path_flag;
@@ -50,6 +65,8 @@ function gui_set_browser_config(doc_flag, path_flag, init_flag,
     autocomplete = ac_flag;
     autocomplete_prefix = ac_prefix_flag;
     autocomplete_relevance = ac_relevance_flag;
+    autocomplete_tooltip_enabled = ac_tooltip_flag;
+    autocomplete_fuzzy_search = ac_fuzzy_search_flag;
     make_completion_index();
     // AG: Start building the keyword index for dialog_search.html. We do this
     // here so that we can be sure that lib_dir and help_path are known
@@ -124,6 +141,7 @@ exports.nw_os_is_windows = nw_os_is_windows;
 
 // Keyword index (cf. dialog_search.html)
 
+var dns = require("dns");
 var fs = require("fs");
 var path = require("path");
 var dive = require("./dive.js"); // small module to recursively search dirs
@@ -359,6 +377,7 @@ function add_doc_details_to_index(filename, data) {
         "ref_related_objects": ref_rel_objs
         //"body": big_line,
     });
+    ac_tooltip_descriptions.set(title, desc);
 }
 
 // GB: This does an initial scan of help patches, recording filename, title and
@@ -426,7 +445,7 @@ function finish_index() {
                 a.join("\n"), {mode: 0o644});
         }
     } catch (err) {
-        console.log(err);
+        //console.log(err);
     }
     var t = new Date().getTime() / 1000;
     post("finished " + (have_cache?"building":"loading") + " help index (" +
@@ -542,6 +561,7 @@ function make_index() {
                 var desc = e[3] ? e[3] : null;
                 var rel_obj = e[4] ? e[4] : null;
                 var ref_rel_obj = e[5] ? e[5] : null;
+                ac_tooltip_descriptions.set(title, desc);
                 index.addDoc({
                     "id": filename,
                     "title": title,
@@ -584,13 +604,19 @@ exports.build_index = build_index;
 
 // normally, this doesn't actually rebuild the index, it just clears it, so
 // that it will be rebuilt the next time the help browser is opened
-function rebuild_index()
+function rebuild_index(clear_index = false)
 {
     index = init_elasticlunr();
     index_started = index_done = false;
+
+    if (clear_index) {
+        completion_list = [];
+        completion_index = new fuse(completion_list,autocomplete_index_options);
+    }
+
     try {
-        fs.unlink(expand_tilde(cache_name));
-        fs.unlink(expand_tilde(stamps_name));
+        fs.unlinkSync(expand_tilde(cache_name));
+        fs.unlinkSync(expand_tilde(stamps_name));
     } catch (err) {
         //console.log(err);
     }
@@ -603,13 +629,17 @@ function rebuild_index()
     }
 }
 
+exports.rebuild_index = rebuild_index;
+
 // this is called from the gui tab of the prefs dialog
-function update_browser(doc_flag, path_flag, ac_flag, ac_prefix_flag, ac_relevance_flag)
+function update_browser(doc_flag, path_flag, ac_flag, ac_prefix_flag, ac_relevance_flag, ac_tooltip_flag, ac_fuzzy_search_flag)
 {
     var changed = ac_flag == 1 && autocomplete == 0;
     autocomplete = ac_flag;
     autocomplete_prefix = ac_prefix_flag;
     autocomplete_relevance = ac_relevance_flag;
+    autocomplete_tooltip_enabled = ac_tooltip_flag;
+    autocomplete_fuzzy_search = ac_fuzzy_search_flag;
     doc_flag = doc_flag?1:0;
     path_flag = path_flag?1:0;
     if (browser_doc !== doc_flag) {
@@ -634,7 +664,9 @@ let autocomplete_index_options = {
     useExtendedSearch : true,
     includeMatches : true,
     includeScore : true,
-    keys : ["title", "args.text"]
+    isCaseSensitive : false,
+    keys : ["title", "args.text"],
+    threshold : 0.3
 };
 let args_completion_field = {keys : ["args.text"]};
 let objs_completion_field = {keys : ["title"]};
@@ -661,13 +693,24 @@ function obj_exact_match(title) {
 
 function search_obj(title) {
     if (!autocomplete) return [];
+    let exact_match_results = [];
     // GB approaches: search objects that *contains* search _word_ (1st line) or patches that *begins with* _word_ (2nd line)
     // either should skip the result 'message' and 'text' thus messages and comments are not created the same way objects are
     if (!autocomplete_prefix) {
-        return completion_index.search({$and: [{"title": "'\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
+        exact_match_results = completion_index.search({$and: [{"title": "'\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
     } else {
-        return completion_index.search({$and: [{"title": "^\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
+        exact_match_results = completion_index.search({$and: [{"title": "^\"" + title + "\""}, {"title": "!\"message\"" }, {"title": "!\"text\"" }]});
     }
+
+    if (exact_match_results.length > 0) {
+        return exact_match_results;
+    }
+
+    if(autocomplete_fuzzy_search){
+        return completion_index.search({$and: [{ "title": title },{ "title": "!\"message\"" },{ "title": "!\"text\"" }]});
+    }
+
+    return [];
 }
 
 function arg_exact_match(title, arg) {
@@ -677,26 +720,48 @@ function arg_exact_match(title, arg) {
 function search_arg(title, arg) {
     if (!autocomplete) return [];
     // for the arguments, we are only interested on the obj that match exactly the 'title', so we return only the args from this obj
-    let results = completion_index.search({$and: [{"title": "=\"" + title + "\""}, {"args.text": "^\"" + arg + "\""}]});
-    if (results.length > 0) {
-        let args = results[0].item.args;
+    let exact_match_results = completion_index.search({$and: [{ "title": "=\"" + title + "\"" },{ "args.text": "^\"" + arg + "\"" }]});
+    if (exact_match_results.length > 0) {
+        let args = exact_match_results[0].item.args;
         // AG: Matched args are in matches.slice(1,), extract them.
         // This code originally just returned matches itself, which has the
         // text of all matched arguments, but not the occurrence data, and we
         // need the latter to sort based on relevance.
-        results = results[0].matches.slice(1,).map(a => args[a.refIndex]);
+        return exact_match_results[0].matches.slice(1).map(a => args[a.refIndex]);
     }
-    return results;
+
+    if(autocomplete_fuzzy_search){
+        let fuzzy_results = completion_index.search({$and: [{ "title": title },{ "args.text": arg }]});
+
+        if (fuzzy_results.length > 0) {
+            let args = fuzzy_results[0].item.args;
+            return fuzzy_results[0].matches.slice(1).map(a => args[a.refIndex]);
+        }
+    }
+    
+    return [];
 }
 
 function search_args(title) {
     // like above, but look up *all* arg completions for a given object
     if (!autocomplete) return [];
     // for the arguments, we are only interested on the obj that match exactly the 'title', so we return only the args from this obj
-    let results = obj_exact_match(title);
+    let exact_match_results = obj_exact_match(title);
     // item.args is live data from the fuse, make sure to take a shallow copy
     // with slice() which can be safely sorted in-place later
-    return (results.length > 0) ? results[0].item.args.slice() : [];
+    if (exact_match_results.length > 0) {
+        let args = exact_match_results[0].item.args.slice();
+        return args;
+    }
+
+    if(autocomplete_fuzzy_search){
+        let fuzzy_results = completion_index.search({$and: [{ "title": title },{ "title": "!\"message\"" },{ "title": "!\"text\"" }]});
+        if (fuzzy_results.length > 0) {
+            return fuzzy_results[0].item.args.slice();
+        }
+    }
+
+    return [];
 }
 
 function index_obj_completion(obj_or_msg, obj_or_msg_text) {
@@ -758,23 +823,55 @@ function update_autocomplete_selected(ac_dropdown, sel, new_sel) {
 function update_autocomplete_dd_arrowdown(ac_dropdown) {
     if (ac_dropdown !== null) {
         let sel = ac_dropdown.getAttribute("selected_item");
-        update_autocomplete_selected(ac_dropdown, sel, parseInt(sel) + 1);
+        let new_sel = parseInt(sel) + 1;
+
+        if (new_sel < ac_dropdown.children.length) {
+            update_autocomplete_selected(ac_dropdown, sel, new_sel);
+            let selected_element = ac_dropdown.children.item(new_sel);
+            let dropdown_height = ac_dropdown.offsetHeight;
+            let scroll_bottom = ac_dropdown.scrollTop + dropdown_height;
+            let element_bottom = selected_element.offsetTop + selected_element.offsetHeight;
+
+            if (element_bottom > scroll_bottom) {
+                ac_dropdown.scrollTop = (element_bottom - dropdown_height) + 4;
+            }
+        } else {
+            // Reached the end of the dropdown, cycle back to the beginning
+            update_autocomplete_selected(ac_dropdown, sel, 0);
+            ac_dropdown.scrollTop = 0;
+        }
     }
 }
 
 function update_autocomplete_dd_arrowup(ac_dropdown) {
     if (ac_dropdown !== null) {
         let sel = ac_dropdown.getAttribute("selected_item");
-        update_autocomplete_selected(ac_dropdown, sel, parseInt(sel) - 1);
+        let new_sel = parseInt(sel) - 1;
+
+        if (new_sel >= 0) {
+            update_autocomplete_selected(ac_dropdown, sel, new_sel);
+            let selected_element = ac_dropdown.children.item(new_sel);
+
+            if (selected_element.offsetTop < ac_dropdown.scrollTop) {
+                ac_dropdown.scrollTop = selected_element.offsetTop;
+            }
+        } else {
+        // Reached the beginning of the dropdown, cycle back to the end
+            let last_index = ac_dropdown.children.length - 1;
+            update_autocomplete_selected(ac_dropdown, sel, last_index);
+            let last_element = ac_dropdown.children.item(last_index);
+            ac_dropdown.scrollTop = last_element.offsetTop+4;
+        }
     }
 }
 
-function select_result_autocomplete_dd(textbox, ac_dropdown, last, offs, res, dir) {
+function select_result_autocomplete_dd(doc, textbox, ac_dropdown, last, offs, res, dir) {
     if (ac_dropdown !== null) {
+        delete_tooltip(doc);
         let sel = ac_dropdown.getAttribute("selected_item");
         if (sel > -1) {
             textbox.innerText = ac_dropdown.children.item(sel).innerText;
-            delete_autocomplete_dd(ac_dropdown);
+            delete_autocomplete_dd(doc, ac_dropdown);
             return [sel+offs, offs];
         } else {
 	    // We only come here if the user presses 'tab' and there is no
@@ -809,8 +906,38 @@ function select_result_autocomplete_dd(textbox, ac_dropdown, last, offs, res, di
     }
 }
 
+function create_tooltip(doc) {
+    let tooltip = doc.createElement("div");
+    tooltip.className = "tooltip";
+    tooltip.style.position = "absolute";
+    tooltip.style.visibility = "hidden";
+    tooltip.style.opacity = "0";
+    tooltip.style.zIndex = "1000";
+    tooltip.style.backgroundColor = "black";
+    tooltip.style.borderRadius="5px"
+    tooltip.style.color = "white";
+    tooltip.style.padding = "5px";
+    tooltip.style.fontSize = "12px";
+    tooltip.style.border = "2px solid black";
+    tooltip.style.textAlign = "center";
+    tooltip.style.width = "auto"; 
+    tooltip.style.maxWidth = "220px"; 
+    tooltip.style.wordWrap = "break-word"; 
+    doc.body.appendChild(tooltip);
+    return tooltip;
+}
+
+function delete_tooltip(doc) {
+    let tooltip = doc.querySelector(".tooltip");
+    if (tooltip) {
+        doc.body.removeChild(tooltip);
+    }
+}
+
+
 // GB: update autocomplete dropdown with new results
 function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
+    delete_tooltip(doc);
     ac_dropdown().setAttribute("searched_text", text);
     let title, arg, have_arg;
     if (obj_class === "obj") {
@@ -905,14 +1032,22 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
 
     // record the complete results, we need them for tab completion
     let all_results = results;
-    // GB TODO: ideally we should be able to show all the results in a limited window with a scroll bar
-    let n = 8; // Maximum number of suggestions
-    if (results.length > n) results = results.slice(0,n);
+
+    let n = 12; // Maximum number of suggestions
+    if (results.length < n){
+        ac_dropdown().style.overflowY = 'hidden'; // Remove scrollbar
+    } else{
+        ac_dropdown().style.overflowY = 'scroll'; // Show scrollbar
+    }
 
     ac_dropdown().innerHTML = ""; // clear all old results
     if (results.length > 0) {
         // for each result, make a paragraph child of autocomplete_dropdown
         let h = ac_dropdown().getAttribute("font_height");
+        let tooltip;
+        if (autocomplete_tooltip_enabled) {
+            tooltip = create_tooltip(doc);
+        }
         results.forEach(function (f,i,a) {
             let y = h*(i+1);
             let r = doc.createElement("p");
@@ -921,12 +1056,45 @@ function repopulate_autocomplete_dd(doc, ac_dropdown, obj_class, text) {
             r.setAttribute("y", y);
             r.setAttribute("class", "border");
             r.setAttribute("idx", i);
-            r.textContent = f;
+
+            let parts = f.split(text);
+            let content = "";
+
+            for (let j = 0; j < parts.length; j++) {
+                if (j > 0) {
+                    content += `<span class="highlight">${text}</span>`;
+                }
+                content += parts[j];
+            }
+
+            r.innerHTML = content;
+
+            if (autocomplete_tooltip_enabled) {
+                r.addEventListener("mouseover", function (e) {
+                    let description = ac_tooltip_descriptions.get(f);
+                    if (description) {
+                        tooltip.textContent = description;
+                        tooltip.style.top = `${e.clientY + 10}px`;
+                        tooltip.style.left = `${e.clientX}px`;
+                        tooltip.style.visibility = "visible";
+                        tooltip.style.opacity = "1";
+                    } else {
+                        tooltip.style.visibility = "hidden";
+                        tooltip.style.opacity = "0";
+                    }
+                });
+
+                r.addEventListener("mouseout", function () {
+                    tooltip.style.visibility = "hidden";
+                    tooltip.style.opacity = "0";
+                });
+            }
+            
             ac_dropdown().appendChild(r);
         })
         ac_dropdown().setAttribute("selected_item", "-1");
     } else { // if there is no suggestion candidate, the autocompletion dropdown should disappear
-        delete_autocomplete_dd (ac_dropdown());
+        delete_autocomplete_dd (doc, ac_dropdown());
     }
     return all_results;
 }
@@ -966,8 +1134,9 @@ function create_autocomplete_dd (doc, ac_dropdown, new_obj_element) {
     }
 }
 
-function delete_autocomplete_dd (ac_dropdown) {
+function delete_autocomplete_dd (doc, ac_dropdown) {
     if (ac_dropdown !== null) {
+        delete_tooltip(doc)
         ac_dropdown.parentNode.removeChild(ac_dropdown);
     }
 }
@@ -1262,6 +1431,21 @@ function cmd_or_ctrl_key(evt) {
 
 exports.cmd_or_ctrl_key = cmd_or_ctrl_key;
 
+function nw_window_zoom(name, delta) {
+    var w = name=="pd"?pd_window.nw.Window.get():patchwin[name];
+    var z = w.zoomLevel;
+    z += delta;
+    if (z < 8 && z > -8) {
+        w.zoomLevel = z;
+        if (name != "pd") {
+            pdsend(name, "zoom", z);
+            gui_canvas_get_scroll(name);
+        }
+    }
+}
+
+exports.nw_window_zoom = nw_window_zoom;
+
 (function () {
 
     var last_keydown = "";
@@ -1271,6 +1455,7 @@ exports.cmd_or_ctrl_key = cmd_or_ctrl_key;
         var key_code = evt.keyCode,
             hack = null, // hack for non-printable ascii codes
             cmd_or_ctrl
+        //post("keydown: "+evt.key+" ("+evt.keyCode+")")
         switch(key_code) {
             case 8: // backspace
             case 9:
@@ -1368,71 +1553,37 @@ exports.cmd_or_ctrl_key = cmd_or_ctrl_key;
             case 17: hack = "Control"; break;
             case 18: hack = "Alt"; break;
 
-            // keycode 55 = 7 key (shifted = '/' on German keyboards)
+            /* Work-arounds for French azerty and German qwertz keyboards. The
+               problematic bindings are Ctrl - on the French and Shift+Ctrl /
+               on the German keyboard, as well as Cmd + (keycode 187) on the
+               German MacBook keyboard, which aren't translated correctly by
+               nw.js, and thus won't work as-is. Instead of fiddling around
+               with pd_shortcuts.js, we just handle these right here.
+               NOTE: There's no way to detect the actual keyboard layout in
+               nw.js, so these are enabled all the time. This means that the
+               unshifted Ctrl+6 and the shifted Ctrl+7 keys aren't available
+               as menu shortcuts. If this bothers you then you can just
+               comment out the code below. */
+
+            // keycode 187 = + key on the German Mac keyboard
+            case 187:
+                if (cmd_or_ctrl_key(evt) && !evt.shiftKey) {
+                    evt.preventDefault();
+                    nw_window_zoom(cid, +1);
+                }
+                break;
+            // keycode 54 = 6 key ('-' a.k.a. zoomin on azerty keyboard)
+            case 54:
+                if (cmd_or_ctrl_key(evt) && !evt.shiftKey) {
+                    evt.preventDefault();
+                    nw_window_zoom(cid, -1);
+                }
+                break;
+            // keycode 55 = shifted 7 key ('/' a.k.a. dsp on on qwertz keyboard)
             case 55:
-                if (cmd_or_ctrl_key(evt)) {
+                if (cmd_or_ctrl_key(evt) && evt.shiftKey) {
                     evt.preventDefault();
                     pdsend("pd dsp 1");
-                }
-                break;
-
-            /* ag: These *should* be handled in the nwjs menu (see put menu
-               in pd_canvas.js), but aren't (at least not from nw.js 0.42.4
-               onward). XXXFIXME: Maybe this should go into the keydown
-               function in pd_canvas.js instead? Also note that we prevent
-               the default handling here, so that the menu action doesn't get
-               triggered, in case the upstream bug gets fixed eventually. */
-            case 49:
-                if (cmd_or_ctrl_key(evt)) { // ctrl-1
-                    pdsend(cid, "dirty 1");
-                    pdsend(cid, "obj 0");
-                    evt.preventDefault();
-                }
-                break;
-            case 50:
-                if (cmd_or_ctrl_key(evt)) { // ctrl-2
-                    pdsend(cid, "dirty 1");
-                    pdsend(cid, "msg 0");
-                    evt.preventDefault();
-                }
-                break;
-            case 51:
-                if (cmd_or_ctrl_key(evt)) { // ctrl-3
-                    pdsend(cid, "dirty 1");
-                    pdsend(cid, "floatatom 0");
-                    evt.preventDefault();
-                }
-                break;
-            case 52:
-                if (cmd_or_ctrl_key(evt)) { // ctrl-4
-                    pdsend(cid, "dirty 1");
-                    pdsend(cid, "symbolatom 0");
-                    evt.preventDefault();
-                }
-                break;
-            case 53:
-                if (cmd_or_ctrl_key(evt)) { // ctrl-5
-                    pdsend(cid, "dirty 1");
-                    pdsend(cid, "text 0");
-                    evt.preventDefault();
-                }
-                break;
-            case 77:
-                // ctrl+shift-m: weirdly, ctrl+shift doesn't appear to work,
-                // although the unshifted combo does??
-                if (cmd_or_ctrl_key(evt) && evt.shiftKey) {
-                    pdsend(cid, "dirty 1");
-                    pdsend(cid, "dropdown 0");
-                    evt.preventDefault();
-                }
-                break;
-            case 57:
-                // ctrl-9: funnily enough, the Alt and Shift key combinations
-                // *do* get triggered, so we don't handle these here
-                if (cmd_or_ctrl_key(evt) && !evt.shiftKey && !evt.altKey) {
-                    gui_canvas_optimal_zoom(cid, 1, 1);
-                    gui_canvas_get_scroll(cid);
-                    evt.preventDefault();
                 }
                 break;
 
@@ -1595,7 +1746,11 @@ var duplicate = 0;
 
 function do_post(object_id, selector, string, type, loglevel) {
     var my_p, my_a, span, text, sel_span, printout, dup_span;
-    current_string = current_string + (selector ? selector : "") + string;
+    // ag 20240909: We get escapes for some characters (\ { } ;) in the string
+    // argument directly from s_print.c. Probably a remnant from the Tcl/Tk
+    // days, but I won't touch that C code, so we must unescape those here.
+    string = string.replace(/\\([\\{};])/g, "$1");
+    current_string = current_string + string;
     my_p = pd_window.document.getElementById("p1");
     // We can get posts from Pd that are build incrementally, with the final
     // message having a "\n" at the end. So we test for that.
@@ -1776,7 +1931,7 @@ function canvas_check_geometry(cid) {
     //var cnv_width = patchwin[cid].window.innerWidth,
     //    cnv_height = patchwin[cid].window.innerHeight;
     var cnv_width = win_w,
-        cnv_height = win_h - nw_menu_height;
+        cnv_height = win_h - nw_menu_offset;
     //post("canvas_check_geometry w=" + win_w + " h=" + win_h +
     //    " x=" + win_x + " y=" + win_y + " cnv_w=" + cnv_width + " cnv_h=" + cnv_height);
 
@@ -1837,17 +1992,16 @@ function gui_canvas_saveas(name, initfile, initdir, close_flag) {
     // latest nw.js on Linux at all (dialog comes up without a path under
     // which to save, "Save" doesn't work until you explicitly select one).
 
-    // Setting nwsaveas to initfile and nwworkingdir to initdir (as you'd
-    // expect) works for me on Linux, but it seems that specifying an absolute
-    // pathname for nwsaveas is necessary on Windows, and this also works on
-    // Linux. Cf. https://github.com/nwjs/nw.js/issues/3372 (which is still
-    // open at the time of this writing). -ag
+    // Older nw.js versions on some platforms required an absolute pathname to
+    // be specified here, but it appears that this is no longer needed, at
+    // least as of nw.js 0.42. We still keep this around for the older legacy
+    // nw.js versions being used on some platformas like the RPi. -ag
     input = build_file_dialog_string({
         style: "display: none;",
         type: "file",
         id: "saveDialog",
-        // using an absolute path here, see comment above
-        nwsaveas: check_nw_version("0.46") ? initfile : path.join(initdir, initfile),
+        // using an absolute path on older nw.js here, see comment above
+        nwsaveas: check_nw_version("0.42") ? initfile : path.join(initdir, initfile),
         nwworkingdir: initdir,
         accept: ".pd"
     });
@@ -1857,7 +2011,7 @@ function gui_canvas_saveas(name, initfile, initdir, close_flag) {
         saveas_callback(name, this.value, close_flag);
         // reset value so that we can open the same file twice
         this.value = null;
-        console.log("tried to save something");
+        //console.log("tried to save something");
     }
     chooser.click();
 }
@@ -2405,20 +2559,21 @@ function open_textfile(target) {
 // Think about renaming this and pd_doc_open...
 
 // Open a file-- html, text, or Pd.
-function doc_open (dir, basename) {
+function doc_open (dir, basename, f) {
     // normalize to get rid of extra slashes, ".." and "."
     var norm_path = path.normalize(dir);
     if (basename.slice(-4) === ".txt"
         || basename.slice(-2) === ".c") {
         open_textfile(path.join(norm_path, basename));
-    } else if (basename.slice(-5) === ".html"
-               || basename.slice(-4) === ".htm"
-               || basename.slice(-4) === ".pdf") {
-        open_html(path.join(norm_path, basename));
-
-    } else {
+    } else if (basename.slice(-3) === ".pd") {
+        // ag: We only try to open .pd files as patches here. Previously, we'd
+        // try to open pretty much anything, which isn't a good idea. Guess
+        // what happens if you try to open an mp3 file as a patch?
         pdsend("pd open", enquote(defunkify_windows_path(basename)),
-            enquote(defunkify_windows_path(norm_path)));
+               enquote(defunkify_windows_path(norm_path)), f?f:0);
+    } else {
+        // ag: Fall back to the desktop's default action for anything else.
+        open_html(path.join(norm_path, basename));
     }
 }
 
@@ -2428,8 +2583,8 @@ function doc_open (dir, basename) {
 exports.doc_open = doc_open;
 
 // Open a file relative to the main directory where "doc/" and "extra/" live
-function pd_doc_open(dir, basename) {
-    doc_open(path.join(lib_dir, dir), basename);
+function pd_doc_open(dir, basename, f) {
+    doc_open(path.join(lib_dir, dir), basename, f);
 }
 
 exports.pd_doc_open = pd_doc_open;
@@ -2790,7 +2945,7 @@ function gui_canvas_new(cid, width, height, geometry, grid, grid_size_value,
    to do its "vis" function. The result will be a flood of messages
    back from Pd to the GUI to draw these objects */
 function canvas_map(name) {
-    console.log("canvas mapping " + name + "...");
+    //console.log("canvas mapping " + name + "...");
     pdsend(name + " map 1");
 }
 
@@ -2890,12 +3045,25 @@ function connect_as_client_to_secondary_instance(host, port, pd_engine_id) {
             next_command: ""
     };
     client.setNoDelay(true);
+    // We need to make sure that localhost is resolved to IPv4 here -- the
+    // default in later nw.js versions is to prefer IPv6 which causes issues
+    // on Linux and Windows. Protect with try ... catch to prevent exceptions
+    // on earlier nw.js versions which don't have this function.
+    try {
+	dns.setDefaultResultOrder("ipv4first");
+    } catch (err) {
+    }
     client.connect(+port, host, function() {
         console.log("CONNECTED TO: " + host + ":" + port);
         secondary_pd_engines[pd_engine_id] = {
             socket: client
         }
         client.write("pd forward_files_from_secondary_instance;");
+    });
+    // Add some rudimentary error handling. At least we ought to tell the user
+    // what went wrong and where he can submit a bug report.
+    client.on("error", function (event) {
+	post("CONNECTION ERROR: "+event+"\nThis shouldn't happen. Please submit a bug report with the above error message at the Purr Data website.");
     });
     client.on("data", function(data) {
         // Terrible thing:
@@ -3473,10 +3641,10 @@ function gui_message_redraw_border(cid, tag, width, height) {
     });
 }
 
-function atom_border_points(width, height, is_dropdown) {
-    // For atom, angle the top-right corner.
-    // For dropdown, angle both top-right and bottom-right corners
-    var bottom_right_x = is_dropdown ? width - 4 : width;
+function atom_border_points(width, height, type) {
+    // For atom other than listbox, angle the top-right corner.
+    // For dropdown and listbox, angle both top-right and bottom-right corners
+    var bottom_right_x = type != 0 ? width - 4 : width;
     return  [0, 0,
             width - 4, 0,
             width, 4,
@@ -3508,7 +3676,7 @@ function gui_atom_draw_border(cid, tag, type, width, height) {
         });
            
         frag.appendChild(polygon);
-        if (type !== 0) { // dropdown
+        if (type > 0) { // dropdown
             // 1 = output index
             // 2 = output value
             // Let's make the two visually distinct so that the user can still
@@ -5744,6 +5912,227 @@ function gui_pianoroll_erase_innards(cid, tag) {
     });
 }
 
+// pd-lua gfx helpers (ag@gmail.com)
+
+// create the graphics container (a gobj)
+function gui_luagfx_new(cid, tag, xpos, ypos, is_toplevel) {
+    gui_gobj_new(cid, tag, "obj", xpos, ypos, is_toplevel, 0);
+}
+
+// clear the contents of the graphics container
+function gui_luagfx_clear(cid, tag) {
+    // get rid of all contents
+    gui(cid).get_gobj(tag, function(g) {
+        g.innerHTML = "";
+    });
+}
+
+// clear the contents, old version (we keep this around for backward
+// compatibility with pd-lua 0.12.1)
+function gui_luagfx_clear_contents(cid, tag) {
+    gui(cid).get_gobj(tag, function(e) {
+        e.innerHTML = "";
+    });
+}
+
+// this erases the gobj (completely removes it)
+function gui_luagfx_erase(cid, tag) {
+    gui_gobj_erase(cid, tag);
+}
+
+// a bunch of drawing operations as required by the pd-lua graphics interface
+function gui_luagfx_fill_all(cid, tag, gfxtag, color, x1, y1, x2, y2) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        // border rectangle in the usual style with the given bg color
+        var r = create_item(cid, "rect", {
+            x: x1,
+            y: y1,
+            width: x2 - x1,
+            height: y2 - y1,
+            class: "border",
+            style: "fill: "+color+";",
+            id: gfxtag
+        });
+        frag.appendChild(r);
+        return frag;
+    });
+}
+
+function gui_luagfx_fill_rect(cid, tag, gfxtag, color, width, x1, y1, x2, y2) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var gx = create_item(cid, "rect", {
+            x: x1,
+            y: y1,
+            width: x2 - x1,
+            height: y2 - y1,
+            fill: color,
+            "stroke-width": width,
+            id: gfxtag
+        });
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
+function gui_luagfx_stroke_rect(cid, tag, gfxtag, color, width, x1, y1, x2, y2) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var gx = create_item(cid, "rect", {
+            x: x1,
+            y: y1,
+            width: x2 - x1,
+            height: y2 - y1,
+            fill: "none",
+            stroke: color,
+            "stroke-width": width,
+            id: gfxtag
+        });
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
+function gui_luagfx_fill_rounded_rect(cid, tag, gfxtag, color, width, x1, y1, x2, y2, rx, ry) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var gx = create_item(cid, "rect", {
+            x: x1,
+            y: y1,
+            width: x2 - x1,
+            height: y2 - y1,
+            rx: rx,
+            ry: ry,
+            fill: color,
+            "stroke-width": width,
+            id: gfxtag
+        });
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
+function gui_luagfx_stroke_rounded_rect(cid, tag, gfxtag, color, width, x1, y1, x2, y2, rx, ry) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var gx = create_item(cid, "rect", {
+            x: x1,
+            y: y1,
+            width: x2 - x1,
+            height: y2 - y1,
+            rx: rx,
+            ry: ry,
+            fill: "none",
+            stroke: color,
+            "stroke-width": width,
+            id: gfxtag
+        });
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
+function gui_luagfx_fill_ellipse(cid, tag, gfxtag, color, width, x1, y1, x2, y2) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var gx = create_item(cid, "ellipse", {
+            cx: (x2 - x1) * 0.5 + x1,
+            cy: (y2 - y1) * 0.5 + y1,
+            rx: (x2 - x1) * 0.5,
+            ry: (y2 - y1) * 0.5,
+            fill: color,
+            "stroke-width": width,
+            id: gfxtag
+        });
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
+function gui_luagfx_stroke_ellipse(cid, tag, gfxtag, color, width, x1, y1, x2, y2) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var gx = create_item(cid, "ellipse", {
+            cx: (x2 - x1) * 0.5 + x1,
+            cy: (y2 - y1) * 0.5 + y1,
+            rx: (x2 - x1) * 0.5,
+            ry: (y2 - y1) * 0.5,
+            fill: "none",
+            stroke: color,
+            "stroke-width": width,
+            id: gfxtag
+        });
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
+function gui_luagfx_draw_line(cid, tag, gfxtag, color, width, x1, y1, x2, y2) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var gx = create_item(cid, "line", {
+            x1: x1,
+            y1: y1,
+            x2: x2,
+            y2: y2,
+            stroke: color,
+            "stroke-width": width,
+            id: gfxtag
+        });
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
+function gui_luagfx_draw_text(cid, tag, gfxtag, color, width, font_height, x, y, text) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        // Check gui_text_new for some black magic being used here.
+        var gx = create_item(cid, "text", {
+            transform: "translate(" + x + ")",
+            y: y + font_height,
+            width: width,
+            "font-size": font_height + "px",
+            fill: color,
+            id: gfxtag
+        });
+        // fill svg_text with tspan content by splitting on "\n"
+        text_to_tspans(cid, gx, text);
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
+function gui_luagfx_fill_path(cid, tag, gfxtag, color, width, path) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var gx = create_item(cid, "path", {
+            d: path.join(" "),
+            fill: color,
+            "stroke-width": width,
+            id: gfxtag
+        });
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
+function gui_luagfx_stroke_path(cid, tag, gfxtag, color, width, path) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var gx = create_item(cid, "path", {
+            d: path.join(" "),
+            fill: "none",
+            stroke: color,
+            "stroke-width": width,
+            id: gfxtag
+        });
+        frag.appendChild(gx);
+        return frag;
+    });
+}
+
 // mknob from moonlib
 function gui_mknob_new(cid, tag, x, y, is_toplevel, show_in, show_out,
     is_footils_knob) {
@@ -6485,35 +6874,68 @@ function gui_raise_window(cid) {
     });
 }
 
-// Unfortunately DOM window.focus doesn't actually focus the window, so we
-// have to use the chrome API
 function gui_raise_pd_window() {
-    chrome.windows.getAll(function (w_array) {
-        chrome.windows.update(w_array[0].id, { focused: true });
-    });
+    pd_window.window.focus();
 }
 
-// Using the chrome app API, because nw.js doesn't seem
-// to let me get a list of the Windows
+// ico@vt.edu 2022-11-09: reimplemented this function to make it
+// work with newer nw.js (should also work with older ones)
+
+// ag: reworked again to deal with all pesky corner cases were some
+// entries in the patchwin array may not actually point to existing
+// windows anymore
 function walk_window_list(cid, offset) {
-    chrome.windows.getAll(function (w_array) {
-        chrome.windows.getLastFocused(function (w) {
-            var i, next, match = -1;
-            for (i = 0; i < w_array.length; i++) {
-                if (w_array[i].id === w.id) {
-                    match = i;
-                    break;
-                }
+    var keys = Object.keys(patchwin);
+    var len = keys.length;
+
+    function find_window(cid) {
+        for (var i = 0; i < len; i++) {
+            if (keys[i] === cid) {
+                return i;
             }
-            if (match !== -1) {
-                next = (((match + offset) % w_array.length) // modulo...
-                        + w_array.length) % w_array.length; // handle negatives
-                chrome.windows.update(w_array[next].id, { focused: true });
-            } else {
-                post("error: cannot find last focused window.");
+        }
+        return -1;
+    }
+
+    function next(i) {
+        // cycle through all indices
+        return ((i+offset) % len + len) % len;
+    }
+
+    function find_next_window(i) {
+        var found = false;
+        var count = 0;
+        while (!found && count < len) {
+            // check that the window actually exists
+            gui(keys[i]).get_nw_window(function(nw_win) {
+                found = true;
+            });
+            if (found) {
+                return i;
             }
-        });
-    })
+            // if it doesn't, check the next one
+            i = next(i);
+            count++;
+        }
+        // if we come here, we cycled through all the entries and none
+        // of the windows still existed, bail out with failure
+        return -1;
+    }
+
+    var match = find_window(cid);
+    if (match !== -1) {
+        var next = find_next_window(next(match));
+        //post("match: "+match+" next: "+next+" cid: "+keys[next]);
+        gui_raise_window(keys[next]);
+    } else if (cid === "pd_window" && Object.keys(patchwin).length > 0) {
+        // go to first or last window if invoked from the main window
+        var match = offset === 1 ? 0 : len-1;
+        next = find_next_window(match);
+        //post("match: : pd_window next: "+next+" cid: "+keys[next]);
+        gui_raise_window(keys[next]);
+    } else {
+        post("error: cannot find last focused window.");
+    }
 }
 
 function raise_next(cid) {
@@ -6551,23 +6973,31 @@ function file_dialog(cid, type, target, start_path) {
         pd_window;
     input_span = win.window.document.querySelector("#" + query_string);
     // We have to use an absolute path here because of a bug in nw.js 0.14.7
+    // ag 20240912: When figuring out a default location, get_pd_opendir()
+    // seems to be a better choice than just pwd. It also matches vanilla's
+    // behavior AFAICT.
     if (!path.isAbsolute(start_path)) {
-        start_path = path.join(pwd, start_path);
+        start_path = path.join(get_pd_opendir(), start_path);
+    }
+    // ag 20240912: Make sure that what we have is actually a directory,
+    // otherwise it's better to fall back to a known location.
+    try {
+        var stat = fs.lstatSync(start_path);
+        if (!stat.isDirectory()) start_path = get_pd_opendir();
+    } catch (e) {
+        start_path = get_pd_opendir();
     }
     // We also have to inject html into the dom because of a bug in nw.js
     // 0.14.7. For some reason we can't just change the value of nwworkingdir--
     // it just doesn't work. So this requires us to have the parent <span>
     // around the <input>. Then when we change the innerHTML of the span the
     // new value for nwworkingdir magically works.
-    if(nw_os_is_windows) {
-        start_path = start_path.replace(/\//g, '\\');
-    }
     dialog_options = {
         style: "display: none;",
         type: "file",
         id: type === "open" ? "openpanel_dialog" : "savepanel_dialog",
         // using an absolute path here, see comment above
-        nwworkingdir: start_path
+        nwworkingdir: funkify_windows_path(start_path)
     };
     if (type !== "open") {
         dialog_options.nwsaveas = "";
@@ -6582,7 +7012,7 @@ function file_dialog(cid, type, target, start_path) {
         // reset value so that we can open the same file twice
         file_dialog_callback(this.value);
         this.value = null;
-        console.log("openpanel/savepanel called");
+        //console.log("openpanel/savepanel called");
     };
     win.window.setTimeout(function() {
         input_elem.click(); },
@@ -6800,11 +7230,13 @@ function gui_canvas_dialog(did, attr_arrays) {
     // Convert array of arrays to an array of objects
     for (i = 0; i < attr_arrays.length; i++) {
         attr_arrays[i] = attr_array_to_object(attr_arrays[i]);
+        /*
         for (prop in attr_arrays[i]) {
             if (attr_arrays[i].hasOwnProperty(prop)) {
                 console.log("array: prop is " + prop);
             }
         }
+        */
     }
     var has_array = (attr_arrays.length > 1 ? 1 : 0);
     /*
@@ -6914,7 +7346,7 @@ function gui_pd_dsp(state) {
 
 function open_prefs() {
     if (!dialogwin["prefs"]) {
-        create_window("prefs", "prefs", 486, 532, 0, 0, null);
+        create_window("prefs", "prefs", 486, 548+26*nw_os_is_osx, 0, 0, null);
     } else {
         dialog_raise("prefs");
     }
@@ -7029,12 +7461,12 @@ function gui_midi_properties(gfxstub, sys_indevs, sys_outdevs,
 
 function gui_gui_properties(dummy, name, show_grid, grid_size, save_zoom,
                             autocomplete, autocomplete_prefix, autocomplete_relevance,
-                            browser_doc, browser_path, browser_init,
+                            autocomplete_tooltip_enabled, autocomplete_fuzzy_search, browser_doc, browser_path, browser_init,
                             autopatch_yoffset) {
     if (dialogwin["prefs"] !== null) {
         dialogwin["prefs"].window.gui_prefs_callback(name, show_grid, grid_size,
             save_zoom, autocomplete, autocomplete_prefix, autocomplete_relevance,
-            browser_doc, browser_path, browser_init, autopatch_yoffset);
+            autocomplete_tooltip_enabled, autocomplete_fuzzy_search, browser_doc, browser_path, browser_init, autopatch_yoffset);
     }
 }
 
@@ -7816,11 +8248,30 @@ function gui_find_lowest_and_arrange(cid, reference_element_tag, objtag) {
     });
 }
 
+
+
+function set_on_issue_tab(val) {
+    on_issue_tab = val;
+}
+
+function submit_issue(issue_title, issue_description, steps_to_reproduce, environment_details) {
+    var body = `%23%23 Description:%0A${issue_description}%0A%0A` +
+               `%23%23 Steps to Reproduce:%0A${steps_to_reproduce}%0A%0A` +
+               `%23%23 Environment Details:%0A${environment_details}`;
+
+    var url = `https://github.com/agraef/purr-data/issues/new?title=${issue_title}&body=${body}`;
+
+    nw.Shell.openExternal(url);
+} 
+
+exports.set_on_issue_tab = set_on_issue_tab;
+exports.submit_issue = submit_issue;
+
 // Bindings for dialog menu of iemgui, canvas, etc.
 exports.dialog_bindings = function(did) {
     var dwin = dialogwin[did].window;
     dwin.document.onkeydown = function(evt) {
-        if (evt.keyCode === 13) { // enter
+        if (evt.keyCode === 13  && !on_issue_tab) { // enter
             dwin.ok();
         } else if (evt.keyCode === 27) { // escape
             dwin.cancel();

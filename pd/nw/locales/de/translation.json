@@ -80,7 +80,7 @@
   "gatom": {
     "prop": {
       "gatom": "Atom-Box",
-      "dropdown": "Ausgezähltwunderbox",
+      "dropdown": "Dropdown-Menü",
       "label": "Etikett",
       "label_left": "links",
       "label_right": "rechts",
@@ -91,8 +91,8 @@
       "label_bottom": "unten",
       "label_left": "links",
       "label_right": "rechts",
-      "dropdown_outtype": "output",
-      "dropdown_outtype_tt": "whether to output the index or the value",
+      "dropdown_outtype": "Ausgabetyp",
+      "dropdown_outtype_tt": "Ausgabe von Index oder Wert",
       "width": "Breite",
       "width_tt": "Breite (in Zeichen)"
     }
@@ -201,6 +201,8 @@
     "symbol_tt": "Füge dem Patch ein Feld zur Eingabe und Anzeige von Symbolen hinzu",
     "comment": "Kommentar",
     "comment_tt": "Füge dem Patch einen Kommentar hinzu",
+    "listbox": "Listbox",
+    "listbox_tt": "Füge dem Patch ein Feld zur Eingabe und Anzeige von Listen hinzu",
     "dropdown": "Dropdown",
     "dropdown_tt": "Dropdown menu",
     "bang": "Bang",
@@ -259,6 +261,8 @@
     "about_tt": "Zeige Informationen über diese Version von Pd an",
     "manual": "Handbuch",
     "manual_tt": "Öffne das Pd-HTML-Handbuch",
+    "tutorial": "Purr-Data Tutorial",
+    "tutorial_tt": "Öffne das PDF-Tutorial für neue Purr-Data-Benutzer",
     "browser": "Hilfe-Browser",
     "browser_tt": "Öffne einen Hilfe-Browser, um nach Dokumentation und Objekten zu suchen",
     "intro": "Schnellreferenz",
@@ -277,6 +281,12 @@
   "pd_window": {
     "find": {
       "placeholder": "Suche in der Konsole",
+      "highlight": "Alle hervorheben"
+    }
+  },
+  "browser": {
+    "find": {
+      "placeholder": "Suche im Browser",
       "highlight": "Alle hervorheben"
     }
   },
@@ -327,10 +337,10 @@
         "viewbox_offsets": "Anzeigebox-Offsets",
         "arrays": "Feld-Optionen"
       },
-      "no_scroll": "Rollbalken verbergen (experimentell)",
-      "no_scroll_tt": "Rollbalken verbergen (experimentell)",
-      "no_menu": "Fenstermenü verbergen (experimentell)",
-      "no_menu_tt": "Fenstermenü verbergen (experimentell)",
+      "no_scroll": "Rollbalken verbergen",
+      "no_scroll_tt": "Rollbalken verbergen",
+      "no_menu": "Fenstermenü verbergen",
+      "no_menu_tt": "Fenstermenü verbergen",
       "gop": "Anzeige im übergeordneten Patch",
       "gop_tt": "Zeige den Inhalt dieses Patches in einem Rechteck im übergeordneten Patch",
       "hide_name": "Namen und Argumente verbergen",
@@ -395,7 +405,9 @@
       "audio": "Audio",
       "audio_tt": "konfiguriere die Audio-Geräte",
       "midi": "MIDI",
-      "midi_tt": "konfiguriere die MIDI-Geräte"
+      "midi_tt": "konfiguriere die MIDI-Geräte",
+      "issue": "Feedback",
+      "issue_tt": "Feedback abgeben oder ein Problem melden"
     },
     "startup": {
       "flags": "Startup-Flags",
@@ -432,7 +444,7 @@
         "footgun": "Fusspistole"
       },
       "grid": {
-        "show_grid": "Am Gitter ausrichten (experimentell)",
+        "show_grid": "Am Gitter ausrichten",
         "show_grid_tt": "Ausrichten am Gitter im Edit-Modus"
       },
       "zoom": {
@@ -441,12 +453,16 @@
       },
       "autocomplete": {
         "autocomplete_title": "Autovervollständigungs-Einstellungen",
-        "autocomplete": "Autovervollständigung von Objekt-Namen und Argumenten (experimentell)",
+        "autocomplete": "Autovervollständigung von Objekt-Namen und Argumenten",
         "autocomplete_tt": "Schlägt bei der Eingabe Vervollständigungen von Objekt-Namen und Argumenten vor",
         "autocomplete_prefix": "Vervollständigung per Objektnamens-Präfix",
         "autocomplete_prefix_tt": "Vervollständigung nur per Objektnamens-Präfix (statt Übereinstimmung irgendwo im Objektnamen)",
         "autocomplete_relevance": "Sortiere Vervollständigungen nach Relevanz",
-        "autocomplete_relevance_tt": "Zeigt die relevantesten Vervollständigungen zuerst (basierend auf der Nutzungshäufigkeit)"
+        "autocomplete_relevance_tt": "Zeigt die relevantesten Vervollständigungen zuerst (basierend auf der Nutzungshäufigkeit)",
+        "autocomplete_tooltip_enabled": "Tooltips für Objekte anzeigen",
+        "autocomplete_tooltip_enabled_tt": "Zeigt Tooltips für Objekte an, wenn Sie mit der Maus darüber fahren",
+        "autocomplete_fuzzy_search": "Fuzzy-Matching für Autovervollständigungen",
+        "autocomplete_fuzzy_search_tt": "Zeigt ungefähre Vervollständigungen mithilfe von Fuzzy-Matching an"
       },
       "browser": {
         "browser_title": "Hilfe-Browser-Einstellungen (WARNUNG: Änderungen können Startup-Zeiten beeinflussen!)",
@@ -455,7 +471,11 @@
         "browser_path": "Hilfe-Browser durchsucht auch den Hilfe-Pfad",
         "browser_path_tt": "Der Hilfe-Browser durchkämmt auch Hilfe-Patches im benutzerdefinierten Hilfe-Pfad nach Suchbegriffen (langsamer)",
         "browser_init": "Erstelle den Hilfe-Index beim Programmstart",
-        "browser_init_tt": "Falls aktiviert, erstelle den Index für den Hilfe-Browser bereits beim Programmstart"
+        "browser_init_tt": "Falls aktiviert, erstelle den Index für den Hilfe-Browser bereits beim Programmstart",
+        "reset_init": "Lösche Vervollständigungen",
+        "reset_init_tt": "Falls aktiviert, lösche die benutzerdefinierten Vervollständigungen und Argumente beim Zurücksetzen des Indexes",
+        "reset_index": "Zurücksetzen der Indizes",
+        "reset_index_tt": "Setze den Hilfe- und Vervollständigungs-Index zurück"
       }
     },
     "audio": {
@@ -474,7 +494,9 @@
       "input_title": "Eingabe-Geräte",
       "input_title_tt": "Hardware-Geräte für die Audio-Eingabe von Pd",
       "output_title": "Ausgabe-Geräte",
-      "output_title_tt": "Hardware-Geräte für die Audio-Ausgabe von Pd"
+      "output_title_tt": "Hardware-Geräte für die Audio-Ausgabe von Pd",
+      "refresh_audiodevs": "Aktualisieren",
+      "refresh_audiodevs_tt": "Audio-Geräteliste aktualisieren"
     },
     "midi": {
       "api": "MIDI API",
@@ -486,7 +508,23 @@
       "input_title": "Eingabe-Geräte",
       "input_title_tt": "Hardware-Geräte für die MIDI-Eingabe von Pd",
       "output_title": "Ausgabe-Geräte",
-      "output_title_tt": "Hardware-Geräte für die MIDI-Ausgabe von Pd"
+      "output_title_tt": "Hardware-Geräte für die MIDI-Ausgabe von Pd",
+      "refresh_mididevs": "Aktualisieren",
+      "refresh_mididevs_tt": "MIDI-Geräteliste aktualisieren"
+    },
+    "issue":{
+      "title": "Titel",
+      "title_tt": "Bitte geben Sie einen kurzen Titel für Ihr Feedback ein",
+      "description": "Beschreibung",
+      "description_tt": "Beschreiben Sie das Problem, das bei Ihnen auftritt",
+      "submit": "Absenden",
+      "submit_tt": "Senden Sie Ihr Feedback an den Purr-Data Issue Tracker (Anmeldung erforderlich)",
+      "warning": "Titel und Beschreibung sind Pflichtfelder.",
+      "confirm": "Ihr Feedback geht verloren. Trotzdem schließen?",
+      "steps_to_reproduce": "Schritte zum Reproduzieren",
+      "steps_to_reproduce_tt": "Listen Sie die Schritte auf, um das Problem zu reproduzieren",
+      "environment_details": "Umgebungsdetails",
+      "environment_details_tt": "Details zu Ihrem Betriebssystem, Purr-Data-Version usw."
     },
     "ok": "Ok",
     "ok_tt": "Aktualisiere die Einstellungen und schließe den Dialog",

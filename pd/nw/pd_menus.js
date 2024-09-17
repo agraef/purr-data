@@ -472,6 +472,12 @@ function create_menu(gui, type) {
             tooltip: l("menu.comment_tt")
         }));
         put_menu.append(new gui.MenuItem({ type: "separator" }));
+        put_menu.append(m.put.listbox = new gui.MenuItem({
+            label: l("menu.listbox"),
+            key: shortcuts.menu.listbox.key,
+            modifiers: shortcuts.menu.listbox.modifiers,
+            tooltip: l("menu.listbox_tt")
+        }));
         put_menu.append(m.put.dropdown = new gui.MenuItem({
             label: l("menu.dropdown"),
             key: shortcuts.menu.dropdown.key,
@@ -536,6 +542,9 @@ function create_menu(gui, type) {
         put_menu.append(new gui.MenuItem({ type: "separator" }));
         //putMenu.append(m.put.graph = new gui.MenuItem());
         put_menu.append(m.put.array = new gui.MenuItem({
+            label: l("menu.array"),
+            key: shortcuts.menu.array.key,
+            modifiers: shortcuts.menu.array.modifiers,
             label: l("menu.array"),
             tooltip: l("menu.array_tt")
         }));
@@ -625,6 +634,10 @@ function create_menu(gui, type) {
     help_menu.append(m.help.manual = new gui.MenuItem({
         label: l("menu.manual"),
         tooltip: l("menu.manual_tt")
+    }));
+    help_menu.append(m.help.tutorial = new gui.MenuItem({
+        label: l("menu.tutorial"),
+        tooltip: l("menu.tutorial_tt")
     }));
     help_menu.append(m.help.browser = new gui.MenuItem({
         label: l("menu.browser"),

@@ -163,7 +163,18 @@ fi
 
 # Fetch the nw.js binary if we haven't already. We want to fetch it even
 # for building with no libs, so we do it regardless of the options
-#echo nwjs-sdk-v0.16.0-`uname | tr '[:upper:]' '[:lower:]'`
+
+# If the nwjsver env variable is set, it denotes the nw.js version for the
+# default Linux, Mac, and Windows builds. This cleans out any existing
+# binaries, and provides a quick way to switch nw.js versions without having
+# to edit this script. For the other platforms, or if the variable isn't set,
+# we use a hard-coded default, see below. (Even in that case you can set
+# nwjsver to have the cached binaries cleared beforehand.)
+
+if [ -n "$nwjsver" ]; then
+	rm -rf "../pd/nw/nw"
+fi
+
 if [ ! -d "../pd/nw/nw" ]; then
 	if [ `getconf LONG_BIT` -eq 32 ]; then
 		arch="ia32"
@@ -194,27 +205,33 @@ if [ ! -d "../pd/nw/nw" ]; then
 		ext="tar.gz"
 	fi
 
+	# Some of the nw.js versions are hard-coded for special support of
+	# legacy systems, or platforms for which there are no official
+	# binaries, so we have to use what we can get from 3rd parties. Some
+	# of these are quite old, so expect some gui regressions.
 	if [[ $osx_version == "10.8" ]]; then
 		# We need the lts version to be able to run on legacy systems.
 		nwjs_version="v0.14.7"
 	elif [ $os == "osx" ]; then
-		# ag: We need a recent version here to make the latest macOS
-		# versions work. Tested with Mojave (Intel), Monterey and
-		# Ventura (M1). NB: The Intel build also works on Apple
-		# Silicon using Rosetta 2.
-		nwjs_version="v0.71.0"
+		# ag: We need a fairly recent version here to make the build
+		# work on newer macOS versions. Note that at present only
+		# Intel builds are supported, but these should also work on
+		# Apple Silicon via Rosetta 2.
+		nwjs_version="v${nwjsver:-0.55.0}"
+	elif [[ $os == "win" || $os == "win64" ]]; then
+		# same version works on Windows, too
+		nwjs_version="v${nwjsver:-0.55.0}"
+	elif [ $arch == "arm" ]; then
+		# rpi-- only 0.27.6 is available atm
+		nwjs_version="v0.27.6"
+	elif [ $arch == "arm64" ]; then
+		# dito for rpi arm64-- 0.23.7 version
+		nwjs_version="v0.23.7"
 	else
-		# temporary kluge for rpi-- only 0.27.6 is available atm
-		if [ $arch == "arm" ]; then
-			nwjs_version="v0.27.6"
-		elif [ $arch == "arm64" ]; then
-			nwjs_version="v0.23.7"
-		else
-		# ag: Unfortunately, Linux exhibits a bunch of regressions
-		# with 0.71.0, so we keep the tried and true 0.28 version for
-		# now. 0.28.3 is the final point release in this series.
-			nwjs_version="v0.28.3"
-		fi
+		# default for Linux -- same as Mac and Windows; note that
+		# anything past 0.55.0 suffers from the nwworkingdir bug which
+		# makes file dialogs open in the wrong locations
+		nwjs_version="v${nwjsver:-0.55.0}"
 	fi
 
 	nwjs="nwjs-sdk"
@@ -360,15 +377,23 @@ then
 	if [[ $os == "win" || $os == "win64" ]]; then
 		echo "Making Windows package..."
 		echo `pwd`
-		make install INCREMENTAL=$INCREMENTAL LIGHT=$LIGHT && make package
+		make install INCREMENTAL=$INCREMENTAL LIGHT=$LIGHT
+		# copy the patch-nwjs.sh script
+		cp ../../l2ork_addons/patch-nwjs.sh build/bin
+		make package
 	elif [[ $os == "osx" ]]; then
 		echo "Making OSX package (dmg)..."
 		echo `pwd`
-		make install INCREMENTAL=$INCREMENTAL LIGHT=$LIGHT && make package
+		make install INCREMENTAL=$INCREMENTAL LIGHT=$LIGHT
+		# copy the patch-nwjs.sh script
+		cp ../../l2ork_addons/patch-nwjs.sh build/Purr-Data.app/Contents/Resources/app.nw/bin
+		make package
 	else
 		# create images folder
-		mkdir -p ../../packages/linux_make/build$inst_dir/lib/pd-l2ork/extra/images
+		mkdir -p build$inst_dir/lib/pd-l2ork/extra/images
 		make install prefix=$inst_dir
+		# copy the patch-nwjs.sh script
+		cp ../../l2ork_addons/patch-nwjs.sh build$inst_dir/bin
 	fi
 	echo "copying pd-l2ork-specific externals..."
 	# patch_name

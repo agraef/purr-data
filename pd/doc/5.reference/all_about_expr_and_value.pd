@@ -20,7 +20,7 @@ variables like $f3- rather \, they are global symbolic variables that
 aren't the names of functions or operators like some_number \, below:
 ;
 #X text 21 184 Using Pd's dollar sign variables is tricky-- for example
-\, \$0-foo is interpretated as "\$0 minus foo". Additionally \, \$0
+\, \$0-foo is interpreted as "\$0 minus foo". Additionally \, \$0
 cannot be at the beginning of the variable name (e.g. \, \$0foo). Underscores
 provide a workable \, if clunky \, solution:;
 #X obj 1 478 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0

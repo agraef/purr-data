@@ -714,7 +714,7 @@ void canvasinfo_setup(void)
 /* -------------------------- pdinfo ------------------------------ */
 static t_class *pdinfo_class;
 
-t_symbol *getapiname(int id)
+static t_symbol *getapiname(int id)
 {
     t_symbol *s = 0;
     switch (id)
@@ -731,6 +731,14 @@ t_symbol *getapiname(int id)
         //case API_DUMMY: s = gensym("dummy"); break;
     }
     return s;
+}
+
+static t_symbol *getmidiapiname(int id)
+{
+    if (id == API_PORTAUDIO)
+        return gensym("PortMidi");
+    else
+        return getapiname(id);
 }
 
 void pdinfo_dir(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
@@ -814,11 +822,6 @@ void pdinfo_classlist(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
-void pdinfo_audioin(t_pdinfo *x, t_symbol *s, int argc, t_atom *arg)
-{
-//        char i
-}
-
 void pdinfo_audio_api_list_all(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[7];
@@ -832,14 +835,14 @@ void pdinfo_audio_apilist(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[8];
     int n = 0;
+#ifdef USEAPI_ALSA
+    SETSYMBOL(at+n, getapiname(API_ALSA)); n++;
+#endif
 #ifdef USEAPI_OSS
     SETSYMBOL(at+n, getapiname(API_OSS)); n++;
 #endif
 #ifdef USEAPI_MMIO
     SETSYMBOL(at+n, getapiname(API_MMIO)); n++;
-#endif
-#ifdef USEAPI_ALSA
-    SETSYMBOL(at+n, getapiname(API_ALSA)); n++;
 #endif
 #ifdef USEAPI_PORTAUDIO
 #ifdef MSW
@@ -925,26 +928,26 @@ void pdinfo_audio_dev(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 void pdinfo_midi_api(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
     t_atom at[1];
-    t_symbol *api, *def = gensym("DEFAULT");
-#ifdef USEAPI_OSS
-    def = gensym("OSS");
-#endif
-    api = sys_midiapi ? gensym("ALSA") : def;
+    t_symbol *api = getmidiapiname(sys_midiapi);
     SETSYMBOL(at, api);
     info_out((t_text *)x, s, 1, at);
 }
 
 void pdinfo_midi_apilist(t_pdinfo *x, t_symbol *s, int argc, t_atom *argv)
 {
-    t_atom at[8];
+    t_atom at[4];
     int n = 0;
-    SETSYMBOL(at+n, gensym("DEFAULT"));
-#ifdef USEAPI_OSS
-    SETSYMBOL(at+n, gensym("OSS"));
-#endif
-    n++;
 #ifdef USEAPI_ALSA
-    SETSYMBOL(at+n, getapiname(API_ALSA)); n++;
+    SETSYMBOL(at+n, getmidiapiname(API_ALSA)); n++;
+#endif
+#ifdef USEAPI_OSS
+    SETSYMBOL(at+n, getmidiapiname(API_OSS)); n++;
+#endif
+#ifdef USEAPI_MMIO
+    SETSYMBOL(at+n, getmidiapiname(API_MMIO)); n++;
+#endif
+#ifdef USEAPI_PORTAUDIO
+    SETSYMBOL(at+n, getmidiapiname(API_PORTAUDIO)); n++;
 #endif
     info_out((t_text *)x, s, n, at);
 }

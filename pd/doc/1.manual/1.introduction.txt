@@ -1,28 +1,28 @@
 PD_VERSION
 
 A real-time graphical programming environment for live interactive
-computer music, Pd-l2ork works on Linux, Macintosh OSX, and Microsoft
-Windows.
+computer music, Pd works on Linux, Apple macOS, and Microsoft Windows.
+
+Purr Data is a modern successor of Pd-extended which features many
+improvements, especially in the user interface. For additional info see:
+    https://agraef.github.io/purr-data/
+
+For the Purr Data release notes and license see:
+    doc/manuals/Pd/ReadMe.html
+    doc/manuals/Pd/License.html
 
 Pd is copyrighted, but is free for you to use for any reasonable purpose.
 See the file:
-     PD_BASEDIR/doc/manuals/Pd/Pd-LICENSE.txt
+    doc/manuals/Pd/Pd-LICENSE.txt
 
-Pd-l2ork offers a rewrite of many of Pd's core routines for the purpose
-of improving editor functionality and stability. It is distributed under
-the same license as Pd. For additional info see:
-    http://l2ork.music.vt.edu/main/
-
-Reference documentation for Pd lives in:
-    file:PD_BASEDIR/doc/1.manual/index.htm
-or:
+Reference manual for Pd lives in:
+    doc/1.manual/index.htm
+or online at:
     http://msp.ucsd.edu/Pd_documentation/
 
-Much more documentation and other resources live on:
-    http://puredata.org
+Information of all sorts (guides, development, forks, meetings, more
+documentation, etc):
+    http://puredata.info
 
 The Pd mailing list archive lives in:
     http://iem.at/mailinglists/pd-list/
-
-
-Many more useful links are listed in the HTML documentation, section 1.2.

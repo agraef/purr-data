@@ -154,7 +154,7 @@ void *OpenHTMSocket(char *host, int portnumber, short *multicast_TTL)
 		         * server that we want to send to.
 		*/
 		
-		bzero((char *) &o->userv_addr, sizeof(o->userv_addr));
+		memset((char *) &o->userv_addr, 0, sizeof(o->userv_addr));
 		       o->userv_addr.sun_family = AF_UNIX;
 		strcpy(o->userv_addr.sun_path, UNIXDG_PATH);
 			sprintf(o->userv_addr.sun_path+strlen(o->userv_addr.sun_path), "%d", portnumber);
@@ -173,7 +173,7 @@ void *OpenHTMSocket(char *host, int portnumber, short *multicast_TTL)
 			 * pathname, based on our process id.
 			 */
 		
-			bzero((char *) &ucl_addr, sizeof(ucl_addr));    /* zero out */
+			memset((char *) &ucl_addr, 0, sizeof(ucl_addr));    /* zero out */
 			ucl_addr.sun_family = AF_UNIX;
 			strcpy(ucl_addr.sun_path, UNIXDG_TMP);
 
@@ -204,7 +204,7 @@ void *OpenHTMSocket(char *host, int portnumber, short *multicast_TTL)
 		#ifdef WIN32
 			ZeroMemory((char *)&o->serv_addr, sizeof(o->serv_addr));
 		#else
-			bzero((char *)&o->serv_addr, sizeof(o->serv_addr));
+			memset((char *)&o->serv_addr, 0, sizeof(o->serv_addr));
 		#endif
 
 		o->serv_addr.sin_family = AF_INET;
@@ -290,7 +290,7 @@ void *OpenHTMSocket(char *host, int portnumber, short *multicast_TTL)
 			o->serv_addr.sin_port = htons(portnumber);
 			o->addr = &(o->serv_addr);
 			if((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) >= 0) {
-					bzero((char *)&cl_addr, sizeof(cl_addr));
+					memset((char *)&cl_addr, 0, sizeof(cl_addr));
 				cl_addr.sin_family = AF_INET;
 				cl_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 				cl_addr.sin_port = htons(0);

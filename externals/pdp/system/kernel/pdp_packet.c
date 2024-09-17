@@ -122,7 +122,7 @@ pdp_packet_setup(void)
 
     pdp_pool_size = PDP_INITIAL_POOL_SIZE;
     pdp_pool = (t_pdp **)pdp_alloc(PDP_INITIAL_POOL_SIZE * sizeof(t_pdp *));
-    bzero(pdp_pool, pdp_pool_size * sizeof(t_pdp *));
+    memset(pdp_pool, 0, pdp_pool_size * sizeof(t_pdp *));
     class_list = pdp_list_new(0);
     pthread_mutex_init(&pdp_pool_mutex, NULL);
 }
@@ -172,7 +172,7 @@ _pdp_pool_expand_nolock(void){
     /* double the size */
     int new_pool_size = pdp_pool_size << 1;
     t_pdp **new_pool = (t_pdp **)pdp_alloc(new_pool_size * sizeof(t_pdp *));
-    bzero(new_pool, new_pool_size * sizeof(t_pdp *));
+    memset(new_pool, 0, new_pool_size * sizeof(t_pdp *));
     memcpy(new_pool, pdp_pool, pdp_pool_size * sizeof(t_pdp *));
     pdp_dealloc(pdp_pool);
     pdp_pool = new_pool;

@@ -621,6 +621,25 @@ void sys_reopen_midi( void)
     sys_open_midi(nmidiindev, midiindev, nmidioutdev, midioutdev, 1);
 }
 
+    /* extended close midi: make sure that devices are rescanned when opening
+       again, for backends which need it (specifically, portmidi needs to be
+       forced to properly reinitialize to update its device list) */
+void sys_xclose_midi( void)
+{
+    sys_close_midi();
+    // This is confusing. There doesn't appear to be a separate flag for
+    // portmidi, but it seems to be used whenever portaudio is, which is on
+    // Mac and Windows in the current implementation. In this case,
+    // sys_midiapi seems to be largely ignored and is just always set to
+    // API_DEFAULT. Thus we only need to check that we're using API_DEFAULT,
+    // but not API_ALSA (which is the API_DEFAULT on Linux).
+#ifdef USEAPI_PORTAUDIO
+    void pm_fini_midi(void);
+    if (sys_midiapi == API_DEFAULT && sys_midiapi != API_ALSA)
+        pm_fini_midi();
+#endif
+}
+
 void sys_listmididevs(void )
 {
     char indevlist[MAXNDEV*DEVDESCSIZE], outdevlist[MAXNDEV*DEVDESCSIZE];
@@ -677,6 +696,21 @@ void glob_midi_setapi(void *dummy, t_floatarg f)
         sys_midiapi = newapi;
         sys_reopen_midi();
     }
+#ifdef USEAPI_ALSA
+    midi_alsa_setndevs(midi_nmidiindev, midi_nmidioutdev);
+#endif
+    glob_midi_properties(0, (midi_nmidiindev > 1 || midi_nmidioutdev > 1));
+}
+
+void glob_midi_refresh(void *dummy)
+{
+#ifdef USEAPI_ALSA
+    if (sys_midiapi == API_ALSA)
+        sys_alsa_close_midi();
+    else
+#endif
+        sys_xclose_midi();
+    sys_reopen_midi();
 #ifdef USEAPI_ALSA
     midi_alsa_setndevs(midi_nmidiindev, midi_nmidioutdev);
 #endif

@@ -54,7 +54,7 @@ typedef struct pdp_edge_struct
 static void pdp_edge_allocate(t_pdp_edge *x)
 {
   x->x_map = (int*) getbytes ( ( x->x_vwidth * x->x_vheight * sizeof (int) ) << 1 );
-  bzero(x->x_map, ( x->x_vwidth * x->x_vheight * sizeof (int) ) << 1 );
+  memset(x->x_map, 0, ( x->x_vwidth * x->x_vheight * sizeof (int) ) << 1 );
 }
 
 static void pdp_edge_free_ressources(t_pdp_edge *x)

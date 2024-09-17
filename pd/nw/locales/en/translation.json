@@ -201,6 +201,8 @@
     "symbol_tt": "Add a box to type and display a symbol on the canvas",
     "comment": "Comment",
     "comment_tt": "Write a comment on the canvas",
+    "listbox": "Listbox",
+    "listbox_tt": "Add a box to type and display a listbox on the canvas",
     "dropdown": "Dropdown",
     "dropdown_tt": "Dropdown menu",
     "bang": "Bang",
@@ -259,6 +261,8 @@
     "about_tt": "Get information about this version of Pd",
     "manual": "Manual",
     "manual_tt": "Open the HTML manual for Pd",
+    "tutorial": "Purr-Data Tutorial",
+    "tutorial_tt": "Open the PDF tutorial for new Purr-Data users",
     "browser": "Help Browser",
     "browser_tt": "Open a help browser to search for documentation and objects",
     "intro": "Quick Reference",
@@ -277,6 +281,12 @@
   "pd_window": {
     "find": {
       "placeholder": "Search in Console",
+      "highlight": "Highlight All"
+    }
+  },
+  "browser": {
+    "find": {
+      "placeholder": "Search in Browser",
       "highlight": "Highlight All"
     }
   },
@@ -395,7 +405,9 @@
       "audio": "Audio",
       "audio_tt": "configure the audio devices",
       "midi": "MIDI",
-      "midi_tt": "configure MIDI devices"
+      "midi_tt": "configure MIDI devices",
+      "issue": "Feedback",
+      "issue_tt": "submit feedback or report an issue"
     },
     "startup": {
       "flags": "startup flags",
@@ -432,7 +444,7 @@
         "footgun": "Footgun"
       },
       "grid": {
-        "show_grid": "snap to grid (experimental)",
+        "show_grid": "snap to grid",
         "show_grid_tt": "Snap to the grid in edit mode"
       },
       "zoom": {
@@ -441,12 +453,16 @@
       },
       "autocomplete": {
         "autocomplete_title": "Auto-completion settings",
-        "autocomplete": "auto-complete object names and arguments (experimental)",
+        "autocomplete": "auto-complete object names and arguments",
         "autocomplete_tt": "Offers completions for object names and arguments as you type",
         "autocomplete_prefix": "match completions by object name prefix",
         "autocomplete_prefix_tt": "Only list completions whose prefix matches (rather than matches anywhere in object names)",
         "autocomplete_relevance": "sort completions by relevance",
-        "autocomplete_relevance_tt": "List most relevant completions first (based on how frequently they are used)"
+        "autocomplete_relevance_tt": "List most relevant completions first (based on how frequently they are used)",
+        "autocomplete_tooltip_enabled": "show tooltips for objects",
+        "autocomplete_tooltip_enabled_tt": "Show tooltips for objects when hovering over them",
+        "autocomplete_fuzzy_search": "fuzzy matching for autocompletions",
+        "autocomplete_fuzzy_search_tt": "Show approximate completions using fuzzy matching"
       },
       "browser": {
         "browser_title": "Help browser settings (WARNING: changing these may affect startup times!)",
@@ -455,7 +471,11 @@
         "browser_path": "help browser also searches the help path",
         "browser_path_tt": "Also scan help patches in the user-defined help path for searchable keywords (slower)",
         "browser_init": "prepare the help index at application start",
-        "browser_init_tt": "If checked, prepare the index for the help browser already when the application starts"
+        "browser_init_tt": "If checked, prepare the index for the help browser already when the application starts",
+        "reset_init": "clear completions",
+        "reset_init_tt": "If checked, clear the custom completions and arguments when resetting the index",
+        "reset_index": "Reset indexes",
+        "reset_index_tt": "Reset the help and completion indexes"
       }
     },
     "audio": {
@@ -474,7 +494,9 @@
       "input_title": "Input Devices",
       "input_title_tt": "hardware devices used to get audio into Pd",
       "output_title": "Output Devices",
-      "output_title_tt": "hardware devices to send audio from Pd"
+      "output_title_tt": "hardware devices to send audio from Pd",
+      "refresh_audiodevs": "Refresh",
+      "refresh_audiodevs_tt": "refresh the list of audio devices"
     },
     "midi": {
       "api": "midi api",
@@ -486,7 +508,23 @@
       "input_title": "Input Devices",
       "input_title_tt": "hardware devices used to get midi data into Pd",
       "output_title": "Output Devices",
-      "output_title_tt": "hardware devices to send midi data from Pd"
+      "output_title_tt": "hardware devices to send midi data from Pd",
+      "refresh_mididevs": "Refresh",
+      "refresh_mididevs_tt": "refresh the list of midi devices"
+    },
+    "issue":{
+      "title": "Title",
+      "title_tt": "Please provide a short title for your feedback",
+      "description": "Description",
+      "description_tt": "Describe the issue you are experiencing",
+      "submit": "Submit",
+      "submit_tt": "Submit your feedback to the Purr-Data issue tracker (login required)",
+      "warning": "Title and Description are required fields.",
+      "confirm": "Your feedback will be lost. Close anyway?",
+      "steps_to_reproduce": "Steps to Reproduce",
+      "steps_to_reproduce_tt": "List the steps to reproduce the issue",
+      "environment_details": "Environment Details",
+      "environment_details_tt": "Details about your operating system, Purr-Data version, etc."
     },
     "ok": "Ok",
     "ok_tt": "Update the preferences and close the dialog",

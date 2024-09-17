@@ -201,6 +201,8 @@
     "symbol_tt": "Ajouter un objet Symbole au canevas (pour affichage)",
     "comment":    "Commentaire",
     "comment_tt": "Ajouter un object Commentaire au canevas",
+    "listbox": "Listbox",
+    "listbox_tt": "Ajouter un objet Zone de liste au canevas (pour affichage)",
     "dropdown":    "Menu Dropdown",
     "dropdown_tt": "Ajouter un objet Menu Dropdown au canevas (menu déroulant vers le bas)",
     "bang":    "Bang",
@@ -259,6 +261,8 @@
     "about_tt": "Obtenir des informations au sujet de cette version de Pd",
     "manual":    "Manuel Pd (HTML)",
     "manual_tt": "Ouvrir le manuel HTML de Pd",
+    "tutorial": "Tutoriel Purr-Data (PDF)",
+    "tutorial_tt": "Ouvrir le tutoriel PDF pour les nouveaux utilisateurs de Purr-Data",
     "browser":    "Navigateur de l'Aide",
     "browser_tt": "Ouvrir le navigateur de l'Aide pour chercher de la documentation et des objets",
     "intro":    "Référence rapide",
@@ -277,7 +281,13 @@
   "pd_window": {
     "find": {
       "placeholder": "Chercher dans la Console",
-      "highlight": "Surligner toutes les occurrences"
+      "highlight": "Surligner toutes"
+    }
+  },
+  "browser": {
+    "find": {
+      "placeholder": "Chercher dans le Navigateur",
+      "highlight": "Surligner toutes"
     }
   },
   "canvas": {
@@ -328,8 +338,8 @@
         "arrays": "Options du tableau"
       },
       "no_scroll":    "Cacher ascenseurs V/H (xptal)",
-      "no_scroll_tt": "Masquer les barres de défilement de la fenêtre (expérimental)",
-      "no_menu":    "Masquer le menu (expérimental)",
+      "no_scroll_tt": "Masquer les barres de défilement de la fenêtre",
+      "no_menu":    "Masquer le menu",
       "no_menu_tt": "Masquer le menu de la fenêtre",
       "gop":    "Graphique sur le Parent (GOP)",
       "gop_tt": "Afficher le contenu intérieur de ce canevas dans un rectangle sur le canevas conteneur",
@@ -395,7 +405,9 @@
       "audio":    "Audio",
       "audio_tt": "Configurer les dispositifs Audio",
       "midi":    "MIDI",
-      "midi_tt": "Configurer les dispositifs MIDI"
+      "midi_tt": "Configurer les dispositifs MIDI",
+      "issue": "Commentaires",
+      "issue_tt": "Soumettre des commentaires ou signaler un problème"
     },
     "startup": {
       "flags":    "Indicateurs de démarrage",
@@ -432,7 +444,7 @@
         "footgun":   "Footgun"
       },
       "grid": {
-        "show_grid": "Aligner sur la grille (expérimental)",
+        "show_grid": "Aligner sur la grille",
         "show_grid_tt": "Accrocher à la grille en mode Édition"
       },
       "zoom": {
@@ -441,12 +453,16 @@
       },
       "autocomplete": {
         "autocomplete_title": "Paramètres d'autocomplétion",
-        "autocomplete": "autocompléter les noms et arguments des objets (expérimental)",
+        "autocomplete": "autocompléter les noms et arguments des objets",
         "autocomplete_tt": "Offre complétion pour les noms et arguments des objets au fur et à mesure de la saisie",
         "autocomplete_prefix": "complétion par le préfixe du nom de l'objet",
         "autocomplete_prefix_tt": "Complétion uniquement par le préfixe du nom de l'objet (ignorer les correspondances au milieu du nom des objets)",
         "autocomplete_relevance": "Trier les complétions par pertinence",
-        "autocomplete_relevance_tt": "Affiche les complétions les plus pertinentes en premier (basé sur la fréquence d'utilisation)"
+        "autocomplete_relevance_tt": "Affiche les complétions les plus pertinentes en premier (basé sur la fréquence d'utilisation)",
+        "autocomplete_tooltip_enabled": "Affiche les info-bulles pour les objets",
+        "autocomplete_tooltip_enabled_tt": "Affiche les info-bulles des objets lorsque vous les survolez",
+        "autocomplete_fuzzy_search": "Correspondance floue pour les autocomplétions",
+        "autocomplete_fuzzy_search_tt": "Afficher les complétions approximatifs à l'aide de la correspondance floue"
       },
       "browser": {
         "browser_title": "Paramètres du navigateur d'Aide (AVERTISSEMENT: les modifier peut affecter les temps de démarrage!)",
@@ -455,7 +471,11 @@
         "browser_path":    "Le navigateur d'Aide recherche également dans le chemin de l'Aide",
         "browser_path_tt": "Analyser également les Patches d'Aide dans le chemin d'Aide défini par l'utilisateur pour rechercher des mots clés consultables (plus lent)",
         "browser_init":    "Préparer l'index de l'Aide au démarrage de l'application",
-        "browser_init_tt": "Si cette case est cochée, préparez l'index pour le navigateur d'Aide dès le démarrage de l'application"
+        "browser_init_tt": "Si cette case est cochée, préparez l'index pour le navigateur d'Aide dès le démarrage de l'application",
+        "reset_init": "Effacer les complétions",
+        "reset_init_tt": "Si cette case est cochée, effacer les complétions et arguments personnalisés lors de la réinitialisation de l'index",
+        "reset_index": "Réinitialiser les index",
+        "reset_index_tt": "Réinitialiser les index d'aide et de complétion"
       }
     },
     "audio": {
@@ -474,7 +494,9 @@
       "input_title":    "Dispositifs d'entrée",
       "input_title_tt": "Périphériques matériels utilisés pour recevoir l'Audio dans Pd",
       "output_title":    "Dispositifs de sortie",
-      "output_title_tt": "Périphériques matériels utilisés pour envoyer l'Audio depuis Pd"
+      "output_title_tt": "Périphériques matériels utilisés pour envoyer l'Audio depuis Pd",
+      "refresh_audiodevs": "Actualiser",
+      "refresh_audiodevs_tt": "Actualiser la liste des périphériques audio"
     },
     "midi": {
       "api": "API MIDI",
@@ -486,7 +508,23 @@
       "input_title":    "Dispositifs d'entrée",
       "input_title_tt": "Périphériques matériels utilisés pour recevoir des données MIDI dans Pd",
       "output_title":    "Dispositifs de sortie",
-      "output_title_tt": "Périphériques matériels utilisés pour envoyer des données MIDI depuis Pd"
+      "output_title_tt": "Périphériques matériels utilisés pour envoyer des données MIDI depuis Pd",
+      "refresh_mididevs": "Actualiser",
+      "refresh_mididevs_tt": "Actualiser la liste des périphériques MIDI"
+    },
+    "issue":{
+      "title": "Titre",
+      "title_tt": "Veuillez fournir un titre court pour vos commentaires",
+      "description": "Description",
+      "description_tt": "Décrivez le problème que vous rencontrez",
+      "submit": "Soumettre",
+      "submit_tt": "Soumettez vos commentaires au système de suivi des problèmes Purr-Data (connexion requise)",
+      "warning": "Le titre et la description sont des champs obligatoires.",
+      "confirm": "Vos commentaires seront perdus. Fermer quand même ?",
+      "steps_to_reproduce": "Étapes pour reproduire",
+      "steps_to_reproduce_tt": "Répertoriez les étapes pour reproduire le problème",
+      "environment_details": "Détails de l'environnement",
+      "environment_details_tt": "Détails sur votre système d'exploitation, la version de Purr-Data, etc."
     },
     "ok": "OK",
     "ok_tt": "Mettre à jour les Préférences et fermer la fenêtre de dialogue",

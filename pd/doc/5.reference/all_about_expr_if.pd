@@ -22,15 +22,15 @@ made up of three parts \, enclosed in parentheses:;
 #X text 20 126 Each part is separated by a comma.;
 #X text 20 108 c) an expression to evaluate if the condition is false.
 ;
-#X text 20 239 c) if the condition is false \, the number 20 is output.
+#X text 20 239 c) if the condition is false \, the number 50 is output.
 ;
 #X text 20 340 You can nest other functions within the if function
 \, including the if function itself.;
 #X text 20 157 By scrolling the number box below you can see the [expr
 if] function in action. When a number is received at the inlet:;
-#X text 20 189 a) the condition "$f1 < 20" checks if the input is less
-than twenty.;
-#X text 20 219 b) if true \, the value is subtracted from twenty and
+#X text 20 189 a) the condition "$f1 < 50" checks if the input is less
+than fifty.;
+#X text 20 219 b) if true \, the value is subtracted from fifty and
 output.;
 #X obj 1 478 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
 14 -233017 -33289 0;

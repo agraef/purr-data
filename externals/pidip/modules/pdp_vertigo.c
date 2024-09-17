@@ -76,7 +76,7 @@ static void pdp_vertigo_allocate(t_pdp_vertigo *x, t_floatarg fnewsize )
     x->x_buffer = (short int *) getbytes( 2*(( nsize + (nsize>>1))<<1) );
     if ( x->x_buffer )
     {
-       bzero( x->x_buffer, 2*((nsize + (nsize>>1))<<1) );
+       memset( x->x_buffer, 0, 2*((nsize + (nsize>>1))<<1) );
        x->x_current_buffer = x->x_buffer;
        x->x_alt_buffer = x->x_buffer + (nsize + (nsize>>1));
     }

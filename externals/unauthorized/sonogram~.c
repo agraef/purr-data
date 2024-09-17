@@ -587,7 +587,7 @@ static void sonogram_update_part(t_sonogram *x, t_glist *glist, t_int bstart, t_
             perror( "pthread_attr_setdetachstate" );
             return;
         }
-        if ( pthread_create( &x->x_updatechild, &update_child_attr, sonogram_do_update_part, x ) < 0 )
+        if ( pthread_create( (pthread_t*)&x->x_updatechild, &update_child_attr, sonogram_do_update_part, x ) < 0 )
         {
             post( "sonogram~ : could not launch update thread" );
             perror( "pthread_create" );

@@ -197,7 +197,7 @@ install: all
 	install -m755 $(BIN_DIR)/pdreceive $(DESTDIR)$(bindir)/pdreceive 
 	rsync -ax --exclude=.git --exclude=.svn ../doc/* $(DESTDIR)$(pddocdir)
 	mv $(ABOUT_FILE) $(ABOUT_FILE).tmp
-	cat $(ABOUT_FILE).tmp | sed 's|PD_VERSION|Pd-l2ork version $(PD_L2ORK_VERSION) ($(PD_BUILD_VERSION))|' \
+	cat $(ABOUT_FILE).tmp | sed 's|PD_VERSION|Purr-Data version $(PD_L2ORK_VERSION) ($(PD_BUILD_VERSION))|' \
 		> $(ABOUT_FILE)
 	rm $(ABOUT_FILE).tmp
 	rsync -ax --exclude=.git --exclude=.svn ../extra $(DESTDIR)$(libpddir)/

@@ -31,8 +31,6 @@ static void my_numbox_set_change(t_my_numbox *x, t_floatarg f);
 static void my_numbox_ftoa(t_my_numbox *x , int append);
 static void my_numbox_list(t_my_numbox *x, t_symbol *s, int ac, t_atom *av);
 
-static t_symbol *numbox_keyname_sym_a;
-
 static void my_numbox_tick_reset(t_my_numbox *x)
 {
     //post("tick_reset\n");
@@ -59,12 +57,10 @@ static void my_numbox_set_change(t_my_numbox *x, t_floatarg f)
     if (f == 0 && x->x_gui.x_change != 0)
     {
         x->x_gui.x_change = 0;
-        pd_unbind(&x->x_gui.x_obj.ob_pd, numbox_keyname_sym_a);
     }
     else if (f == 1 && x->x_gui.x_change != 1)
     {
         x->x_gui.x_change = 1;
-        pd_bind(&x->x_gui.x_obj.ob_pd, numbox_keyname_sym_a);        
     }
 }
 
@@ -1045,8 +1041,6 @@ void g_numbox_setup(void)
         gensym("log_height"), A_FLOAT, 0);
     class_addmethod(my_numbox_class, (t_method)my_numbox_drawstyle,
         gensym("drawstyle"), A_FLOAT, 0);
-
-    numbox_keyname_sym_a = gensym("#keyname_a");
 
     wb_init(&my_numbox_widgetbehavior,my_numbox_getrect,my_numbox_newclick);
     class_setwidget(my_numbox_class, &my_numbox_widgetbehavior);

@@ -1,5 +1,5 @@
 #N struct cat float x float y;
-#N canvas 337 210 527 463 12;
+#N canvas 339 210 527 463 12;
 #N canvas 634 205 452 371 version 0;
 #X msg 61 51 l2ork_version;
 #X obj 61 76 pdinfo;
@@ -43,15 +43,13 @@ OSX \, and Microsoft Windows.;
 any reasonable purpose. See the file:;
 #X obj 18 247 pddp/pddplink @pd_help/../manuals/Pd/License.html -text
 doc/manuals/Pd/License.html;
-#X obj 18 340 pddp/pddplink http://l2ork.music.vt.edu/main/;
-#X text 18 76 This is Purr Data \, the cross-platform \, JS-based version
-of Pd-l2ork. An introduction to Purr Data can be found at:, f 53;
+#X obj 18 340 pddp/pddplink https://agraef.github.io/purr-data/;
 #X obj 18 130 pddp/pddplink https://agraef.github.io/purr-data-intro/
 ;
 #X text 18 366 Reference documentation for Pd lives in:;
 #X obj 18 384 pddp/pddplink @pd_help/../1.manual/index.htm -text doc/1.manual/index.htm
 ;
-#X obj 36 21 cnv 15 432 33 empty \$0-about_text Purr-Data-2.18.1\ 20230117-rev.75a0ac65
+#X obj 36 21 cnv 15 432 33 empty \$0-about_text Purr-Data-2.19.4\ 20240908-rev.b2f63c6e
 20 12 0 18 #fcc048 #000000 0;
 #N canvas 430 372 450 323 cat 0;
 #X obj 16 180 draw sprite ./cat;
@@ -80,4 +78,8 @@ of Pd-l2ork. An introduction to Purr Data can be found at:, f 53;
 #X text 18 272 Purr-Data offers a rewrite of many of Pd's core routines
 for the purpose of improving editor functionality and stability. It
 is originally based on Pd-l2ork and distributed under the same license
-as Pd. For additional info about Pd-l2ork see:, f 66;
+as Pd. For additional info about Purr-Data see:, f 66;
+#X text 18 76 This is Purr Data \, a modern successor of Pd-extended
+which features many improvements. An introduction to Purr Data can
+be found at:, f 53;
+#X obj 310 130 pddplink Purr-Data-Intro.pdf -text (PDF);

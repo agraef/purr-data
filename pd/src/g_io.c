@@ -127,15 +127,10 @@ t_int *vinlet_perform(t_int *w)
 
 static void vinlet_fwd(t_vinlet *x, t_symbol *s, int argc, t_atom *argv)
 {
-    if(x->x_fwdout) /* inlet~ fwd */
-        outlet_anything(x->x_fwdout, s, argc, argv);
-    else if(x->x_buf == 0) /* inlet, need to forward message because we want
-                                it to accept fwd selector */
+    if (!x->x_buf)   /* if we're not signal, just forward */
         outlet_anything(x->x_obj.ob_outlet, s, argc, argv);
-    else /* inlet~ without fwd */
-        pd_error(x->x_canvas, "inlet~: expected 'signal' but got '%s' "
-            "(Note: [inlet~] does not forward non-signal messages unless "
-            "argument 'fwd' is defined)", s->s_name);
+    else if (x->x_fwdout && argc > 0 && argv->a_type == A_SYMBOL)
+        outlet_anything(x->x_fwdout, argv->a_w.w_symbol, argc-1, argv+1);
 }
 
 static void vinlet_dsp(t_vinlet *x, t_signal **sp)

@@ -82,7 +82,7 @@ unsigned char HIDConfigureAction (pRecDevice * ppDevice, pRecElement * ppElement
 		pDevice = HIDGetNextDevice (pDevice);
 	}
 	saveValueArray = (long *) malloc (sizeof (long) * numDevices * maxElements); // 2D array to save values
-	bzero(saveValueArray,sizeof (long) * numDevices * maxElements); // clear array
+	memset(saveValueArray,0,sizeof (long) * numDevices * maxElements); // clear array
 
 	// store current values
 	deviceNum = 0;
@@ -168,7 +168,7 @@ void HIDSaveElementConfig (FILE * fileRef, pRecDevice pDevice, pRecElement pElem
 	if (HIDIsValidElement(pDevice,pElement))
 	{
 		// clear rec
-		bzero(&saveRec,sizeof(recSaveHID));
+		memset(&saveRec,0,sizeof(recSaveHID));
 
 		saveRec.actionCookie = actionCookie;
 

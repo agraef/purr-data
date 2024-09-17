@@ -426,16 +426,12 @@ text.activated {
    move off the object */
 @-webkit-keyframes fizzle {
     0% {
-        stroke-width: 1;
+        stroke-width: 5;
         stroke-opacity: 1;
-        rx: 1;
-        ry: 1;
     }
     100% {
-        stroke-width: 20;
-        stroke-opacity: 0.2;
-        rx: 50;
-        ry: 50;
+        stroke-width: 1;
+        stroke-opacity: 1;
     }
 }
 
@@ -443,7 +439,7 @@ text.activated {
 .xlet_selected {
     stroke: #e87216;
     fill: #e87216;
-    -webkit-animation: fizzle 0.1s ease-in 1;
+    -webkit-animation: fizzle 0.5s ease-in 1;
 }
 
 #console_find {
@@ -718,7 +714,7 @@ div.y2 {
 }
 
 /* This matches tabs displaying to their associated radio inputs */
-.tab1:checked ~ .tab1, .tab2:checked ~ .tab2, .tab3:checked ~ .tab3, .tab4:checked ~ .tab4 {
+.tab1:checked ~ .tab1, .tab2:checked ~ .tab2, .tab3:checked ~ .tab3, .tab4:checked ~ .tab4, .tab5:checked ~ .tab5{
     display: table;
     padding: 8px;
     line-height: 20px;
@@ -816,6 +812,9 @@ input[type="color"] {
 
 /* GB: Autocomplete Dropdown style */
 #autocomplete_dropdown {
+    min-height: auto;
+    max-height: 200px;
+    overflow-y: scroll;
     background-color: #ebebec;
     border: 1px solid;
     padding: 1px;
@@ -828,4 +827,9 @@ input[type="color"] {
 
 #autocomplete_dropdown p.selected {
     background-color: #cfcfd0;
+}
+
+#autocomplete_dropdown p .highlight { 
+    font-weight: bold;
+    color: #e87216;
 }

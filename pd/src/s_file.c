@@ -44,8 +44,8 @@
 
 int sys_defeatrt, sys_autopatch_yoffset, sys_snaptogrid = 1, sys_gridsize = 10,
     sys_zoom, sys_autocomplete = 1, sys_autocomplete_prefix,
-    sys_autocomplete_relevance = 1,
-    sys_browser_doc = 1, sys_browser_path, sys_browser_init;
+    sys_autocomplete_relevance = 1, sys_autocomplete_tooltip_enabled = 1,
+    sys_autocomplete_fuzzy_search = 1, sys_browser_doc = 1, sys_browser_path, sys_browser_init;
 t_symbol *sys_flags = &s_;
 void sys_doflags( void);
 
@@ -195,25 +195,18 @@ static int sys_getpreference(const char *key, char *value, int size)
 {
     HKEY hkey;
     DWORD bigsize = size;
-    LONG err = RegOpenKeyEx(HKEY_CURRENT_USER,
-        "Software\\Purr-Data", 0,  KEY_QUERY_VALUE, &hkey);
-    if (err != ERROR_SUCCESS)
-    {
-        err = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
-            "Software\\Purr-Data", 0,  KEY_QUERY_VALUE, &hkey);
-        if (err != ERROR_SUCCESS)
-        {
-            return (0);
-	}
-    }
-    err = RegQueryValueEx(hkey, key, 0, 0, value, &bigsize);
-    if (err != ERROR_SUCCESS)
-    {
+    int rc = (RegOpenKeyEx(HKEY_CURRENT_USER,
+    "Software\\Purr-Data", 0,  KEY_QUERY_VALUE, &hkey) == ERROR_SUCCESS ||
+        // newer versions of Windows apparently have the registry key here
+        RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+        "Software\\WOW6432Node\\Purr-Data", 0,  KEY_QUERY_VALUE, &hkey) == ERROR_SUCCESS ||
+        RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+        "Software\\Purr-Data", 0,  KEY_QUERY_VALUE, &hkey) == ERROR_SUCCESS);
+    if (rc) {
+        rc = RegQueryValueEx(hkey, key, 0, 0, value, &bigsize) == ERROR_SUCCESS;
         RegCloseKey(hkey);
-        return (0);
     }
-    RegCloseKey(hkey);
-    return (1);
+    return rc;
 }
 
 static void sys_doneloadpreferences( void)
@@ -716,6 +709,10 @@ void sys_loadpreferences( void)
         sscanf(prefbuf, "%d", &sys_autocomplete_prefix);
     if (sys_getpreference("autocomplete_relevance", prefbuf, MAXPDSTRING))
         sscanf(prefbuf, "%d", &sys_autocomplete_relevance);
+    if (sys_getpreference("autocomplete_tooltip_enabled", prefbuf, MAXPDSTRING))
+        sscanf(prefbuf, "%d", &sys_autocomplete_tooltip_enabled);
+    if (sys_getpreference("autocomplete_fuzzy_search", prefbuf, MAXPDSTRING))
+        sscanf(prefbuf, "%d", &sys_autocomplete_fuzzy_search);
     if (sys_getpreference("browser_doc", prefbuf, MAXPDSTRING))
         sscanf(prefbuf, "%d", &sys_browser_doc);
     if (sys_getpreference("browser_path", prefbuf, MAXPDSTRING))
@@ -905,6 +902,10 @@ void glob_savepreferences(t_pd *dummy)
     sys_putpreference("autocomplete_prefix", buf1);
     sprintf(buf1, "%d", sys_autocomplete_relevance);
     sys_putpreference("autocomplete_relevance", buf1);
+    sprintf(buf1, "%d", sys_autocomplete_tooltip_enabled);
+    sys_putpreference("autocomplete_tooltip_enabled", buf1);
+    sprintf(buf1, "%d", sys_autocomplete_fuzzy_search);
+    sys_putpreference("autocomplete_fuzzy_search", buf1);
     sprintf(buf1, "%d", sys_browser_doc);
     sys_putpreference("browser_doc", buf1);
     sprintf(buf1, "%d", sys_browser_path);
