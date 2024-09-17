@@ -892,7 +892,7 @@ typedef struct _gatom
     t_symbol *a_expanded_to; /* a_symto after $0, $1, ...  expansion */
     int a_click_pos;         /* character position when clicked */
     int a_shift_clicked;     /* used to keep old text after \n. this is
-                                activated by shift+clicking no the object */
+                                activated by shift+clicking on the object */
 } t_gatom;
 
     /* prepend "-" as necessary to avoid empty strings, so we can
@@ -1276,10 +1276,10 @@ static void gatom_key(void *z, t_floatarg f)
     {
         if (len > 0)
         {
-        	if (x->a_shift)
-        		x->a_buf[0] = 0;
-        	else
-        		x->a_buf[len-1] = 0;
+            if (x->a_shift)
+                x->a_buf[0] = 0;
+            else
+                x->a_buf[len-1] = 0;
         }
         goto redraw;
     }
@@ -1294,7 +1294,7 @@ static void gatom_key(void *z, t_floatarg f)
             x->a_buf[0] = 0;
         }
         else if (x->a_atom.a_type == A_SYMBOL)
-			x->a_atom.a_w.w_symbol = gensym(x->a_buf);
+            x->a_atom.a_w.w_symbol = gensym(x->a_buf);
         else bug("gatom_key");
 
         x->a_atomold = x->a_atom;
@@ -1415,10 +1415,9 @@ static void gatom_click(t_gatom *x,
     t_floatarg xpos, t_floatarg ypos, t_floatarg shift, t_floatarg ctrl,
     t_floatarg alt)
 {
-	//post("gatom_click %f %f", ctrl, alt);
     // zero-based position of clicked character (listbox)
-    x->a_click_pos = ((int)xpos - x->a_text.te_xpix) / sys_fontwidth(glist_getfont(x->a_glist));
-	//post("bind");
+    x->a_click_pos = ((int)xpos - x->a_text.te_xpix) /
+        sys_fontwidth(glist_getfont(x->a_glist));
     if (x->a_text.te_width == 1)
     {
         if (x->a_atom.a_type == A_FLOAT)
@@ -1451,14 +1450,15 @@ static void gatom_click(t_gatom *x,
             glist_retext(x->a_glist, &x->a_text);
             quote_spaces(save_flag);
         }
-	   	glist_grabx(x->a_glist, &x->a_text.te_g, gatom_motion, gatom_key,
-	        (t_glistkeynameafn)gatom_keyhandler, xpos, ypos);
-	    //post("a_shift_clicked=%d", x->a_shift_clicked);
+        glist_grabx(x->a_glist, &x->a_text.te_g, gatom_motion, gatom_key,
+                    (t_glistkeynameafn)gatom_keyhandler, xpos, ypos);
         x->a_shift_clicked = shift;
-	    	// second click wipes prior text
-	    if (!x->a_shift_clicked)
-			x->a_buf[0] = 0;
-	    //post("a_shift_clicked=%d", x->a_shift_clicked);
+        if (!x->a_shift_clicked)
+            // unshifted click wipes prior text
+            x->a_buf[0] = 0;
+        else if (x->a_atom.a_type == A_SYMBOL)
+            // make sure to initialize the edit buffer from the current value
+            gatom_setabuf(x, x->a_atom.a_w.w_symbol->s_name);
     }
 }
 

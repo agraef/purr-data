@@ -5702,7 +5702,9 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 
     if (!x || !x->gl_editor)
         return;
-    if (x && down)
+    // ag 20240917: We also need to report Shift key up here, otherwise the
+    // keynameafn will only ever receive Shift key down events.
+    if (x && (down || (gotkeysym && strcmp(gotkeysym->s_name, "Shift") == 0)))
     {
             /* cancel any dragging action */
         if (x->gl_editor->e_onmotion == MA_MOVE)
