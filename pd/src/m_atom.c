@@ -81,15 +81,6 @@ t_symbol *atom_getsymbolarg(int which, int argc, t_atom *argv)
 * the '$' only gets quoted if followed by a digit.
 */
 
-// ag 20240916 XXXFIXME: Option to suppress escaping spaces. This flag is
-// normally 1 (enable backslash-quoting of space characters), but at present
-// we need to disable it for listboxes because these use spaces as a
-// delimiter. It's a kludge to have this as a global variable, but turning it
-// into a parameter would be even clumsier and require changes in public APIs,
-// which we don't want. Thus, this will have to do until we fix our listbox
-// implementation to make it work with symbols containing spaces.
-int atom_quote_spaces = 1;
-
 void atom_string(const t_atom *a, char *buf, unsigned int bufsize)
 {
     char tbuf[30];
@@ -117,8 +108,8 @@ void atom_string(const t_atom *a, char *buf, unsigned int bufsize)
         else
         {
             for (sp = a->a_w.w_symbol->s_name, len = 0, quote = 0; *sp; sp++, len++)
-                if (*sp == ';' || *sp == ',' || *sp == '\\' ||
-                    (atom_quote_spaces && *sp == ' ') ||
+                if (*sp == ';' || *sp == ',' || *sp == '\\' || *sp == ' ' ||
+                    (a_sym && *sp == ALIST_DELIM) ||
                     (a_sym && *sp == '$' && sp[1] >= '0' && sp[1] <= '9'))
                     quote = 1;
         }
@@ -128,11 +119,12 @@ void atom_string(const t_atom *a, char *buf, unsigned int bufsize)
             sp = a->a_w.w_symbol->s_name;
             while (bp < ep && *sp)
             {
-                if (*sp == ';' || *sp == ',' || *sp == '\\' ||
-                    (atom_quote_spaces && *sp == ' ') ||
+                if (*sp == ';' || *sp == ',' || *sp == '\\' || *sp == ' ' ||
                     (a_sym && *sp == '$' && ((sp[1] >= '0' && sp[1] <= '9') || sp[1]=='@')))
                         *bp++ = '\\';
-                *bp++ = *sp++;
+                // replace the special non-printable listbox delim character
+                // with a blank
+                *bp++ = a_sym && *sp == ALIST_DELIM ? ' ' : *sp; sp++;
             }
             if (*sp) *bp++ = '*';
             *bp = 0;
@@ -162,5 +154,50 @@ void atom_string(const t_atom *a, char *buf, unsigned int bufsize)
         break;
     default:
         bug("atom_string");
+    }
+}
+
+// same as atom_string, but without the auto-quoting
+void atom_string_s(const t_atom *a, char *buf, unsigned int bufsize)
+{
+    char tbuf[30];
+    switch(a->a_type)
+    {
+    case A_SEMI: strcpy(buf, ";"); break;
+    case A_COMMA: strcpy(buf, ","); break;
+    case A_POINTER:
+        strcpy(buf, "(pointer)");
+        break;
+    case A_FLOAT:
+        sprintf(tbuf, M_ATOM_FLOAT_SPECIFIER, a->a_w.w_float);
+        if (strlen(tbuf) < bufsize-1) strcpy(buf, tbuf);
+        else if (a->a_w.w_float < 0) strcpy(buf, "-");
+        else  strcat(buf, "+");
+        break;
+    case A_SYMBOL:
+    case A_DOLLSYM:
+        {
+            char *sp = a->a_w.w_symbol->s_name;
+            unsigned int len = strlen(sp);
+            if (len < bufsize-1) strcpy(buf, sp);
+            else {
+                strncpy(buf, sp, bufsize - 2);
+                strcpy(buf + (bufsize - 2), "*");
+            }
+        }
+        break;
+    case A_DOLLAR:
+        if(a->a_w.w_index == DOLLARALL)
+        {
+            /* JMZ: $@ expansion */
+            sprintf(buf, "$@");
+        }
+        else
+        {
+            sprintf(buf, "$%d", a->a_w.w_index);
+        }
+        break;
+    default:
+        bug("atom_string_s");
     }
 }

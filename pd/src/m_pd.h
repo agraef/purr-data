@@ -392,7 +392,14 @@ EXTERN t_float atom_getfloatarg(int which, int argc, t_atom *argv);
 EXTERN t_int atom_getintarg(int which, int argc, t_atom *argv);
 EXTERN t_symbol *atom_getsymbolarg(int which, int argc, t_atom *argv);
 
+// ag 20240918: special delimiter for listbox elements; this should be a
+// non-printable ASCII character which doesn't normally occur in symbols
+// NOTE: '\177' = ascii 127 seems to be a perfect choice
+#define ALIST_DELIM '\177'
+
 EXTERN void atom_string(const t_atom *a, char *buf, unsigned int bufsize);
+// ag 20240918: special variant only used in listbox operations
+EXTERN void atom_string_s(const t_atom *a, char *buf, unsigned int bufsize);
 
 /* ------------------  binbufs --------------- */
 
@@ -424,6 +431,10 @@ EXTERN int binbuf_write(t_binbuf *x, char *filename, char *dir,
 EXTERN void binbuf_evalfile(t_symbol *name, t_symbol *dir);
 EXTERN t_symbol *binbuf_realizedollsym(t_symbol *s, int ac, t_atom *av,
     int tonew);
+
+// ag 20240918: special variants only used in listbox operations
+EXTERN void binbuf_text_s(t_binbuf *x, char *text, size_t size);
+EXTERN void binbuf_gettext_s(t_binbuf *x, char **bufp, int *lengthp);
 
 /* ------------------  clocks --------------- */
 

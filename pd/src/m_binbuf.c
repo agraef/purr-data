@@ -220,6 +220,123 @@ void binbuf_text(t_binbuf *x, char *text, size_t size)
     x->b_n = natom;
 }
 
+// listbox variant: This is the same as binbuf_text, but assumes no quoting
+// and uses ALIST_DELIM instead of whitespace to separate elements.
+void binbuf_text_s(t_binbuf *x, char *text, size_t size)
+{
+    //fprintf(stderr, "current text: %.*s\n", size, text);
+    char buf[MAXPDSTRING+1], *bufp, *ebuf = buf+MAXPDSTRING;
+    const char *textp = text, *etext = text+size;
+    t_atom *ap;
+    int nalloc = 16, natom = 0;
+    t_freebytes(x->b_vec, x->b_n * sizeof(*x->b_vec));
+    x->b_vec = t_getbytes(nalloc * sizeof(*x->b_vec));
+    ap = x->b_vec;
+    x->b_n = 0;
+    while (1)
+    {
+        //int type;
+            /* skip leading space */
+        while (textp != etext && *textp == ALIST_DELIM) textp++;
+        if (textp == etext) break;
+        else
+        {
+            char c;
+            int floatstate = 0;
+            bufp = buf;
+            do
+            {
+                c = *bufp++ = *textp++;
+
+                if (floatstate >= 0)
+                {
+                    int digit = (c >= '0' && c <= '9'),
+                        dot = (c == '.'), minus = (c == '-'),
+                        plusminus = (minus || (c == '+')),
+                        expon = (c == 'e' || c == 'E');
+                    if (floatstate == 0)    /* beginning */
+                    {
+                        if (minus) floatstate = 1;
+                        else if (digit) floatstate = 2;
+                        else if (dot) floatstate = 3;
+                        else floatstate = -1;
+                    }
+                    else if (floatstate == 1)   /* got minus */
+                    {
+                        if (digit) floatstate = 2;
+                        else if (dot) floatstate = 3;
+                        else floatstate = -1;
+                    }
+                    else if (floatstate == 2)   /* got digits */
+                    {
+                        if (dot) floatstate = 4;
+                        else if (expon) floatstate = 6;
+                        else if (!digit) floatstate = -1;
+                    }
+                    else if (floatstate == 3)   /* got '.' without digits */
+                    {
+                        if (digit) floatstate = 5;
+                        else floatstate = -1;
+                    }
+                    else if (floatstate == 4)   /* got '.' after digits */
+                    {
+                        if (digit) floatstate = 5;
+                        else if (expon) floatstate = 6;
+                        else floatstate = -1;
+                    }
+                    else if (floatstate == 5)   /* got digits after . */
+                    {
+                        if (expon) floatstate = 6;
+                        else if (!digit) floatstate = -1;
+                    }
+                    else if (floatstate == 6)   /* got 'e' */
+                    {
+                        if (plusminus) floatstate = 7;
+                        else if (digit) floatstate = 8;
+                        else floatstate = -1;
+                    }
+                    else if (floatstate == 7)   /* got plus or minus */
+                    {
+                        if (digit) floatstate = 8;
+                        else floatstate = -1;
+                    }
+                    else if (floatstate == 8)   /* got digits */
+                    {
+                        if (!digit) floatstate = -1;
+                    }
+                }
+            }
+            while (textp != etext && bufp != ebuf && *textp != ALIST_DELIM);
+            *bufp = 0;
+#if 0
+            post("binbuf_text: buf %s", buf);
+#endif
+            if (floatstate == 2 || floatstate == 4 || floatstate == 5 ||
+                floatstate == 8)
+                    SETFLOAT(ap, atof(buf));
+                /* LATER try to figure out how to mix "$" and "\$" correctly;
+                here, the backslashes were already stripped so we assume all
+                "$" chars are real dollars.  In fact, we only know at least one
+                was. */
+            else SETSYMBOL(ap, gensym(buf));
+        }
+        ap++;
+        natom++;
+        if (natom == nalloc)
+        {
+            x->b_vec = t_resizebytes(x->b_vec, nalloc * sizeof(*x->b_vec),
+                nalloc * (2*sizeof(*x->b_vec)));
+            nalloc = nalloc * 2;
+            ap = x->b_vec + natom;
+        }
+        if (textp == etext) break;
+    }
+    /* reallocate the vector to exactly the right size */
+    x->b_vec = t_resizebytes(x->b_vec, nalloc * sizeof(*x->b_vec),
+        natom * sizeof(*x->b_vec));
+    x->b_n = natom;
+}
+
     /* convert a binbuf to text; no null termination. */
 void binbuf_gettext(t_binbuf *x, char **bufp, int *lengthp)
 {
@@ -232,33 +349,61 @@ void binbuf_gettext(t_binbuf *x, char **bufp, int *lengthp)
 
     for (ap = x->b_vec, indx = x->b_n; indx--; ap++)
     {
-        //fprintf(stderr,"=====\n");
         if ((ap->a_type == A_SEMI || ap->a_type == A_COMMA) &&
                 length && buf[length-1] == ' ') 
         {
-            //fprintf(stderr, "subtracting length\n");
             length--;
         }
         atom_string(ap, string, MAXPDSTRING);
         newlength = length + strlen(string) + 1;
         if (!(newbuf = resizebytes(buf, length, newlength))) break;
         buf = newbuf;
-        //fprintf(stderr,"string=<%s> buf=<%s> length=%d\n", string, buf, length);
         strcpy(buf + length, string);
         length = newlength;
         if (ap->a_type == A_SEMI) buf[length-1] = '\n';
         else buf[length-1] = ' ';
-        //if (ap->a_type == A_COMMA) length--;
     }
     if (length && buf[length-1] == ' ')
     {
-        if (newbuf = t_resizebytes(buf, length, length-1))
+        if ((newbuf = t_resizebytes(buf, length, length-1)))
         {
             buf = newbuf;
             length--;
         }
     }
-    //fprintf(stderr,"binbuf_gettext: <%s>\n", buf);
+    *bufp = buf;
+    *lengthp = length;
+}
+
+// listbox variant: This is the same as binbuf_gettext, but bypasses
+// auto-quoting and uses ALIST_DELIM to separate elements.
+void binbuf_gettext_s(t_binbuf *x, char **bufp, int *lengthp)
+{
+    char *buf = getbytes(0), *newbuf;
+    int length = 0;
+    char string[MAXPDSTRING];
+    t_atom *ap;
+    int indx;
+    int newlength;
+
+    for (ap = x->b_vec, indx = x->b_n; indx--; ap++)
+    {
+        atom_string_s(ap, string, MAXPDSTRING);
+        newlength = length + strlen(string) + 1;
+        if (!(newbuf = resizebytes(buf, length, newlength))) break;
+        buf = newbuf;
+        strcpy(buf + length, string);
+        length = newlength;
+        buf[length-1] = ALIST_DELIM;
+    }
+    if (length && buf[length-1] == ALIST_DELIM)
+    {
+        if ((newbuf = t_resizebytes(buf, length, length-1)))
+        {
+            buf = newbuf;
+            length--;
+        }
+    }
     *bufp = buf;
     *lengthp = length;
 }

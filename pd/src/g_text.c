@@ -922,20 +922,10 @@ static t_symbol *gatom_unescapit(t_symbol *s)
     else return (iemgui_raute2dollar(s));
 }
 
-static int quote_spaces(int flag)
-{
-    extern int atom_quote_spaces;
-    int save_flag = atom_quote_spaces;
-    atom_quote_spaces = flag;
-    return save_flag;
-}
-
 static void gatom_redraw(t_gobj *client, t_glist *glist)
 {
     t_gatom *x = (t_gatom *)client;
-    int save_flag = quote_spaces(x->a_flavor != A_LIST);
     glist_retext(x->a_glist, &x->a_text);
-    quote_spaces(save_flag);
 }
 
     /* recolor option offers    0 ignore recolor
@@ -977,11 +967,10 @@ static void gatom_set(t_gatom *x, t_symbol *s, int argc, t_atom *argv)
         int size;
         binbuf_add(b, argc, argv);
         // our "listbox" is really just a symbol gatom masquerading as a list
-        // gatom, so internally we store the list as a symbol -- our code can't
-        // really deal with proper list gatoms right now
-        int save_flag = quote_spaces(0);
-        binbuf_gettext(b, &buf, &size);
-        quote_spaces(save_flag);
+        // gatom, so internally we store the list as a symbol, with elements
+        // delimited by ALIST_DELIM (a non-printing character which shouldn't
+        // normally occur in symbols)
+        binbuf_gettext_s(b, &buf, &size);
         buf = (char *)t_resizebytes(buf, size, size+1);
         buf[size] = 0;
         x->a_atom.a_w.w_symbol = gensym(buf);
@@ -1047,7 +1036,7 @@ static void gatom_bang(t_gatom *x)
         // proper list again
         t_binbuf *b = binbuf_new();
         char *buf = x->a_atom.a_w.w_symbol->s_name;
-        binbuf_text(b, buf, strlen(buf));
+        binbuf_text_s(b, buf, strlen(buf));
         int argc = binbuf_getnatom(b);
         t_atom *argv = binbuf_getvec(b);
         for (int i = 0; i < argc; i++)
@@ -1124,18 +1113,32 @@ static char *clicked_number(t_gatom *a, double *d, int *p, int *q)
 {
     static char token[MAXPDSTRING];
     if (a->a_flavor == A_LIST) {
-        char *buf = a->a_atom.a_w.w_symbol->s_name;
+        char buf[MAXPDSTRING];
+        // make sure to get the fully expanded atom representation here, since
+        // number positions may be different from the symbol itself
+        atom_string(&a->a_atom, buf, MAXPDSTRING);
         int size = strlen(buf), pos = a->a_click_pos;
         if (pos <= size) {
             // find the token preceding pos
-            while (pos > 0 && !isspace(buf[pos-1])) pos--;
+            while (pos > 0 &&
+                   (!isspace(buf[pos-1]) ||
+                    // check for and ignore escaped whitespace
+                    (pos > 1 && buf[pos-2] == '\\'))) pos--;
             int endpos = pos;
-            while (endpos < size && !isspace(buf[endpos])) endpos++;
+            while (endpos < size &&
+                   (!isspace(buf[endpos]) ||
+                    // check for and ignore escaped whitespace
+                    (endpos > 0 && buf[endpos-1] == '\\'))) endpos++;
             if (endpos > pos) {
                 strncpy(token, buf+pos, endpos-pos);
                 token[endpos-pos] = 0;
                 int n;
                 if (sscanf(token, "%lg%n", d, &n) == 1 && n == endpos-pos) {
+                    // We need to account for backslash quoting in order to
+                    // translate the token position back to the original
+                    // unquoted symbol.
+                    for (char *s = buf; *s; s++)
+                        if (*s == '\\') pos--, endpos--;
                     *p = pos; *q = endpos;
                     return token;
                 }
@@ -1208,7 +1211,7 @@ static void gatom_motion(void *z, t_floatarg dx, t_floatarg dy)
         {
             double nval2 = float_increment(nval, dy);
             if (nval2 != nval)
-              change_clicked(x, nval2, p, q, 1);
+                change_clicked(x, nval2, p, q, 1);
         }
     }
     else if (x->a_atom.a_type == A_FLOAT)
@@ -1235,6 +1238,7 @@ static void gatom_key(void *z, t_floatarg f)
     int len = strlen(x->a_buf);
     t_atom at;
     char sbuf[ATOMBUFSIZE + 4];
+    int escaped = 0;
     if (len > 0 && x->a_buf[len-1] == '\\') {
         // ag 20240916: Get rid of a trailing backslash. We don't keep the
         // backslash itself in the buffer after it has served its purpose of
@@ -1243,6 +1247,7 @@ static void gatom_key(void *z, t_floatarg f)
         // needed, when the gatom gets sent to the GUI, which happens in
         // rtext_retext().
         x->a_buf[--len] = 0;
+        escaped = 1;
     }
     if (c == 0)
     {
@@ -1312,6 +1317,12 @@ static void gatom_key(void *z, t_floatarg f)
     }
     else if (len < (ATOMBUFSIZE-1))
     {
+        if (c == ' ' && x->a_flavor == A_LIST && !escaped) {
+            // special listbox delimiter, this will be shown as ' '
+            x->a_buf[len++] = ALIST_DELIM;
+            x->a_buf[len] = 0;
+            goto redraw;
+        }
             /* for numbers, only let reasonable characters through */
         if ((x->a_atom.a_type == A_SYMBOL) ||
             (c >= '0' && c <= '9' || c == '.' || c == '-'
@@ -1343,9 +1354,7 @@ redraw:
     SETSYMBOL(&at, gensym(sbuf));
     binbuf_clear(x->a_text.te_binbuf);
     binbuf_add(x->a_text.te_binbuf, 1, &at);
-    int save_flag = quote_spaces(x->a_flavor != A_LIST);
     glist_retext(x->a_glist, &x->a_text);
-    quote_spaces(save_flag);
 }
 
 // Ico's special keyboard bindings for gatoms. This was originally mangled up
@@ -1446,9 +1455,7 @@ static void gatom_click(t_gatom *x,
             SETSYMBOL(&at, gensym(sbuf));
             binbuf_clear(x->a_text.te_binbuf);
             binbuf_add(x->a_text.te_binbuf, 1, &at);
-            int save_flag = quote_spaces(x->a_flavor != A_LIST);
             glist_retext(x->a_glist, &x->a_text);
-            quote_spaces(save_flag);
         }
         glist_grabx(x->a_glist, &x->a_text.te_g, gatom_motion, gatom_key,
                     (t_glistkeynameafn)gatom_keyhandler, xpos, ypos);
@@ -1518,9 +1525,7 @@ static void gatom_param(t_gatom *x, t_symbol *sel, int argc, t_atom *argv)
             canvas_realizedollar(x->a_glist, x->a_symfrom));
     x->a_symto = symto;
     x->a_expanded_to = canvas_realizedollar(x->a_glist, x->a_symto);
-    int save_flag = quote_spaces(x->a_flavor != A_LIST);
     gobj_vis(&x->a_text.te_g, x->a_glist, 1);
-    quote_spaces(save_flag);
     gobj_select(&x->a_text.te_g, x->a_glist, 1);
     canvas_dirty(x->a_glist, 1);
     canvas_getscroll(x->a_glist);
@@ -1568,9 +1573,7 @@ static void gatom_vis(t_gobj *z, t_glist *glist, int vis)
 {
     //post("gatom_vis");
     t_gatom *x = (t_gatom*)z;
-    int save_flag = quote_spaces(x->a_flavor != A_LIST);
     text_vis(z, glist, vis);
-    quote_spaces(save_flag);
     if (*x->a_label->s_name)
     {
         if (vis)
