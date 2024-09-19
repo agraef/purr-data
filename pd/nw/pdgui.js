@@ -3803,6 +3803,8 @@ function text_to_tspans(cid, svg_text, text) {
             dy: i == 0 ? 0 : text_line_height_kludge(+fontsize, "gui") + "px",
             x: 0
         });
+        // tspan needs at least one char so that empty lines are preserved
+        if (lines[i] == "") lines[i] = " ";
         // find a way to abstract away the canvas array and the DOM here
         text_node = patchwin[cid].window.document
                     .createTextNode(lines[i]);
@@ -7697,6 +7699,19 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
     gui(cid).get_nw_window(function(nw_win) {
         zoom = nw_win.zoomLevel;
     });
+    if (type === "obj") {
+        // ag: Replace \v -> \n in visually formatted comments so that we
+        // render them as newlines when editing a comment. We also remove any
+        // \n immediately preceding a \v, which may have been added
+        // automatically by the binbuf unparser after a semicolon.
+
+        // NOTE: \v (a.k.a. vertical tab a.k.a. ^K a.k.a. ASCII code 11) will
+        // only ever occur in comments when using explicit line breaks. These
+        // *will* end up in the patch file, and render as funny-looking glyphs
+        // in vanilla, so you better avoid explicit line breaks if you want to
+        // keep your patches "vanilla-clean".
+        text = text.replace(/\n?\v/g, "\n");
+    }
     if (state !== 0) {
         // Make sure we're in editmode
         canvas_set_editmode(cid, 1);

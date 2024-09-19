@@ -3173,7 +3173,7 @@ static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     }
     // if we are part of a restore message
     // of a subpatch in the form "#X restore..., f 123456789+;"
-    if (!x->gl_list || !strcmp(last_typedmess->s_name, "restore"))
+    if (!x->gl_list && !strcmp(last_typedmess->s_name, "restore"))
     {
         if (x->gl_owner && !x->gl_isgraph)
         {
@@ -3193,7 +3193,7 @@ static void canvas_f(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     }
     else
     {
-        for (g = x->gl_list; g2 = g->g_next; g = g2)
+        for (g = x->gl_list; g && (g2 = g->g_next); g = g2)
             ;
         //fprintf(stderr,"same canvas .x%zx .x%zx\n", (t_uint)g, (t_uint)x);
     }

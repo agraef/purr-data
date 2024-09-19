@@ -2606,33 +2606,6 @@ void text_save(t_gobj *z, t_binbuf *b)
     }
     else    
     {
-        //fprintf(stderr,"comment\n");
-        int natom = binbuf_getnatom(x->te_binbuf);
-        t_atom *a = binbuf_getvec(x->te_binbuf);
-        int i;
-        for (i = 0; i < natom; i++)
-        {
-            t_symbol *s;
-            if (a[i].a_type == A_SYMBOL)
-            {
-                //fprintf(stderr,"%d is a symbol\n", i);
-                s = a[i].a_w.w_symbol;
-                if (s != NULL && s->s_name != NULL)
-                {
-                    //fprintf(stderr,"s != NULL\n");
-                    char *c;
-                    for(c = s->s_name; c != NULL && *c != '\0'; c++)
-                    {
-                        if (*c == '\n')
-                        {
-                            *c = '\v';
-                            //fprintf(stderr,"n->v\n");
-                        }
-                    }
-                }
-            }
-        }
-
         binbuf_addv(b, "ssii", gensym("#X"), gensym("text"),
             (int)x->te_xpix, (int)x->te_ypix);
         binbuf_addbinbuf(b, x->te_binbuf);
@@ -3143,18 +3116,6 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
     }
     else
     { // T_MESSAGE, T_TEXT, T_ATOM
-        if (buf && x->te_type == T_TEXT)
-        {
-            char *c;
-            int n;
-            for(c = buf, n = 0; n < bufsize; n++, c++)
-            {
-                if(*c == '\n')
-                {
-                    *c = '\v';
-                }
-            }
-        }
         binbuf_gettext(x->te_binbuf, &c1, &i1);
         t_binbuf *b = binbuf_new();
         binbuf_text(b, buf, bufsize);

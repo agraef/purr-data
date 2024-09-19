@@ -313,7 +313,10 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
             nlines++;
         }
         // append new line in case we end our input with an \n
-        if (x_bufsize_c > 0 && (x->x_buf[x_bufsize_c - 1] == '\n' || x->x_buf[x_bufsize_c - 1] == '\v'))
+        // suppressed at the end of a comment (backport from pd-l2ork)
+        int iscomment = pd_class(&x->x_text->te_pd) == text_class &&
+            x->x_text->te_type == T_TEXT;
+        if (!iscomment && x_bufsize_c > 0 && (x->x_buf[x->x_bufsize - 1] == '\n' || x->x_buf[x->x_bufsize - 1] == '\v'))
         {
             nlines++;
             tempbuf[outchars_b++] = '\n';
@@ -357,7 +360,6 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
             rtext_senditup(x, 0, &newwidth, &newheight, &newindex);
             if (newwidth/fontwidth != widthwas)
                 x->x_text->te_width = widthwas;
-            else x->x_text->te_width = 0;
         }
         if (action == SEND_FIRST)
         {

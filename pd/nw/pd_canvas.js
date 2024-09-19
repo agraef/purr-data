@@ -233,7 +233,9 @@ var canvas_events = (function() {
             if (msg.length <= chunk_max) {
                 out_array.push([msg]);
             } else {
-                in_array = msg.split(/[\s\n]/); // split on newlines or spaces
+                // ag: make sure to exclude \v below since we need these as
+                // newline substitutes which survive binbuf treatment
+                in_array = msg.split(/[ \t\n]/); // split on newlines or spaces
                 while (in_array.length) {
                     left = in_array.slice(); // make a copy of in_array
                     if (left.toString().length > chunk_max) {
@@ -1012,18 +1014,32 @@ var canvas_events = (function() {
                 // here.  I want those newlines: although that isn't
                 // standard in Pd-Vanilla, Pd-l2ork uses and preserves
                 // them inside comments
-                var fudi_msg = text_to_fudi(textbox().innerText),
-                    fudi_array = string_to_array_of_chunks(fudi_msg),
-                    i;
-                for (i = 0; i < fudi_array.length; i++) {
-                    pdgui.pdsend(name, "obj_addtobuf", fudi_array[i].join(" "));
+                var msg = textbox().innerText;
+                // GB: find obj class and remove word "selected"
+                let obj = document
+                    .getElementById(textbox().getAttribute("tag")+"gobj");
+                let obj_class = obj.getAttribute("class")
+                    .toString().split(" ").slice(0,1).toString();
+                if (obj_class == "comment") {
+                    // ag: Visual comment formatting: We need to replace \n
+                    // with \v to protect the newlines from the binbuf
+                    // routines on the C side -- for them, \n is just
+                    // whitespace which they eat for breakfast. However, we
+                    // also need to preserve comma and semicolon atoms which
+                    // get special treatment from the binfuf parser.
+                    msg = msg.replace(/\n/g, "\v");
+                    msg = msg.replace(/,[ \t]*\v/g, ", \v");
+                    msg = msg.replace(/;[ \t]*\v/g, "; ");
+                }
+                var fudi_msg = text_to_fudi(msg),
+                    fudi_array = string_to_array_of_chunks(fudi_msg);
+                for (var i = 0; i < fudi_array.length; i++) {
+                    var chunk = fudi_array[i].join(" ");
+                    pdgui.pdsend(name, "obj_addtobuf", chunk);
                 }
                 pdgui.pdsend(name, "obj_buftotext");
 
                 // GB: index created object
-                let obj = document.getElementById(textbox().getAttribute("tag")+"gobj");
-                // find obj class and remove word "selected"
-                let obj_class = obj.getAttribute("class").toString().split(" ").slice(0,1).toString();
                 if (pdgui.autocomplete_enabled()) {
                     pdgui.index_obj_completion(obj_class, fudi_msg);
                     // GB: save every 50 changes, so that we don't loose too
