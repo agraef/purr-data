@@ -1,4 +1,4 @@
-#N canvas 428 58 555 749 10;
+#N canvas 429 58 555 747 10;
 #X obj 0 725 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 #dcdcdc #404040 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header gatom 3 12 0 18
@@ -46,22 +46,22 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X floatatom 311 9 5 0 0 0 - - -, f 5;
 #X floatatom 25 58 0 0 0 0 - - -;
 #X floatatom 25 96 0 0 0 0 - - -;
-#X msg 469 76 set 45;
-#X floatatom 469 104 0 0 0 0 - - -;
+#X msg 465 76 set 45;
+#X floatatom 465 104 0 0 0 0 - - -;
 #X text 98 319 bang;
 #X text 98 339 float;
-#X text 98 369 list;
-#X text 98 399 symbol;
+#X text 98 397 list;
+#X text 98 370 symbol;
 #X text 98 429 set;
-#N canvas 100 96 430 514 Number_box_properties 0;
+#N canvas 102 96 441 656 Number_box_properties 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 #c4dcdc #000000 0;
 #X floatatom 70 102 12 0 0 0 - - -, f 12;
 #X floatatom 71 223 1 0 0 0 - - -, f 1;
 #X text 50 2 Properties for gatom;
-#X text 20 38 Right click on a number box and choose "Properties" to
-change the following:;
-#X text 19 69 width;
+#X text 13 38 Right click on a number box and choose "Properties" to
+change the following:, f 55;
+#X text 12 69 width;
 #X text 69 69 - width of the number box (in characters). By default
 the width is 5 characters.;
 #X text 148 102 width = 12 characters;
@@ -76,7 +76,7 @@ TIME. In a production patch \, you'll want to set a specific width.
 #X text 69 240 A width of one gives a clickable toggle switch a la
 Max.;
 #X text 88 223 width = 1 character: toggle between 0 and 1;
-#X text 19 260 limits;
+#X text 12 260 limits;
 #X floatatom 71 282 5 0 127 0 - - -, f 5;
 #X text 109 281 numbers between 0 and 127;
 #X text 69 260 - set lower and upper limits for scrolling the number
@@ -84,12 +84,12 @@ box;
 #X text 68 300 This only affects scrolling- you can still send values
 to the number box that are outside these limits.;
 #X floatatom 71 353 5 0 127 1 my_number_box - -, f 5;
-#X text 19 331 label;
+#X text 12 331 label;
 #X text 69 331 - give the number box a visible name;
 #X text 68 371 Use the radio buttons to reposition the label to the
 left \, right \, top \, or bottom of the number box. Spaces in the
 label will automatically be converted to underscores.;
-#X text 19 413 messages;
+#X text 12 413 messages;
 #X text 69 413 - nonlocal send and receive;
 #X floatatom 193 532 5 0 0 2 Number_box_7 gatom-help-rcv gatom-help-snd
 , f 5;
@@ -126,40 +126,25 @@ cannot change the value by clicking and dragging.;
 #X text 96 174 The symbol box is called "Symbol" in the "Put" menu.
 ;
 #X text 168 319 - sends the current value to the outlet.;
-#X msg 469 156 set foo;
-#X symbolatom 469 180 10 0 0 0 - - -, f 10;
-#X text 168 399 - symbol box only: an incoming symbol is displayed
-and output. (Number box will display and output zero.);
-#X text 168 339 - number box only: sets the current value and outputs
-it. (Symbol box will display 'float' and output 'symbol float'.);
-#X text 168 494 - number box only: outputs a float for each message
-it receives (except set).;
+#X msg 465 156 set foo;
+#X symbolatom 465 180 10 0 0 0 - - -, f 10;
 #X text 98 524 symbol;
-#X text 168 524 - symbol box only: outputs a symbol message for each
-message it receives (except set).;
 #X text 100 667 Control-clicking (or command-clicking on a mac) toggles
 the value between 0 and the last nonzero value.;
 #X floatatom 59 675 5 0 0 0 - - -, f 5;
 #X text 61 118 The number box is called "Number" in the "Put" menu.
 ;
-#X text 67 277 To enter data simply click a number box or symbol box
-and begin typing. Then click "Enter" to finish and output it.;
-#X text 168 371 - list box only: an incoming list \, symbol \, or number
-is displayed and output.;
 #X text 168 429 - displays the incoming value without outputting it
 (e.g. \, "set 23" will cause a number box to display 23). Sending a
 set message without a value does not change the current value of a
 number box or symbol box \, but clears a listbox.;
 #X text 98 558 list;
-#X text 168 558 - list box only: outputs a list \, symbol \, or number
-message for each message it receives (except set). Outputs bang for
-the empty list.;
 #X text 96 244 The list box is called "Listbox" in the "Put" menu.
 ;
 #X listbox 25 208 10 0 0 0 - - -, f 10;
 #X listbox 25 244 10 0 0 0 - - -, f 10;
-#X listbox 469 251 10 0 0 0 - - -, f 10;
-#X msg 469 226 set foo 1 2 3;
+#X listbox 465 251 10 0 0 0 - - -, f 10;
+#X msg 465 226 set foo 1 2 3;
 #X text 11 23 atom (number \, symbol \, and list boxes);
 #X listbox 420 9 20 0 0 0 - - -, f 20;
 #X text 97 204 A list box allows you to display a list \, symbol \,
@@ -168,7 +153,7 @@ change the value of a number by clicking and dragging.;
 #X text 100 633 You can shift-click a number box (or a number in a
 listbox) and drag to change the number by hundredths instead of ones.
 ;
-#N canvas 360 174 656 446 More_about_symbol_and_listbox 0;
+#N canvas 362 174 656 446 More_about_symbol_and_listbox 0;
 #X obj 1 1 cnv 15 650 20 empty \$0-pddp.cnv.subheading empty 3 12 0
 14 #c4dcdc #000000 0;
 #X symbolatom 8 3 10 0 0 0 - - -, f 10;
@@ -218,6 +203,11 @@ loadbang and a set message \, or by sending data to a receiver (see
 below)., f 46;
 #X msg 83 380 \; symbox symbol bar \; listbox 4711;
 #X text 210 2 More about symbols and listboxes;
+#X text 340 186 Click on a symbol or list box to type in a new value.
+Shift-click retains the existing value. Backspace deletes the rightmost
+character \, Shift+Backspace the entire value. Enter finishes data
+entry and outputs the value. Clicking on the canvas while editing aborts
+the edit and reverts to the previous value., f 46;
 #X connect 3 0 22 0;
 #X connect 4 0 21 0;
 #X connect 5 0 4 0;
@@ -243,9 +233,25 @@ below)., f 46;
 #X connect 32 0 33 0;
 #X connect 34 0 35 0;
 #X restore 282 701 pd More_about_symbol_and_listbox;
+#X text 67 277 To enter data simply click a number \, symbol \, or
+list box and begin typing. Then click "Enter" to finish and output
+it.;
+#X text 168 339 - number box: sets the current value and outputs it.
+(Symbol box will display 'float' and output 'symbol float'.);
+#X text 168 399 - list box: an incoming list \, symbol \, or number
+is displayed and output.;
+#X text 168 370 - symbol box: an incoming symbol is displayed and output.
+(Number box will display and output zero.);
+#X text 168 494 - number box: outputs a float for each message it receives
+(except set).;
+#X text 168 524 - symbol box: outputs a symbol message for each message
+it receives (except set).;
+#X text 168 558 - list box: outputs a list \, symbol \, or number message
+for each message it receives (except set). Outputs bang for the empty
+list.;
 #X connect 13 0 14 0;
 #X connect 15 0 16 0;
 #X connect 24 0 26 0;
 #X connect 31 0 32 0;
-#X connect 47 0 48 0;
-#X connect 50 0 49 0;
+#X connect 40 0 41 0;
+#X connect 43 0 42 0;
