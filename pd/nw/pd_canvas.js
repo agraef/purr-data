@@ -203,7 +203,7 @@ var canvas_events = (function() {
                 return prev.concat(curr)
             }).join(" ");
         },
-        text_to_fudi = function(text) {
+        text_to_fudi = function(text, obj_class) {
             text = text.trim();
             // special case for draw path d="arbitrary path string" ...
             if (text.search(/^draw\s+path\s+d\s*=\s*"/) !== -1) {
@@ -215,7 +215,11 @@ var canvas_events = (function() {
             // escape special $@ sign
             text = text.replace(/(\$@)/g, "\\$@");
 
-            // escape "," and ";"
+            if (obj_class == "comment") {
+                // don't ask, backslash escapes in comments are just insane
+                text = text.replace(/\\(,|;|\\)/g, "\\\\\\$1");
+            }
+            // escape "," and ";" (if not already escaped)
             text = text.replace(/(?<!\\)(,|;)/g, " \\$1 ");
 
             // filter consecutive ascii32
@@ -1031,7 +1035,7 @@ var canvas_events = (function() {
                     msg = msg.replace(/,[ \t]*\v/g, ", \v");
                     msg = msg.replace(/;[ \t]*\v/g, "; ");
                 }
-                var fudi_msg = text_to_fudi(msg),
+                var fudi_msg = text_to_fudi(msg, obj_class),
                     fudi_array = string_to_array_of_chunks(fudi_msg);
                 for (var i = 0; i < fudi_array.length; i++) {
                     var chunk = fudi_array[i].join(" ");

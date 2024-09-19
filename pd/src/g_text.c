@@ -3125,7 +3125,6 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
             canvas_undo_add(glist_getcanvas(glist), 10, "typing",
                 (void *)canvas_undo_set_recreate(glist_getcanvas(glist),
                 &x->te_g, pos));
-            //fprintf(stderr,"blah |%s| |%s|\n", c1, buf);
         }
         binbuf_text(x->te_binbuf, buf, bufsize);
         binbuf_free(b);
