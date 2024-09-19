@@ -1315,7 +1315,7 @@ static void gatom_key(void *z, t_floatarg f)
            we're commenting the following out */
         //glist_grab(x->a_glist, 0, 0, 0, 0, 0);
     }
-    else if (len < (ATOMBUFSIZE-1))
+    else if (len < (ATOMBUFSIZE-1) && c != 127) // 127 == Delete key, ignored
     {
         if (c == ' ' && x->a_flavor == A_LIST && !escaped) {
             // special listbox delimiter, this will be shown as ' '
