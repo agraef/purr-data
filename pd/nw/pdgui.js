@@ -1746,10 +1746,6 @@ var duplicate = 0;
 
 function do_post(object_id, selector, string, type, loglevel) {
     var my_p, my_a, span, text, sel_span, printout, dup_span;
-    // ag 20240909: We get escapes for some characters (\ { } ;) in the string
-    // argument directly from s_print.c. Probably a remnant from the Tcl/Tk
-    // days, but I won't touch that C code, so we must unescape those here.
-    string = string.replace(/\\([\\{};])/g, "$1");
     current_string = current_string + string;
     my_p = pd_window.document.getElementById("p1");
     // We can get posts from Pd that are build incrementally, with the final
