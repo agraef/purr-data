@@ -17,51 +17,6 @@ t_printhook sys_printhook;
 t_printhook sys_printhook_error;
 int sys_printtostderr;
 
-/* escape characters for tcl/tk */
-static char* strnescape(char *dest, const char *src, size_t len)
-{
-    int ptin = 0;
-    unsigned ptout = 0;
-    for(; ptout < len; ptin++, ptout++)
-    {
-        int c = src[ptin];
-        if (c == '\\' || c == '{' || c == '}' || c == ';')
-            dest[ptout++] = '\\';
-        if (ptout < len - 1)
-            dest[ptout] = c;
-        else {
-            // ag 20240909: prevent buffer overflow, roll back and bail out.
-            // NOTE: We need to reserve an extra character for any trailing \n
-            // here (see below), and we don't want to keep any partial escapes
-            // hanging aroung, so we bail out a bit early for ptout < len - 1
-            // already (see above).
-            dest[ptout-1] = 0;
-            break;
-        }
-        if (c==0) break;
-    }
-
-    if (src[ptin] != 0) {
-        // ag 20240909: The output is truncated, make sure that we save any
-        // trailing newline at least, in order to prevent garbled messages.
-        int c;
-        while (src[ptin] != 0) c = src[ptin++];
-        if (c == '\n') {
-            // we can safely assert len>1 here
-            dest[len-2] = c;
-            // terminating 0 will be added below
-            ptout = len-1;
-        }
-    }
-
-    if(ptout < len)
-        dest[ptout]=0;
-    else
-        dest[len-1]=0;
-
-    return dest;
-}
-
 static char* strnpointerid(char *dest, const void *pointer, size_t len)
 {
     *dest=0;
@@ -70,18 +25,14 @@ static char* strnpointerid(char *dest, const void *pointer, size_t len)
     return dest;
 }
 
-// ag 20240909: Let's make this buffer big enough so that strnescape() is less
-// likely to run out of buffer space.
-#define UPBUFSZ (2*MAXPDSTRING)
-
 static void doerror(const void *object, const char *s)
 {
-    char upbuf[UPBUFSZ];
-    upbuf[UPBUFSZ-1]=0;
+    char upbuf[MAXPDSTRING];
+    upbuf[MAXPDSTRING-1]=0;
 
     if (sys_printhook || sys_printhook_error)
     {
-        snprintf(upbuf, UPBUFSZ-1, "error: %s", s);
+        snprintf(upbuf, MAXPDSTRING-1, "error: %s", s);
         if (sys_printhook_error)
             (*sys_printhook_error)(upbuf);
         if (sys_printhook)
@@ -92,13 +43,8 @@ static void doerror(const void *object, const char *s)
     else
     {
         char obuf[MAXPDSTRING];
-        //sys_vgui("pdtk_posterror {%s} 1 {%s}\n",
-        //    strnpointerid(obuf, object, MAXPDSTRING),
-        //    strnescape(upbuf, s, UPBUFSZ));
         gui_vmess("gui_post_error", "sis",
-            strnpointerid(obuf, object, MAXPDSTRING),
-            1,
-            strnescape(upbuf, s, UPBUFSZ));
+            strnpointerid(obuf, object, MAXPDSTRING), 1, s);
     }
 }
 
@@ -107,20 +53,20 @@ static void dologpost(const void *object, const int level, const char *s)
     /* 1. s is at most MAXPDSTRING, but we're prepending a stupid header
        below. So for sanity, we first overallocate here to ensure the stupid
        header doesn't end up overflowing the buffer. */
-    char upbuf[UPBUFSZ];
+    char upbuf[MAXPDSTRING];
 
     // what about sys_printhook_verbose ?
     if (sys_printhook) 
     {
         /* 2. The "n" in snprintf stands for "evil": we have to subtract one
            from total size so the null doesn't get truncated */ 
-        snprintf(upbuf, UPBUFSZ - 1, "verbose(%d): %s", level, s);
+        snprintf(upbuf, MAXPDSTRING - 1, "verbose(%d): %s", level, s);
         /* 3. Finally, we add a null at UPBUFSZ-1 so that we end up with
            a string that fits inside MAXPDSTRING for use with t_symbol, etc.
 
            If anyone knows how I was *supposed* to do this safely within the
            constraints of C's stupid stdlib, please teach me... */
-        upbuf[UPBUFSZ-1]=0;
+        upbuf[MAXPDSTRING-1]=0;
         (*sys_printhook)(upbuf);
     }
     else if (sys_printtostderr) 
@@ -129,13 +75,7 @@ static void dologpost(const void *object, const int level, const char *s)
     }
     else
     {
-        //sys_vgui("::pdwindow::logpost {%s} %d {%s}\n", 
-                 //strnpointerid(obuf, object, MAXPDSTRING), 
-                 //level, strnescape(upbuf, s, UPBUFSZ));
-        //sys_vgui("pdtk_post {%s}\n", 
-        //         strnescape(upbuf, s, UPBUFSZ));
-        gui_vmess("gui_post", "s",
-                 strnescape(upbuf, s, UPBUFSZ));
+        gui_vmess("gui_post", "s", s);
     }
 }
 
@@ -147,10 +87,7 @@ static void dopost(const char *s)
         fprintf(stderr, "%s", s);
     else
     {
-        char upbuf[UPBUFSZ];
-//        sys_vgui("pdtk_post {%s}\n", upbuf);
-        gui_vmess("gui_post", "s",
-                  strnescape(upbuf, s, UPBUFSZ));
+        gui_vmess("gui_post", "s", s);
     }
 }
 
