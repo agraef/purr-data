@@ -717,8 +717,23 @@ var canvas_events = (function() {
             },
             text_paste: function(evt) {
                 evt.preventDefault();
-                document.execCommand("insertText", false,
-                    evt.clipboardData.getData("text"));
+                var text = evt.clipboardData.getData("text");
+                // ag: We need to insert each line individually here, with
+                // line breaks in between. Otherwise the behavior of
+                // "insertText" is to insert a *paragraph* break between
+                // lines, so that we get two newlines for each newline in the
+                // input. (Who thought that this was a good design? There's
+                // probably a reason why this WebKit API is deprecated, but
+                // since there's no replacement for it, we have to use it.)
+                // Also note that we skip the line break at the end of the
+                // paste buffer, since it will be stripped off on the C side
+                // during object creation anyway.
+                var lines = text.split("\n");
+                for (var i = 0; i < lines.length; i++) {
+                    document.execCommand("insertText", false, lines[i]);
+                    if (i < lines.length-1)
+                        document.execCommand("insertLineBreak", false);
+                }
                 grow_svg_for_element(textbox());
             },
             floating_text_click: function(evt) {

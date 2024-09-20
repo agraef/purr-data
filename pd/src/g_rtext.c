@@ -312,17 +312,6 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
                 ncolumns = foundit_c;
             nlines++;
         }
-        // append new line in case we end our input with an \n
-        // suppressed at the end of a comment (backport from pd-l2ork)
-        int iscomment = pd_class(&x->x_text->te_pd) == text_class &&
-            x->x_text->te_type == T_TEXT;
-        if (!iscomment && x_bufsize_c > 0 && (x->x_buf[x->x_bufsize - 1] == '\n' || x->x_buf[x->x_bufsize - 1] == '\v'))
-        {
-            nlines++;
-            tempbuf[outchars_b++] = '\n';
-            //tempbuf[outchars_b] = '\0';
-            //outchars_b++;
-        }
         if (!reportedindex)
             *indexp = outchars_b;
         if (nlines < 1) nlines = 1;
@@ -653,8 +642,7 @@ void rtext_activate(t_rtext *x, int state)
        null terminated. If this becomes a problem we can revisit
        it later */
     tmpbuf = t_getbytes(x->x_bufsize + 1);
-    sprintf(tmpbuf, "%.*s", (int)x->x_bufsize, x->x_buf);
-    /* in case x_bufsize is 0... */
+    snprintf(tmpbuf, x->x_bufsize+1, "%s", x->x_buf);
     tmpbuf[x->x_bufsize] = '\0';
     gui_vmess("gui_textarea", "xssiiiisiiiiiii",
         canvas,

@@ -3794,13 +3794,16 @@ function text_to_tspans(cid, svg_text, text) {
     len = lines.length;
     // Get fontsize (minus the trailing "px")
     fontsize = svg_text.getAttribute("font-size").slice(0, -2);
+    var dy = text_line_height_kludge(+fontsize, "gui");
     for (i = 0; i < len; i++) {
+        // ag: We need to specify absolute y offsets for the baseline
+        // positions here. Relative dy offsets, which were used previously,
+        // don't advance the y position if no glyphs are rendered, so empty
+        // lines aren't rendered correctly.
         tspan = create_item(cid, "tspan", {
-            dy: i == 0 ? 0 : text_line_height_kludge(+fontsize, "gui") + "px",
+            y: ((i+1)*dy) + "px",
             x: 0
         });
-        // tspan needs at least one char so that empty lines are preserved
-        if (lines[i] == "") lines[i] = " ";
         // find a way to abstract away the canvas array and the DOM here
         text_node = patchwin[cid].window.document
                     .createTextNode(lines[i]);
