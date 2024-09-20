@@ -1040,6 +1040,15 @@ var canvas_events = (function() {
                 let obj_class = obj.getAttribute("class")
                     .toString().split(" ").slice(0,1).toString();
                 if (obj_class == "comment") {
+                    // ag: This might be a bug in the browser engine, but the
+                    // <p> element tries to be clever about newlines and adds
+                    // extra newlines where it thinks they are appropriate
+                    // (they never are). Therefore we replace 2 or more
+                    // consecutive empty lines by a single one. Alas, this
+                    // means that you can only ever have a single empty line
+                    // in sequence. To work around this, enter a space on an
+                    // empty line and it will be preserved.
+                    msg = msg.replace(/\n\n\n+/g, "\n\n");
                     // ag: Visual comment formatting: We need to replace \n
                     // with \v to protect the newlines from the binbuf
                     // routines on the C side -- for them, \n is just
