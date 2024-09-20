@@ -6574,20 +6574,15 @@ static t_binbuf *canvas_docopy(t_canvas *x)
     {
         if (glist_isselected(x, y))
         {
-            //fprintf(stderr,"saving object\n");
             gobj_save(y, b);
         }
     }
     linetraverser_start(&t, x);
-    while (oc = linetraverser_next(&t))
+    while ((oc = linetraverser_next(&t)))
     {
-        //fprintf(stderr,"found some lines %d %d\n",
-        //    glist_isselected(x, &t.tr_ob->ob_g),
-        //    glist_isselected(x, &t.tr_ob2->ob_g));
         if (glist_isselected(x, &t.tr_ob->ob_g)
             && glist_isselected(x, &t.tr_ob2->ob_g))
         {
-            //fprintf(stderr,"saving lines leading into selected object\n");
             binbuf_addv(b, "ssiiii;", gensym("#X"), gensym("connect"),
                 glist_selectionindex(x, &t.tr_ob->ob_g, 1), t.tr_outno,
                 glist_selectionindex(x, &t.tr_ob2->ob_g, 1), t.tr_inno);
@@ -6612,7 +6607,6 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
 
     if (!ac && !copyfromexternalbuffer)
     {
-        //fprintf(stderr,"init\n");
         copyfromexternalbuffer = 1;
         screenx1 = 0;
         screeny1 = 0;
@@ -6642,7 +6636,6 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
             binbuf_clear(copy_binbuf);
             return;
         }
-        //fprintf(stderr,"fill %d\n", ac);
         if (copyfromexternalbuffer != 1 || !begin_patch || ac != 7)
         {
         // not a patch header, just copy
@@ -6657,8 +6650,6 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
         // patch header, if the canvas is empty adjust window size and
         // position here...
             int check = 0;
-            //fprintf(stderr,
-            //    "copying canvas properties for copyfromexternalbuffer\n");
             if (av[2].a_type == A_FLOAT)
             {
                 screenx1 = av[2].a_w.w_float;
@@ -6728,28 +6719,7 @@ static void canvas_copy(t_canvas *x)
     copiedfont = 0;
     binbuf_free(copy_binbuf);
     clipboard_istext = 0;
-    //fprintf(stderr, "canvas_copy\n");
-    /* We're not replacing the following sys_vgui call because nw.js's
-       paste mechanism works a bit differently and doesn't require this.
-       But if I missed some functionality this-- as well as the rest of the
-       insanely complicated externalbuffer logic-- should be revisited. */
-
-    //sys_vgui("pdtk_canvas_reset_last_clipboard\n");
     copy_binbuf = canvas_docopy(x);
-    if (!x->gl_editor->e_selection)
-    {
-        /* Ok, this makes no sense-- if we return above when there's no
-           e_selection, then how could the following possibly be true? */
-
-        //sys_vgui("pdtk_canvas_update_edit_menu .x%zx 0\n", x);
-    }
-    else
-    {
-        /* Still not exactly sure what this is doing.  If it's just
-           disabling menu items related to the clipboard I think we can
-           do without it. */
-        //sys_vgui("pdtk_canvas_update_edit_menu .x%zx 1\n", x);
-    }
     paste_xyoffset = 1;
     if (x->gl_editor->e_textedfor)
     {
@@ -6790,13 +6760,6 @@ static void canvas_doclear(t_canvas *x)
              x->gl_editor->e_selectline_outno,
              x->gl_editor->e_selectline_index2,
              x->gl_editor->e_selectline_inno);
-        /*canvas_setundo(x, canvas_undo_disconnect,
-            canvas_undo_set_disconnect(x,
-                x->gl_editor->e_selectline_index1,
-                x->gl_editor->e_selectline_outno,
-                x->gl_editor->e_selectline_index2,
-                x->gl_editor->e_selectline_inno),
-            "disconnect");*/
         canvas_undo_add(x, 2, "disconnect", canvas_undo_set_disconnect(x,
                 x->gl_editor->e_selectline_index1,
                 x->gl_editor->e_selectline_outno,
@@ -6836,10 +6799,6 @@ static void canvas_doclear(t_canvas *x)
 
                 /* now destroy the object */
                 glist_delete(x, y);
-#if 0
-                if (y2) post("cut 5 %zx %zx", y2, y2->g_next);
-                else post("cut 6");
-#endif
                 goto next;
             }
         }
@@ -6874,8 +6833,6 @@ static void canvas_cut(t_canvas *x)
     /* else we are cutting objects */
     else if (x->gl_editor && x->gl_editor->e_selection)
     {
-        //canvas_setundo(x, canvas_undo_cut,
-        //    canvas_undo_set_cut(x, UCUT_CUT), "cut");
         canvas_undo_add(x, 3, "cut", canvas_undo_set_cut(x, UCUT_CUT));
         canvas_copy(x);
         canvas_doclear(x);
@@ -7167,28 +7124,7 @@ static void glist_donewloadbangs(t_glist *x)
 
 static void canvas_paste_xyoffset(t_canvas *x)
 {
-    //t_selection *sel;
-    //t_class *cl;
-    //int resortin = 0;
-    //int resortout = 0;
-
-    //for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
-    //{
-        //gobj_displace(sel->sel_what, x, paste_xyoffset*10, paste_xyoffset*10);
-        //cl = pd_class(&sel->sel_what->g_pd);
-        //if (cl == vinlet_class) resortin = 1;
-        //if (cl == voutlet_class) resortout = 1;
-    //}
     canvas_displaceselection(x, paste_xyoffset*10, paste_xyoffset*10);
-
-    //if (resortin) canvas_resortinlets(x);
-    //if (resortout) canvas_resortoutlets(x);
-
-    // alternative one-line implementation that
-    // replaces the entire function
-    //canvas_displaceselection(x, 10, 10);
-
-    //paste_xyoffset++; //a part of original way
 }
 
 static void canvas_paste_atmouse(t_canvas *x)
@@ -7240,7 +7176,6 @@ static void canvas_paste_atmouse(t_canvas *x)
     canvas_undo_already_set_move = 1;
     canvas_displaceselection(x,
         (x->gl_editor->e_xwas)-x1-8, (x->gl_editor->e_ywas)-y1-8);
-    //glist_setlastxy(x, (int)((x->gl_editor->e_xwas)+5-x1), (int)((x->gl_editor->e_ywas)-y1));
     canvas_startmotion(x);
 }
 
@@ -7340,8 +7275,6 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 
     paste_canvas = 0;
 
-    //fprintf(stderr,"dopaste autopatching? %d==%d %d\n",
-    //    count, nbox, connectme);
     do_not_redraw -= 1;
 
     /* TODO: Ico: because figuring out exact position/size for a scalar
@@ -7376,13 +7309,12 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
     /* if we are pasting into a new window and this is not copied from external
        buffer OR if we are copying from external buffer and the current canvas
        is not empty */
-    else if (canvas_undo_name && !strcmp(canvas_undo_name, "paste") &&
-             !copyfromexternalbuffer ||
-             copyfromexternalbuffer && !canvas_empty)
+    else if ((canvas_undo_name && !strcmp(canvas_undo_name, "paste") &&
+              !copyfromexternalbuffer) ||
+             (copyfromexternalbuffer && !canvas_empty))
     {
         //if (!copyfromexternalbuffer) canvas_paste_xyoffset(x);
         if (!we_are_undoing) canvas_paste_atmouse(x);
-        //fprintf(stderr,"doing a paste\n");
     }
     //else let's provide courtesy offset
     else if (!copyfromexternalbuffer && offset)
@@ -7391,13 +7323,6 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
     }
 
     canvas_dirty(x, 1);
-    //fprintf(stderr,"dopaste redraw %d\n", do_not_redraw);
-    //if (!canvas_undo_name || !strcmp(canvas_undo_name, "duplicate")) {
-        // need to redraw duplicated objects as
-        // they need to be drawn with an offset
-        // fprintf(stderr,"canvas_dopaste redraw objects\n");
-        // canvas_redraw(x);
-    //}
 
     scrollbar_update(x);
     if (!abort_when_pasting_from_external_buffer)
@@ -7413,46 +7338,25 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
     canvas_resume_dsp(dspstate);
     abort_when_pasting_from_external_buffer = 0;
     glob_preset_node_list_check_loc_and_update();
-    //fprintf(stderr,"end dopaste\n");
 }
 
 static void canvas_paste(t_canvas *x)
 {
-    if (!x->gl_editor)
+    if (!x->gl_editor ||
+        // ico@vt.edu: prevent pasting in a toplevel garray window
+        (x->gl_list && glist_istoplevel(x) && canvas_hasarray(x)))
         return;
-    // ico@vt.edu: prevent pasting in a toplevel garray window
-    if (x->gl_list && glist_istoplevel(x) && canvas_hasarray(x))
-        return;
-    if (x->gl_editor->e_textedfor)
-    {
-            /* simulate keystrokes as if the copy buffer were typed in. */
-//#if defined(MSW) || defined(__APPLE__)
-            /* for Mac or Windows,  ask the GUI to send the clipboard down */
-        sys_gui("pdtk_pastetext\n");
-//#else
-            /* in X windows we kept the text in our own copy buffer */
-/*        int i;
-        for (i = 0; i < canvas_textcopybufsize; i++)
-        {
-            pd_vmess(&x->gl_gobj.g_pd, gensym("key"), "iii",
-                1, canvas_textcopybuf[i]&0xff, 0);
-        }*/
-//#endif
-    }
     // ico@vt.edu: need to check that the copy_binbuf is not null. This
     // currently prevents the crash when opening a new patch with nothing
     // in the buffer and pressing paste since the paste menu item is not
     // being properly initialized. This is probably a good safety check
     // anyhow. We will also have to investigate why the undo/paste menus
     // are not being properly initialized and fix them accordingly.
-    else if (!clipboard_istext && copy_binbuf != NULL)
+    if (!x->gl_editor->e_textedfor && !clipboard_istext && copy_binbuf != NULL)
     {
-        //canvas_setundo(x, canvas_undo_paste, canvas_undo_set_paste(x),
-        //    "paste");
         canvas_undo_add(x, 5, "paste",
             (void *)canvas_undo_set_paste(x, 0, 0, 0));
         canvas_dopaste(x, copy_binbuf);
-        //canvas_paste_xyoffset(x);
     }
 }
 
