@@ -3230,6 +3230,10 @@ function pdsend() {
     // some reason.  But it doesn't look like it makes that much
     // of a difference
     var string = Array.prototype.join.call(arguments, " ");
+    // ag: If the message string ends in '\', make sure to add an extra space
+    // at the end so that the message is properly terminated with an unescaped
+    // ';' character.
+    if (string.slice(-1) === "\\") string = string + " ";
     connection.write(string + ";");
     // reprint the outgoing string to the pdwindow
     //post(string + ";", "red");
@@ -7701,7 +7705,7 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
     gui(cid).get_nw_window(function(nw_win) {
         zoom = nw_win.zoomLevel;
     });
-    if (type === "obj") {
+    if (type === "comment") {
         // ag: Replace \v -> \n in visually formatted comments so that we
         // render them as newlines when editing a comment. We also remove any
         // \n immediately preceding a \v, which may have been added
@@ -7758,7 +7762,7 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         });
         svg_view = patchwin[cid].window.document.getElementById("patchsvg")
             .viewBox.baseVal;
-        p.classList.add(type);
+        p.classList.add(type === "msg" ? "msg" : "obj");
         p.contentEditable = "true";
 
         if (is_gop != 0) {
@@ -7790,7 +7794,10 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
             p.style.setProperty("min-height", height_spec - 4 + "px");
         }
         // remove leading/trailing whitespace
-        text = text.trim();
+        if (type !== "comment") {
+            // trim whitespace at the beginning and end (unless escaped)
+            text = text.replace(/^\s+|(?<!(\\\\)*\\)\s+$/g, "");
+        }
         p.textContent = text;
         // append to doc body
         patchwin[cid].window.document.body.appendChild(p);

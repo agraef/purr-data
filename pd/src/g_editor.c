@@ -531,6 +531,8 @@ static void glist_checkanddeselectall(t_glist *gl, t_gobj *g)
 
 int glist_getindex(t_glist *x, t_gobj *y);
 
+static t_binbuf *newobjbuf;
+
     /* call this for selected objects only */
 void glist_deselect(t_glist *x, t_gobj *y)
 {
@@ -603,6 +605,14 @@ void glist_deselect(t_glist *x, t_gobj *y)
             int bufsize;
 
             rtext_gettext(z, &buf, &bufsize);
+            if (bufsize == 0 && newobjbuf && binbuf_getnatom(newobjbuf) > 0) {
+                post("error: object pending creation:");
+                binbuf_print(newobjbuf);
+                post("** NOTE: This indicates a bug in the gui message interface, most likely an unterminated gui message; please copy down this error message and submit a bug report, thanks!");
+                // to be on the safe side, clear the pending buffer, so that
+                // it doesn't get injected in a subsequent object creation
+                binbuf_clear(newobjbuf);
+            }
             text_setto((t_text *)y, x, buf, bufsize, pos);
             canvas_fixlinesfor(glist_getcanvas(x), (t_text *)y);
             x->gl_editor->e_textedfor = 0;
@@ -8481,7 +8491,6 @@ static void canvas_tip(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
-t_binbuf *newobjbuf;
 static void canvas_addtobuf(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (!newobjbuf)

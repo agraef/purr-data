@@ -203,27 +203,47 @@ var canvas_events = (function() {
                 return prev.concat(curr)
             }).join(" ");
         },
-        text_to_fudi = function(text, obj_class) {
-            text = text.trim();
+        text_to_fudi = function(text, obj_class, escapes) {
+            if (obj_class !== "comment") {
+                // trim whitespace at the beginning and end (unless escaped)
+                text = text.replace(/^\s+|(?<!(\\\\)*\\)\s+$/g, "");
+            }
+
             // special case for draw path d="arbitrary path string" ...
-            if (text.search(/^draw\s+path\s+d\s*=\s*"/) !== -1) {
+            if (obj_class === "obj" &&
+                text.search(/^draw\s+path\s+d\s*=\s*"/) !== -1) {
                 text = text_to_normalized_svg_path(text);
             }
-            // escape dollar signs
-            text = text.replace(/(\$[0-9]+)/g, "\\$1");
 
-            // escape special $@ sign
-            text = text.replace(/(\$@)/g, "\\$@");
-
-            if (obj_class == "comment") {
-                // don't ask, backslash escapes in comments are just insane
-                text = text.replace(/\\(,|;|\\)/g, "\\\\\\$1");
+            if (escapes) {
+                // regex doesn't really work here, do some straight string
+                // processing instead
+                var buf = "", quote = false, len = text.length;
+                for (var i = 0; i < len; i++) {
+                    var c = text[i];
+                    if (quote) {
+                        buf += "\\"+c;
+                        quote = false;
+                    } else if (c == "," || c == ";") {
+                        // '\;' and '\,' need spaces around them
+                        buf += " \\"+c+" ";
+                    } else if (c == "$" && /^([0-9]|@)/.test(text.slice(i+1))) {
+                        buf += "\\"+c;
+                    } else if (c == "\\") {
+                        quote = 1;
+                        // double escape
+                        buf += "\\\\";
+                    } else {
+                        buf += c;
+                    }
+                }
+                text = buf;
             }
-            // escape "," and ";" (if not already escaped)
-            text = text.replace(/(?<!\\)(,|;)/g, " \\$1 ");
 
-            // filter consecutive ascii32
-            text = text.replace(/\u0020+/g, " ");
+            if (obj_class !== "comment") {
+                // filter consecutive ascii32
+                text = text.replace(/\u0020+/g, " ");
+            }
             return text;
         },
         string_to_array_of_chunks = function(msg) {
@@ -239,7 +259,8 @@ var canvas_events = (function() {
             } else {
                 // ag: make sure to exclude \v below since we need these as
                 // newline substitutes which survive binbuf treatment
-                in_array = msg.split(/[ \t\n]/); // split on newlines or spaces
+                // split on newlines or (unescaped) spaces
+                in_array = msg.split(/(?<!(\\\\)*\\) |[\t\n]/);
                 while (in_array.length) {
                     left = in_array.slice(); // make a copy of in_array
                     if (left.toString().length > chunk_max) {
@@ -1059,7 +1080,7 @@ var canvas_events = (function() {
                     msg = msg.replace(/,[ \t]*\v/g, ", \v");
                     msg = msg.replace(/;[ \t]*\v/g, "; ");
                 }
-                var fudi_msg = text_to_fudi(msg, obj_class),
+                var fudi_msg = text_to_fudi(msg, obj_class, true),
                     fudi_array = string_to_array_of_chunks(fudi_msg);
                 for (var i = 0; i < fudi_array.length; i++) {
                     var chunk = fudi_array[i].join(" ");
@@ -1069,7 +1090,8 @@ var canvas_events = (function() {
 
                 // GB: index created object
                 if (pdgui.autocomplete_enabled()) {
-                    pdgui.index_obj_completion(obj_class, fudi_msg);
+                    var obj_text = text_to_fudi(msg, obj_class, false);
+                    pdgui.index_obj_completion(obj_class, obj_text);
                     // GB: save every 50 changes, so that we don't loose too
                     // much data in case purr-data unexpectedly quits or crashes
                     if (changes_in_completion_index===0 ||

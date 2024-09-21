@@ -560,6 +560,18 @@ void rtext_select(t_rtext *x, int state)
     //canvas_editing = canvas;
 }
 
+static void text_get_typestring(int type, char *buf)
+{
+    if (type == T_OBJECT)
+        sprintf(buf, "%s", "obj");
+    else if (type == T_MESSAGE)
+        sprintf(buf, "%s", "msg");
+    else if (type == T_TEXT)
+        sprintf(buf, "%s", "comment");
+    else
+        sprintf(buf, "%s", "atom");
+}
+
 void rtext_activate(t_rtext *x, int state)
 {
     //fprintf(stderr,"rtext_activate state=%d\n", state);
@@ -644,10 +656,12 @@ void rtext_activate(t_rtext *x, int state)
     tmpbuf = t_getbytes(x->x_bufsize + 1);
     snprintf(tmpbuf, x->x_bufsize+1, "%s", x->x_buf);
     tmpbuf[x->x_bufsize] = '\0';
+    char type[8];
+    text_get_typestring(x->x_text->te_type, type);
     gui_vmess("gui_textarea", "xssiiiisiiiiiii",
         canvas,
         x->x_tag,
-        (__is_message_class(pd_class((t_pd *)x->x_text)) ? "msg" : "obj"),
+        type,
         x->x_text->te_xpix,
         x->x_text->te_ypix,
         widthspec,
