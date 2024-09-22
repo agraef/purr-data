@@ -767,9 +767,9 @@ function search_args(title) {
 function index_obj_completion(obj_or_msg, obj_or_msg_text) {
     var title, arg;
     if (obj_or_msg === "obj") {
-        let text_array = obj_or_msg_text.split(" ");
+        let text_array = obj_or_msg_text.split(/(?<!\\) /);
         title = text_array[0];
-        arg = text_array.slice(1, text_array.length).toString().replace(/\,/g, " ");
+        arg = text_array.slice(1, text_array.length).join(" ");
     } else { // the autocomplete feature doesn't work with messages and comments
         return;
     }
