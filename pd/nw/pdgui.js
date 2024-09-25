@@ -1699,12 +1699,14 @@ exports.encode_for_dialog = encode_for_dialog;
 
 // originally used to enquote a string to send it to a tcl function
 function enquote (x) {
-    var foo = x.replace(/,/g, "");
-    foo = foo.replace(/;/g, "");
-    foo = foo.replace(/"/g, "");
-    foo = foo.replace(/ /g, "\\ ");
-    foo = foo.trim();
-    return foo;
+    // ag: there's no need to get rid of special symbols like comma anymore,
+    // we can now just escape them
+    return x.replace(/,/g, "\\,")
+    .replace(/;/g, "\\;")
+    .replace(/"/g, "\\\"")
+    .replace(/ /g, "\\ ")
+    // trim whitespace (unless escaped)
+    .replace(/^\s+|(?<!(\\\\)*\\)\s+$/g, "");
 }
 
 // from stackoverflow.com/questions/21698906/how-to-check-if-a-path-is-absolute-or-relative
@@ -6964,7 +6966,7 @@ exports.raise_pd_window= gui_raise_pd_window;
 
 var file_dialog_target;
 
-function file_dialog(cid, type, target, start_path) {
+function file_dialog(cid, type, target, start_path, mode) {
     file_dialog_target = target;
     var query_string = (type === "open" ?
                         "openpanelSpan" : "savepanelSpan"),
@@ -7007,7 +7009,15 @@ function file_dialog(cid, type, target, start_path) {
         // using an absolute path here, see comment above
         nwworkingdir: funkify_windows_path(start_path)
     };
-    if (type !== "open") {
+    if (type === "open") {
+        if (mode == 1) {
+            // nw.js extension, see:
+            // https://nwjs.readthedocs.io/en/latest/search.html?q=nwdirectory
+            dialog_options.nwdirectory = null;
+        } else if (mode == 2) {
+            dialog_options.multiple = null;
+        }
+    } else {
         dialog_options.nwsaveas = "";
     }
     input_string = build_file_dialog_string(dialog_options);
@@ -7017,8 +7027,12 @@ function file_dialog(cid, type, target, start_path) {
         (type === "open" ? "openpanel_dialog" : "savepanel_dialog"));
     // And add an event handler for the callback
     input_elem.onchange = function() {
+        var file_list = this.files, files = [];
+        for (var i = 0; i < file_list.length; ++i) {
+            files[i] = file_list[i].path; // nw.js extension
+        }
+        file_dialog_callback(files);
         // reset value so that we can open the same file twice
-        file_dialog_callback(this.value);
         this.value = null;
         //console.log("openpanel/savepanel called");
     };
@@ -7028,17 +7042,26 @@ function file_dialog(cid, type, target, start_path) {
     );
 }
 
-function gui_openpanel(cid, target, path) {
-    file_dialog(cid, "open", target, path);
+function gui_openpanel(cid, target, path, mode) {
+    file_dialog(cid, "open", target, path, mode);
 }
 
 function gui_savepanel(cid, target, path) {
-    file_dialog(cid, "save", target, path);
+    file_dialog(cid, "save", target, path, 0);
 }
 
-function file_dialog_callback(file_string) {
-    pdsend(file_dialog_target, "callback",
-        enquote(defunkify_windows_path(file_string)));
+function file_dialog_callback(files) {
+    // files may either be an array of file names, or a single file as a
+    // string (the latter option is for backward compatibility)
+    if (Array.isArray(files)) {
+        var args = files.map(function (f) {
+                return enquote(defunkify_windows_path(f));
+            });
+        pdsend.apply(null, [file_dialog_target, "callback"].concat(args));
+    } else {
+        var file = enquote(defunkify_windows_path(files));
+        pdsend(file_dialog_target, "callback", file);
+    }
 }
 
 exports.file_dialog_callback = file_dialog_callback;
