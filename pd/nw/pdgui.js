@@ -3794,30 +3794,99 @@ function text_line_height_kludge(fontsize, fontsize_type) {
     }
 }
 
-function text_to_tspans(cid, svg_text, text) {
+function text_to_tspans(cid, svg_text, text, type) {
     var lines, i, len, tspan, fontsize, text_node;
+    // the type argument is optional, but it *will* be set when we're being
+    // called via rtext_senditup() in order to update an object text
+    var is_comment = type && type === "text";
     lines = text.split("\n");
     len = lines.length;
     // Get fontsize (minus the trailing "px")
     fontsize = svg_text.getAttribute("font-size").slice(0, -2);
     var dy = text_line_height_kludge(+fontsize, "gui");
+    var init_attr, style = {}, fill = null;
+    function make_tspan(span) {
+        if (is_comment) {
+            // tags can be escaped with <!tag>, show these as literals
+            span = span.replace(/<!([!a-z0-9#/]+)>/g, "<$1>");
+        }
+        if (span.length > 0) {
+            // find a way to abstract away the canvas array and the DOM here
+            var attr = init_attr;
+            if (fill) attr.fill = fill;
+            tspan = create_item(cid, "tspan", attr);
+            for (var x in style) tspan.style[x] = style[x];
+            text_node = patchwin[cid].window.document
+                .createTextNode(span);
+            if (!/^\s*$/.test(span)) init_attr = {};
+            tspan.appendChild(text_node);
+            svg_text.appendChild(tspan);
+        }
+    }
     for (i = 0; i < len; i++) {
-        tspan = create_item(cid, "tspan", {
-            dy: i==0 ? 0 : dy + "px",
-            x: 0
-        });
+        var spans = [lines[i]], tags = null;
+        init_attr = { dy: i==0 ? 0 : dy + "px", x: 0 };
+        delete style.visibility;
         if (/^\s*$/.test(lines[i])) {
             // ag: empty spans won't render correctly, so add something other
             // than a blank and hide the contents of the tspan. See
             // https://stackoverflow.com/a/58429593
-            tspan.style.visibility = "hidden"
-            lines[i] = ".";
+            style.visibility = "hidden";
+            spans[0] = ".";
+        } else if (is_comment) {
+            // split the text into individual spans and tags
+            spans = lines[i].split(/<[a-z0-9#/]+>/);
+            tags = lines[i].match(/<[a-z0-9#/]+>/g);
         }
-        // find a way to abstract away the canvas array and the DOM here
-        text_node = patchwin[cid].window.document
-                    .createTextNode(lines[i]);
-        tspan.appendChild(text_node);
-        svg_text.appendChild(tspan);
+        make_tspan(spans[0]);
+        if (tags) {
+            for (var j = 1, k = 0; j < spans.length; j++, k++) {
+                var tag = tags[k];
+                switch (tag) {
+                case "<b>":
+                    style.fontWeight = "bold";
+                    break;
+                case "</b>":
+                    delete style.fontWeight;
+                    break;
+                case "<i>":
+                    style.fontStyle = "italic";
+                    break;
+                case "</i>":
+                    delete style.fontStyle;
+                    break;
+                case "<s>":
+                    style.textDecoration = "line-through";
+                    break;
+                case "</s>":
+                    delete style.textDecoration;
+                    break;
+                case "<u>":
+                    style.textDecoration = "underline";
+                    break;
+                case "</u>":
+                    delete style.textDecoration;
+                    break;
+                case "<h>":
+                    style.fontSize = "120%";
+                    style.fontWeight = "bold";
+                    break;
+                case "</h>":
+                    delete style.fontSize;
+                    delete style.fontWeight;
+                    break;
+                default:
+                    // anything else is taken to be a color
+                    if (!tag.startsWith("</")) {
+                        fill = tag.slice(1, -1);
+                    } else if (fill === tag.slice(2, -1)) {
+                        fill = null;
+                    }
+                    break;
+                }
+                make_tspan(spans[j]);
+            }
+        }
     }
 }
 
@@ -3953,7 +4022,7 @@ function gui_text_new(cid, tag, type, isselected, left_margin, font_height, text
         // whitespace.
         text = text.trim();
         // fill svg_text with tspan content by splitting on '\n'
-        text_to_tspans(cid, svg_text, text);
+        text_to_tspans(cid, svg_text, text, type);
         frag.appendChild(svg_text);
         if (isselected) {
             gui_gobj_select(cid, tag);
@@ -3970,11 +4039,11 @@ function gui_gobj_erase(cid, tag) {
     });
 }
 
-function gui_text_set (cid, tag, text) {
+function gui_text_set (cid, tag, text, type) {
     gui(cid).get_elem(tag + "text", function(e) {
         text = text.trim();
         e.textContent = "";
-        text_to_tspans(cid, e, text);
+        text_to_tspans(cid, e, text, type);
     });
 }
 
