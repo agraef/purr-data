@@ -1706,7 +1706,7 @@ function enquote (x) {
     .replace(/"/g, "\\\"")
     .replace(/ /g, "\\ ")
     // trim whitespace (unless escaped)
-    .replace(/^\s+|(?<!(\\\\)*\\)\s+$/g, "");
+    .replace(/^\s+|(?<!\\)\s+$/g, "");
 }
 
 // from stackoverflow.com/questions/21698906/how-to-check-if-a-path-is-absolute-or-relative
@@ -7819,7 +7819,7 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         // remove leading/trailing whitespace
         if (type !== "comment") {
             // trim whitespace at the beginning and end (unless escaped)
-            text = text.replace(/^\s+|(?<!(\\\\)*\\)\s+$/g, "");
+            text = text.replace(/^\s+|(?<!\\)\s+$/g, "");
         }
         p.textContent = text;
         // append to doc body

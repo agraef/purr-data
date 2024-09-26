@@ -206,7 +206,7 @@ var canvas_events = (function() {
         text_to_fudi = function(text, obj_class, escapes) {
             if (obj_class !== "comment") {
                 // trim whitespace at the beginning and end (unless escaped)
-                text = text.replace(/^\s+|(?<!(\\\\)*\\)\s+$/g, "");
+                text = text.replace(/^\s+|(?<!\\)\s+$/g, "");
             }
 
             // special case for draw path d="arbitrary path string" ...
@@ -260,7 +260,7 @@ var canvas_events = (function() {
                 // ag: make sure to exclude \v below since we need these as
                 // newline substitutes which survive binbuf treatment
                 // split on newlines or (unescaped) spaces
-                in_array = msg.split(/(?<!(\\\\)*\\) |[\t\n]/);
+                in_array = msg.split(/(?<!\\) |[\t\n]/);
                 while (in_array.length) {
                     left = in_array.slice(); // make a copy of in_array
                     if (left.toString().length > chunk_max) {
