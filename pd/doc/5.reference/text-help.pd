@@ -1,4 +1,4 @@
-#N canvas 372 200 555 619 10;
+#N canvas 373 200 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
 14 #dcdcdc #404040 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header text 3 12 0 18 #c4dcdc
@@ -66,23 +66,27 @@ float atom and you will lose some rather important precision!;
 #X obj 99 571 pddp/pddplink all_about_ascii_art.pd;
 #X text 378 11 To create \, click <Control-5>;
 #X text 11 23 box with text for an object or comment;
-#X text 40 127 Comments don't actually "do" anything \, but you can
+#X text 40 107 Comments don't actually "do" anything \, but you can
 use them to annotate your patch \, explain how something works \, add
 a copyright notice \, or anything else., f 76;
-#X text 40 80 All text in Pure Data is just a series of symbol and/or
+#X text 40 60 All text in Pure Data is just a series of symbol and/or
 float atoms. You create Pd objects by typing text into an object box
 \, but you can also write text as a comment for your patch (like this
 one)., f 76;
-#X text 40 174 To create a comment \, use the "Put" menu or click <Control-5>.
+#X text 40 154 To create a comment \, use the "Put" menu or click <Control-5>.
 , f 76;
+#X obj 300 575 pddp/pddplink all_about_rich_text.pd;
 #X text 40 400 For some other peculiarities with Pd's comments please
-check the "Some Comments on Comments" subpatch below., f 76;
-#X text 40 330 NOTE: Visual formatting of comments is a Purr Data-specific
-feature \, it will *not* work (and look funny) in vanilla Pd! Thus
-you want to avoid it in patches that are to be run in both environments.
-, f 76;
-#X text 40 210 Purr Data also lets you do visual formatting of comments
+check the <b>"Some Comments on Comments"</b> subpatch below., f 76
+;
+#X text 40 190 Purr Data also lets you do visual formatting of comments
 using explicit line breaks. E.g:Lorem ipsum dolor sit amet \, consetetur
 sadipscingelitr \, sed diam nonumy eirmod tempor invidunt ut laboreet
 dolore magna aliquyam erat \, sed diam voluptua. Atvero eos et accusam
-et justo duo dolores et ea rebum., f 76;
+et justo duo dolores et ea rebum.There are also some possibilities
+for <red><b>rich text formatting</b></red> \, please see the <b>"all_about_rich_text"</b>
+patch linked below for details., f 76;
+#X text 40 350 <b>NOTE:</b> Visual and rich text formatting of comments
+are Purr Data-specific features \, they will *not* work (and look funny)
+in vanilla Pd! Thus they're best avoided in patches that are to be
+run in both environments., f 76;
