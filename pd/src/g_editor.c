@@ -4453,71 +4453,63 @@ static int grid_coord(int x)
     return (int)((x+PIX_GRID/2)/PIX_GRID);
 }
 
+static int check_wrap(t_gobj *x, int *last)
+{
+    t_text *y = (t_text *)(x);
+    if (grid_coord(y->te_xpix) < *last) {
+        return 1;
+    } else {
+        *last = grid_coord(y->te_xpix);
+        return 0;
+    }
+}
+
+typedef struct _sel_map {
+    int i;
+    t_selection *sel;
+} t_sel_map;
+
+static int sel_compare(const void *x, const void *y)
+{
+    t_sel_map *xs = (t_sel_map*)x;
+    t_sel_map *ys = (t_sel_map*)y;
+    t_text *xt =(t_text*)xs->sel->sel_what;
+    t_text *yt =(t_text*)ys->sel->sel_what;
+    if (grid_coord(xt->te_ypix) == grid_coord(yt->te_ypix))
+        return grid_coord(xt->te_xpix) - grid_coord(yt->te_xpix);
+    else
+        return grid_coord(xt->te_ypix) - grid_coord(yt->te_ypix);
+}
+
 void canvas_sort_selection_according_to_location(t_canvas *x)
 {
     int n_selected = glist_selectionindex(x, 0, 1); // get all selected objects
     //fprintf(stderr,"n_selected = %d\n", n_selected);
-    t_selection *traverse, *sel[n_selected];
-    int map[n_selected];
-    int already_mapped = 0;
-    int i = 0, j = 0, k = 0, leftmost = 99999, topmost = 99999;
-    t_text *yt;
+    t_selection *traverse;
+    t_sel_map sel[n_selected];
+    int i = 0;
     for (traverse = x->gl_editor->e_selection; traverse; traverse = traverse->sel_next)
     {
-        sel[i] = traverse;
-        map[i] = -1;
+        sel[i].sel = traverse;
+        sel[i].i = i;
         i++;
     }
-    for (i = 0; i < n_selected; i++)
-    {
-        for (j = 0; j < n_selected; j++)
-        {
-            yt = (t_text *)(sel[j]->sel_what);
-            if ((grid_coord(yt->te_ypix) < topmost) ||
-                (grid_coord(yt->te_ypix) == topmost && yt->te_xpix <= leftmost))
-            {
-                for (k = 0; k < n_selected; k++)
-                {
-                    if (map[k] == j)
-                    {
-                        already_mapped = 1;
-                    }
-                }
-                if (!already_mapped)
-                {
-                    map[i] = j;
-                    leftmost = yt->te_xpix;
-                    topmost = grid_coord(yt->te_ypix);
-                }
-                already_mapped = 0;
-            }
-        }
-        leftmost = 99999;
-        topmost = 99999;
-    }
-#if 0
-    // debug
-    for (i = 0; i < n_selected; i++) {
-        yt = (t_text *)(sel[map[i]]->sel_what);
-        fprintf(stderr,"sorted: %d (%d) x=%d y=%d\n",
-            i, map[i], yt->te_xpix, yt->te_ypix);
-    }
-#endif
-    x->gl_editor->e_selection = sel[map[0]];
+    qsort(sel, n_selected, sizeof(t_sel_map), sel_compare);
+    x->gl_editor->e_selection = sel[0].sel;
     for (i = 0; i < n_selected-1; i++)
     {
-        sel[map[i]]->sel_next = sel[map[i+1]];
+        sel[i].sel->sel_next = sel[i+1].sel;
     }
-    sel[map[n_selected-1]]->sel_next = 0;
+    sel[n_selected-1].sel->sel_next = 0;
 
 #if 0
     // debug
     i = 0;
     for (traverse = x->gl_editor->e_selection; traverse; traverse = traverse->sel_next) {
-        yt = (t_text *)(traverse->sel_what);
-        post("sel[%d] x=%d y=%d", i, yt->te_xpix, yt->te_ypix);
+        t_text *yt = (t_text *)(traverse->sel_what);
+        post("sel[%d/%d] x=%d y=%d", i, sel[i].i, yt->te_xpix, yt->te_ypix);
         binbuf_print(yt->te_binbuf);
-        fprintf(stderr,"final: %d x=%d y=%d\n", i, yt->te_xpix, yt->te_ypix);
+        fprintf(stderr,"final: %d/%d x=%d y=%d\n", i, sel[i].i, yt->te_xpix, yt->te_ypix);
         i++;
     }
 #endif
@@ -5099,15 +5091,12 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                     int count = 0, counting = 0;
                     for (sel = x->gl_editor->e_selection, i = 0; sel; sel = sel->sel_next, i++)
                     {
-                        t_text *yt = (t_text *)(sel->sel_what);
-                        if (grid_coord(yt->te_xpix) < last_x) {
-                            // enforce left-to-right order
+                        // check for wrap-around
+                        if (check_wrap(sel->sel_what, &last_x)) {
                             if (counting)
                                 counting = 0;
                             else if (i2 != -1)
                                 break;
-                        } else {
-                            last_x = grid_coord(yt->te_xpix);
                         }
                         // identify original source and target as we go along
                         if (sel->sel_what == y1) {
@@ -5164,12 +5153,9 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 int tmp_ninlet2 = ninlet2;
                 for (sel = x->gl_editor->e_selection, i = 0; sel; sel = sel->sel_next, i++)
                 {
-                    t_text *yt = (t_text *)(sel->sel_what);
-                    if (grid_coord(yt->te_xpix) < last_x) {
-                        // enforce left-to-right order
+                    // check for wrap-around
+                    if (check_wrap(sel->sel_what, &last_x)) {
                         if (i2 != -1) break;
-                    } else {
-                        last_x = grid_coord(yt->te_xpix);
                     }
                     // identify original source and target as we go along
                     if (sel->sel_what == y1) {
@@ -5231,12 +5217,9 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 last_x = -1;
                 for (sel = x->gl_editor->e_selection, i = 0; sel; sel = sel->sel_next, i++)
                 {
-                    t_text *yt = (t_text *)(sel->sel_what);
-                    if (grid_coord(yt->te_xpix) < last_x) {
-                        // enforce left-to-right order
+                    // check for wrap-around
+                    if (check_wrap(sel->sel_what, &last_x)) {
                         break;
-                    } else {
-                        last_x = grid_coord(yt->te_xpix);
                     }
                     // identify original source and target as we go along
                     if (sel->sel_what == y1) {
@@ -5295,12 +5278,9 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                     // OPTION A (fan-out)
                     for (sel = x->gl_editor->e_selection, i = 0; sel; sel = sel->sel_next, i++)
                     {
-                        t_text *yt = (t_text *)(sel->sel_what);
-                        if (grid_coord(yt->te_xpix) < last_x) {
-                            // enforce left-to-right order
+                        // check for wrap-around
+                        if (check_wrap(sel->sel_what, &last_x)) {
                             if (i2 != -1) break;
-                        } else {
-                            last_x = grid_coord(yt->te_xpix);
                         }
                         // identify original source and target as we go along
                         if (sel->sel_what == y1) {
@@ -5337,12 +5317,9 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                     // OPTION B (fan-in)
                     for (sel = x->gl_editor->e_selection, i = 0; sel; sel = sel->sel_next, i++)
                     {
-                        t_text *yt = (t_text *)(sel->sel_what);
-                        if (grid_coord(yt->te_xpix) < last_x) {
-                            // enforce left-to-right order
+                        // check for wrap-around
+                        if (check_wrap(sel->sel_what, &last_x)) {
                             break;
-                        } else {
-                            last_x = grid_coord(yt->te_xpix);
                         }
                         // identify original source and target as we go along
                         if (sel->sel_what == y1) {
