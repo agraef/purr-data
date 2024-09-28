@@ -4445,6 +4445,14 @@ int canvas_isconnected (t_canvas *x, t_text *ob1, int n1,
     return (0);
 }
 
+// coordinate grid to mitigate sloppy object alignment
+#define PIX_GRID 10
+
+static int grid_coord(int x)
+{
+    return (int)((x+PIX_GRID/2)/PIX_GRID);
+}
+
 void canvas_sort_selection_according_to_location(t_canvas *x)
 {
     int n_selected = glist_selectionindex(x, 0, 1); // get all selected objects
@@ -4465,8 +4473,8 @@ void canvas_sort_selection_according_to_location(t_canvas *x)
         for (j = 0; j < n_selected; j++)
         {
             yt = (t_text *)(sel[j]->sel_what);
-            if ((yt->te_xpix < leftmost) ||
-                (yt->te_xpix == leftmost && yt->te_ypix <= topmost))
+            if ((grid_coord(yt->te_ypix) < topmost) ||
+                (grid_coord(yt->te_ypix) == topmost && yt->te_xpix <= leftmost))
             {
                 for (k = 0; k < n_selected; k++)
                 {
@@ -4479,7 +4487,7 @@ void canvas_sort_selection_according_to_location(t_canvas *x)
                 {
                     map[i] = j;
                     leftmost = yt->te_xpix;
-                    topmost = yt->te_ypix;
+                    topmost = grid_coord(yt->te_ypix);
                 }
                 already_mapped = 0;
             }
@@ -4487,13 +4495,14 @@ void canvas_sort_selection_according_to_location(t_canvas *x)
         leftmost = 99999;
         topmost = 99999;
     }
-    /*
+#if 0
     // debug
     for (i = 0; i < n_selected; i++) {
         yt = (t_text *)(sel[map[i]]->sel_what);
         fprintf(stderr,"sorted: %d (%d) x=%d y=%d\n",
             i, map[i], yt->te_xpix, yt->te_ypix);
-    }*/
+    }
+#endif
     x->gl_editor->e_selection = sel[map[0]];
     for (i = 0; i < n_selected-1; i++)
     {
@@ -4501,14 +4510,17 @@ void canvas_sort_selection_according_to_location(t_canvas *x)
     }
     sel[map[n_selected-1]]->sel_next = 0;
 
-    /*
+#if 0
     // debug
     i = 0;
     for (traverse = x->gl_editor->e_selection; traverse; traverse = traverse->sel_next) {
         yt = (t_text *)(traverse->sel_what);
+        post("sel[%d] x=%d y=%d", i, yt->te_xpix, yt->te_ypix);
+        binbuf_print(yt->te_binbuf);
         fprintf(stderr,"final: %d x=%d y=%d\n", i, yt->te_xpix, yt->te_ypix);
         i++;
-    }*/
+    }
+#endif
 }
 
 void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
@@ -4756,6 +4768,7 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2,
     return(0);
 }
 
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
 {
     //fprintf(stderr,"canvas_trymulticonnect\n");
@@ -4778,10 +4791,10 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
     if ((y1 = canvas_findhitbox(x, xwas, ywas, &x11, &y11, &x12, &y12))
             && (y2 = canvas_findhitbox(x, xpos, ypos, &x21, &y21, &x22, &y22)))
     {
-        /* FIRST OPTION: if two objects are selected and the one that is
-           originating is one of the selected objects try multi-connecting
-           all outlets into all inlets starting with the user-made one as
-           an offset */
+        /* FIRST OPTION (1:1 multi-connect): if two objects are selected and
+           the one that is originating is one of the selected objects try
+           multi-connecting all outlets into all inlets starting with the
+           user-made one as an offset */
         if (!x->gl_editor->e_selection->sel_next->sel_next &&
             glist_isselected(x, y1) && glist_isselected(x, y2))
         {
@@ -4825,16 +4838,15 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                     return_val = canvas_doconnect_doit(
                         x, y1, y2, closest1 + i, closest2 + i, 1, 1);
                 }
-                hotspot1=hotspot1; hotspot2=hotspot2; // silence warnings (unused vars)
             }
             canvas_undo_add(x, UNDO_SEQUENCE_END, "multiconnect (mode-1)", 0);
             return(return_val);
         /* end of FIRST OPTION */
         }
-        /* SECOND OPTION: if two or more objects are selected and the one
-           that is originating is not one of the selected, connect originating
-           to all selected objects' the outlets specified by the first
-           connection */
+        /* SECOND OPTION (1:N a.k.a. fan-out single-connect): if two or more
+           objects are selected and the one that is originating is *not* one
+           of the selected, connect originating to the inlet of all selected
+           objects which was specified by the first connection */
         else if (x->gl_editor->e_selection->sel_next &&
                  !glist_isselected(x, y1) && glist_isselected(x, y2))
         {
@@ -4892,18 +4904,17 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                         }
                     }
                 }    
-                hotspot1=hotspot1; hotspot2=hotspot2; // silence warnings (unused vars)
             }
             canvas_undo_add(x, UNDO_SEQUENCE_END, "multiconnect (mode-2)", 0);
             return(return_val);
         /* end of SECOND OPTION */
         }
 
-        /* THIRD OPTION: if two or more objects are selected and the one
-           that is receiving connection is one of the selected, and the
-           target object is selected, connect nth outlet (as specified by
-           the first connection) from all selected objects into the inlet
-           of the unselected one */
+        /* THIRD OPTION (N:1 a.k.a. fan-in single-connect): if two or more
+           objects are selected and the one that is receiving connection is
+           *not* one of the selected, connect the outlet of all selected
+           objects which was specified by the first connection to the inlet of
+           the receiving object */
         else if (x->gl_editor->e_selection->sel_next &&
                  glist_isselected(x, y1) && !glist_isselected(x, y2))
         {
@@ -4962,25 +4973,59 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                         }
                     }
                 }
-                hotspot1=hotspot1; hotspot2=hotspot2; // silence warnings (unused vars)
             }
             canvas_undo_add(x, UNDO_SEQUENCE_END, "multiconnect (mode-3)", 0);
             return(return_val);
         /* end of THIRD OPTION */
         }
 
-        /* FOURTH OPTION: if more than two objects are selected and both y1
-           and y2 are selected connect each originating object's outlet to
-           each of the outgoing objects' inlets until you run out of objects
-           or outlets. This one is tricky as there is no guarrantee that
-           objects will be selected in proper visual order, so we order the
-           selection from left to right and top to bottom to ensure proper
-           visual pairing. This option has two variants, A and B.
+        /* FOURTH OPTION (1:N a.k.a. fan-out or N:1 a.k.a. fan-in
+           multi-connect): These are multi-connect variations of the fan-out
+           and fan-in single-connect operations, in which at least *three*
+           objects are selected and *both* the originating object y1 and the
+           receiving object y2 are selected. It connects each originating
+           object's outlet to each receiving object's inlets until it runs out
+           of objects or outlets.
 
-           OPTION A VS B: we either connect outgoing to each of other objects
-           (A) or incoming to all other objects (B). We determine which one of
-           the two options is selected based on which condition will yield more
-           successful connections. */
+           Since both y1 and y2 are selected, there's no a-priori way to tell
+           which of the selected objects are originating and which are
+           receiving connections, so a visual top-to-bottom and left-to-right
+           order is used instead. For the sake of simplicity, assume that the
+           objects are arranged in two rows a, b as depicted below, where y1 =
+           a[i] and y2 = b[j]:
+
+           a[1] ... a[i-1] y1 a[i+1] ... a[m]
+           b[1] ... b[j-1] y2 b[j+1] ... b[n]
+
+           Then one of the following options will be taken:
+
+           - OPTION A (fan-out): Beginning with the *outlet* of the initial
+             connection y1-y2, the outlets of y1 will be connected to the same
+             inlet of as many objects y2=b[j], b[j+1], ... as possible, in
+             that order, starting with y2=b[j].
+
+           - OPTION B (fan-in): Beginning with the *inlet* of the initial
+             connection y1-y2, the inlets of y2 will be connected to the same
+             outlet of as many objects y1=a[i], a[i+1], ... as possible, in
+             that order, starting with y1=a[i].
+
+           The operation automatically chooses fan-out or fan-in depending on
+           which option gives the larger number of connections, breaking ties
+           in favor of fan-out. However, you can reverse that decision by
+           pressing the ctrl key while connecting. Note that the operation
+           will fail if y2 comes *before* y1 in the visual order, since
+           connections will always go to objects which come later in the
+           visual order.
+
+           CAVEATS: This operation is not 100% foolproof. :) The current
+           implementation doesn't really try to arrange the selected objects
+           into two neat rows as depicted above, it only goes by the
+           precomputed linear top-to-bottom, left-to-right order. In the real
+           world, patches tend to be messy, with objects not being lined up
+           exactly. The operation tries to account for this by rounding
+           coordinates to a 10 pixel grid (see grid_coord() above); but if
+           necessary you can always use the tidy-up operation in the edit menu
+           to line things up properly beforehand. */
         else if (x->gl_editor->e_selection->sel_next->sel_next &&
                  glist_isselected(x, y1) && glist_isselected(x, y2))
         {
@@ -5012,8 +5057,6 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 }
                 else closest2 = 0, hotspot2 = x21;
 
-                hotspot1=hotspot1; hotspot2=hotspot2; // silence warnings (unused vars)
-
                 if (closest1 >= noutlet1)
                     closest1 = noutlet1 - 1;
                 if (closest2 >= ninlet2)
@@ -5032,17 +5075,25 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 int successB = 0;
                 int do_count;
 
-                // try option A
+                // try option A (fan-out)
                 int tmp_closest1 = closest1;
                 int tmp_closest2 = closest2;
                 t_object *tmp_ob1 = ob1;
                 t_object *tmp_ob2 = ob2;
                 int tmp_noutlet1 = noutlet1;
                 int tmp_ninlet2 = ninlet2;
-                for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+                int i, i1 = -1, i2 = -1;
+                for (sel = x->gl_editor->e_selection, i = 0; sel; sel = sel->sel_next, i++)
                 {
-                    if (sel->sel_what != y1 && sel->sel_what != y2)
-                    {
+                    // identify original source and target as we go along
+                    if (sel->sel_what == y1) {
+                        i1 = i;
+                    } else if (sel->sel_what == y2) {
+                        i2 = i;
+                        // if original target comes before original source => fail
+                        if (i1 == -1) break;
+                        // otherwise, start doing connections
+                    } else if (i2 != -1) {
                         tmp_ob2 = pd_checkobject(&sel->sel_what->g_pd);
                         tmp_ninlet2 = obj_ninlets(tmp_ob2);
                         tmp_closest1++;
@@ -5082,17 +5133,35 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 }
                 //fprintf(stderr,"successA %d\n", successA);
 
-                // try option B
+                // try option B (fan-in)
                 tmp_closest1 = closest1;
                 tmp_closest2 = closest2;
                 tmp_ob1 = ob1;
                 tmp_ob2 = ob2;
                 tmp_noutlet1 = noutlet1;
                 tmp_ninlet2 = ninlet2;
-                for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+                i1 = -1; i2 = -1;
+                int last_x = -1;
+                for (sel = x->gl_editor->e_selection, i = 0; sel; sel = sel->sel_next, i++)
                 {
-                    if (sel->sel_what != y1 && sel->sel_what != y2)
-                    {
+                    t_text *yt = (t_text *)(sel->sel_what);
+                    if (grid_coord(yt->te_xpix) < last_x) {
+                        // this most likely indicates that we processed all 'a'
+                        // objects already and are about to spill over into
+                        // the 'b's, bail out.
+                        break;
+                    } else {
+                        last_x = grid_coord(yt->te_xpix);
+                    }
+                    // identify original source and target as we go along
+                    if (sel->sel_what == y1) {
+                        i1 = i;
+                        // found the original source, start doing connections
+                    } else if (sel->sel_what == y2) {
+                        i2 = i;
+                        // reached the original target, we're done
+                        break;
+                    } else if (i1 != -1) {
                         tmp_ob1 = pd_checkobject(&sel->sel_what->g_pd);
                         tmp_noutlet1 = obj_noutlets(tmp_ob1);
                         tmp_closest2++;
@@ -5136,16 +5205,24 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 // (we give preference to option A if both are equal)
                 // AG: Also take into account the ctrl mod status, so
                 // that the user can reverse our default choice (otherwise
-                // we usually just end up preferring outgoing connections)
+                // we usually just end up preferring fan-out)
+                i1 = -1; i2 = -1;
+                last_x = -1;
                 if (glob_ctrl ? successA < successB : successA >= successB)
                 {
-                    // OPTION A (see description above)
-                    for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+                    // OPTION A (fan-out)
+                    for (sel = x->gl_editor->e_selection, i = 0; sel; sel = sel->sel_next, i++)
                     {
-                        /* do this only with objects that have not
-                           been connected as of yet */
-                        if (sel->sel_what != y1 && sel->sel_what != y2)
-                        {
+                        // identify original source and target as we go along
+                        if (sel->sel_what == y1) {
+                            i1 = i;
+                        } else if (sel->sel_what == y2) {
+                            i2 = i;
+                            // if original target comes before original source => fail
+                            if (i1 == -1) break;
+                            // otherwise, found the original target, start doing connections
+                        } else if (i2 != -1) {
+                            // still doing connections
                             ob2 = pd_checkobject(&sel->sel_what->g_pd);
                             ninlet2 = obj_ninlets(ob2);
                             closest1++;
@@ -5166,13 +5243,28 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 }
                 else
                 {
-                    // OPTION B (see description above)
-                    for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+                    // OPTION B (fan-in)
+                    for (sel = x->gl_editor->e_selection, i = 0; sel; sel = sel->sel_next, i++)
                     {
-                        // do this only with objects that have not
-                        // been connected as of yet
-                        if (sel->sel_what != y1 && sel->sel_what != y2)
-                        {
+                        t_text *yt = (t_text *)(sel->sel_what);
+                        if (grid_coord(yt->te_xpix) < last_x) {
+                            // this most likely indicates that we processed all 'a'
+                            // objects already and are about to spill over into
+                            // the 'b's, bail out.
+                            break;
+                        } else {
+                            last_x = grid_coord(yt->te_xpix);
+                        }
+                        // identify original source and target as we go along
+                        if (sel->sel_what == y1) {
+                            i1 = i;
+                            // found the original source, start doing connections
+                        } else if (sel->sel_what == y2) {
+                            i2 = i;
+                            // reached the original target, we're done
+                            break;
+                        } else if (i1 != -1) {
+                            // still doing connections
                             ob1 = pd_checkobject(&sel->sel_what->g_pd);
                             noutlet1 = obj_noutlets(ob1);
                             closest2++;
