@@ -247,24 +247,28 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
         if (x->x_bufsize >= 100)
              tempbuf = (char *)t_getbytes(2 * x->x_bufsize + 1);
         else tempbuf = smallbuf;
+        int large = 0;
         while (x_bufsize_c - inindex_c > 0)
         {
             int inchars_b  = x->x_bufsize - inindex_b;
             int inchars_c  = x_bufsize_c  - inindex_c;
+            int maxindex_c =
+                (inchars_c > widthlimit_c ? widthlimit_c : inchars_c);
+            int maxindex_b = u8_offset(x->x_buf + inindex_b, maxindex_c,
+                x->x_bufsize - inindex_b);
             // deal with rich text tags in the input (comment text)
             int tag_width = 0, extra_width = 0;
             if (x->x_text->te_type == T_TEXT) {
-                int start = inindex_b, count = inchars_b,
-                    large = 0, extra = 0, in_tag = 0;
-                for (int i = start; i < start+count && x->x_buf[i] != '\n' &&
-                         x->x_buf[i] != '\v'; i++) {
+                int extra = 0, in_tag = 0;
+                for (int i = inindex_b; i < inindex_b+maxindex_b &&
+                         x->x_buf[i] != '\n' && x->x_buf[i] != '\v'; i++) {
                     if (x->x_buf[i] == '<' &&
                         // skip escaped tags
-                        i+1 < start+count && x->x_buf[i+1] != '!') {
+                        i+1 < inindex_b+maxindex_b && x->x_buf[i+1] != '!') {
                         int j;
-                        for (j = i+1; j < start+count &&
+                        for (j = i+1; j < inindex_b+maxindex_b &&
                                  is_tag_char(x->x_buf[j]); j++) ;
-                        if (j < start+count && x->x_buf[j] == '>') {
+                        if (j < inindex_b+maxindex_b && x->x_buf[j] == '>') {
                             if (strncmp(x->x_buf+i+1, "h", j-i-1) == 0)
                                 large = 1;
                             else if (strncmp(x->x_buf+i+1, "/h", j-i-1) == 0)
@@ -283,10 +287,11 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
                 extra_width = (int)(extra*0.2+0.5);
             }
             int tag_offs = tag_width - extra_width;
-            int maxindex_c =
-                (inchars_c > widthlimit_c + tag_offs ? widthlimit_c + tag_offs : inchars_c);
-            int maxindex_b = u8_offset(x->x_buf + inindex_b, maxindex_c,
-                x->x_bufsize - inindex_b);
+            if (tag_offs && maxindex_c == widthlimit_c) {
+                // recalculate offsets
+                maxindex_c += tag_offs;
+                maxindex_b += tag_offs;
+            }
             int eatchar = 1;
             //fprintf(stderr, "firstone <%s> inindex_b=%d maxindex_b=%d\n", x->x_buf + inindex_b, inindex_b, maxindex_b);
             int foundit_b  = firstone(x->x_buf + inindex_b, '\n', maxindex_b);
