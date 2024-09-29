@@ -443,4 +443,9 @@ EXTERN void alist_anything(t_alist *x, t_symbol *s, int argc, t_atom *argv);
 EXTERN void alist_toatoms(t_alist *x, t_atom *to, int onset, int count);
 EXTERN void alist_clone(t_alist *x, t_alist *y, int onset, int count);
 
+/* safe cross-platform alternatives to snprintf and vsnprintf. */
+EXTERN int pd_snprintf(char *buf, size_t size, const char *fmt, ...);
+EXTERN int pd_vsnprintf(char *buf, size_t size, const char *fmt,
+    va_list argptr);
+
 #endif /* __s_stuff_h_ */

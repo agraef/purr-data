@@ -17,6 +17,58 @@ t_printhook sys_printhook;
 t_printhook sys_printhook_error;
 int sys_printtostderr;
 
+#ifdef _WIN32
+
+    /* NB: Unlike vsnprintf(), _vsnprintf() does *not* null-terminate
+    the output if the resulting string is too large to fit into the buffer.
+    Also, it just returns -1 instead of the required number of bytes.
+    Strictly speaking, the UCRT in Windows 10 actually contains a standard-
+    conforming vsnprintf() function that is not just an alias for _vsnprintf().
+    However, MinGW traditionally links against the old msvcrt.dll runtime library.
+    Recent versions of MinGW seem to have their own (standard-conformating)
+    implementation of vsnprintf(), but to ensure portability we rather use our
+    own implementation for all Windows builds. */
+int pd_vsnprintf(char *buf, size_t size, const char *fmt, va_list argptr)
+{
+    int ret = _vsnprintf(buf, size, fmt, argptr);
+    if (ret < 0)
+    {
+            /* null-terminate the buffer and get the required number of bytes. */
+        ret = _vscprintf(fmt, argptr);
+        buf[size - 1] = '\0';
+    }
+    return ret;
+}
+
+int pd_snprintf(char *buf, size_t size, const char *fmt, ...)
+{
+    int ret;
+    va_list ap;
+    va_start(ap, fmt);
+    ret = pd_vsnprintf(buf, size, fmt, ap);
+    va_end(ap);
+    return ret;
+}
+
+#else
+
+int pd_vsnprintf(char *buf, size_t size, const char *fmt, va_list argptr)
+{
+    return vsnprintf(buf, size, fmt, argptr);
+}
+
+int pd_snprintf(char *buf, size_t size, const char *fmt, ...)
+{
+    int ret;
+    va_list ap;
+    va_start(ap, fmt);
+    ret = vsnprintf(buf, size, fmt, ap);
+    va_end(ap);
+    return ret;
+}
+
+#endif
+
 static char* strnpointerid(char *dest, const void *pointer, size_t len)
 {
     *dest=0;

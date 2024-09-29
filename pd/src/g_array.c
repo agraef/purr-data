@@ -7,6 +7,7 @@
 #include <stdio.h>      /* for read/write to files */
 #include "m_pd.h"
 #include "g_canvas.h"
+#include "g_all_guis.h"
 #include <math.h>
 #include <ctype.h>
 
@@ -134,6 +135,7 @@ struct _garray
     char x_saveit;          /* true if we should save this with parent */
     char x_joc;             /* true if we should "jump on click" in a graph */
     char x_hidename;        /* don't print name above graph */
+    char x_edit;            /* true if we can edit the array */
     int x_style;            /* so much simpler to keep it here */
     t_symbol *x_send;       /* send_changed hook */
     t_symbol *x_fillcolor;     /* filled area of bar in bar graph */
@@ -145,8 +147,8 @@ t_pd *garray_floattemplatecanvas;
 static char garray_arraytemplatefile[] = "\
 #N canvas 0 0 458 153 10;\n\
 #X obj 43 31 struct _float_array array z float float style\n\
-float linewidth float color symbol fillcolor symbol outlinecolor;\n\
-#X obj 43 70 plot z color linewidth 0 0 1 style fillcolor outlinecolor;\n\
+float linewidth float color symbol fillcolor symbol outlinecolor float v;\n\
+#X obj 43 70 plot -v v z color linewidth 0 0 1 style fillcolor outlinecolor;\n\
 ";
 static char garray_floattemplatefile[] = "\
 #N canvas 0 0 458 153 10;\n\
@@ -196,6 +198,7 @@ static t_garray *graph_scalar(t_glist *gl, t_symbol *s, t_symbol *templatesym,
     x->x_outlinecolor = outline;
     x->x_scalar = scalar_new(gl, templatesym);
     x->x_name = s;
+    x->x_edit = 1;
     x->x_realname = canvas_realizedollar(gl, s);
     pd_bind(&x->x_gobj.g_pd, x->x_realname);
     x->x_usedindsp = 0;
@@ -508,6 +511,7 @@ t_garray *graph_array(t_glist *gl, t_symbol *s, int argc, t_atom *argv)
         x->x_style, 1);
     template_setfloat(template, gensym("linewidth"), x->x_scalar->sc_vec, 
         ((x->x_style == PLOTSTYLE_POINTS) ? 2 : 1), 1);
+    template_setfloat(template, gensym("v"), x->x_scalar->sc_vec, 1, 1);
     template_setsymbol(template, gensym("fillcolor"), x->x_scalar->sc_vec,
         fill, 1);
     template_setsymbol(template, gensym("outlinecolor"), x->x_scalar->sc_vec,
@@ -1392,6 +1396,8 @@ static int garray_click(t_gobj *z, t_glist *glist,
     int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
     t_garray *x = (t_garray *)z;
+    if (!x->x_edit)
+        return 0;
     array_garray = x;
     return (gobj_click(&x->x_scalar->sc_gobj, glist,
         xpix, ypix, shift, alt, dbl, doit));
@@ -1826,6 +1832,62 @@ static void garray_ylabel(t_garray *x, t_symbol *s, int argc, t_atom *argv)
 {
     typedmess(&x->x_glist->gl_pd, s, argc, argv);
 }
+
+static void garray_style(t_garray *x, t_floatarg fstyle) {
+    x->x_style = (int)fstyle;
+    template_setfloat(template_findbyname(x->x_scalar->sc_template), gensym("style"), x->x_scalar->sc_vec, (t_float)x->x_style, 0);
+    glist_redraw(x->x_glist);
+}
+
+static t_symbol* garray_convertcolor(int argc, t_atom *argv) {
+    if(argv->a_type == A_SYMBOL) {
+        return argv->a_w.w_symbol;
+    } else {
+        int col = argv->a_w.w_float;
+        int bitsPerChannel;
+        char* hexCol[8]; 
+
+        if(col >= 0) {
+            col = iemgui_color_hex[col % 30];
+            bitsPerChannel = 8;
+        } else {
+            col = -1 - col;
+            bitsPerChannel = 6;
+        }
+
+        int r = (col & ((1 << bitsPerChannel) - 1)) << (8 - bitsPerChannel);
+        int g = (col & ((1 << (bitsPerChannel * 2)) - 1)) << (8 - bitsPerChannel) * 2;
+        int b = (col & ((1 << (bitsPerChannel * 3)) - 1)) << (8 - bitsPerChannel) * 3;
+
+        snprintf(hexCol, sizeof(hexCol), "#%06x", (r | g | b) & 0xFFFFFF);
+
+        return gensym(hexCol);
+    }
+}
+
+static void garray_fillcolor(t_garray *x, t_symbol *s, int argc, t_atom *argv) {
+    x->x_fillcolor = garray_convertcolor(argc, argv);
+    template_setsymbol(template_findbyname(x->x_scalar->sc_template), gensym("fillcolor"), x->x_scalar->sc_vec, x->x_fillcolor, 1);
+    glist_redraw(x->x_glist);
+}
+
+static void garray_outlinecolor(t_garray *x, t_symbol *s, int argc, t_atom *argv) {
+    x->x_outlinecolor = garray_convertcolor(argc, argv);
+    template_setsymbol(template_findbyname(x->x_scalar->sc_template), gensym("outlinecolor"), x->x_scalar->sc_vec, x->x_outlinecolor, 1);
+    glist_redraw(x->x_glist);
+}
+
+static void garray_vis_msg(t_garray *x, t_floatarg fvis)
+{
+    template_setfloat(template_findbyname(x->x_scalar->sc_template), gensym("v"), x->x_scalar->sc_vec, fvis, 0);
+    glist_redraw(x->x_glist);
+}
+
+static void garray_width(t_garray *x, t_floatarg fvis)
+{
+    template_setfloat(template_findbyname(x->x_scalar->sc_template), gensym("linewidth"), x->x_scalar->sc_vec, fvis, 0);
+    glist_redraw(x->x_glist);
+}
     /* change the name of a garray. */
 static void garray_rename(t_garray *x, t_symbol *s)
 {
@@ -1943,6 +2005,11 @@ void garray_resize(t_garray *x, t_floatarg f)
     garray_resize_long(x, f);
 }
 
+static void garray_edit(t_garray *x, t_floatarg f)
+{
+    x->x_edit = (int)f;
+}
+
 static void garray_print(t_garray *x)
 {
     t_array *array = garray_getarray(x);
@@ -1974,6 +2041,18 @@ void g_array_setup(void)
         A_FLOAT, A_FLOAT, A_FLOAT, 0);
     class_addmethod(garray_class, (t_method)garray_ylabel, gensym("ylabel"),
         A_GIMME, 0);
+    class_addmethod(garray_class, (t_method)garray_style, gensym("style"),
+        A_FLOAT, 0);
+    class_addmethod(garray_class, (t_method)garray_width, gensym("width"),
+        A_FLOAT, 0);
+    class_addmethod(garray_class, (t_method)garray_outlinecolor, gensym("color"),
+        A_GIMME, 0); // This is duplicated alongside outlinecolor for pure-data compatibility
+    class_addmethod(garray_class, (t_method)garray_outlinecolor, gensym("outlinecolor"),
+        A_GIMME, 0);
+    class_addmethod(garray_class, (t_method)garray_fillcolor, gensym("fillcolor"),
+        A_GIMME, 0);
+    class_addmethod(garray_class, (t_method)garray_vis_msg, gensym("vis"),
+        A_FLOAT, 0);
     class_addmethod(garray_class, (t_method)garray_rename, gensym("rename"),
         A_SYMBOL, 0);
     class_addmethod(garray_class, (t_method)garray_read, gensym("read"),
@@ -1982,6 +2061,8 @@ void g_array_setup(void)
         A_SYMBOL, A_NULL);
     class_addmethod(garray_class, (t_method)garray_resize, gensym("resize"),
         A_FLOAT, A_NULL);
+    class_addmethod(garray_class, (t_method)garray_edit, gensym("edit"),
+        A_FLOAT, 0);
     class_addmethod(garray_class, (t_method)garray_print, gensym("print"),
         A_NULL);
     class_addmethod(garray_class, (t_method)garray_sinesum, gensym("sinesum"),
