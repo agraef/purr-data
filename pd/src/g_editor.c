@@ -4453,13 +4453,16 @@ static int grid_coord(int x)
     return (int)((x+PIX_GRID/2)/PIX_GRID);
 }
 
+static int sel_order = 0; // 0 = vertical, 1 = horizontal
+static int sel_order_r = 1; // -1 = reverse rows or columns
+
 static int check_wrap(t_gobj *x, int *last)
 {
-    t_text *y = (t_text *)(x);
-    if (grid_coord(y->te_xpix) < *last) {
+    t_text *y = (t_text *)x;
+    if (grid_coord(sel_order?y->te_ypix:y->te_xpix) < *last) {
         return 1;
     } else {
-        *last = grid_coord(y->te_xpix);
+        *last = grid_coord(sel_order?y->te_ypix:y->te_xpix);
         return 0;
     }
 }
@@ -4469,32 +4472,108 @@ typedef struct _sel_map {
     t_selection *sel;
 } t_sel_map;
 
+static int analyze_order(t_sel_map *sel, int n_selected,
+                         t_gobj *y1, t_gobj *y2, int *ip1, int *ip2)
+{
+    int i1 = -1, i2 = -1, count1 = 0, count2 = 0, skip = 1, last = -1;
+    for (int i = 0; i < n_selected; i++)
+    {
+        t_gobj *x = sel[i].sel->sel_what;
+        if (!skip && check_wrap(x, &last)) {
+            if (i1 != -1 || i2 != -1) {
+                skip = 1;
+                last = -1;
+            }
+        }
+        if (x == y1) {
+            i1 = i;
+            count1 = 1; skip = 0;
+        } else if (x == y2) {
+            i2 = i;
+            count2 = 1; skip = 0;
+        } else if (!skip) {
+            if (i1 != -1 && i2 < i1)
+                count1++;
+            if (i2 != -1 && i1 < i2)
+                count2++;
+        }
+    }
+    *ip1 = i1; *ip2 = i2;
+    return count2 > count1 ? count2 : count1;
+}
+
 static int sel_compare(const void *x, const void *y)
 {
     t_sel_map *xs = (t_sel_map*)x;
     t_sel_map *ys = (t_sel_map*)y;
     t_text *xt =(t_text*)xs->sel->sel_what;
     t_text *yt =(t_text*)ys->sel->sel_what;
-    if (grid_coord(xt->te_ypix) == grid_coord(yt->te_ypix))
-        return grid_coord(xt->te_xpix) - grid_coord(yt->te_xpix);
-    else
-        return grid_coord(xt->te_ypix) - grid_coord(yt->te_ypix);
+    if (sel_order) {
+        if (grid_coord(xt->te_xpix) == grid_coord(yt->te_xpix))
+            return grid_coord(xt->te_ypix) - grid_coord(yt->te_ypix);
+        else
+            return sel_order_r *
+                (grid_coord(xt->te_xpix) - grid_coord(yt->te_xpix));
+    } else {
+        if (grid_coord(xt->te_ypix) == grid_coord(yt->te_ypix))
+            return grid_coord(xt->te_xpix) - grid_coord(yt->te_xpix);
+        else
+            return sel_order_r *
+                (grid_coord(xt->te_ypix) - grid_coord(yt->te_ypix));
+    }
 }
 
-void canvas_sort_selection_according_to_location(t_canvas *x)
+void canvas_sort_selection_according_to_location(t_canvas *x, t_gobj *y1, t_gobj *y2)
 {
     int n_selected = glist_selectionindex(x, 0, 1); // get all selected objects
     //fprintf(stderr,"n_selected = %d\n", n_selected);
     t_selection *traverse;
-    t_sel_map sel[n_selected];
+    // vertical order = top-to-bottom, left-to-right
+    // horizontal order = left-to-right, top-to-bottom
+    t_sel_map sel_v[n_selected], sel_h[n_selected];
     int i = 0;
     for (traverse = x->gl_editor->e_selection; traverse; traverse = traverse->sel_next)
     {
-        sel[i].sel = traverse;
-        sel[i].i = i;
+        sel_v[i].sel = traverse;
+        sel_v[i].i = i;
+        sel_h[i].sel = traverse;
+        sel_h[i].i = i;
         i++;
     }
-    qsort(sel, n_selected, sizeof(t_sel_map), sel_compare);
+    // compute both orders
+    int i1 = -1, i2 = -1;
+    sel_order_r = 1;
+    sel_order = 0;
+    qsort(sel_v, n_selected, sizeof(t_sel_map), sel_compare);
+    int count_v = analyze_order(sel_v, n_selected, y1, y2, &i1, &i2);
+    int offs_v = i2 - i1;
+    sel_order = 1;
+    qsort(sel_h, n_selected, sizeof(t_sel_map), sel_compare);
+    int count_h = analyze_order(sel_h, n_selected, y1, y2, &i1, &i2);
+    int offs_h = i2 - i1;
+    // Assess whether the vertical or the horizontal order is most likely,
+    // based on the number of columns and rows in the resulting pairing of
+    // objects, respectively. Break ties in favor of the vertical order.
+    sel_order = 0;
+    t_sel_map *sel = sel_v;
+    int offs = offs_v;
+    if (count_v < count_h) {
+        sel_order = 1;
+        sel = sel_h;
+        offs = offs_h;
+    }
+    if (offs < 0) {
+        // If i2 < i1 then the target y2 comes before source y1 in the
+        // computed order. Our algorithm assumes that i1 < i2. We can try to
+        // fix up the order on the fly by reversing the primary coordinate.
+        // This won't do any good if both y1 and y2 are at the same primary
+        // coordinate, but then the whole bipartite pairing of sources and
+        // targets won't work anyway, and the algorithm will detect this error
+        // condition later.
+        sel_order_r = -1;
+        qsort(sel, n_selected, sizeof(t_sel_map), sel_compare);
+    }
+    // apply the constructed order
     x->gl_editor->e_selection = sel[0].sel;
     for (i = 0; i < n_selected-1; i++)
     {
@@ -4981,8 +5060,13 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
 
            Since both y1 and y2 are selected, there's no a-priori way to tell
            which of the selected objects will be originating and which will be
-           receiving connections, so a visual top-to-bottom and left-to-right
-           order is used instead. To keep things simple, let's imagine that
+           receiving connections, so the selection is sorted based on the
+           positions of the objects on the canvas instead. The present
+           implementation assumes that the selection can be organized into
+           rows or columns with the originating object in one of these, and
+           the receiving object in another. A heuristic is used to determine
+           which configuration is most likely, based on the layout and the
+           positions of y1 and y2. To keep things simple, let's imagine that
            the objects are arranged in two rows a, b as depicted below, where
            y1 = a[i] and y2 = b[j]:
 
@@ -5010,34 +5094,36 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
              b[j+1], ... as possible, using the same inlet and outlet numbers
              as in the initial connection.
 
-           Note that in any case, the operation will fail if y2 comes *before*
-           y1 in the visual order, since connections will always go to objects
-           which come later in that order. In addition, the algorithm enforces
-           a strict top-to-bottom, left-to-right order of doing connections.
-           This limits the possible connections, but makes the results more
-           predictable and more likely to resemble the user's intentions.
+           In the vertical, row-based order sketched out above, the algorithm
+           enforces a strict top-to-bottom, left-to-right order of doing
+           connections.  Likewise, in the horizontal, column-based order,
+           connections are done from left-to-right, top-to-bottom. This limits
+           the possible connections, but makes the results more predictable
+           and more likely to resemble the user's intentions.
 
            Option C is only taken if the ctrl key is pressed while doing the
            initial connection. Otherwise, the operation automatically chooses
            fan-out or fan-in depending on which option gives you the larger
            number of connections, breaking ties in favor of fan-out.
 
-           CAVEAT: This operation is not 100% foolproof. :) The current
+           CAVEAT: This operation is not 100% foolproof. The current
            implementation doesn't really try to arrange the selected objects
-           into two neat rows as depicted above, it only goes by the
-           precomputed linear top-to-bottom, left-to-right order. In the real
-           world, patches tend to be messy, with objects rarely being lined up
-           perfectly. The algorithm tries to account for this by rounding
-           coordinates to a 10 pixel grid (see grid_coord() above), but you
-           can help it along by employing the tidy-up operation in the edit
-           menu to line things up properly beforehand.
+           into two neat rows or columns as depicted above, it only goes by
+           the precomputed linear selection order. In the real world, patches
+           tend to be messy, with objects rarely being lined up perfectly. The
+           algorithm tries to account for this by rounding coordinates to a
+           grid (see grid_coord() above), but you can also help it along by
+           employing the tidy-up operation in the edit menu to line things up
+           beforehand.
 
-           It also helps if you avoid ambiguities by selecting minimal 'a' and
-           'b' sets of objects which will give you the connections that you
-           want. In particular, if the algorithm gives you a fan-out, but you
-           actually wanted a fan-in instead, try deselecting all 'b' objects
-           except the one that you want to fan into. In the same way, a
-           fan-out can be forced by selecting only a single 'a' object. */
+           It also helps if the positions of the selected objects at least
+           roughly follow the row- or column-based layout assumed by the
+           algorithm. Moreover, you can avoid ambiguities by selecting minimal
+           'a' and 'b' sets of objects which will give you the connections
+           that you want. In particular, if the algorithm gives you a fan-out,
+           but you actually wanted a fan-in instead, try deselecting all 'b'
+           objects except the one that you want to fan into. In the same way,
+           a fan-out can be forced by selecting only a single 'a' object. */
         else if (x->gl_editor->e_selection->sel_next->sel_next &&
                  glist_isselected(x, y1) && glist_isselected(x, y2))
         {
@@ -5083,7 +5169,7 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 int i, i1 = -1, i2 = -1;
                 int last_x = -1;
                 // re-order the selection
-                canvas_sort_selection_according_to_location(x);
+                canvas_sort_selection_according_to_location(x, y1, y2);
 
                 if (glob_ctrl) {
                     // OPTION C (N:N multi-connect)
