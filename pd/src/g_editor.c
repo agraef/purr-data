@@ -6160,6 +6160,8 @@ static void canvas_snap_to_grid(t_canvas *x, int xwas, int ywas, int xnew,
 
 static void delay_move(t_canvas *x)
 {
+    if (!x || !x->gl_editor || !x->gl_editor->e_selection)
+        return;
     int dx, dy;
     int xwas = x->gl_editor->e_xwas, ywas = x->gl_editor->e_ywas,
         xnew = x->gl_editor->e_xnew, ynew = x->gl_editor->e_ynew;
