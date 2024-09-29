@@ -1,40 +1,21 @@
-#N canvas 252 51 453 586 10;
+#N canvas 254 51 453 661 10;
 #X obj 36 48 pack f f f f;
 #X obj 169 8 unpack f f f f;
-#X text 13 180 (1) 1:1 multi-connect: connects o(n+k) -> i(m+k) for
-k=0 \, 1 \, ... \, where o(n)->i(m) is the initial connection and *exactly*
-o and i are selected;
 #X obj 36 8 unpack f f f;
 #X obj 169 48 pack f f f;
-#X text 13 226 (2) 1:N single-connect: connects o(n)->i(m) \, o(n)->i'(m)
-\, o(n)->i''(m) \, ... \, where o(n)->i(m) is the initial connection
-\, o is unselected and at least 2 objects i \, i' \, i'' \, ... are
-selected;
-#X text 13 285 (3) N:1 single-connect: connects o(n)->i(m) \, o'(n)->i(m)
-\, o''(n)->i(m) \, ... \, where o(n)->i(m) is the initial connection
-\, i is unselected and at least 2 objects o \, o' \, o'' \, ... are
-selected;
-#X text 13 344 (4) 1:N multi-connect: connects o(n+k) -> i(m) for each
-other selected object i \, k = 0 \, 1 \, ... \, where o(n)->i(m) is
-the initial connection \, and *both* o and at least two different i's
-are selected;
-#X text 13 403 (4') N:1 multi-connect: connects o(n) -> i(m+k) for
-each other selected object o \, k = 0 \, 1 \, ... \, where o(n)->i(m)
-is the initial connection \, and *both* i and at least two different
-o's are selected;
-#X text 13 160 "Intelligent" patching:;
-#X text 13 114 Shift connections: Pressing the shift key while doing
+#X text 13 154 "Intelligent" patching:;
+#X text 13 108 Shift connections: Pressing the shift key while doing
 connections will let you do multiple connections from the same outlet
 in one go.;
-#N canvas 88 323 450 323 mode1 0;
+#N canvas 89 323 450 323 mode1 0;
 #X text 37 15 Mode 1 is the simplest: just select the two objects below
 and then connect the leftmost outlet of the upper object to the leftmost
 inlet of the lower object:;
 #X obj 110 81 unpack f f f f;
 #X obj 115 120 pack f f f f;
-#X restore 377 198 pd mode1;
+#X restore 377 188 pd mode1;
 #X text 272 35 can be found in the margin.;
-#N canvas 66 279 450 323 mode2+3 0;
+#N canvas 67 279 450 323 mode2+3 0;
 #X obj 188 84 inlet;
 #X floatatom 150 114 5 0 0 0 - - -, f 5;
 #X floatatom 187 114 5 0 0 0 - - -, f 5;
@@ -49,49 +30,98 @@ the leftmost object in the (selected) bottom row.;
 row and then connect the leftmost object in the (selected) top row
 to the inlet of the (unselected) lower object.;
 #X obj 181 243 outlet;
-#X restore 377 283 pd mode2+3;
-#N canvas 288 307 445 421 mode4 0;
-#X obj 86 177 unpack f f f;
-#X floatatom 83 209 5 0 0 0 - - -, f 5;
-#X floatatom 120 209 5 0 0 0 - - -, f 5;
-#X floatatom 157 209 5 0 0 0 - - -, f 5;
-#X floatatom 237 177 5 0 0 0 - - -, f 5;
-#X floatatom 274 177 5 0 0 0 - - -, f 5;
-#X floatatom 311 177 5 0 0 0 - - -, f 5;
-#X obj 246 209 pack f f f;
-#X obj 68 318 unpack f f;
-#X obj 137 318 unpack f f;
-#X obj 110 347 pack f f;
-#X obj 222 318 unpack f f;
-#X obj 291 318 unpack f f;
-#X obj 264 347 pack f f;
-#X text 99 374 without ctrl;
-#X text 262 374 with ctrl;
-#X text 54 145 Mode 4: 1:N ("fan out");
-#X text 220 145 Mode 4': N:1 ("fan in");
-#X text 37 236 Note that the intelligent patching heuristic will pick
-either mode 4 or mode 4' \, whatever gives the most connections. Sometimes
-this choice will be ambiguous \, in which case you may have to help
-the algorithm along by pressing the ctrl key *before* doing the connections:
+#X restore 377 273 pd mode2+3;
+#N canvas 299 126 786 542 mode4 0;
+#X obj 73 208 unpack f f f;
+#X floatatom 70 240 5 0 0 0 - - -, f 5;
+#X floatatom 107 240 5 0 0 0 - - -, f 5;
+#X floatatom 144 240 5 0 0 0 - - -, f 5;
+#X floatatom 224 208 5 0 0 0 - - -, f 5;
+#X floatatom 261 208 5 0 0 0 - - -, f 5;
+#X floatatom 298 208 5 0 0 0 - - -, f 5;
+#X obj 233 240 pack f f f;
+#X floatatom 100 470 5 0 0 0 - - -, f 5;
+#X floatatom 147 470 5 0 0 0 - - -, f 5;
+#X floatatom 194 470 5 0 0 0 - - -, f 5;
+#X floatatom 100 500 5 0 0 0 - - -, f 5;
+#X floatatom 147 500 5 0 0 0 - - -, f 5;
+#X floatatom 194 500 5 0 0 0 - - -, f 5;
+#X text 41 176 <b>Mode 4A:</b> 1:N ("fan out");
+#X text 207 176 <b>Mode 4B:</b> N:1 ("fan in");
+#X msg 440 361 1;
+#X floatatom 440 390 5 0 0 0 - - -, f 5;
+#X floatatom 440 420 5 0 0 0 - - -, f 5;
+#X obj 500 391 * 1.5;
+#X obj 500 421 * 1.5;
+#X floatatom 440 450 5 0 0 0 - - -, f 5;
+#X floatatom 440 480 5 0 0 0 - - -, f 5;
+#X obj 500 451 * 1.5;
+#X obj 500 481 * 1.5;
+#X floatatom 440 510 5 0 0 0 - - -, f 5;
+#X msg 610 361 1;
+#X floatatom 610 390 5 0 0 0 - - -, f 5;
+#X floatatom 610 420 5 0 0 0 - - -, f 5;
+#X obj 670 391 * 1.5;
+#X obj 670 421 * 1.5;
+#X floatatom 610 450 5 0 0 0 - - -, f 5;
+#X floatatom 610 480 5 0 0 0 - - -, f 5;
+#X obj 670 451 * 1.5;
+#X obj 670 481 * 1.5;
+#X floatatom 610 510 5 0 0 0 - - -, f 5;
+#X text 20 20 <b>Mode 4</b> is the most complicated \, but also the
+most versatile.Here we want to connect the objects above to the objects
+below again \, but this time the different out- or inlets of the target
+object will be *distributed* among the other objects. To try these
+\, select each group of four objects below and then connect the leftmost
+outlet of the leftmost object on the top to the leftmost inlet of the
+leftmost object on the bottom. Note that \, in contrast to mode 2 and
+3 \, here *all* the objects to be connected have to be selected beforehand!
+, f 61;
+#X text 24 267 The algorithm will pick either mode 4A or mode 4B \,
+whatever gives the most connections. Sometimes this choice will be
+ambiguous \, in which case you may have to help the algorithm along
+by deselecting source or target objects that should be excluded from
+the connections.;
+#X text 24 351 <b>Mode 4C</b> is activated by holding the ctrl key
+while doing the initial connection. It does simple parallel connections
+between as many pairs of objects as possible \, using the same inlets
+and outlets as in the initial connection. E.g. \, select all six number
+objects below \, then draw a connection from the leftmost object in
+the upper row to the leftmost object in the lower row while holding
+the ctrl key. All three pairs of number objects will then be connected:
 ;
-#X text 36 17 Mode 4 is the most complicated. Here we want to connect
-the objects above to the objects below again \, but this time the different
-out- or inlets of the target object will be *distributed* among the
-other objects. To try these \, select each group of three or four objects
-below and then connect the leftmost outlet of the leftmost object on
-the top to the leftmost inlet of the leftmost object on the bottom.
-Note that \, in contrast to mode 2 and 3 \, here *all* the objects
-to be connected have to be selected beforehand!;
-#X restore 377 392 pd mode4;
-#X text 13 462 NOTE: Intelligent patching will do either (4) or (4')
-\, whichever gives the most connections. This choice can be reversed
-by holding the ctrl key when doing the initial connection. The "other"
-selected objects will be considered in left-to-right and top-to-bottom
-order.;
-#X obj 4 -24 cnv 15 445 20 empty \$0-pddp.cnv.header intelligent\ patching
-20 10 1 18 -261139 -33289 0;
-#X obj 2 536 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
-14 -233017 -33289 0;
+#X text 400 20 <h>Column- vs. Row-Based Layouts</h>Mode 4 works best
+if objects are arranged in rows or columns. The algorithm chooses the
+most likely layout automatically based on the relative locations of
+the selected objects and the initial pair on the canvas. (If the actual
+alignment of objects is too sloppy you can help the algorithm by employing
+the tidy-up operation in the edit menu to line things up beforehand.)We've
+already seen row-based examples on the left. For a column-based example
+\, try the following "frequency ladder" \, which computes a collection
+of frequencies spaced by a perfect fifth in just intonation. To make
+all the required connections (as shown on the right) \, select all
+the number boxes on the left and the [* 1.5] objects on the right.We're
+going to use parallel connections (mode 4C) here \, so don't forget
+to hold down the ctrl key. Then connect the outlet of the topmost number
+box to the left <b>inlet</b> of the topmost [* 1.5] object. Now keep
+holding the ctrl key and connect the <b>outlet</b> of the topmost [*
+1.5] object to the inlet of the number box below it.Finally \, test
+it out by clicking the [1( message at the top!;
+#X connect 16 0 17 0;
+#X connect 26 0 27 0;
+#X connect 27 0 29 0;
+#X connect 28 0 30 0;
+#X connect 29 0 28 0;
+#X connect 30 0 31 0;
+#X connect 31 0 33 0;
+#X connect 32 0 34 0;
+#X connect 33 0 32 0;
+#X connect 34 0 35 0;
+#X restore 377 416 pd mode4;
+#X obj 4 -24 cnv 15 445 20 empty \$0-pddp.cnv.header intelligent\\\ patching
+20 10 1 18 #fcc048 #202020 0;
+#X obj 2 616 cnv 15 445 20 empty \$0-pddp.cnv.footer empty 20 12 0
+14 #e0e0e0 #202020 0;
 #N canvas 42 254 494 284 META 0;
 #X text 12 85 LIBRARY PDDP;
 #X text 12 45 LICENSE SIBSD;
@@ -101,18 +131,48 @@ Wilkes).;
 #X text 12 105 WEBSITE https://agraef.github.io/purr-data-intro/;
 #X text 12 65 DESCRIPTION how to connect multiple objects in one go
 ;
-#X restore 383 538 pd META;
+#X restore 383 618 pd META;
 #N canvas 19 470 428 143 References 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -261139 -33289 0;
+14 #fcc048 #202020 0;
 #X text 7 2 Editing- Related Help Documents;
 #X text 17 28 Notice that some of the menu items have shortcut keys
 listed beside them. Check out the one for Edit mode for a quick way
 to switch back and forth between Edit mode and Run mode.;
-#X restore 104 538 pd References;
-#X obj 7 538 pddp/pddplink ../5.reference/pddp/help.pd -text help;
+#X restore 104 618 pd References;
+#X obj 7 618 pddp/pddplink ../5.reference/pddp/help.pd -text help;
 #X obj 418 -23 pddp/pddplink http://puredata.info/dev/pddp -text pddp
 ;
-#X text 33 90 Note: these behaviors are unstable and subject to change
+#X text 13 84 Note: these behaviors are unstable and subject to change
 ;
 #X text 272 22 Details and exercises;
+#X text 13 518 <b>NOTE:</b> (4C) is activated by holding the ctrl key
+when doing the initial connection. Otherwise \, either (4A) or (4B)
+will be applied \, whichever gives the most connections. This mode
+works best if objects are arranged in rows or columns \, with the original
+o in one row/column \, and the original i in the other. Connections
+are made proceeding from left to right if row-based \, or top to bottom
+if column-based., f 70;
+#X text 13 174 <b>(1)</b> 1:1 multi-connect: connects o(n+k) -> i(m+k)
+for k=0 \, 1 \, ... \, where o(n)->i(m) is the initial connection and
+*exactly* o and i are selected, f 57;
+#X text 13 220 <b>(2)</b> 1:N single-connect: connects o(n)->i(m) \,
+o(n)->i'(m) \, o(n)->i''(m) \, ... \, where o(n)->i(m) is the initial
+connection \, o is unselected and at least 2 objects i \, i' \, i''
+\, ... are selected;
+#X text 13 279 <b>(3)</b> N:1 single-connect: connects o(n)->i(m) \,
+o'(n)->i(m) \, o''(n)->i(m) \, ... \, where o(n)->i(m) is the initial
+connection \, i is unselected and at least 2 objects o \, o' \, o''
+\, ... are selected;
+#X text 13 338 <b>(4A)</b> 1:N multi-connect: connects o(n+k) -> i(m)
+for each other selected object i \, k = 0 \, 1 \, ... \, where o(n)->i(m)
+is the initial connection \, and *both* o and at least two different
+i's are selected, f 57;
+#X text 13 397 <b>(4B)</b> N:1 multi-connect: connects o(n) -> i(m+k)
+for each other selected object o \, k = 0 \, 1 \, ... \, where o(n)->i(m)
+is the initial connection \, and *both* i and at least two different
+o's are selected, f 57;
+#X text 13 457 <b>(4C)</b> N:N parallel connections: connects o(n)
+-> i(m) \, o'(n) -> i'(m) \, o''(n) -> i''(m) \, ... for as many o
+and i as possible \, where o(n)->i(m) is the initial connection and
+at least three different o's and i's are selected, f 57;
