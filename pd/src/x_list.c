@@ -568,9 +568,9 @@ static void list_store_list(t_list_store *x, t_symbol *s,
 }
 
 /* function to restore gpointers after the list has moved in memory */
-static void list_store_restore_gpointers(t_list_store *x, int offset, int count)
+static void alist_restore_gpointers(t_alist *x, int offset, int count)
 {
-    t_listelem *vec = x->x_alist.l_vec + offset;
+    t_listelem *vec = x->l_vec + offset;
     while (count--)
     {
         if (vec->l_a.a_type == A_POINTER)
@@ -594,7 +594,7 @@ static void list_store_doinsert(t_list_store *x, t_symbol *s,
     }
         /* fix gpointers in case resizebytes() has moved the alist in memory */
     if (x->x_alist.l_vec != oldptr && x->x_alist.l_npointer)
-        list_store_restore_gpointers(&x->x_alist, 0, x->x_alist.l_n);
+        alist_restore_gpointers(&x->x_alist, 0, x->x_alist.l_n);
         /* shift existing elements after 'index' to the right */
     if (index < x->x_alist.l_n)
     {
@@ -602,7 +602,7 @@ static void list_store_doinsert(t_list_store *x, t_symbol *s,
             (x->x_alist.l_n - index) * sizeof(*x->x_alist.l_vec));
             /* fix gpointers because of memmove() */
         if (x->x_alist.l_npointer)
-            list_store_restore_gpointers(&x->x_alist, index + argc, x->x_alist.l_n - index);
+            alist_restore_gpointers(&x->x_alist, index + argc, x->x_alist.l_n - index);
     }
         /* finally copy new elements */
     alist_copyin(&x->x_alist, s, argc, argv, index);
@@ -681,9 +681,9 @@ static void list_store_delete(t_list_store *x, t_floatarg f1, t_floatarg f2)
     {
             /* fix all gpointers in case resizebytes() has moved the alist in memory */
         if (x->x_alist.l_vec != oldptr)
-            list_store_restore_gpointers(&x->x_alist, 0, x->x_alist.l_n - n);
+            alist_restore_gpointers(&x->x_alist, 0, x->x_alist.l_n - n);
         else /* only fix gpointers after index (because of of memmove()) */
-            list_store_restore_gpointers(&x->x_alist, index, x->x_alist.l_n - index - n);
+            alist_restore_gpointers(&x->x_alist, index, x->x_alist.l_n - index - n);
     }
     x->x_alist.l_n -= n;
 }
