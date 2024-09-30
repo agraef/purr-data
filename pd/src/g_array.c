@@ -1840,12 +1840,14 @@ static void garray_style(t_garray *x, t_floatarg fstyle) {
 }
 
 static t_symbol* garray_convertcolor(int argc, t_atom *argv) {
-    if(argv->a_type == A_SYMBOL) {
+    if (argc != 1 || (argv->a_type != A_SYMBOL && argv->a_type != A_FLOAT))
+        return 0;
+    else if (argv->a_type == A_SYMBOL) {
         return argv->a_w.w_symbol;
     } else {
         int col = argv->a_w.w_float;
         int bitsPerChannel;
-        char* hexCol[8]; 
+        char hexCol[8];
 
         if(col >= 0) {
             col = iemgui_color_hex[col % 30];
@@ -1866,15 +1868,25 @@ static t_symbol* garray_convertcolor(int argc, t_atom *argv) {
 }
 
 static void garray_fillcolor(t_garray *x, t_symbol *s, int argc, t_atom *argv) {
-    x->x_fillcolor = garray_convertcolor(argc, argv);
-    template_setsymbol(template_findbyname(x->x_scalar->sc_template), gensym("fillcolor"), x->x_scalar->sc_vec, x->x_fillcolor, 1);
-    glist_redraw(x->x_glist);
+    t_symbol* color = garray_convertcolor(argc, argv);
+    if (color) {
+        x->x_fillcolor = color;
+        template_setsymbol(template_findbyname(x->x_scalar->sc_template), gensym("fillcolor"), x->x_scalar->sc_vec, x->x_fillcolor, 1);
+        glist_redraw(x->x_glist);
+    } else
+        error("%s: color argument must be symbol or float",
+              x->x_realname->s_name);
 }
 
 static void garray_outlinecolor(t_garray *x, t_symbol *s, int argc, t_atom *argv) {
-    x->x_outlinecolor = garray_convertcolor(argc, argv);
-    template_setsymbol(template_findbyname(x->x_scalar->sc_template), gensym("outlinecolor"), x->x_scalar->sc_vec, x->x_outlinecolor, 1);
-    glist_redraw(x->x_glist);
+    t_symbol* color = garray_convertcolor(argc, argv);
+    if (color) {
+        x->x_outlinecolor = color;
+        template_setsymbol(template_findbyname(x->x_scalar->sc_template), gensym("outlinecolor"), x->x_scalar->sc_vec, x->x_outlinecolor, 1);
+        glist_redraw(x->x_glist);
+    } else
+        error("%s: color argument must be symbol or float",
+              x->x_realname->s_name);
 }
 
 static void garray_vis_msg(t_garray *x, t_floatarg fvis)
