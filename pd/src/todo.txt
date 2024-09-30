@@ -4,12 +4,5 @@ we might want to port in the future:
 
 - pd fast-forward message (sched_fastforward, glob_fastforward)
 
-- missing objects: file (low-level file operations), slop~ (slew-limiting
-  low-pass filter), trace (message tracing)
-
-- garray (edit and vis messages; messages to change style, width and color)
-
-- list store (new and updated methods)
-
 There might be more lurking in the shadows, but these are the ones that I
 found in the release notes and can thus be considered official. -ag
