@@ -516,6 +516,8 @@ EXTERN int sys_fontheight(int fontsize);
 EXTERN void canvas_dataproperties(t_glist *x, t_scalar *sc, t_binbuf *b);
 EXTERN int canvas_open(t_canvas *x, const char *name, const char *ext,
     char *dirresult, char **nameresult, unsigned int size, int bin);
+EXTERN t_float canvas_getsr(t_canvas *x);
+EXTERN int canvas_getsignallength(t_canvas *x);
 
 /* ---------------- widget behaviors ---------------------- */
 
@@ -529,13 +531,33 @@ EXTERN t_parentwidgetbehavior *pd_getparentwidget(t_pd *x);
 /* -------------------- classes -------------- */
 
 #define CLASS_DEFAULT 0         /* flags for new classes below */
-#define CLASS_PD 1
-#define CLASS_GOBJ 2
-#define CLASS_PATCHABLE 3
-#define CLASS_NOINLET 8
-
+#define CLASS_PD 1              /* non-canvasable (bare) pd such as an inlet */
+#define CLASS_GOBJ 2            /* pd that can belong to a canvas */
+#define CLASS_PATCHABLE 3       /* pd that also can have inlets and outlets */
 #define CLASS_TYPEMASK 3
 
+#define CLASS_NOINLET 8             /* suppress left inlet */
+#define CLASS_MULTICHANNEL 0x10     /* can deal with multichannel sigs */
+#define CLASS_NOPROMOTESIG 0x20     /* don't promote scalars to signals */
+#define CLASS_NOPROMOTELEFT 0x40    /* not even the main (left) inlet */
+
+/*
+    Setting a tilde object's CLASS_MULTICHANNEL flag declares that it can
+    deal with multichannel inputs.  In this case the channel counts of
+    the inputs might not match; it's up to the dsp method to figure out what
+    to do.  Also, the output signal vectors aren't allocated.  The output
+    channel counts have to be specified by the object at DSP time.  If
+    the object can't put itself on the DSP chain it then has to create
+    outputs anyway and arrange to zero them.
+    By default, if a tilde object's inputs are unconnected, Pd fills them
+    in by adding scalar-to-vector conversions to the DSP chain as needed before
+    calling the dsp method.  This behavior can be suppressed for the left
+    (main) inlet by setting CLASS_NOPROMOTELEFT and for one or more non-main
+    inlets by setting CLASS_NOPROMOTESIG.  Seeing this, the object can then
+    opt to supply a faster routine; for example, "+" can do a vector-scalar
+    add.  In any case, signal outputs are all vectors, and are allocated
+    automatically unless the CLASS_MULTICHANNEL flag is also set.
+*/
 
 EXTERN t_class *class_new(t_symbol *name, t_newmethod newmethod,
     t_method freemethod, size_t size, int flags, t_atomtype arg1, ...);
@@ -558,8 +580,8 @@ EXTERN char *class_getname(t_class *c);
 EXTERN char *class_gethelpname(t_class *c);
 EXTERN void class_setdrawcommand(t_class *c);
 EXTERN int class_isdrawcommand(t_class *c);
-EXTERN void class_domainsignalin(t_class *c, int onset);
 EXTERN void class_set_extern_dir(t_symbol *s);
+EXTERN void class_domainsignalin(t_class *c, int onset);
 #define CLASS_MAINSIGNALIN(c, type, field) \
     class_domainsignalin(c, (char *)(&((type *)0)->field) - (char *)0)
 
@@ -642,22 +664,37 @@ typedef PD_FLOATTYPE t_sample;
 
 typedef struct _signal
 {
-    int s_n;            /* number of points in the array */
-    t_sample *s_vec;    /* the array */
-    t_float s_sr;         /* sample rate */
-    int s_refcount;     /* number of times used */
-    int s_isborrowed;   /* whether we're going to borrow our array */
+    union
+    {
+        int s_length;       /* number of items per channel */
+        int s_n;            /* for source compatibility: pre-0.54 name */
+    };
+    t_sample *s_vec;        /* the samples, s_nchans vectors of s_length */
+    t_float s_sr;           /* samples per second per channel */
+    int s_nchans;           /* number of channels */
+    int s_overlap;          /* number of times each sample appears */
+    int s_refcount;         /* number of times signal is referenced */
+    int s_isborrowed;       /* whether we're going to borrow our array */
+    int s_isscalar;         /* scalar for an unconnected signal input */
     struct _signal *s_borrowedfrom;     /* signal to borrow it from */
     struct _signal *s_nextfree;         /* next in freelist */
     struct _signal *s_nextused;         /* next in used list */
-    int s_vecsize;      /* allocated size of array in points */
+    int s_nalloc;      /* allocated size of array in points */
 } t_signal;
 
 typedef t_int *(*t_perfroutine)(t_int *args);
 
+EXTERN t_signal *signal_new(int length, int nchans, t_float sr,
+    t_sample *scalarptr);
+EXTERN void signal_setmultiout(t_signal **sig, int nchans);
 EXTERN t_int *plus_perform(t_int *args);
+EXTERN t_int *plus_perf8(t_int *args);
 EXTERN t_int *zero_perform(t_int *args);
+EXTERN t_int *zero_perf8(t_int *args);
 EXTERN t_int *copy_perform(t_int *args);
+EXTERN t_int *copy_perf8(t_int *args);
+EXTERN t_int *scalarcopy_perform(t_int *args);
+EXTERN t_int *scalarcopy_perf8(t_int *args);
 
 EXTERN void dsp_add_plus(t_sample *in1, t_sample *in2, t_sample *out, int n);
 EXTERN void dsp_add_copy(t_sample *in, t_sample *out, int n);
@@ -692,7 +729,7 @@ EXTERN int canvas_dspstate;
 /*   up/downsampling */
 typedef struct _resample
 {
-  int method;       /* up/downsampling method ID */
+  int method;       /* unused */
 
   t_int downsample; /* downsampling factor */
   t_int upsample;   /* upsampling factor */
@@ -823,7 +860,7 @@ defined, there is a "te_xpix" field in objects, not a "te_xpos" as before: */
 
 #define PD_USE_TE_XPIX
 
-#if defined(__i386__) || defined(__x86_64__) // Type punning code:
+#if defined(__i386__) || defined(__x86_64__)  || defined(__aarch64__) // Type punning code:
 
 #if PD_FLOATSIZE == 32
 
@@ -893,6 +930,9 @@ static inline int PD_BIGORSMALL(t_float f)
 
     /* get version number at run time */
 EXTERN void sys_getversion(int *major, int *minor, int *bugfix);
+
+    /* get floatsize at run time */
+EXTERN unsigned int sys_getfloatsize(void);
 
 EXTERN_STRUCT _pdinstance;
 #define t_pdinstance struct _pdinstance       /* m_imp.h */

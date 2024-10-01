@@ -22,9 +22,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#ifdef _MSC_VER  /* This is only for Microsoft's compiler, not cygwin, e.g. */
-#define snprintf sprintf_s
-#endif
+#include "m_private_utils.h"
 
 t_symbol *class_loadsym;     /* name under which an extern is invoked */
 static void pd_defaultfloat(t_pd *x, t_float f);
@@ -402,11 +400,16 @@ t_class *class_new(t_symbol *s, t_newmethod newmethod, t_method freemethod,
     c->c_blobmethod = pd_defaultblob; /* MP 20061226 blob type */
     c->c_listmethod = pd_defaultlist;
     c->c_anymethod = pd_defaultanything;
+    /* set default widget behavior.  Things like IEM GUIs override
+        this; they're patchable but have bespoke widget behaviors */
     c->c_wb = (typeflag == CLASS_PATCHABLE ? &text_widgetbehavior : 0);
     c->c_pwb = 0;
     c->c_firstin = ((flags & CLASS_NOINLET) == 0);
     c->c_patchable = (typeflag == CLASS_PATCHABLE);
     c->c_gobj = (typeflag >= CLASS_GOBJ);
+    c->c_multichannel = (flags & CLASS_MULTICHANNEL) != 0;
+    c->c_nopromotesig = (flags & CLASS_NOPROMOTESIG) != 0;
+    c->c_nopromoteleft = (flags & CLASS_NOPROMOTELEFT) != 0;
     c->c_drawcommand = 0;
     c->c_floatsignalin = 0;
     c->c_externdir = class_extern_dir;
@@ -1252,3 +1255,12 @@ t_gotfn zcheckgetfn(t_pd *x, t_symbol *s, t_atomtype arg1, ...)
     }
     return(0);
 }
+
+/* this is privately shared with d_ugen.c */
+int class_getdspflags(const t_class *c)
+{
+    return ((c->c_multichannel ? CLASS_MULTICHANNEL : 0) |
+            (c->c_nopromotesig ? CLASS_NOPROMOTESIG : 0) |
+            (c->c_nopromoteleft ? CLASS_NOPROMOTELEFT : 0) );
+}
+

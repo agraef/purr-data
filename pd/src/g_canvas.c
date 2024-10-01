@@ -20,9 +20,7 @@ to be different but are now unified except for some fossilized names.) */
 #ifdef MSW
 #include <io.h>
 #endif
-#ifdef _MSC_VER
-#define snprintf _snprintf
-#endif
+#include "m_private_utils.h"
 
 t_garray *array_garray;
 int array_joc;
@@ -2122,7 +2120,11 @@ void canvas_resume_dsp(int oldstate)
     /* this is equivalent to suspending and resuming in one step. */
 void canvas_update_dsp(void)
 {
-    if (pd_this->pd_dspstate) canvas_start_dsp();
+    if (pd_this->pd_dspstate)
+    {
+        canvas_stop_dsp();
+        canvas_start_dsp();
+    }
 }
 
 /* the "dsp" message to pd starts and stops DSP computation, and, if
@@ -3565,7 +3567,8 @@ void g_canvas_setup(void)
         /* we prevent the user from typing "canvas" in an object box
         by sending 0 for a creator function. */
     canvas_class = class_new(gensym("canvas"), 0,
-        (t_method)canvas_free, sizeof(t_canvas), CLASS_NOINLET, 0);
+        (t_method)canvas_free, sizeof(t_canvas),
+            CLASS_NOINLET | CLASS_MULTICHANNEL, 0);
             /* here is the real creator function, invoked in patch files
             by sending the "canvas" message to #N, which is bound
             to pd_camvasmaker. */

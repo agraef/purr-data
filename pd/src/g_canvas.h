@@ -868,7 +868,11 @@ void canvas_getscroll (t_canvas *x);
 /* --------------------------------------------------------------------- */
 
 /*-------------  g_clone.c ------------- */
-extern t_class *clone_class;
+EXTERN t_class *clone_class;
+
+/*-------------  d_ugen.c ------------- */
+EXTERN void signal_setborrowed(t_signal *sig, t_signal *sig2);
+EXTERN void signal_makereusable(t_signal *sig);
 
 #if defined(_LANGUAGE_C_PLUS_PLUS) || defined(__cplusplus)
 }
