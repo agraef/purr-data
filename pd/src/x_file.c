@@ -10,7 +10,6 @@
 #include "s_stuff.h"
 #include "s_utf8.h"
 
-#define PD_INTERNAL
 #include "m_private_utils.h"
 
 #include <string.h>
