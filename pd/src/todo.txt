@@ -1,8 +1,0 @@
-
-Some things purr-data still lacks for full vanilla 0.53 compatibility, which
-we might want to port in the future:
-
-- pd fast-forward message (sched_fastforward, glob_fastforward)
-
-There might be more lurking in the shadows, but these are the ones that I
-found in the release notes and can thus be considered official. -ag
