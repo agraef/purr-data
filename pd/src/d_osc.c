@@ -205,11 +205,11 @@ static void cos_maketable(void)
 #endif
 }
 
-static void cos_cleanup(t_class *c)
-{
 #if 0
     // ag: this causes segfaults during regression testing, so we just never
     // free the tables at all.
+static void cos_cleanup(t_class *c)
+{
 #ifdef OLDTABSIZE
     if (cos_table)
         freebytes(cos_table, sizeof(float) * (OLDTABSIZE+1));
@@ -218,12 +218,12 @@ static void cos_cleanup(t_class *c)
     if (cos_newtable)
         freebytes(cos_newtable, sizeof(float) * (COSTABLESIZE+1));
     cos_newtable = 0;
-#endif
 }
+#endif
 
 static void cos_setup(void)
 {
-    cos_class = class_new(gensym("cos~"), (t_newmethod)cos_new, (t_method)cos_cleanup,
+    cos_class = class_new(gensym("cos~"), (t_newmethod)cos_new, 0,
         sizeof(t_cos), CLASS_MULTICHANNEL, A_DEFFLOAT, 0);
     CLASS_MAINSIGNALIN(cos_class, t_cos, x_f);
     class_addmethod(cos_class, (t_method)cos_dsp, gensym("dsp"), A_CANT, 0);
