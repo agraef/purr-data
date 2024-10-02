@@ -433,7 +433,7 @@ void signal_makereusable(t_signal *sig)
     if (ugen_loud) post("free %zx: %d", sig, sig->s_isborrowed);
     if (sig->s_isborrowed || sig->s_isscalar)
     {
-        if (sig->s_isborrowed)
+        if (sig->s_isborrowed && sig->s_borrowedfrom)
         {
             /* if the signal is borrowed, decrement the borrowed-from signal's
                 reference count, possibly marking it reusable too */
