@@ -207,6 +207,9 @@ static void cos_maketable(void)
 
 static void cos_cleanup(t_class *c)
 {
+#if 0
+    // ag: this causes segfaults during regression testing, so we just never
+    // free the tables at all.
 #ifdef OLDTABSIZE
     if (cos_table)
         freebytes(cos_table, sizeof(float) * (OLDTABSIZE+1));
@@ -214,7 +217,8 @@ static void cos_cleanup(t_class *c)
 #endif
     if (cos_newtable)
         freebytes(cos_newtable, sizeof(float) * (COSTABLESIZE+1));
-    cos_table = 0;
+    cos_newtable = 0;
+#endif
 }
 
 static void cos_setup(void)
