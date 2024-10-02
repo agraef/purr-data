@@ -521,7 +521,9 @@ t_signal *signal_new(int length, int nchans, t_float sr, t_sample *scalarptr)
 
 t_signal *signal_newlike(const t_signal *sig)
 {
-    return (signal_new(sig->s_length, sig->s_nchans, sig->s_sr, 0));
+    t_signal *s = signal_new(sig->s_length, sig->s_nchans, sig->s_sr, 0);
+    s->s_overlap = sig->s_overlap;
+    return s;
 }
 
 void signal_setborrowed(t_signal *sig, t_signal *sig2)
@@ -544,7 +546,9 @@ void signal_setborrowed(t_signal *sig, t_signal *sig2)
     on output signal - we assume it's currently a pointer to the null signal */
 void signal_setmultiout(t_signal **sig, int nchans)
 {
+    int overlap = (*sig)->s_overlap;
     *sig = signal_new((*sig)->s_length, nchans, (*sig)->s_sr, 0);
+    (*sig)->s_overlap = overlap;
 }
 
 int signal_compatible(t_signal *s1, t_signal *s2)
@@ -606,6 +610,7 @@ struct _dspcontext
 };
 #define DC_LENGTH(x) ((x)->dc_nullsignal.s_length)
 #define DC_SR(x) ((x)->dc_nullsignal.s_sr)
+#define DC_OVERLAP(x) ((x)->dc_nullsignal.s_overlap)
 
 #define t_dspcontext struct _dspcontext
 
@@ -615,8 +620,10 @@ static t_dspcontext *ugen_currentcontext;
     /* get a new signal for the current context - used by clone~ object */
 t_signal *signal_newfromcontext(int borrowed, int nchans)
 {
-    return (signal_new((borrowed? 0 : DC_LENGTH(ugen_currentcontext)), nchans,
-        DC_SR(ugen_currentcontext), 0));
+    t_signal *s = signal_new((borrowed? 0 : DC_LENGTH(ugen_currentcontext)), nchans,
+        DC_SR(ugen_currentcontext), 0);
+    s->s_overlap = DC_OVERLAP(ugen_currentcontext);
+    return s;
 }
 
 void ugen_stop(void)
@@ -857,6 +864,7 @@ static void ugen_doit(t_dspcontext *dc, t_ugenbox *u)
                 dsp_add_scalarcopy(scalar, uin->i_signal->s_vec,
                     uin->i_signal->s_n);
             }
+            uin->i_signal->s_overlap = DC_OVERLAP(dc);
             uin->i_signal->s_refcount = 1;
         }
     }
@@ -903,6 +911,7 @@ static void ugen_doit(t_dspcontext *dc, t_ugenbox *u)
         else if (flags & CLASS_MULTICHANNEL)
             *sig = &dc->dc_nullsignal;
         else *sig = signal_new(DC_LENGTH(dc), 1, DC_SR(dc), 0);
+        (*sig)->s_overlap = DC_OVERLAP(dc);
     }
 
         /* now call the DSP scheduling routine for the ugen.  This
@@ -1017,7 +1026,7 @@ void ugen_done_graph(t_dspcontext *dc)
     t_block *blk;
     t_dspcontext *parent_context = dc->dc_parentcontext;
     t_float parent_srate;
-    int parent_vecsize;
+    int parent_vecsize, parent_overlap;
     int period, frequency, vecsize, calcsize;
     t_float srate;
     int chainblockbegin;    /* DSP chain onset before block prolog code */
@@ -1025,6 +1034,7 @@ void ugen_done_graph(t_dspcontext *dc)
     int chainafterall;      /* and after signal outlet epilog */
     int reblock = 0, switched;
     int downsample = 1, upsample = 1;
+    int totaloverlap;
     /* debugging printout */
 
     if (ugen_loud)
@@ -1060,12 +1070,15 @@ void ugen_done_graph(t_dspcontext *dc)
     {
         parent_srate = DC_SR(parent_context);
         parent_vecsize = DC_LENGTH(parent_context);
+        parent_overlap = DC_OVERLAP(parent_context);
     }
     else
     {
         parent_srate = sys_getsr();
         parent_vecsize = sys_getblksize();
+        parent_overlap = 1;
     }
+    totaloverlap = parent_overlap;
     if (blk)
     {
         int realoverlap;
@@ -1093,6 +1106,8 @@ void ugen_done_graph(t_dspcontext *dc)
                 (downsample != 1) || (upsample != 1))
                     reblock = 1;
         switched = blk->x_switched;
+
+        totaloverlap = parent_overlap * realoverlap;
     }
     else
     {
@@ -1107,6 +1122,7 @@ void ugen_done_graph(t_dspcontext *dc)
     dc->dc_switched = switched;
     dc->dc_nullsignal.s_sr = srate;
     dc->dc_nullsignal.s_length = calcsize;
+    dc->dc_nullsignal.s_overlap = totaloverlap;
     dc->dc_nullsignal.s_nchans = -1;    /* fake so we can sanity check */
 
         /* if we're reblocking or switched, we now have to create output
@@ -1123,9 +1139,9 @@ void ugen_done_graph(t_dspcontext *dc)
         {
             if ((*sigp)->s_isborrowed && !(*sigp)->s_borrowedfrom)
             {
-                signal_setborrowed(*sigp,
-                    signal_new(parent_vecsize, 1, parent_srate, 0));
-                (*sigp)->s_refcount++;
+                t_signal *s = signal_new(parent_vecsize, 1, parent_srate, 0);
+                s->s_overlap = totaloverlap;
+                signal_setborrowed(*sigp, s);
 
                 if (ugen_loud) post("set %zx->%zx", *sigp,
                     (*sigp)->s_borrowedfrom);
@@ -1147,7 +1163,7 @@ void ugen_done_graph(t_dspcontext *dc)
     for (u = dc->dc_ugenlist; u; u = u->u_next)
     {
         t_pd *zz = &u->u_obj->ob_pd;
-        t_signal **insigs = dc->dc_iosigs, **outsigs = dc->dc_iosigs;
+        t_signal **outsigs = dc->dc_iosigs;
         if (outsigs) outsigs += dc->dc_ninlets;
 
         if (pd_class(zz) == vinlet_class)
@@ -1207,6 +1223,7 @@ void ugen_done_graph(t_dspcontext *dc)
             if ((*sigp)->s_isborrowed && !(*sigp)->s_borrowedfrom)
             {
                 t_signal *s3 = signal_new(parent_vecsize, 1, parent_srate, 0);
+                s3->s_overlap = totaloverlap;
                 signal_setborrowed(*sigp, s3);
                 dsp_add_zero(s3->s_vec, s3->s_n);
                 if (ugen_loud)
