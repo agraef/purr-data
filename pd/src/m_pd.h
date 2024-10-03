@@ -51,12 +51,15 @@ extern int pd_compatibilitylevel;   /* e.g., 43 for pd 0.43 compatibility */
 #define EXTERN extern
 #endif /* MSW */
 
-    /* and depending on the compiler, hidden data structures are
-    declared differently: */
-#if defined( __GNUC__) || defined( __BORLANDC__ ) || defined( __MWERKS__ )
-#define EXTERN_STRUCT struct
-#else
+    /* On most c compilers, you can just say "struct foo;" to declare a
+    structure whose elements are defined elsewhere.  On very old MSVC versions,
+    when compiling C (but not C++) code, you have to say "extern struct foo;".
+    So we make a stupid macro: */
+#if defined(_MSC_VER) && !defined(_LANGUAGE_C_PLUS_PLUS) \
+    && !defined(__cplusplus) && (_MSC_VER < 1700)
 #define EXTERN_STRUCT extern struct
+#else
+#define EXTERN_STRUCT struct
 #endif
 
     /* Define some attributes, specific to the compiler */
@@ -66,9 +69,7 @@ extern int pd_compatibilitylevel;   /* e.g., 43 for pd 0.43 compatibility */
 #define ATTRIBUTE_FORMAT_PRINTF(a, b)
 #endif
 
-#if !defined(_SIZE_T) && !defined(_SIZE_T_)
-#include <stddef.h>     /* just for size_t -- how lame! */
-#endif
+#include <stddef.h> /* for size_t and offsetof */
 
 /* Microsoft Visual Studio is not C99, it does not provide stdint.h */
 #ifdef _MSC_VER
@@ -583,7 +584,7 @@ EXTERN int class_isdrawcommand(t_class *c);
 EXTERN void class_set_extern_dir(t_symbol *s);
 EXTERN void class_domainsignalin(t_class *c, int onset);
 #define CLASS_MAINSIGNALIN(c, type, field) \
-    class_domainsignalin(c, (char *)(&((type *)0)->field) - (char *)0)
+    class_domainsignalin(c, offsetof(type, field))
 
          /* classtable functions */
 EXTERN t_class *classtable_findbyname(t_symbol *s);
