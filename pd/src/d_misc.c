@@ -234,7 +234,7 @@ static void snake_tilde_setup(void)
     CLASS_MAINSIGNALIN(snake_in_tilde_class, t_snake_in, x_f);
     class_addmethod(snake_in_tilde_class, (t_method)snake_in_tilde_dsp,
         gensym("dsp"), 0);
-    class_sethelpsymbol(snake_in_tilde_class, gensym("snake-tilde"));
+    class_sethelpsymbol(snake_in_tilde_class, gensym("snake~"));
 
     snake_out_tilde_class = class_new(gensym("snake_out~"),
         (t_newmethod)snake_out_tilde_new, 0, sizeof(t_snake_out),
@@ -242,7 +242,7 @@ static void snake_tilde_setup(void)
     CLASS_MAINSIGNALIN(snake_out_tilde_class, t_snake_out, x_f);
     class_addmethod(snake_out_tilde_class, (t_method)snake_out_tilde_dsp,
         gensym("dsp"), 0);
-    class_sethelpsymbol(snake_out_tilde_class, gensym("snake-tilde"));
+    class_sethelpsymbol(snake_out_tilde_class, gensym("snake~"));
 
     class_addcreator((t_newmethod)snake_tilde_new, gensym("snake~"),
         A_GIMME, 0);
