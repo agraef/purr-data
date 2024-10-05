@@ -5991,26 +5991,28 @@ function gui_pianoroll_erase_innards(cid, tag) {
     });
 }
 
-// pd-lua gfx helpers (ag@gmail.com)
+// pd-lua gfx helpers (aggraef@gmail.com)
 
 // create the graphics container (a gobj)
 function gui_luagfx_new(cid, tag, xpos, ypos, is_toplevel) {
     gui_gobj_new(cid, tag, "obj", xpos, ypos, is_toplevel, 0);
 }
 
-// clear the contents of the graphics container
+// create a graphics layer (pd-lua 0.12.19)
+function gui_luagfx_new_layer(cid, tag, layer_tag) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var layer = create_item(cid, "g", { id: layer_tag + "gobj" });
+        frag.appendChild(layer);
+        return frag;
+    });
+}
+
+// clear the contents of the graphics container (or layer, per pd-lua 0.12.19)
 function gui_luagfx_clear(cid, tag) {
     // get rid of all contents
     gui(cid).get_gobj(tag, function(g) {
         g.innerHTML = "";
-    });
-}
-
-// clear the contents, old version (we keep this around for backward
-// compatibility with pd-lua 0.12.1)
-function gui_luagfx_clear_contents(cid, tag) {
-    gui(cid).get_gobj(tag, function(e) {
-        e.innerHTML = "";
     });
 }
 
