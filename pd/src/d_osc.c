@@ -206,8 +206,8 @@ static void cos_maketable(void)
 }
 
 #if 0
-    // ag: this causes segfaults during regression testing, so we just never
-    // free the tables at all.
+    // ag: in vanilla this is being used as a class destructor (set_freefn)
+    // which we don't have, so this code is disabled for now
 static void cos_cleanup(t_class *c)
 {
 #ifdef OLDTABSIZE
