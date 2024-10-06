@@ -93,42 +93,61 @@ static void dinlet_float(t_inlet *x, t_float f)
         pd_float(x->i_dest, f);
     /*else inlet_wrong(x, &s_float);*/
 }
-/**************** from g_io.c : *********************************/
-
-void signal_setborrowed(t_signal *sig, t_signal *sig2);
-void signal_makereusable(t_signal *sig);
 
 /* ------------------------- vinlet -------------------------- */
 extern t_class *vinlet_class;
+
+typedef struct _reblocker
+{
+    t_sample *r_buf;         /* signal buffer; zero if not a signal */
+    t_resample r_updown;
+} t_reblocker;
+
+static void reblocker_init(t_reblocker *rb, int buflength)
+{
+    rb->r_buf = (t_sample *)getbytes(buflength * sizeof(t_sample));
+    resample_init(&rb->r_updown);
+}
 
 typedef struct _vinlet
 {
     t_object x_obj;
     t_canvas *x_canvas;
     t_inlet *x_inlet;
-    int x_bufsize;
-    t_float *x_buf; 	    /* signal buffer; zero if not a signal */
-    t_float *x_endbuf;
-    t_float *x_fill;
-    t_float *x_read;
+    int x_buflength;        /* number of samples per channel in buffer */
+    int x_write;            /* write position in reblocker */
+    int x_read;             /* read position in reblocker */
     int x_hop;
-    /* if not reblocking, the next slot communicates the parent's inlet
-    signal from the prolog to the DSP routine: */
+    int x_updownmethod;
+            /* if not reblocking, the next slot communicates the parent's
+                inlet signal from the prolog to the DSP routine: */
     t_signal *x_directsignal;
-    t_resample x_updown;
+    int x_nchans;       /* this is also set in prolog & used in dsp */
+    t_outlet *x_fwdout; /* optional outlet for forwarding messages to inlet~ */
+    t_reblocker *x_rb;  /* reblocking and resampling, one per channel */
 } t_vinlet;
 
+// ag: I fixed the class data structure and initialization once more for
+// multi-channel compatibility. However, I'm not sure whether it makes much
+// sense to keep maintaining this object any longer, because it requires
+// pulling so much source from g_io.c, and isn't really compatible with the
+// new inlet~ anymore because it lacks the message forwarding.
 
 static void *dinlet_newsig(t_floatarg f)
 {
     t_vinlet *x = (t_vinlet *)pd_new(vinlet_class);
     x->x_canvas = canvas_getcurrent();
     x->x_inlet = canvas_addinlet(x->x_canvas, &x->x_obj.ob_pd, &s_signal);
-    x->x_endbuf = x->x_buf = (t_float *)getbytes(0);
-    x->x_bufsize = 0;
+    x->x_nchans = 1;
+    x->x_buflength = 0;
+    x->x_rb = (t_reblocker *)getbytes(sizeof(*x->x_rb));
+    reblocker_init(x->x_rb, x->x_buflength);
+    x->x_directsignal = 0;
+    x->x_fwdout = 0;
     x->x_directsignal = 0;
     x->x_inlet->i_un.iu_floatsignalvalue=f;
     outlet_new(&x->x_obj, &s_signal);
+    x->x_updownmethod = -1;
     return (x);
 }
 
