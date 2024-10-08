@@ -375,8 +375,6 @@ then
 		cat ../../externals/OSCx/src/Makefile | sed -e s/-lpd//g > ../../externals/OSCx/src/Makefile
 	fi
 	if [[ $os == "win" || $os == "win64" ]]; then
-		# create images folder
-		mkdir -p build/extra/images
 		echo "Making Windows package..."
 		echo `pwd`
 		make install INCREMENTAL=$INCREMENTAL LIGHT=$LIGHT
@@ -384,8 +382,6 @@ then
 		cp ../../l2ork_addons/patch-nwjs.sh build/bin
 		make package
 	elif [[ $os == "osx" ]]; then
-		# create images folder
-		mkdir -p build/Purr-Data.app/Contents/Resources/app.nw/extra/images
 		echo "Making OSX package (dmg)..."
 		echo `pwd`
 		make install INCREMENTAL=$INCREMENTAL LIGHT=$LIGHT
