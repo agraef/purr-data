@@ -389,8 +389,6 @@ then
 		cp ../../l2ork_addons/patch-nwjs.sh build/Purr-Data.app/Contents/Resources/app.nw/bin
 		make package
 	else
-		# create images folder
-		mkdir -p build$inst_dir/lib/pd-l2ork/extra/images
 		make install prefix=$inst_dir
 		# copy the patch-nwjs.sh script
 		cp ../../l2ork_addons/patch-nwjs.sh build$inst_dir/bin

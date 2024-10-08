@@ -335,6 +335,7 @@ autotune:
 autotune_install:
 	make -C $(externals_src)/autotune DESTDIR="$(DESTDIR)" \
 		objectsdir="$(objectsdir)" install
+	install -d $(DESTDIR)$(objectsdir)/images
 	install -p $(externals_src)/autotune/autotune_scale_warp.png \
 		$(DESTDIR)/$(objectsdir)/images
 
