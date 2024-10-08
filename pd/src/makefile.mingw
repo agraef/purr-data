@@ -292,17 +292,11 @@ install:  all
 	cp -pr $(DESTDIR)$(includedir)/pdl2ork $(DESTDIR)$(includedir)/pd
 	install -p m_pd.h $(DESTDIR)$(includedir)
 	rsync -ax --exclude=.git --exclude=.svn ../doc/* $(pddocdir)
-	cp -rf ../doc/about $(pddocdir)/
 	mv $(ABOUT_FILE) $(ABOUT_FILE).tmp
-	cat $(ABOUT_FILE).tmp | sed 's|PD_VERSION|Pd version $(PD_L2ORK_VERSION) ($(PD_BUILD_VERSION))|' \
+	cat $(ABOUT_FILE).tmp | sed 's|PD_VERSION|Purr-Data version $(PD_L2ORK_VERSION) ($(PD_BUILD_VERSION))|' \
 		> $(ABOUT_FILE)
 	rm $(ABOUT_FILE).tmp
-	install -d $(libpddir)/extra
-	install -p $(pd_src)/extra/*/*.dll $(libpddir)/extra
-	install -p $(pd_src)/extra/*.pd $(libpddir)/extra
-	install -d $(pddocdir)/5.reference
-	install -p ../extra/*/*.pd $(pddocdir)/5.reference
-	install -p ../extra/*-help.pd $(pddocdir)/5.reference
+	rsync -ax --exclude=.git --exclude=.svn ../extra $(libpddir)/
 	install -d $(DESTDIR)$(includedir)
 	install -p m_pd.h $(DESTDIR)$(includedir)/m_pd.h
 	install -p s_stuff.h $(DESTDIR)$(includedir)/s_stuff.h
