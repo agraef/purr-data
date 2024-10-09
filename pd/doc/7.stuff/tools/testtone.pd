@@ -499,8 +499,8 @@ set 1 \;;
 #X text 34 67 TEST TONES;
 #X text 233 156 AUDIO OUTPUT ON/OFF;
 #X text 18 5 Welcome to Pd ("Pure Data"). You can use this window to
-test audio and MIDI connections. To see Pd's DOCUMENTATION \, select
-"getting started" in the Help menu.;
+test audio and MIDI connections. To see Pd's DOCUMENTATION \, open
+the Help Browser in the Help menu.;
 #X text 18 323 Pd is Free software under the BSD license. See LICENSE.txt
 in the distribution for details.;
 #X obj 27 292 bng 20 250 50 0 empty empty empty 17 7 0 10 -262144 -1
