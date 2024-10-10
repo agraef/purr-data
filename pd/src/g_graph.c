@@ -1272,7 +1272,10 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
                 glist_getcanvas(x),
                 tag,
                 (int)glist_xtopixels(x, atof(x->gl_xlabel[i]->s_name)),
-                (int)glist_ytopixels(x, x->gl_xlabely),
+                // ico@vt.edu 2022-06-13: added +7 offset for the x label
+                // because it was otherwise overlapping with the array
+                // and potentially unreadable
+                (int)glist_ytopixels(x, x->gl_xlabely) + 7,
                 x->gl_xlabel[i]->s_name,
                 sys_font, 
                 sys_hostfontsize(glist_getfont(x)),
