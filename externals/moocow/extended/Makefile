@@ -11,7 +11,6 @@
 SUBDIRS = \
 	locale \
 	pdstring \
-	flite \
 	deque \
 	readdir \
 	weightmap \
