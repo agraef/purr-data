@@ -6311,8 +6311,8 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                               yval) -
                                   fielddesc_cvttocoord(wfielddesc, wval));
                 }
-                gui_end_array();
             ouch:
+                gui_end_array();
                 gui_start_array();
 
                 gui_s("stroke-width");
