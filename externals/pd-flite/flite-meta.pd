@@ -1,0 +1,8 @@
+#N canvas 169 49 432 242 10;
+#N canvas 25 49 420 300 META 1;
+#X text 10 10 VERSION 0.3.2;
+#X text 10 30 AUTHOR Bryan Jurish <moocow.bovine@gmail.com>;
+#X text 10 50 NAME flite;
+#X text 10 70 LICENSE GPL-2;
+#X text 9 91 DESCRIPTION Speech synthesis for Pd;
+#X restore 20 20 pd META;

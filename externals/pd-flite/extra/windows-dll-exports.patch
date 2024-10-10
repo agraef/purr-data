@@ -1,0 +1,70 @@
+From a8d89b884736dcf3a9b3c262da2c0e20954c46d8 Mon Sep 17 00:00:00 2001
+From: Lucas Cordiviola <lucarda27@hotmail.com>
+Date: Thu, 26 May 2022 18:18:05 -0300
+Subject: [PATCH] Windows object now works
+
+---
+ flite-master/include/flite.h   | 10 +---------
+ flite-master/src/synth/flite.c | 13 ++++---------
+ 2 files changed, 5 insertions(+), 18 deletions(-)
+
+diff --git a/flite-master/include/flite.h b/flite-master/include/flite.h
+index 8814d97..3a2bd1c 100644
+--- a/flite-master/include/flite.h
++++ b/flite-master/include/flite.h
+@@ -65,15 +65,7 @@ extern "C" {
+ #include "cst_units.h"
+ #include "cst_tokenstream.h"
+ 
+-#ifdef WIN32
+-/* For Visual Studio 2012 global variable definitions */
+-#define GLOBALVARDEF __declspec(dllexport)
+-#else
+-#define GLOBALVARDEF
+-#endif
+- extern GLOBALVARDEF cst_val *flite_voice_list;
+- extern GLOBALVARDEF cst_lang flite_lang_list[20];
+- extern GLOBALVARDEF int flite_lang_list_length;
++
+ 
+ /* Public functions */
+ int flite_init();
+diff --git a/flite-master/src/synth/flite.c b/flite-master/src/synth/flite.c
+index d85fe1a..ec0e0eb 100644
+--- a/flite-master/src/synth/flite.c
++++ b/flite-master/src/synth/flite.c
+@@ -44,12 +44,7 @@
+ #include "cst_clunits.h"
+ #include "cst_cg.h"
+ 
+-#ifdef WIN32
+-/* For Visual Studio 2012 global variable definitions */
+-#define GLOBALVARDEF __declspec(dllexport)
+-#else
+-#define GLOBALVARDEF
+-#endif
++
+ 
+ /* This is a global, which isn't ideal, this may change */
+ /* It is set when flite_set_voice_list() is called which happens in */
+@@ -59,14 +54,14 @@
+ /* Note these voices remain loaded, there is currently no automatic */
+ /* garbage collection, that would be necessary in the long run      */
+ /* delete_voice will work, but you'd need to know when to call it   */
+-GLOBALVARDEF cst_val *flite_voice_list = NULL;
++cst_val *flite_voice_list = NULL;
+ 
+ /* Another global with hold pointers to the language and lexicon    */
+ /* initalization functions, we limiting to 20 but it could be bigger */
+ /* if we really did support over 20 different languages             */
+ #define FLITE_MAX_LANGS 20
+-GLOBALVARDEF cst_lang flite_lang_list[FLITE_MAX_LANGS];
+-GLOBALVARDEF int flite_lang_list_length = 0;
++cst_lang flite_lang_list[FLITE_MAX_LANGS];
++int flite_lang_list_length = 0;
+ 
+ int flite_init()
+ {
+-- 
+2.36.0.windows.1
+
