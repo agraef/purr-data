@@ -986,6 +986,7 @@ static void scalar_groupvis(t_scalar *x, t_glist *owner, t_template *template,
    The tag "blankscalar" is for scalars that don't have a visual
    representation, but maybe this can just be merged with "scalar"
 */
+
 static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
 {
     //fprintf(stderr,"scalar_vis %d %zx\n", vis, (t_uint)z);
@@ -1005,28 +1006,17 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
     {
         if (vis)
         {
-            //int x1 = glist_xtopixels(owner, basex);
-            //int y1 = glist_ytopixels(owner, basey);
             /* Let's just not create anything to visualize scalars that
                don't have a template. Pd Vanilla draws a single pixel to 
                represent them, so later we might want to do a simple
                shape for them... */
-            //sys_vgui(".x%zx.c create prect %d %d %d %d "
-            //         "-tags {blankscalar%zx %s}\n",
-            //    glist_getcanvas(owner), x1-1, y1-1, x1+1, y1+1, x,
-            //    (glist_isselected(owner, &x->sc_gobj) ?
-            //        "scalar_selected" : ""));
         }
         else
         {
             /* No need to delete if we don't draw anything... */
-            //sys_vgui(".x%zx.c delete blankscalar%zx\n",
-            //    glist_getcanvas(owner), x);
         }
         return;
     }
-    //else sys_vgui(".x%zx.c delete blankscalar%zx\n",
-    //    glist_getcanvas(owner), x);
 
     if (vis)
     {
@@ -1041,8 +1031,10 @@ static void scalar_vis(t_gobj *z, t_glist *owner, int vis)
             t_garray *g_a = (t_garray *)g;
             plot_style = garray_get_style(g_a);
         }
-        t_float xscale = ((glist_xtopixels(owner, 1) - glist_xtopixels(owner, 0)));
-        t_float yscale = glist_ytopixels(owner, 1) - glist_ytopixels(owner, 0);
+        t_float xscale = (glist_norm_x_per_scalar(owner, 1) -
+            glist_norm_x_per_scalar(owner, 0));
+        t_float yscale = (glist_norm_y_per_scalar(owner, 1) -
+            glist_norm_y_per_scalar(owner, 0));
         /* we translate the .scalar%zx group to displace it on the tk side.
            This is the outermost group for the scalar, something like a
            poor man's viewport.

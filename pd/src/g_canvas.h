@@ -514,7 +514,9 @@ EXTERN void glist_mergefile(t_glist *x, t_symbol *filename, t_symbol *format);
 EXTERN t_float glist_pixelstox(t_glist *x, t_float xpix);
 EXTERN t_float glist_pixelstoy(t_glist *x, t_float ypix);
 EXTERN t_float glist_xtopixels(t_glist *x, t_float xval);
+EXTERN t_float glist_norm_x_per_scalar(t_glist *x, t_float xval);
 EXTERN t_float glist_ytopixels(t_glist *x, t_float yval);
+EXTERN t_float glist_norm_y_per_scalar(t_glist *x, t_float yval);
 EXTERN t_float glist_dpixtodx(t_glist *x, t_float dxpix);
 EXTERN t_float glist_dpixtody(t_glist *x, t_float dypix);
 
