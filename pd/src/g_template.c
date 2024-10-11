@@ -6025,6 +6025,9 @@ int plot_has_drawcommand(t_canvas *elemtemplatecanvas)
     return 0;
 }
 
+// maximum data points to render in plot_vis
+#define MAX_POINTS 2000
+
 static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
     t_scalar *sc, t_word *data, t_template *template,
     t_float basex, t_float basey, t_array *parentarray, int tovis)
@@ -6188,7 +6191,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                     minyval = 1e20;
                     maxyval = -1e20;
                 }
-                if (ndrawn > 2000 || ixpix >= 3000) break;
+                if (ndrawn >= MAX_POINTS) break;
             }
 
             gui_end_array();
@@ -6270,7 +6273,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                         ndrawn++;
                     }
                     lastpixel = ixpix;
-                    if (ndrawn >= 1000) goto ouch;
+                    if (ndrawn >= MAX_POINTS) goto ouch;
                 }
                 lastpixel = -1;
                 for (i = nelem-1; i >= 0; i--)
@@ -6296,7 +6299,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                         ndrawn++;
                     }
                     lastpixel = ixpix;
-                    if (ndrawn >= 1000) goto ouch;
+                    if (ndrawn >= MAX_POINTS) goto ouch;
                 }
                     /* TK will complain if there aren't at least 3 points.
                     There should be at least two already. */
@@ -6384,7 +6387,7 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                         ndrawn++;
                     }
                     lastpixel = ixpix;
-                    if (ndrawn >= 1000) break;
+                    if (ndrawn >= MAX_POINTS) break;
                 }
                     /* TK will complain if there aren't at least 2 points... */
                 //if (ndrawn == 0) sys_vgui("0 0 0 0 \\\n");
