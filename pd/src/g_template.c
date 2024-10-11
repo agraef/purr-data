@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>  /* for path bbox calculations */
+#include <limits.h> /* for double -> int conversion in plot_vis */
 
 #include "m_pd.h"
 #include "m_imp.h"
@@ -6358,13 +6359,48 @@ static void plot_vis(t_gobj *z, t_glist *glist, t_glist *parentglist,
                 gui_start_array();
                 gui_s("M");
 
-                for (xsum = xloc, i = 0; i < nelem; i++)
+                if (xonset < 0)
+                {
+                    // ag: Optimize the case of a plain array with equidistant
+                    // x steps, doing the xpix calculation in double to avoid
+                    // rounding issues with very large arrays.
+                    double xpix = fielddesc_cvttocoord(xfielddesc, xloc);
+                    double xdelta = fielddesc_cvttocoord(xfielddesc, xloc+xinc)
+                        - xpix;
+                    // NOTE: Here we just skip over samples until we reach a
+                    // new x pixel. This is the way vanilla does it, which is
+                    // serviceable, but will give you a pretty random sample
+                    // selection for large arrays. LATER we might consider
+                    // drawing a more sophisticated representation, e.g.,
+                    // employing max/min/rms ranges for each pixel, like audio
+                    // editors do.
+                    for (i = 0; i < nelem; i++, xpix += xdelta) {
+                        // as we're rounding a double value to an int here,
+                        // there's the possibilty that we exceed the 32 bit
+                        // int range, bail out in this case
+                        if (xpix > (double)INT_MAX) break;
+                        ixpix = xpix + 0.5;
+                        int render = (int)(glist_xtopixels(glist, ixpix)) !=
+                            (int)(glist_xtopixels(glist, lastpixel));
+                        if (render) {
+                            if (yonset >= 0)
+                                yval = *(t_float *)((elem + elemsize * i) +
+                                                    yonset);
+                            else yval = 0;
+                            gui_i(ixpix);
+                            gui_f(yloc + fielddesc_cvttocoord(yfielddesc,
+                                                              yval));
+                            ndrawn++;
+                            if (ndrawn >= MAX_POINTS) break;
+                        }
+                        lastpixel = ixpix;
+                    }
+                }
+                else for (xsum = xloc, i = 0; i < nelem; i++)
                 {
                     t_float usexloc;
-                    if (xonset >= 0)
-                        usexloc = xloc + *(t_float *)((elem + elemsize * i) +
-                            xonset);
-                    else usexloc = xsum, xsum += xinc;
+                    usexloc = xloc + *(t_float *)((elem + elemsize * i) +
+                        xonset);
                     if (yonset >= 0)
                         yval = *(t_float *)((elem + elemsize * i) + yonset);
                     else yval = 0;
