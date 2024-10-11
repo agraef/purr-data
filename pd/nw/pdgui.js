@@ -5053,90 +5053,10 @@ function gui_scalar_new(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
     var g;
     // we should probably use gui_gobj_new here, but we"re doing some initial
     // scaling that normal gobjs don't need...
-    //post("gui_scalar_new " + t1 + " " + t2 +
-    //    " " + t3 + " " + t4 + " " + t5 + " " + t6);
-        
-    /* ico@vt.edu HACKTASCTIC: calculating scrollbars is throwing 0.997 for
-       plots drawn inside the subpatch and it is a result of the -1 in the 
-       (min_width - 1) / width call inside canvas_params. Yet, if we don't
-       call this, we don't have nice flush scrollbars with the regular edges.
-       This is why here we make a hacklicious hack and simply hide hscrollbar
-       since the scroll is not doing anything anyhow.
-       
-       After further testing, it seems that the aforesaid margin is a hit'n'miss
-       depending on the patch, so we will disable this and make the aforesaid
-       canvas_params equation min_width / width.
-
-    if (is_toplevel === 1) {
-        gui(cid).get_elem("hscroll", function(elem) {
-            elem.style.setProperty("display", "none");
-        });
-        gui(cid).get_elem("vscroll", function(elem) {
-            elem.style.setProperty("display", "none");
-        });
-    }*/
-      
     gui(cid).get_elem("patchsvg", function(svg_elem) {
         var matrix, transform_string, selection_rect;
-        if (is_toplevel === 1) {
-            // here we deal with weird scrollbar offsets and
-            // inconsistencies for the various plot styles.
-            // the matrix format is xscale, 0, 0, yscale, width, height
-            // we don't use the matrix for the bar graph since it is
-            // difficult to get the right ratio, so we do the manual
-            // translate and scale instead.
-            // cases are: 0=points, 1=plot, 2=bezier, 3=bars
-            switch (plot_style) {
-                case 0:
-                    matrix = [t1,t2,t3,t4,t5,t6+0.5];
-                    break;
-                case 1:
-                    matrix = [t1,t2,t3,t4,t5,t6+1.5];
-                    break;
-                case 2:
-                    matrix = [t1,t2,t3,t4,t5,t6+1.5];
-                    break;
-                case 3:
-                    //matrix = [t1*.995,t2,t3,t4+1,t5+0.5,t6-2];
-                    matrix = 0;
-                    transform_string = "translate(" + 0 +
-                        "," + (t6+1) + ") scale(" + t1 + "," + t4 + ")";
-                    //post("transform_string = " + transform_string);
-                    break;
-                default:
-                    // we are a non-plot scalar
-                    matrix = [t1,t2,t3,t4,t5,t6];
-                    break;        
-            }
-        }        
-        else {
-            switch (plot_style) {
-                case 0:
-                    matrix = [t1,t2,t3,t4,t5,t6+0.5];
-                    break;
-                case 1:
-                    matrix = [t1,t2,t3,t4,t5,t6+1.5];
-                    break;
-                case 2:
-                    matrix = [t1,t2,t3,t4,t5,t6+1.5];
-                    break;
-                case 3:
-                    //matrix = [t1,t2,t3,t4+1,t5+0.5,t6+0.5];
-                    matrix = 0;
-                    transform_string = "translate(" + (t5+(t1 < 1 ? 0.5 : 1.5)) +
-                        "," + (t6+1.5) + ") scale(" + t1 + "," + t4 + ")";
-                    //post("transform_string = " + transform_string);
-                    break;
-                default:
-                    // we are a non-plot scalar
-                    matrix = [t1,t2,t3,t4,t5,t6];
-                    break; 
-            }
-        }
-        
-        if (matrix !== 0) {
-            transform_string = "matrix(" + matrix.join() + ")";
-        }
+        matrix = [t1,t2,t3,t4,t5,t6];
+        transform_string = "matrix(" + matrix.join() + ")";
         g = create_item(cid, "g", {
             id: tag + "gobj",
             transform: transform_string,
