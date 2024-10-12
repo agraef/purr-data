@@ -14,7 +14,7 @@ extern "C" {
 #define PD_MINOR_VERSION 54
 #define PD_BUGFIX_VERSION 0
 #define PD_TEST_VERSION ""
-#define PD_L2ORK_VERSION "2.19.4"
+#define PD_L2ORK_VERSION "2.20.0"
 #define PDL2ORK
 // This is defined only for Purr-Data, not DISIS Pd-l2ork.
 #define PURR_DATA
