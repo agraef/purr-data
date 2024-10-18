@@ -645,7 +645,7 @@ static void clone_free(t_clone *x)
         int i;
         for (i = 0; i < x->x_n; i++)
         {
-            canvas_closebang(x->x_vec[i].c_gl);
+#if 1 // ag: what's this for? on probation for now
             if(x->x_vec[i].c_gl->gl_isab)
             {
                 /* crude hack. since clones don't have owner,
@@ -653,9 +653,8 @@ static void clone_free(t_clone *x)
                     deregister the dependencies */
                 x->x_vec[i].c_gl->gl_owner = x->x_canvas;
             }
-            pd_free(&x->x_vec[i].c_gl->gl_pd);
-            t_freebytes(&x->x_outvec[i],
-                x->x_nout * sizeof(x->x_outvec[i]));
+#endif
+            clone_freeinstance(x, i);
         }
         t_freebytes(x->x_vec, x->x_n * sizeof(*x->x_vec));
         t_freebytes(x->x_argv, x->x_argc * sizeof(*x->x_argv));
