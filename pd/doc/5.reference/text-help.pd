@@ -84,7 +84,7 @@ using explicit line breaks. E.g:Lorem ipsum dolor sit amet \, consetetur
 sadipscingelitr \, sed diam nonumy eirmod tempor invidunt ut laboreet
 dolore magna aliquyam erat \, sed diam voluptua. Atvero eos et accusam
 et justo duo dolores et ea rebum.There are also some possibilities
-for <red><b>rich text formatting</b></red> \, please see the <b>"all_about_rich_text"</b>
+for <=red><b>rich text formatting</b></=red> \, please see the <b>"all_about_rich_text"</b>
 patch linked below for details., f 76;
 #X text 40 350 <b>NOTE:</b> Visual and rich text formatting of comments
 are Purr Data-specific features \, they will *not* work (and look funny)
