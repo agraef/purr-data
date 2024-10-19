@@ -207,9 +207,33 @@ flag is set from the GUI if this happens.  LATER take this out: early 2006? */
 extern int sys_oldtclversion;           
 extern int is_dropdown(t_text *x);
 
-static int is_tag_char(char c)
+// Parse rtf tags. The syntax is [bhisu]|=color, optionally preceded by '/'
+// indicating an end tag, and enclosed in '<' and '>'. Here, 'color' indicates
+// an HTML color spec which can be either an (alphanumeric) color name, or a
+// color triplet beginning with '#'. NOTE: We want to be as specific as
+// possible here, since help patches also use <...> as ad-hoc syntax for
+// certain meta variables, in which case we want to treat them as literals.
+static int is_tag_char(char c, int j)
 {
-    return islower(c) || isdigit(c) || c == '#' || c == '/';
+    // simple DFA: j==1 indicates the beginning og the parse; state 0 is at
+    // the beginning of the tag, state 1 is when we've read an initial '/',
+    // state 2 when we've read the '=' prefix starting a color spec, and state
+    // -1 is error (we've reached a final state where we can't accept any more
+    // characters).
+    static int state = 0;
+    int ret = 0;
+    if (j == 1) state = 0;
+    if (state == 0) {
+        ret = strchr("bhisu=/", c) != NULL;
+        state = c=='/' ? 1 : c=='=' ? 2 : -1;
+    } else if (state == 1) {
+        ret = strchr("bhisu=", c) != NULL;
+        state = c=='=' ? 2 : -1;
+    } else if (state == 2) {
+        // here we keep eating away all chars that can be in a color spec
+        ret = islower(c) || isdigit(c) || c == '#';
+    }
+    return ret;
 }
 
 static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
@@ -267,7 +291,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
                         i+1 < inindex_b+maxindex_b && x->x_buf[i+1] != '!') {
                         int j;
                         for (j = i+1; j < inindex_b+maxindex_b &&
-                                 is_tag_char(x->x_buf[j]); j++) ;
+                                 is_tag_char(x->x_buf[j], j-i); j++) ;
                         if (j < inindex_b+maxindex_b && x->x_buf[j] == '>') {
                             if (strncmp(x->x_buf+i+1, "h", j-i-1) == 0)
                                 large = 1;

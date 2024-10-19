@@ -3808,7 +3808,7 @@ function text_to_tspans(cid, svg_text, text, type) {
     function make_tspan(span) {
         if (is_comment) {
             // tags can be escaped with <!tag>, show these as literals
-            span = span.replace(/<!([!a-z0-9#/]+)>/g, "<$1>");
+            span = span.replace(/<!([!=a-z0-9#/]+)>/g, "<$1>");
         }
         if (span.length > 0) {
             // find a way to abstract away the canvas array and the DOM here
@@ -3835,8 +3835,8 @@ function text_to_tspans(cid, svg_text, text, type) {
             spans[0] = ".";
         } else if (is_comment) {
             // split the text into individual spans and tags
-            spans = lines[i].split(/<[a-z0-9#/]+>/);
-            tags = lines[i].match(/<[a-z0-9#/]+>/g);
+            spans = lines[i].split(/<\/?(?:[bhisu]|=[a-z0-9#]+)>/);
+            tags = lines[i].match(/<\/?([bhisu]|=[a-z0-9#]+)>/g);
         }
         make_tspan(spans[0]);
         if (tags) {
@@ -3876,10 +3876,11 @@ function text_to_tspans(cid, svg_text, text, type) {
                     delete style.fontWeight;
                     break;
                 default:
-                    // anything else is taken to be a color
-                    if (!tag.startsWith("</")) {
-                        fill = tag.slice(1, -1);
-                    } else if (fill === tag.slice(2, -1)) {
+                    // any tag starting with '=' is taken to be a color
+                    if (tag.startsWith("<=")) {
+                        fill = tag.slice(2, -1);
+                    } else if (tag.startsWith("</=") &&
+                               tag.slice(3, -1) === fill) {
                         fill = null;
                     }
                     break;
