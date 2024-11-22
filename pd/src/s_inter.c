@@ -1846,6 +1846,7 @@ void sys_bail(int n)
 extern void glob_closeall(void *dummy, t_floatarg fforce);
 
 extern int do_not_redraw;
+extern void glob_savepreferences(t_pd *dummy);
 
 void glob_quit(void *dummy, t_floatarg status)
 {
@@ -1872,6 +1873,8 @@ void glob_quit(void *dummy, t_floatarg status)
     canvas_suspend_dsp();
     do_not_redraw = 1;
     glob_closeall(0, 1);
+    // ico@vt.edu 2022-12-14: save preferences on quit
+    glob_savepreferences(dummy);
     //sys_vgui("exit\n");
     gui_vmess("app_quit", "");
     if (!sys_nogui)
