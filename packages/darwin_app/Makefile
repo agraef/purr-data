@@ -189,8 +189,6 @@ dmg:
 # sign libs (@MovementGH, https://github.com/pd-l2ork/pd-l2ork/commit/5a99fac)
 	./sign-MacOSX-dependencies.sh $(PD_APP_CONTENTS)
 	rm -f build.dmg
-	hdiutil create -format UDRW -fs HFS+ -srcfolder "$(BUILD_BASE)" \
-		-volname $(VOLUME_NAME) build.dmg
 # GH runner often fails here, do max 10 retries
 	nretries=10; until [[ $$nretries -le 0 ]] || hdiutil create -format UDRW -fs HFS+ -srcfolder "$(BUILD_BASE)" -volname $(VOLUME_NAME) build.dmg; do echo "hdiutil create failed, retrying"; sleep 5; nretries=$$(expr $$nretries - 1); done
 # detach one with the same name first
