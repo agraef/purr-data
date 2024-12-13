@@ -15,6 +15,11 @@
 #define MAX_CLIENTS 100
 #define NUM_JACK_PORTS 128
 #define BUF_JACK 4096
+// ag 20241213: This was a hard-coded constant 100 in the code previously, but
+// Pipewire seems to allow larger sizes. We now use jack_client_name_size()
+// here if it is supported, the following is used as a fallback if not.
+// See: https://github.com/pure-data/pure-data/commit/a20fce3c
+#define CLIENT_NAME_SIZE_FALLBACK 1024
 static jack_nframes_t jack_out_max;
 #define JACK_OUT_MAX  64
 static jack_nframes_t jack_filled = 0;
@@ -132,6 +137,8 @@ static int jack_xrun(void* arg)
 static char** jack_get_clients(void)
 {
     const char **jack_ports;
+    int tmp_client_name_size = jack_client_name_size ? jack_client_name_size() : CLIENT_NAME_SIZE_FALLBACK;
+    char* tmp_client_name = (char*)getbytes(tmp_client_name_size);
     int i,j;
     int num_clients = 0;
     regex_t port_regex;
@@ -147,7 +154,6 @@ static char** jack_get_clients(void)
         {
             int client_seen;
             regmatch_t match_info;
-            char tmp_client_name[100];
 
             /* extract the client name from the port name, using a regex
              * that parses the clientname:portname syntax */
@@ -196,6 +202,7 @@ static char** jack_get_clients(void)
 
     /*   for (i=0;i<num_clients;i++) post("client: %s",jack_client_names[i]); */
 
+    freebytes( tmp_client_name, tmp_client_name_size );
     free( jack_ports );
     return jack_client_names;
 }
