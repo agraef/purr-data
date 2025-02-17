@@ -1,6 +1,6 @@
 Windows Registry Editor Version 5.00
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Pd-extended]
+[HKEY_LOCAL_MACHINE\SOFTWARE\Purr-Data]
 "flags"="-font-size 12"
 "loadlib1"="libdir"
 "loadlib2"="pddp"

@@ -1,0 +1,22 @@
+#N canvas 774 239 512 642 12;
+#X text 20 10 <h>Rich Text Formatting</h><=#090><b>This</b> <=#f69>is</=#f69>
+<s>normal</s> <=#039><u>rich</u> <=#909>text</=#909>.This <i>only</i>
+works in comments \, and uses special tags in the input text. Tags
+come in pairs \, as they do in HTML \, '<!tag>' begins and '<!/tag>'
+ends a specially formatted part of the text. Currently supported tags
+are:• <!h><h>header text</h><!/h>  Typeset in bold at 120% size.•
+<!b><b>bold text</b><!/b>• <!i><i>italic text</i><!/i>• <!u><u>underlined
+text</u><!/u>• <!s><s>strike-through text</s><!/s>• <!=red><=red>colored
+text</=red><!/=red>  The standard HTML color names and triplets can
+be used as tags  if preceded by '='.Obviously \, this won't replace your word processor
+anytime soon \, and entering all the formatting tags can get a bit
+tedious. But at least it provides you with some useful formatting options.<b>NOTE:</b>
+This entire text is in a single comment object \, so you can click
+on this object in edit mode to reveal how it was formatted. To show
+a tag as a literal in a comment \, as we did in the descriptions above
+\, it can be escaped with a '!' immediately following the angle bracket
+\, e.g.: '<!!tag>'.Please also note that none of the formatting tags
+will work in vanilla Pd at present \, instead you will see the text
+as shown while editing the comment box. Which doesn't look great \,
+TBH \, thus rich text formatting is best avoided in patches that you
+plan to use with vanilla Pd., f 66;

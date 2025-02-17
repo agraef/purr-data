@@ -49,8 +49,8 @@ INCLUDE = -I$(pd_src)/src
 GINCLUDE = -I/usr/local/include $(INCLUDE)
 
 LDFLAGS = 
-LIBS = -lm -lwsock32 -lwinmm -lole32 -lpthread
-
+LIBS = -lm -lws2_32 -lwinmm -lole32 -lpthread
+# used to have -lwsock32 instead of -lws2_32
 OPT_CFLAGS = 
 
 WARN_CFLAGS = -Wall -W -Wstrict-prototypes -Wno-unused \
@@ -120,16 +120,16 @@ SRC = g_canvas.c g_graph.c g_text.c g_rtext.c g_array.c g_template.c g_io.c \
     g_all_guis.c g_bang.c g_radio.c g_mycanvas.c g_numbox.c g_toggle.c \
     g_vumeter.c m_pd.c m_class.c m_obj.c m_atom.c m_memory.c \
     m_binbuf.c m_conf.c m_glob.c m_sched.c s_main.c s_inter.c s_file.c \
-    s_print.c s_loader.c s_path.c s_entry.c s_audio.c s_midi.c \
+    s_print.c s_loader.c s_path.c s_entry.c s_audio.c s_midi.c s_net.c \
     d_ugen.c d_ctl.c d_arithmetic.c d_osc.c d_filter.c d_dac.c d_misc.c \
     d_math.c d_fft.c d_fft_mayer.c d_fftroutine.c d_array.c d_global.c \
-    d_delay.c d_resample.c x_arithmetic.c x_connective.c x_interface.c \
+    d_delay.c d_resample.c x_arithmetic.c x_connective.c x_interface.c x_file.c \
     x_midi.c x_misc.c x_time.c x_acoustics.c x_net.c x_text.c x_gui.c \
     x_list.c x_array.c d_soundfile.c g_slider.c import.c \
     x_scalar.c x_vexp.c x_vexp_if.c x_vexp_fun.c \
     g_undo.c s_utf8.c x_preset.c g_magicglass.c
 
-SRSRC = u_pdsend.c u_pdreceive.c
+SRSRC = u_pdsend.c u_pdreceive.c s_net.c
 
 OBJ = $(SRC:.c=.o) 
 GOBJ = $(GSRC:.c=.o)
@@ -194,12 +194,12 @@ $(PMOBJ) : %.o : %.c
 $(VOBJ) : %.o : %.c
 	$(CC) $(CFLAGS) $(GFLAGS) $(INCLUDE) -c -o $*.o $*.c 
 
-pdsend.exe: u_pdsend.o
-	$(CC) $(CFLAGS) $(LDFLAGS) -o pdsend.exe u_pdsend.o $(LIBS)
+pdsend.exe: u_pdsend.o s_net.o
+	$(CC) $(CFLAGS) $(LDFLAGS) -o pdsend.exe u_pdsend.o s_net.o $(LIBS)
 	$(STRIP) pdsend.exe
 
-pdreceive.exe: u_pdreceive.o
-	$(CC) $(CFLAGS) $(LDFLAGS) -o pdreceive.exe u_pdreceive.o $(LIBS)
+pdreceive.exe: u_pdreceive.o s_net.o
+	$(CC) $(CFLAGS) $(LDFLAGS) -o pdreceive.exe u_pdreceive.o s_net.o $(LIBS)
 	$(STRIP) pdreceive.exe
 
 $(PDEXEC): s_entry.o pd.res
@@ -292,17 +292,11 @@ install:  all
 	cp -pr $(DESTDIR)$(includedir)/pdl2ork $(DESTDIR)$(includedir)/pd
 	install -p m_pd.h $(DESTDIR)$(includedir)
 	rsync -ax --exclude=.git --exclude=.svn ../doc/* $(pddocdir)
-	cp -rf ../doc/about $(pddocdir)/
 	mv $(ABOUT_FILE) $(ABOUT_FILE).tmp
-	cat $(ABOUT_FILE).tmp | sed 's|PD_VERSION|Pd version $(PD_L2ORK_VERSION) ($(PD_BUILD_VERSION))|' \
+	cat $(ABOUT_FILE).tmp | sed 's|PD_VERSION|Purr-Data version $(PD_L2ORK_VERSION) ($(PD_BUILD_VERSION))|' \
 		> $(ABOUT_FILE)
 	rm $(ABOUT_FILE).tmp
-	install -d $(libpddir)/extra
-	install -p $(pd_src)/extra/*/*.dll $(libpddir)/extra
-	install -p $(pd_src)/extra/*.pd $(libpddir)/extra
-	install -d $(pddocdir)/5.reference
-	install -p ../extra/*/*.pd $(pddocdir)/5.reference
-	install -p ../extra/*-help.pd $(pddocdir)/5.reference
+	rsync -ax --exclude=.git --exclude=.svn ../extra $(libpddir)/
 	install -d $(DESTDIR)$(includedir)
 	install -p m_pd.h $(DESTDIR)$(includedir)/m_pd.h
 	install -p s_stuff.h $(DESTDIR)$(includedir)/s_stuff.h

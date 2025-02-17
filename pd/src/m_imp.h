@@ -50,10 +50,13 @@ struct _class
     t_savefn c_savefn;                  /* function to call when saving */
     t_propertiesfn c_propertiesfn;      /* function to start prop dialog */
     int c_floatsignalin;                /* onset to float for signal input */
-    char c_gobj;                        /* true if is a gobj */
-    char c_patchable;                   /* true if we have a t_object header */
-    char c_firstin;                 /* if patchable, true if draw first inlet */
-    char c_drawcommand;             /* a drawing command for a template */
+    unsigned int c_gobj:1;              /* true if is a gobj */
+    unsigned int c_patchable:1;         /* true if we have a t_object header */
+    unsigned int c_firstin:1;           /* if so, true if drawing first inlet */
+    unsigned int c_drawcommand:1;       /* drawing command for a template */
+    unsigned int c_multichannel:1;      /* can deal with multichannel sigs */
+    unsigned int c_nopromotesig:1;      /* don't promote scalars to signals */
+    unsigned int c_nopromoteleft:1;     /* not even the main (left) inlet */
 };
 
 struct _pdinstance

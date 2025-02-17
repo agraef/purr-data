@@ -1,0 +1,210 @@
+#N canvas 244 95 793 679 10;
+#X text 25 14 flite : text-to-speech synthesis with libflite;
+#N canvas 0 0 450 300 (subpatch) 0;
+#X array words2 71033 float 0 black black;
+#X coords 0 1 71032 -1 100 70 1;
+#X restore 620 300 graph;
+#X obj 20 650 print flite-synth-done;
+#X text 51 45 ARRAYNAME - initial array name;
+#X text 352 26 1 - control messages;
+#X text 30 32 ARGUMENTS:;
+#X text 336 12 INLETS:;
+#X text 336 39 OUTLETS:;
+#X msg 20 80 set words1;
+#X msg 20 100 set words2;
+#X msg 20 140 synth;
+#X text 70 140 "synth" message synthesizes current text-buffer;
+#X text 110 120 "text" message sets input text-buffer;
+#X text 104 83 "set" message selects the output array;
+#X text 172 250 "list" messages set text and synthesize;
+#X text 500 103 For playback \, you can use 'tabplay~':;
+#X msg 500 130 set words1;
+#X msg 500 150 set words2;
+#X msg 620 163 bang;
+#X msg 671 163 stop;
+#X msg 620 140 start;
+#X text 340 556 ACKNOWLEDGEMENTS:;
+#X text 358 574 Flite runtime speech synthesis library by Alan W Black
+and Kevin A. Lenzo.;
+#X msg 20 250 list bang bahda boobop;
+#N canvas 260 141 629 360 META 0;
+#X text 12 125 HELP_PATCH_AUTHORS "pd meta" information added by Jonathan
+Wilkes for Pd version 0.42.;
+#X text 12 25 LICENSE GPL v2;
+#X text 12 45 DESCRIPTION text-to-speech synthesis with libflite;
+#X text 12 5 KEYWORDS control array;
+#X text 12 85 OUTLET_0 bang;
+#X text 12 105 AUTHOR Bryan Jurish <moocow.bovine@gmail.com>;
+#X text 12 65 INLET_0 set text synth list thrd_synth voice_file thrd_voice_file
+textfile thrd_textfile, f 89;
+#X restore 727 636 pd META;
+#X msg 20 120 text test 123;
+#X text 341 607 Bryan Jurish <moocow.bovine@gmail.com>;
+#X msg 30 290 awb;
+#X msg 63 290 kal;
+#X msg 98 290 kal16;
+#X msg 140 290 rms;
+#X msg 173 290 slt;
+#X msg 20 340 voice \$1;
+#X obj 30 308 symbol;
+#X obj 20 480 openpanel;
+#X obj 101 455 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
+#000000 #000000;
+#X msg 20 533 textfile \$1;
+#N canvas 645 269 544 528 longtext 0;
+#X obj 20 20 inlet;
+#X obj 20 470 outlet;
+#X msg 20 50 test 123 test 123 test 123 test 123 test 123 test 123
+test 123 test 123 test 123 test 123 test 123 test 123 test 123 test
+123 test 123 test 123 test 123 test 123 test 123 test 123 test 123
+test 123 test 123 test 123 test 123 test 123 test 123 test 123 test
+123 test 123 test 123 test 123 test 123 test 123 test 123 test 123
+test 123 test 123 test 123 test 123 test 123 test 123 test 123 test
+123 test 123 test 123 test 123 test 123 test 123 test 123 test 123
+test 123 test 123 test 123 test 123 test 123 test 123 test 123 test
+123 test 123 test 123 test 123 test 123 test 123 test 123 test 123
+test 123 test 123 test 123 test 123 test 123 test 123 test 123 test
+123 test 123 test 123 test 123 test 123 test 123 test 123 test 123
+test 123 test 123 test 123 test 123 test 123 test 123 test 123 test
+123 test 123 test 123 test 123 test 123 test 123 test 123 test 123
+test 123 test 123 test 123 test 123 test 123 test 123 test 123 test
+123 test 123 test 123 test 123 test 123 test 123 test 123 test 123
+test 123 test 123 test 123 test 123 test 123 test 123 test 123 test
+123 test 123 test 123 test 123 test 123 test 123 test 123 test 123
+test 123 test 123 test 123 test 123 test 123 test 123 test 123 test
+123 test 123 test 123 test 123 test 123 test 123 test 123 test 123
+test 123 test 123 test 123 test 123 test 123 test 123 test 123 test
+123 test 123 test 123 test 123 test 123 test 123 test 123 test 123
+test 123 test 123 test 123 test 123 test 123 test 123 test 123 test
+123 test 123 test 123 test 123 test 123 test 123 test 123 test 123
+test 123 test 123 test 123 test 123 test 123 test 123 test 123 test
+123 test 123 test 123 test 123 test 123 test 123 test 123 test 123
+test 123 test 123 test 123 test 123 test 123 test 123 test 123 test
+123 test 123 test 123 test 123 test 123 test 123 test 123 test 123
+test 123 test 123 test 123 test 123 test 123 test 123 test 123 test
+123 test 123 test 123 test 123 test 123 test 123 test 123 test 123
+test 123 test 123 test 123 test 123 test 123 test 123 test 123 test
+123 test 123 test 123 test 123 test 123 test 123 test 123 test 123
+test 123 test 123 test 123 test 123 test 123 test 123 test 123, f
+81;
+#X obj 20 440 list trim;
+#X obj 20 420 list prepend text;
+#X connect 0 0 2 0;
+#X connect 2 0 4 0;
+#X connect 3 0 1 0;
+#X connect 4 0 3 0;
+#X restore 20 176 pd longtext;
+#X obj 140 161 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc
+#000000 #000000;
+#X msg 20 210 thrd_synth;
+#X msg 20 560 thrd_textfile \$1;
+#X obj 130 455 tgl 15 0 empty empty empty 17 7 0 10 #fcfcfc #000000
+#000000 0 1;
+#X text 90 210 "threaded" synthesis of the current text buffer;
+#X text 140 560 threaded version;
+#X text 147 455 threaded, f 10;
+#X msg 20 400 voice_file \$1;
+#X msg 20 380 symbol cmu_us_ljm.flitevox;
+#X msg 20 453 ./README.md;
+#X obj 20 600 flite words1;
+#X obj 500 180 tabplay~ words1;
+#X text 90 340 "voice" messages sets one of the built-in voices;
+#X text 190 380 load a .flitevox voice file (english), f 38;
+#N canvas 489 193 533 410 typical 0;
+#X listbox 140 40 42 0 0 0 - - -, f 42;
+#X obj 140 70 t b l, f 14;
+#X msg 140 138 thrd_synth;
+#X obj 221 97 list prepend text;
+#X obj 221 120 list trim;
+#X obj 140 203 t b b;
+#X obj 140 302 tabplay~ \$0-foo;
+#X obj 140 180 flite \$0-foo;
+#X obj 387 8 array define \$0-foo;
+#X text 33 37 type here and press enter, f 15;
+#X obj 167 228 \$0;
+#X msg 167 256 \; \$1-foo normalize 0.7 \;;
+#X text 33 68 (commas are not allowed in the list box), f 13;
+#X obj 140 340 output~;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 1 3 0;
+#X connect 2 0 7 0;
+#X connect 3 0 4 0;
+#X connect 4 0 7 0;
+#X connect 5 0 6 0;
+#X connect 5 1 10 0;
+#X connect 6 0 13 0;
+#X connect 6 0 13 1;
+#X connect 7 0 5 0;
+#X connect 10 0 11 0;
+#X restore 400 500 pd typical;
+#X text 352 53 1 - bang on completed synthesis;
+#X msg 20 420 thrd_voice_file \$1;
+#X text 140 420 threaded version;
+#N canvas 737 383 450 300 (subpatch) 0;
+#X array words1 71033 float 0 black black;
+#X coords 0 1 71032 -1 100 70 1;
+#X restore 500 300 graph;
+#X obj 360 421 pddplink http://cmuflite.org/packed/flite-2.0/voices/
+;
+#X text 260 420 get voices here:;
+#X obj 500 210 output~;
+#X text 340 480 for typical uses \, open this subpatch:;
+#X text 110 523 "textfile" message reads a text file and synthesizes
+it, f 29;
+#X text 341 630 v0.3.2 updated by Lucas Cordiviola;
+#X obj 341 648 pddplink https://github.com/Lucarda/pd-flite;
+#X obj 20 625 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc #000000
+#000000;
+#N canvas 736 383 450 300 textfile 0;
+#X obj 20 90 route 0 1;
+#X obj 20 130 symbol;
+#X obj 70 130 symbol;
+#X obj 20 60 list prepend 0;
+#X obj 20 20 inlet;
+#X obj 101 20 inlet;
+#X obj 20 230 outlet;
+#X obj 70 230 outlet;
+#X connect 0 0 1 0;
+#X connect 0 1 2 0;
+#X connect 1 0 6 0;
+#X connect 2 0 7 0;
+#X connect 3 0 0 0;
+#X connect 4 0 3 0;
+#X connect 5 0 3 1;
+#X restore 20 510 pd textfile;
+#X connect 8 0 48 0;
+#X connect 9 0 48 0;
+#X connect 10 0 48 0;
+#X connect 16 0 49 0;
+#X connect 17 0 49 0;
+#X connect 18 0 49 0;
+#X connect 19 0 49 0;
+#X connect 20 0 18 0;
+#X connect 23 0 48 0;
+#X connect 25 0 48 0;
+#X connect 27 0 33 0;
+#X connect 28 0 33 0;
+#X connect 29 0 33 0;
+#X connect 30 0 33 0;
+#X connect 31 0 33 0;
+#X connect 32 0 48 0;
+#X connect 33 0 32 0;
+#X connect 34 0 65 0;
+#X connect 35 0 34 0;
+#X connect 36 0 48 0;
+#X connect 37 0 48 0;
+#X connect 38 0 37 0;
+#X connect 39 0 48 0;
+#X connect 40 0 48 0;
+#X connect 41 0 65 1;
+#X connect 45 0 48 0;
+#X connect 46 0 54 0;
+#X connect 47 0 65 0;
+#X connect 48 0 64 0;
+#X connect 49 0 59 0;
+#X connect 49 0 59 1;
+#X connect 54 0 48 0;
+#X connect 64 0 2 0;
+#X connect 65 0 36 0;
+#X connect 65 1 40 0;

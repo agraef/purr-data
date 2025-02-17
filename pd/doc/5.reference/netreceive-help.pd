@@ -1,10 +1,10 @@
-#N canvas 428 33 555 619 10;
-#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
-14 -228856 -66577 0;
+#N canvas 424 52 553 748 10;
+#X obj 0 725 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 #dcdcdc #404040 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header netreceive 3 12
-0 18 -204280 -1 0;
+0 18 #c4dcdc #000000 0;
 #X obj 0 311 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
--228856 -1 0;
+#dcdcdc #000000 0;
 #N canvas 481 282 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
@@ -19,33 +19,38 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X text 12 65 OUTLET_0 anything;
 #X text 12 85 OUTLET_1 float;
 #X text 12 165 RELEASE_DATE 1997;
-#X restore 500 597 pd META;
+#X restore 504 727 pd META;
 #X obj 0 338 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
-13 -228856 -1 0;
+13 #dcdcdc #000000 0;
 #X obj 0 419 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
-0 13 -228856 -1 0;
-#X obj 0 558 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
-0 13 -228856 -1 0;
-#N canvas 216 518 428 109 Related_objects 0;
-#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
-#X text 8 2 [netreceive] Related Objects;
-#X obj 16 35 netsend;
-#X obj 70 35 disis_netsend;
-#X obj 160 35 disis_netreceive;
-#X restore 102 598 pd Related_objects;
-#X obj 78 347 cnv 17 3 25 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
-#X text 80 439 1) float;
+0 13 #dcdcdc #000000 0;
+#X obj 0 688 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 #dcdcdc #000000 0;
+#N canvas 216 518 370 119 Related_objects 0;
+#X obj 0 0 cnv 15 369 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 #c4dcdc #000000 0;
+#X text 7 1 [netreceive] Related Objects;
+#X obj 18 37 netsend;
+#X obj 74 37 netserver;
+#X obj 139 37 mrpeach/udpsend;
+#X obj 240 37 mrpeach/udpreceive;
+#X obj 18 60 mrpeach/udpsend~;
+#X obj 123 60 mrpeach/udpreceive~;
+#X obj 247 60 mrpeach/tcpclient;
+#X obj 18 83 mrpeach/tcpserver;
+#X restore 102 728 pd Related_objects;
+#X obj 78 347 cnv 17 3 25 empty \$0-pddp.cnv.let.0 0 5 9 0 16 #dcdcdc
+#9c9c9c 0;
+#X text 80 559 1) float;
 #X obj 476 10 netreceive;
-#X floatatom 226 82 0 0 0 0 - - -;
-#X obj 139 145 netreceive 3001 1;
+#X floatatom 226 82 0 0 0 0 - - - 0 0;
+#X obj 139 115 netreceive 3001 1;
 #X obj 139 82 print tcp;
-#X obj 139 166 print udp;
+#X obj 139 136 print udp;
 #N canvas 57 331 428 261 About_netreceive 0;
-#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
-#X text 8 2 [netreceive] More Info;
+#X obj 1 0 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 #c4dcdc #000000 0;
+#X text 8 1 [netreceive] More Info;
 #X text 21 38 The [netreceive] object opens a socket for TCP ("stream")
 or UDP ("datagram") network reception on a specified port. If using
 TCP \, an outlet gives you the number of [netsend] objects (or other
@@ -59,27 +64,27 @@ the object you can send messages from the [netsend] help window.;
 #X text 18 208 SECURITY ALERT: the port that netreceive opens has no
 access restrictions \, so anyone can connect to it and send messages.
 ;
-#X restore 102 567 pd About_netreceive;
+#X restore 102 697 pd About_netreceive;
 #X text 11 23 listen for incoming messages from a network;
-#X text 168 454 - (optional) 0 for TCP \, nonzero for UDP. (Default
+#X text 168 574 - (optional) 0 for TCP \, nonzero for UDP. (Default
 is TCP.);
-#X text 168 439 - (optional) port number.;
-#X text 80 454 2) float;
-#X text 168 469 - if you set the third argument to the word "old" \,
+#X text 168 559 - (optional) port number.;
+#X text 80 574 2) float;
+#X text 168 589 - if you set the third argument to the word "old" \,
 everything sent to the specified port is received into the global message
 space. This is the original behavior of [netreceive]. This can be VERY
 INSECURE since it gives someone full access to your computer \, allowing
 them to do anything that Pd can via the network.;
-#X text 98 270 Old behavior: [netreceive 4567 0 old] (see argument
+#X text 98 210 Old behavior: [netreceive 4567 0 old] (see argument
 3 below);
-#X text 80 469 3) symbol atom;
+#X text 80 589 3) symbol atom;
 #X text 98 346 anything;
-#X obj 78 383 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
+#X obj 78 383 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 #dcdcdc
+#9c9c9c 0;
 #X text 98 382 float;
 #X text 264 60 <- TCP \, port 3000;
-#X text 261 144 <- UDP \, port 3001;
-#X text 98 205 You can send messages from the [netsend] objects in
+#X text 261 114 <- UDP \, port 3001;
+#X text 98 175 You can send messages from the [netsend] objects in
 the help patch for [netsend].;
 #X text 168 346 - any message received by this [netreceive] object
 will be sent to the left outlet.;
@@ -87,8 +92,138 @@ will be sent to the left outlet.;
 #X obj 139 61 netreceive 3000;
 #X text 168 382 - when using TCP \, the [netreceive] object has a right
 inlet which shows the number of open connections.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 4 727 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
+#N canvas 546 100 584 639 new_version_of_netreceive_compatible_with_pd_0.51
+0;
+#X obj 50 311 netreceive 3000;
+#X floatatom 138 393 0 0 0 0 - - - 0 0;
+#X text 167 394 <--- number of open connections;
+#X obj 50 393 print tcp;
+#X obj 29 500 print udp;
+#X text 26 137 There are some possibilities for intercommunication
+with other programs... see the help for "netsend.", f 85;
+#X obj 29 476 netreceive -u 3001;
+#X text 165 297 creation arguments:;
+#X text 223 314 optional -u flag for UDP;
+#X text 223 329 optional -b flag for binary;
+#X text 223 360 optional port number;
+#X obj 186 476 netreceive -b 3002;
+#X obj 186 500 print tcp-binary;
+#X obj 343 500 print udp-binary;
+#X msg 59 240 listen 0;
+#X text 145 215 listen message to set or change port;
+#X text 150 241 (0 or negative number to close);
+#X msg 50 213 listen 3000;
+#X text 26 80 By default the messages are ASCII text messages compatible
+with Pd (i.e. \, numbers and symbols terminated with a semicolon --
+the "FUDI" protocol). The "-b" creation argument specifies binary messages
+instead \, which appear in Pd as lists of numbers from 0 to 255 (You
+could use this for OSC messages \, for example.), f 83;
+#X msg 68 286 send foo \$1;
+#X floatatom 68 266 0 0 0 0 - - - 0 0;
+#X floatatom 186 434 0 0 0 0 - - - 0 0;
+#X text 100 266 "send" (for TCP connections only) sends back to connected
+netreceive objects, f 76;
+#X text 28 537 An old (pre-0.45) calling convention is provided for
+compatibility \, port number and following "0" or "1" for TCP or UDP
+respectively:, f 67;
+#X text 27 425 Other examples:;
+#X text 452 525 (UDP port 3004);
+#X obj 343 476 netreceive -u -b -f 3003;
+#X obj 485 500 print from;
+#X text 26 170 SECURITY NOTE: Don't publish the port number of your
+netreceive unless you wouldn't mind other people being able to send
+you messages., f 85;
+#X text 26 36 The netreceive object opens a socket for TCP ("stream")
+or UDP ("datagram") network reception on a specified port. If using
+TCP \, an outlet gives you the number of netsend objects (or other
+compatible clients) that have opened connections here., f 84;
+#X obj 453 548 netreceive 3004 1;
+#X msg 186 454 4 5 6 \$1;
+#N canvas 694 147 526 506 IP 0;
+#X obj 20 361 print udp-hostname;
+#X text 243 239 IPv4 multicast;
+#X text 231 267 IPv6 multicast;
+#X obj 20 328 netreceive -u -f;
+#X obj 146 361 print from-hostname;
+#X msg 106 296 listen 0;
+#X msg 82 266 listen 3005 ff00::114;
+#X msg 65 239 listen 3005 239.200.200.200;
+#X msg 39 183 listen 3005 ::1;
+#X msg 32 153 listen 3005 127.0.0.1;
+#X msg 49 212 listen 3005 localhost;
+#X text 173 153 IPv4 messages;
+#X obj 279 339 netreceive 3005 ::1;
+#X obj 279 362 print tcp-hostname;
+#X text 278 307 listen for IPv6 TCP messages on localhost, f 22;
+#X msg 20 125 listen 3005;
+#X text 102 124 any IPv4 and IPv6 messages (default);
+#X text 143 184 IPv6 messages *);
+#X text 188 205 IPv4 and/or IPv6 messages (system dependent!), f 26
+;
+#X text 20 387 *) On some systems you can also receive IPv4 messages.
+This certainly doesn't work on Windows!, f 54;
+#X text 18 99 For backwards compatibility \, hostname resolution favors
+IPv4 results., f 69;
+#X text 17 54 By default \, netreceive listens on all IPv4 and IPv6
+interfaces \, but you can restrict it to a specific interface \, e.g.
+"127.0.0.1" to only receive IPv4 messages from the same computer.,
+f 66;
+#X text 18 11 As of Pd 0.51+ \, netreceive accepts a hostname which
+can be a UDP multicast address or a network interface. Note that you
+can't specify a remote host - that is the job of a firewall., f 61
+;
+#X connect 3 0 0 0;
+#X connect 3 1 4 0;
+#X connect 5 0 3 0;
+#X connect 6 0 3 0;
+#X connect 7 0 3 0;
+#X connect 8 0 3 0;
+#X connect 9 0 3 0;
+#X connect 10 0 3 0;
+#X connect 12 0 13 0;
+#X connect 15 0 3 0;
+#X restore 343 428 pd IP version and multicast;
+#X text 223 344 optional -f flag for from address & port outlet (0.51+)
+;
+#X text 223 376 optional UDP hostname or multicast address (0.51+)
+;
+#X text 246 454 lists work like "send" (Pd 0.51+);
+#X text 403 614 updated for Pd version 0.51.;
+#X text 29 569 As of 0.51 \, Pd supports IPv6 addresses.;
+#X obj -1 0 cnv 15 584 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 #c4dcdc #000000 0;
+#X text 2 2 [netreceive] More Info on the New Version Compatible with
+Pd 0.51 and Newer, f 75;
+#X obj 277 601 netsend;
+#X text 29 601 this patch works in combination with the;
+#X text 327 601 help file;
+#X connect 0 0 3 0;
+#X connect 0 1 1 0;
+#X connect 6 0 4 0;
+#X connect 11 0 12 0;
+#X connect 14 0 0 0;
+#X connect 17 0 0 0;
+#X connect 19 0 0 0;
+#X connect 20 0 19 0;
+#X connect 21 0 31 0;
+#X connect 26 0 13 0;
+#X connect 26 1 27 0;
+#X connect 31 0 11 0;
+#X restore 121 281 pd new_version_of_netreceive_compatible_with_pd_0.51
+;
+#X text 98 236 IMPORTANT! netsend and netreceive has been updated in
+pd vanilla and the newest changes are reflected in the subpatch below.
+;
+#X text 80 447 optional -u flag for UDP;
+#X text 80 462 optional -b flag for binary;
+#X text 80 493 optional port number;
+#X text 80 477 optional -f flag for from address & port outlet (0.51+)
+;
+#X text 80 509 optional UDP hostname or multicast address (0.51+);
+#X text 80 426 NEW (see the subpatch above for the version 0.51):;
+#X text 80 539 LEGACY (backwards-compatible):;
 #X connect 12 0 14 0;
 #X connect 31 0 13 0;
 #X connect 31 1 11 0;

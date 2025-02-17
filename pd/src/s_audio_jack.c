@@ -15,12 +15,18 @@
 #define MAX_CLIENTS 100
 #define NUM_JACK_PORTS 128
 #define BUF_JACK 4096
+// ag 20241213: This was a hard-coded constant 100 in the code previously, but
+// Pipewire seems to allow larger sizes. We now use jack_client_name_size()
+// here if it is supported, the following is used as a fallback if not.
+// See: https://github.com/pure-data/pure-data/commit/a20fce3c
+#define CLIENT_NAME_SIZE_FALLBACK 256
 static jack_nframes_t jack_out_max;
 #define JACK_OUT_MAX  64
 static jack_nframes_t jack_filled = 0;
 static t_sample jack_outbuf[NUM_JACK_PORTS*BUF_JACK];
 static t_sample jack_inbuf[NUM_JACK_PORTS*BUF_JACK];
 static int jack_started = 0;
+static int jack_default_client = -1;
 
 
 static jack_port_t *input_port[NUM_JACK_PORTS];
@@ -132,6 +138,8 @@ static int jack_xrun(void* arg)
 static char** jack_get_clients(void)
 {
     const char **jack_ports;
+    int tmp_client_name_size = jack_client_name_size ? jack_client_name_size() : CLIENT_NAME_SIZE_FALLBACK;
+    char* tmp_client_name = (char*)getbytes(tmp_client_name_size);
     int i,j;
     int num_clients = 0;
     regex_t port_regex;
@@ -147,7 +155,6 @@ static char** jack_get_clients(void)
         {
             int client_seen;
             regmatch_t match_info;
-            char tmp_client_name[100];
 
             /* extract the client name from the port name, using a regex
              * that parses the clientname:portname syntax */
@@ -168,26 +175,16 @@ static char** jack_get_clients(void)
                 jack_client_names[num_clients] =
                     (char*)getbytes(strlen(tmp_client_name) + 1);
 
-                /* The alsa_pcm client should go in spot 0.  If this
-                 * is the alsa_pcm client AND we are NOT about to put
-                 * it in spot 0 put it in spot 0 and move whatever
-                 * was already in spot 0 to the end. */
-
-                if( strcmp( "system", tmp_client_name ) == 0 &&
-                    num_clients > 0 )
-                {
-                  char* tmp;
-                    /* alsa_pcm goes in spot 0 */
-                  tmp = jack_client_names[ num_clients ];
-                  jack_client_names[ num_clients ] = jack_client_names[0];
-                  jack_client_names[0] = tmp;
-                  strcpy( jack_client_names[0], tmp_client_name);
-                }
-                else
-                {
-                    /* put the new client at the end of the client list */
-                    strcpy( jack_client_names[ num_clients ], tmp_client_name );
-                }
+                // ag 20241213: We will auto-connect to 'system' if it exists,
+                // to maintain backward compatibility if you're still running
+                // Jack proper. Note that this client normally won't exist on
+                // Pipewire systems running the Pipewire Jack module, in which
+                // case we skip the auto-connection, so you'll have to connect
+                // using a patchbay program like qjackctl.
+                if( strcmp( "system", tmp_client_name ) == 0 )
+                    jack_default_client = num_clients;
+                /* put the new client at the end of the client list */
+                strcpy( jack_client_names[ num_clients ], tmp_client_name );
                 num_clients++;
 
             }
@@ -196,6 +193,7 @@ static char** jack_get_clients(void)
 
     /*   for (i=0;i<num_clients;i++) post("client: %s",jack_client_names[i]); */
 
+    freebytes( tmp_client_name, tmp_client_name_size );
     free( jack_ports );
     return jack_client_names;
 }
@@ -207,11 +205,11 @@ static char** jack_get_clients(void)
 
 static int jack_connect_ports(char* client)
 {
-    char  regex_pattern[100]; /* its always the same, ... */
+    char  regex_pattern[CLIENT_NAME_SIZE_FALLBACK]; /* its always the same, ... */
     int i;
     const char **jack_ports;
 
-    if (strlen(client) > 96)  return -1;
+    if (strlen(client) > CLIENT_NAME_SIZE_FALLBACK-4)  return -1;
 
     sprintf( regex_pattern, "%s:.*", client );
 
@@ -414,9 +412,9 @@ int jack_open_audio(int inchans, int outchans, int rate)
         }
         
         memset(jack_outbuf,0,sizeof(jack_outbuf));
-        
-        if (jack_client_names[0])
-            jack_connect_ports(jack_client_names[0]);
+
+        if (jack_default_client >= 0)
+            jack_connect_ports(jack_client_names[jack_default_client]);
 
         pthread_mutex_init(&jack_mutex,NULL);
         pthread_cond_init(&jack_sem,NULL);

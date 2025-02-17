@@ -189,8 +189,8 @@ dmg:
 # sign libs (@MovementGH, https://github.com/pd-l2ork/pd-l2ork/commit/5a99fac)
 	./sign-MacOSX-dependencies.sh $(PD_APP_CONTENTS)
 	rm -f build.dmg
-	hdiutil create -format UDRW -fs HFS+ -srcfolder "$(BUILD_BASE)" \
-		-volname $(VOLUME_NAME) build.dmg
+# GH runner often fails here, do max 10 retries
+	nretries=10; until [[ $$nretries -le 0 ]] || hdiutil create -format UDRW -fs HFS+ -srcfolder "$(BUILD_BASE)" -volname $(VOLUME_NAME) build.dmg; do echo "hdiutil create failed, retrying"; sleep 5; nretries=$$(expr $$nretries - 1); done
 # detach one with the same name first
 	-hdiutil detach "/Volumes/$(VOLUME_NAME)"
 	hdiutil attach build.dmg
@@ -216,8 +216,8 @@ dmg:
 	$(MAKE) -C $(packages_src) \
 		DESTDIR="/Volumes/$(VOLUME_NAME)/*.app/Contents/Resources" doc_format
 	chmod -R a-w /Volumes/$(VOLUME_NAME)/*.app/Contents/Resources
-# max 5 retries
-	nretries=10; volm=$$(mount | grep $(VOLUME_NAME) | cut -d ' ' -f 1); sleep 5; until [[ $$nretries -le 0 ]] || hdiutil detach $$volm; do echo "detach failed, retrying"; sleep 5; nretries=$$(expr $$nretries - 1); done
+# max 10 retries
+	nretries=10; volm=$$(mount | grep $(VOLUME_NAME) | cut -d ' ' -f 1); sleep 5; until [[ $$nretries -le 0 ]] || hdiutil detach $$volm; do echo "hdiutil detach failed, retrying"; sleep 5; nretries=$$(expr $$nretries - 1); done
 	rm -f "$(PACKAGE_NAME).dmg"
 	hdiutil convert -format UDZO -o "$(PACKAGE_NAME).dmg" build.dmg
 	rm -f build.dmg

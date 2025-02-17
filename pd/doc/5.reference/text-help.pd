@@ -1,10 +1,10 @@
-#N canvas 430 35 555 619 10;
+#N canvas 373 200 555 619 10;
 #X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
-14 -228856 -66577 0;
-#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header text 3 12 0 18 -204280
--1 0;
+14 #dcdcdc #404040 0;
+#X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header text 3 12 0 18 #c4dcdc
+#000000 0;
 #X obj 0 458 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
--228856 -1 0;
+#dcdcdc #000000 0;
 #N canvas 489 286 494 344 META 0;
 #X text 12 65 LIBRARY internal;
 #X text 12 105 WEBSITE http://crca.ucsd.edu/~msp/;
@@ -18,15 +18,15 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 45 DESCRIPTION box with text for an object or comment;
 #X restore 500 597 pd META;
 #X obj 0 486 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
-13 -228856 -1 0;
+13 #dcdcdc #000000 0;
 #X obj 0 514 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
-0 13 -228856 -1 0;
+0 13 #dcdcdc #000000 0;
 #X obj 0 542 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
-0 13 -228856 -1 0;
+0 13 #dcdcdc #000000 0;
 #X text 98 518 (none);
-#N canvas 217 509 428 119 Related_objects 0;
+#N canvas 218 509 428 119 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
+14 #c4dcdc #000000 0;
 #X text 8 2 comment Related Objects;
 #X obj 21 28 pddp/pddplink all_about_externals.pd -text _________;
 #X obj 21 28 pddp/pddplink all_about_externals.pd -text Externals;
@@ -34,40 +34,59 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X obj 21 68 pddp/helplink pddp/pddplink;
 #X obj 21 88 pddp/helplink pddp/helplink;
 #X restore 102 597 pd Related_objects;
-#X text 104 387 Phone number with hyphens: 555-555-5555;
-#X text 104 407 Same phone number without hyphens: 5.55556e+09;
 #X text 98 462 (none);
 #X text 98 491 (none);
-#N canvas 100 383 428 181 Some_Comments_On_Comments 0;
+#N canvas 102 383 428 379 Some_Comments_On_Comments 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
-#X text 20 29 semicolons in comments cause the text \; following them
-to \; start \; on a \; new \; line;
-#X text 19 110 Try adding a period at the end of this sentence \, which
-ends with the number 1;
-#X text 19 140 If you close this subwindow \, then open it again \,
-the period you added will be gone.;
+14 #c4dcdc #000000 0;
 #X text 8 2 comment Commentary: Additional Comments About Comments
 ;
+#X text 20 140 Numbers will be reformatted as well. Try adding a period
+at the end of this sentence \, which ends with the number 1;
+#X text 20 170 As soon as you finish your edit \, the period you added
+will be gone. That's because Pd reformatted the '1.' float atom as
+just '1'. (As this comment shows \, this can be prevented by surrounding
+the float value by single or double quotes.);
+#X text 20 30 A comment being just a sequence of symbol and float atoms
+means that they might be reformatted by Pd's parser in more or less
+surprising ways. Here are some examples:;
+#X text 39 320 Phone number with hyphens: 555-555-5555;
+#X text 39 340 Same phone number without hyphens: 5.55556e+09;
+#X text 20 230 In the same vein \, if you want to jot down a large
+value like a phone number in pd \, use hyphens or multiple dots so
+that pd will interpret it as a symbol atom.;
+#X text 20 79 Semicolons in comments cause the text \; following them
+to start on a new \; line \, and commas will always be followed by
+a space character.;
+#X text 20 280 Otherwise your phone number will be interpreted as a
+float atom and you will lose some rather important precision!;
 #X restore 102 551 pd Some_Comments_On_Comments;
 #X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
 #X obj 99 571 pddp/pddplink all_about_ascii_art.pd;
 #X text 378 11 To create \, click <Control-5>;
 #X text 11 23 box with text for an object or comment;
-#X text 85 144 Comments don't actually "do" anything \, but you can
+#X text 40 107 Comments don't actually "do" anything \, but you can
 use them to annotate your patch \, explain how something works \, add
-a copyright notice \, or anything else.;
-#X text 85 74 All text in Pure Data is just a series of symbol and/or
+a copyright notice \, or anything else., f 76;
+#X text 40 60 All text in Pure Data is just a series of symbol and/or
 float atoms. You create Pd objects by typing text into an object box
 \, but you can also write text as a comment for your patch (like this
-one).;
-#X text 85 224 To create a comment \, use the "Put" menu or click <Control-5>.
+one)., f 76;
+#X text 40 154 To create a comment \, use the "Put" menu or click <Control-5>.
+, f 76;
+#X obj 300 575 pddp/pddplink all_about_rich_text.pd;
+#X text 40 400 For some other peculiarities with Pd's comments please
+check the <b>"Some Comments on Comments"</b> subpatch below., f 76
 ;
-#X text 55 267 ***;
-#X text 85 347 Otherwise your phone number will interpreted as a float
-atom and you will lose some rather important precision!;
-#X text 85 267 Remember: text inside a comment is just a series of
-atoms \, and will be formatted accordingly. For example: if you want
-to jot down a large value like a phone number in pd \, use hyphens
-or multiple dots so that pd will interpret it as a symbol atom.;
+#X text 40 190 Purr Data also lets you do visual formatting of comments
+using explicit line breaks. E.g:Lorem ipsum dolor sit amet \, consetetur
+sadipscingelitr \, sed diam nonumy eirmod tempor invidunt ut laboreet
+dolore magna aliquyam erat \, sed diam voluptua. Atvero eos et accusam
+et justo duo dolores et ea rebum.There are also some possibilities
+for <=red><b>rich text formatting</b></=red> \, please see the <b>"all_about_rich_text"</b>
+patch linked below for details., f 76;
+#X text 40 350 <b>NOTE:</b> Visual and rich text formatting of comments
+are Purr Data-specific features \, they will *not* work (and look funny)
+in vanilla Pd! Thus they're best avoided in patches that are to be
+run in both environments., f 76;

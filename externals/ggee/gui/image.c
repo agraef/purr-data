@@ -23,11 +23,13 @@ typedef struct _image
     int x_img_height;
     int x_gop_spill;
     int x_click;
-    //t_float x_clicked;
     t_symbol* x_fname;
     t_symbol* x_receive;
-    //int x_selected;
-    //t_symbol* send;
+#if 0 // TODO?
+    t_float x_clicked;
+    int x_selected;
+    t_symbol* send;
+#endif
 } t_image;
 
 /* widget helper functions */
@@ -97,19 +99,12 @@ static void image_drawme(t_image *x, t_glist *glist, int firstime)
             x,
             x,
             "center");
-        //sys_vgui("catch {.x%zx.c delete %xS}\n", glist_getcanvas(glist), x);
-        //sys_vgui(".x%x.c create image %d %d -tags %xS\n",
-        //    glist_getcanvas(glist),text_xpix(&x->x_obj, glist),
-        //    text_ypix(&x->x_obj, glist), x);
         gui_vmess("gui_image_size_callback", "xxs",
             glist_getcanvas(glist), x, x->x_receive->s_name);
     }
     else
     {
         // move the gobj
-        //sys_vgui(".x%x.c coords %xS %d %d\n",
-        //    glist_getcanvas(glist), x,
-        //    text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist));
         gui_vmess("gui_image_coords", "xxii",
             glist_getcanvas(glist),
             x,
@@ -127,9 +122,6 @@ static void image_drawme(t_image *x, t_glist *glist, int firstime)
 static void image_erase(t_image* x,t_glist* glist)
 {
     gui_vmess("gui_gobj_erase", "xx", glist_getcanvas(glist), x);
-    //sys_vgui("catch {.x%x.c delete %xS}\n",glist_getcanvas(glist), x);
-    //sys_vgui("catch {image delete $img%x}\n", x);
-    //sys_vgui("catch {.x%x.c delete %xSEL}\n",glist_getcanvas(glist), x);
 }
 
 static t_symbol *get_filename(t_int argc, t_atom *argv)
@@ -188,14 +180,15 @@ static void image_getrect(t_gobj *z, t_glist *glist,
     if ((glist_getcanvas(glist) != glist && !x->x_click) || (!glist->gl_edit && !x->x_click))
     {
         *xp2 = *xp1;
-        // only if we have an image loaded and we are placed within a GOP obliterate the height
-        //if (glist_getcanvas(glist) != glist && (x->x_img_width + x->x_img_height) >= 2)
-        //{
-            //printf("blah\n");
-            //*yp2 = *yp1;
-        //}
+        // only if we have an image loaded and we are placed within a GOP
+        // obliterate the height
+#if 0
+        if (glist_getcanvas(glist) != glist && (x->x_img_width + x->x_img_height) >= 2)
+        {
+            *yp2 = *yp1;
+        }
+#endif
     }
-    //fprintf(stderr,"image_getrect %d %d %d %d\n", *xp1, *yp1, *xp2, *yp2);
 }
 
 static void image_displace(t_gobj *z, t_glist *glist,
@@ -216,12 +209,6 @@ static void image_displace_wtag(t_gobj *z, t_glist *glist,
     t_image *x = (t_image *)z;
     x->x_obj.te_xpix += dx;
     x->x_obj.te_ypix += dy;
-    /*sys_vgui(".x%x.c coords %xSEL %d %d %d %d\n",
-           glist_getcanvas(glist), x,
-           text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist),
-           text_xpix(&x->x_obj, glist) + x->x_width, text_ypix(&x->x_obj, glist) + x->x_height);
-
-    image_drawme(x, glist, 0);*/
     canvas_fixlinesfor(glist,(t_text*) x);
 }
 
@@ -234,42 +221,13 @@ static void image_select(t_gobj *z, t_glist *glist, int state)
         if (x->x_glist == glist_getcanvas(glist))
         {
             //x->x_selected = state;
-            if (!x->x_gop_spill && (x->x_img_width + x->x_img_height) >= 2)
-            {
-                sys_vgui(".x%x.c create prect %d %d %d %d \
-                        -tags %xSEL -strokewidth 1 -stroke $pd_colors(selection)\n",
-                    glist_getcanvas(glist),
-                    text_xpix(&x->x_obj, glist) - x->x_img_width/2,
-                    text_ypix(&x->x_obj, glist) - x->x_img_height/2,
-                    text_xpix(&x->x_obj, glist) + x->x_img_width/2,
-                    text_ypix(&x->x_obj, glist) + x->x_img_height/2, x);
-            }
-            else
-            {
-                sys_vgui(".x%x.c create prect %d %d %d %d \
-                        -tags %xSEL -strokewidth 1 -stroke $pd_colors(selection)\n",
-                    glist_getcanvas(glist),
-                    text_xpix(&x->x_obj, glist) - x->x_width/2,
-                    text_ypix(&x->x_obj, glist) - x->x_height/2,
-                    text_xpix(&x->x_obj, glist) + x->x_width/2,
-                    text_ypix(&x->x_obj, glist) + x->x_height/2, x);
-            }
             gui_vmess("gui_image_toggle_border", "xxi", glist_getcanvas(glist),
                 x, 1);
         }
         gui_vmess("gui_gobj_select", "xx", glist_getcanvas(glist), x);
-        //if (glist->gl_owner && !glist_istoplevel(glist))
-        //sys_vgui(".x%x.c addtag selected withtag %xS\n", glist_getcanvas(glist), x);
-        //sys_vgui(".x%x.c addtag selected withtag %xMT\n", glist_getcanvas(glist), x);
-        //sys_vgui(".x%x.c addtag selected withtag %xSEL\n", glist_getcanvas(glist), x);
     }
     else
     {
-        //sys_vgui("catch {.x%x.c delete %xSEL}\n",
-        //glist_getcanvas(glist), x);
-        //if (glist->gl_owner && !glist_istoplevel(glist))
-        //sys_vgui(".x%zx.c dtag %xS selected\n", glist_getcanvas(glist), x);
-        //sys_vgui(".x%zx.c dtag %xMT selected\n", glist_getcanvas(glist), x);
         gui_vmess("gui_image_toggle_border", "xxi", glist_getcanvas(glist),
             x, 0);
         gui_vmess("gui_gobj_deselect", "xx", glist_getcanvas(glist), x);
@@ -278,12 +236,14 @@ static void image_select(t_gobj *z, t_glist *glist, int state)
 
 static void image_activate(t_gobj *z, t_glist *glist, int state)
 {
-    /*fprintf(stderr,"activate...\n");
+#if 0 // TODO?
+    fprintf(stderr,"activate...\n");
     t_text *x = (t_text *)z;
     t_rtext *y = glist_findrtext(glist, x);
     rtext_activate(y, state);
     t_image *i = (t_image *)z;
-    canvas_redraw(i->x_glist);*/
+    canvas_redraw(i->x_glist);
+#endif
 }
 
 static void image_delete(t_gobj *z, t_glist *glist)
@@ -307,27 +267,37 @@ static void image_vis(t_gobj *z, t_glist *glist, int vis)
 static void image_save(t_gobj *z, t_binbuf *b)
 {
     t_image *x = (t_image *)z;
-    binbuf_addv(b, "ssiissi", gensym("#X"), gensym("obj"),
-                x->x_obj.te_xpix, x->x_obj.te_ypix,   
-                atom_getsymbol(binbuf_getvec(x->x_obj.te_binbuf)),
-                x->x_fname, x->x_gop_spill);
+    // ag: unless we need it, avoid adding the gop-spill argument which isn't
+    // compatible with vanilla ggee
+    if (x->x_gop_spill)
+        binbuf_addv(b, "ssiissi", gensym("#X"), gensym("obj"),
+                    x->x_obj.te_xpix, x->x_obj.te_ypix,
+                    atom_getsymbol(binbuf_getvec(x->x_obj.te_binbuf)),
+                    x->x_fname, x->x_gop_spill);
+    else
+        binbuf_addv(b, "ssiiss", gensym("#X"), gensym("obj"),
+                    x->x_obj.te_xpix, x->x_obj.te_ypix,
+                    atom_getsymbol(binbuf_getvec(x->x_obj.te_binbuf)),
+                    x->x_fname);
     binbuf_addv(b, ";");
 }
 
 static t_widgetbehavior image_widgetbehavior;
 
-/*void image_size(t_image* x,t_floatarg w,t_floatarg h) {
+#if 0 // TODO?
+static void image_size(t_image* x,t_floatarg w,t_floatarg h) {
      x->x_width = w;
      x->x_height = h;
      image_displace((t_gobj*)x, x->x_glist, 0.0, 0.0);
-}*/
+}
 
-/*void image_color(t_image* x,t_symbol* col)
+static void image_color(t_image* x,t_symbol* col)
 {
      //outlet_bang(x->x_obj.ob_outlet); only bang if there was a bang .. 
      //so color black does the same as bang, but doesn't forward the bang 
 
-}*/
+}
+#endif
 
 static int image_newclick(t_gobj *z, struct _glist *glist, int xpix, int ypix, int shift, int alt, int dbl, int doit)
 {
@@ -337,15 +307,6 @@ static int image_newclick(t_gobj *z, struct _glist *glist, int xpix, int ypix, i
         outlet_bang(x->x_obj.ob_outlet);
     // LATER: figure out how to do click on and click off
     // and provide a toggle button behavior instead
-    /*{
-        x->x_clicked = 1;
-        outlet_float(x->x_obj.ob_outlet, x->x_clicked);
-    }
-    else if (x->x_clicked)
-    {
-        x->x_clicked = 0;
-        outlet_float(x->x_obj.ob_outlet, x->x_clicked);
-    }*/
     return(1);
 }
 
@@ -426,11 +387,11 @@ static void image_imagesize_callback(t_image *x, t_float w, t_float h) {
     }
     else
     {
-        //sys_vgui("catch {.x%x.c delete %xMT}\n", glist_getcanvas(x->x_glist), x);
         // reselect if we are on a toplevel canvas to adjust the selection rectangle, if necessary
 
+#if 0
         /* ico@vt.edu: this does not work for the spill mode, so we will have to
-           draw the select box on demand
+           draw the select box on demand */
         gui_vmess("gui_image_draw_border", "xxiiii",
             glist_getcanvas(x->x_glist),
             x,
@@ -438,7 +399,7 @@ static void image_imagesize_callback(t_image *x, t_float w, t_float h) {
             0 - x->x_img_height/2,
             x->x_img_width,
             x->x_img_height);
-        */
+#endif
 
         if (glist_isselected(x->x_glist, (t_gobj *)x) && glist_getcanvas(x->x_glist) == x->x_glist)
         {
@@ -463,14 +424,11 @@ static void image_setwidget(void)
 
 static void image_free(t_image *x)
 {
-    //sys_vgui("image delete img%x\n", x);
     gui_vmess("gui_image_free", "x", x);
     if (x->x_receive)
     {
         pd_unbind(&x->x_obj.ob_pd,x->x_receive);
     }
-    //sys_vgui(".x%x.c delete %xSEL\n", x);
-    //sys_vgui(".x%x.c delete %xS\n", x);
 }
 
 static void *image_new(t_symbol *s, t_int argc, t_atom *argv)
@@ -515,12 +473,12 @@ void image_setup(void)
     image_class = class_new(gensym("image"),
                 (t_newmethod)image_new, (t_method)image_free,
                 sizeof(t_image),0, A_GIMME,0);
-/*
+#if 0 // TODO?
     class_addmethod(image_class, (t_method)image_size, gensym("size"),
         A_FLOAT, A_FLOAT, 0);
     class_addmethod(image_class, (t_method)image_color, gensym("color"),
         A_SYMBOL, 0);
-*/
+#endif
     class_addmethod(image_class, (t_method)image_click, gensym("click"),
         A_DEFFLOAT, 0);
     class_addmethod(image_class, (t_method)image_open, gensym("open"),

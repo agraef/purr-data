@@ -892,7 +892,7 @@ typedef struct _gatom
     t_symbol *a_expanded_to; /* a_symto after $0, $1, ...  expansion */
     int a_click_pos;         /* character position when clicked */
     int a_shift_clicked;     /* used to keep old text after \n. this is
-                                activated by shift+clicking no the object */
+                                activated by shift+clicking on the object */
 } t_gatom;
 
     /* prepend "-" as necessary to avoid empty strings, so we can
@@ -967,9 +967,10 @@ static void gatom_set(t_gatom *x, t_symbol *s, int argc, t_atom *argv)
         int size;
         binbuf_add(b, argc, argv);
         // our "listbox" is really just a symbol gatom masquerading as a list
-        // gatom, so internally we store the list as a symbol -- our code can't
-        // really deal with proper list gatoms right now
-        binbuf_gettext(b, &buf, &size);
+        // gatom, so internally we store the list as a symbol, with elements
+        // delimited by ALIST_DELIM (a non-printing character which shouldn't
+        // normally occur in symbols)
+        binbuf_gettext_s(b, &buf, &size);
         buf = (char *)t_resizebytes(buf, size, size+1);
         buf[size] = 0;
         x->a_atom.a_w.w_symbol = gensym(buf);
@@ -1035,7 +1036,7 @@ static void gatom_bang(t_gatom *x)
         // proper list again
         t_binbuf *b = binbuf_new();
         char *buf = x->a_atom.a_w.w_symbol->s_name;
-        binbuf_text(b, buf, strlen(buf));
+        binbuf_text_s(b, buf, strlen(buf));
         int argc = binbuf_getnatom(b);
         t_atom *argv = binbuf_getvec(b);
         for (int i = 0; i < argc; i++)
@@ -1112,18 +1113,32 @@ static char *clicked_number(t_gatom *a, double *d, int *p, int *q)
 {
     static char token[MAXPDSTRING];
     if (a->a_flavor == A_LIST) {
-        char *buf = a->a_atom.a_w.w_symbol->s_name;
+        char buf[MAXPDSTRING];
+        // make sure to get the fully expanded atom representation here, since
+        // number positions may be different from the symbol itself
+        atom_string(&a->a_atom, buf, MAXPDSTRING);
         int size = strlen(buf), pos = a->a_click_pos;
         if (pos <= size) {
             // find the token preceding pos
-            while (pos > 0 && !isspace(buf[pos-1])) pos--;
+            while (pos > 0 &&
+                   (!isspace(buf[pos-1]) ||
+                    // check for and ignore escaped whitespace
+                    (pos > 1 && buf[pos-2] == '\\'))) pos--;
             int endpos = pos;
-            while (endpos < size && !isspace(buf[endpos])) endpos++;
+            while (endpos < size &&
+                   (!isspace(buf[endpos]) ||
+                    // check for and ignore escaped whitespace
+                    (endpos > 0 && buf[endpos-1] == '\\'))) endpos++;
             if (endpos > pos) {
                 strncpy(token, buf+pos, endpos-pos);
                 token[endpos-pos] = 0;
                 int n;
                 if (sscanf(token, "%lg%n", d, &n) == 1 && n == endpos-pos) {
+                    // We need to account for backslash quoting in order to
+                    // translate the token position back to the original
+                    // unquoted symbol.
+                    for (char *s = buf; *s; s++)
+                        if (*s == '\\') pos--, endpos--;
                     *p = pos; *q = endpos;
                     return token;
                 }
@@ -1196,7 +1211,7 @@ static void gatom_motion(void *z, t_floatarg dx, t_floatarg dy)
         {
             double nval2 = float_increment(nval, dy);
             if (nval2 != nval)
-              change_clicked(x, nval2, p, q, 1);
+                change_clicked(x, nval2, p, q, 1);
         }
     }
     else if (x->a_atom.a_type == A_FLOAT)
@@ -1220,14 +1235,23 @@ static void gatom_key(void *z, t_floatarg f)
 {
     t_gatom *x = (t_gatom *)z;
     int c = f;
-    //post("gatom_key %f %d", f, x->a_shift);
     int len = strlen(x->a_buf);
     t_atom at;
     char sbuf[ATOMBUFSIZE + 4];
+    int escaped = 0;
+    if (len > 0 && x->a_buf[len-1] == '\\') {
+        // ag 20240916: Get rid of a trailing backslash. We don't keep the
+        // backslash itself in the buffer after it has served its purpose of
+        // escaping the following character (which is about to be processed).
+        // Rather, escaping special characters will be done automatically as
+        // needed, when the gatom gets sent to the GUI, which happens in
+        // rtext_retext().
+        x->a_buf[--len] = 0;
+        escaped = 1;
+    }
     if (c == 0)
     {
         // we're being notified that no more keys will come for this grab
-    	//post("gatom_key end <%s> <%s>", x->a_buf, x->a_atom.a_w.w_symbol->s_name);
         if (x->a_atom.a_type == A_FLOAT)
         {
             x->a_atom = x->a_atomold;
@@ -1248,12 +1272,8 @@ static void gatom_key(void *z, t_floatarg f)
             // originally clicked on below, but only if the current gatom is
             // symbol type and is empty.
             if (x->a_buf[0] == 0 || strcmp(x->a_buf, x->a_atom.a_w.w_symbol->s_name))
-            {
                 gatom_setabuf(x, x->a_atom.a_w.w_symbol->s_name);
-                gatom_retext(x, 1, 1);
-            }
-            else
-                gatom_retext(x, 0, 1);
+            gatom_retext(x, 1, 1);
         }
         return;
     }
@@ -1261,10 +1281,10 @@ static void gatom_key(void *z, t_floatarg f)
     {
         if (len > 0)
         {
-        	if (x->a_shift)
-        		x->a_buf[0] = 0;
-        	else
-        		x->a_buf[len-1] = 0;
+            if (x->a_shift)
+                x->a_buf[0] = 0;
+            else
+                x->a_buf[len-1] = 0;
         }
         goto redraw;
     }
@@ -1272,9 +1292,6 @@ static void gatom_key(void *z, t_floatarg f)
     {
         if (x->a_atom.a_type == A_FLOAT) {
             if (x->a_buf[0]) x->a_atom.a_w.w_float = atof(x->a_buf);
-            //sprintf(x->a_buf, "%f", x->a_atom.a_w.w_float);
-            //post("got float f=<%f> s=<%s>", x->a_atom.a_w.w_float, x->a_buf);
-
             // ico@vt.edu 20200904:
             // we reset internal buffer since there is currently no graceful way
             // to handle conversion from float to string and back without loss
@@ -1282,25 +1299,30 @@ static void gatom_key(void *z, t_floatarg f)
             x->a_buf[0] = 0;
         }
         else if (x->a_atom.a_type == A_SYMBOL)
-			x->a_atom.a_w.w_symbol = gensym(x->a_buf);
+            x->a_atom.a_w.w_symbol = gensym(x->a_buf);
         else bug("gatom_key");
 
         x->a_atomold = x->a_atom;
         gatom_bang(x);
         gatom_retext(x, 1, 0);
-        /* ico@vt.edu 20200904: We prevent deleting of internal buffer,
-		   so that we can keep adding to the existing text unless we click
-		   the second time in which case we will always start with an
-		   empty symbol
-		*/
-		if (!x->a_shift_clicked)
-        	x->a_buf[0] = 0;
+        /* ico@vt.edu 20200904: We prevent deleting of internal buffer, so
+           that we can keep adding to the existing text unless we click the
+           second time in which case we will always start with an empty symbol
+        */
+        if (!x->a_shift_clicked)
+            x->a_buf[0] = 0;
         /* We want to keep grabbing the keyboard after hitting "Enter", so
            we're commenting the following out */
         //glist_grab(x->a_glist, 0, 0, 0, 0, 0);
     }
-    else if (len < (ATOMBUFSIZE-1))
+    else if (len < (ATOMBUFSIZE-1) && c != 127) // 127 == Delete key, ignored
     {
+        if (c == ' ' && x->a_flavor == A_LIST && !escaped) {
+            // special listbox delimiter, this will be shown as ' '
+            x->a_buf[len++] = ALIST_DELIM;
+            x->a_buf[len] = 0;
+            goto redraw;
+        }
             /* for numbers, only let reasonable characters through */
         if ((x->a_atom.a_type == A_SYMBOL) ||
             (c >= '0' && c <= '9' || c == '.' || c == '-'
@@ -1402,10 +1424,9 @@ static void gatom_click(t_gatom *x,
     t_floatarg xpos, t_floatarg ypos, t_floatarg shift, t_floatarg ctrl,
     t_floatarg alt)
 {
-	//post("gatom_click %f %f", ctrl, alt);
     // zero-based position of clicked character (listbox)
-    x->a_click_pos = ((int)xpos - x->a_text.te_xpix) / sys_fontwidth(glist_getfont(x->a_glist));
-	//post("bind");
+    x->a_click_pos = ((int)xpos - x->a_text.te_xpix) /
+        sys_fontwidth(glist_getfont(x->a_glist));
     if (x->a_text.te_width == 1)
     {
         if (x->a_atom.a_type == A_FLOAT)
@@ -1436,14 +1457,15 @@ static void gatom_click(t_gatom *x,
             binbuf_add(x->a_text.te_binbuf, 1, &at);
             glist_retext(x->a_glist, &x->a_text);
         }
-	   	glist_grabx(x->a_glist, &x->a_text.te_g, gatom_motion, gatom_key,
-	        (t_glistkeynameafn)gatom_keyhandler, xpos, ypos);
-	    //post("a_shift_clicked=%d", x->a_shift_clicked);
+        glist_grabx(x->a_glist, &x->a_text.te_g, gatom_motion, gatom_key,
+                    (t_glistkeynameafn)gatom_keyhandler, xpos, ypos);
         x->a_shift_clicked = shift;
-	    	// second click wipes prior text
-	    if (!x->a_shift_clicked)
-			x->a_buf[0] = 0;
-	    //post("a_shift_clicked=%d", x->a_shift_clicked);
+        if (!x->a_shift_clicked)
+            // unshifted click wipes prior text
+            x->a_buf[0] = 0;
+        else if (x->a_atom.a_type == A_SYMBOL)
+            // make sure to initialize the edit buffer from the current value
+            gatom_setabuf(x, x->a_atom.a_w.w_symbol->s_name);
     }
 }
 
@@ -2584,33 +2606,6 @@ void text_save(t_gobj *z, t_binbuf *b)
     }
     else    
     {
-        //fprintf(stderr,"comment\n");
-        int natom = binbuf_getnatom(x->te_binbuf);
-        t_atom *a = binbuf_getvec(x->te_binbuf);
-        int i;
-        for (i = 0; i < natom; i++)
-        {
-            t_symbol *s;
-            if (a[i].a_type == A_SYMBOL)
-            {
-                //fprintf(stderr,"%d is a symbol\n", i);
-                s = a[i].a_w.w_symbol;
-                if (s != NULL && s->s_name != NULL)
-                {
-                    //fprintf(stderr,"s != NULL\n");
-                    char *c;
-                    for(c = s->s_name; c != NULL && *c != '\0'; c++)
-                    {
-                        if (*c == '\n')
-                        {
-                            *c = '\v';
-                            //fprintf(stderr,"n->v\n");
-                        }
-                    }
-                }
-            }
-        }
-
         binbuf_addv(b, "ssii", gensym("#X"), gensym("text"),
             (int)x->te_xpix, (int)x->te_ypix);
         binbuf_addbinbuf(b, x->te_binbuf);
@@ -3121,18 +3116,6 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
     }
     else
     { // T_MESSAGE, T_TEXT, T_ATOM
-        if (buf && x->te_type == T_TEXT)
-        {
-            char *c;
-            int n;
-            for(c = buf, n = 0; n < bufsize; n++, c++)
-            {
-                if(*c == '\n')
-                {
-                    *c = '\v';
-                }
-            }
-        }
         binbuf_gettext(x->te_binbuf, &c1, &i1);
         t_binbuf *b = binbuf_new();
         binbuf_text(b, buf, bufsize);
@@ -3142,7 +3125,6 @@ void text_setto(t_text *x, t_glist *glist, char *buf, int bufsize, int pos)
             canvas_undo_add(glist_getcanvas(glist), 10, "typing",
                 (void *)canvas_undo_set_recreate(glist_getcanvas(glist),
                 &x->te_g, pos));
-            //fprintf(stderr,"blah |%s| |%s|\n", c1, buf);
         }
         binbuf_text(x->te_binbuf, buf, bufsize);
         binbuf_free(b);

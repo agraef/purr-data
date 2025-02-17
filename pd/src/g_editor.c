@@ -531,6 +531,8 @@ static void glist_checkanddeselectall(t_glist *gl, t_gobj *g)
 
 int glist_getindex(t_glist *x, t_gobj *y);
 
+static t_binbuf *newobjbuf;
+
     /* call this for selected objects only */
 void glist_deselect(t_glist *x, t_gobj *y)
 {
@@ -603,6 +605,14 @@ void glist_deselect(t_glist *x, t_gobj *y)
             int bufsize;
 
             rtext_gettext(z, &buf, &bufsize);
+            if (bufsize == 0 && newobjbuf && binbuf_getnatom(newobjbuf) > 0) {
+                post("error: object pending creation:");
+                binbuf_print(newobjbuf);
+                post("** NOTE: This indicates a bug in the gui message interface, most likely an unterminated gui message; please copy down this error message and submit a bug report, thanks!");
+                // to be on the safe side, clear the pending buffer, so that
+                // it doesn't get injected in a subsequent object creation
+                binbuf_clear(newobjbuf);
+            }
             text_setto((t_text *)y, x, buf, bufsize, pos);
             canvas_fixlinesfor(glist_getcanvas(x), (t_text *)y);
             x->gl_editor->e_textedfor = 0;
@@ -4435,70 +4445,153 @@ int canvas_isconnected (t_canvas *x, t_text *ob1, int n1,
     return (0);
 }
 
-void canvas_sort_selection_according_to_location(t_canvas *x)
+// coordinate grid to mitigate sloppy object alignment
+#define PIX_GRID 10
+
+static int grid_coord(int x)
+{
+    return (int)((x+PIX_GRID/2)/PIX_GRID);
+}
+
+static int sel_order = 0; // 0 = vertical, 1 = horizontal
+static int sel_order_r = 1; // -1 = reverse rows or columns
+
+static int check_wrap(t_gobj *x, int *last)
+{
+    t_text *y = (t_text *)x;
+    if (grid_coord(sel_order?y->te_ypix:y->te_xpix) < *last) {
+        return 1;
+    } else {
+        *last = grid_coord(sel_order?y->te_ypix:y->te_xpix);
+        return 0;
+    }
+}
+
+typedef struct _sel_map {
+    int i;
+    t_selection *sel;
+} t_sel_map;
+
+static int analyze_order(t_sel_map *sel, int n_selected,
+                         t_gobj *y1, t_gobj *y2, int *ip1, int *ip2)
+{
+    int i1 = -1, i2 = -1, count1 = 0, count2 = 0, skip = 1, last = -1;
+    for (int i = 0; i < n_selected; i++)
+    {
+        t_gobj *x = sel[i].sel->sel_what;
+        if (!skip && check_wrap(x, &last)) {
+            if (i1 != -1 || i2 != -1) {
+                skip = 1;
+                last = -1;
+            }
+        }
+        if (x == y1) {
+            i1 = i;
+            count1 = 1; skip = 0;
+        } else if (x == y2) {
+            i2 = i;
+            count2 = 1; skip = 0;
+        } else if (!skip) {
+            if (i1 != -1 && i2 < i1)
+                count1++;
+            if (i2 != -1 && i1 < i2)
+                count2++;
+        }
+    }
+    *ip1 = i1; *ip2 = i2;
+    return count2 > count1 ? count2 : count1;
+}
+
+static int sel_compare(const void *x, const void *y)
+{
+    t_sel_map *xs = (t_sel_map*)x;
+    t_sel_map *ys = (t_sel_map*)y;
+    t_text *xt =(t_text*)xs->sel->sel_what;
+    t_text *yt =(t_text*)ys->sel->sel_what;
+    if (sel_order) {
+        if (grid_coord(xt->te_xpix) == grid_coord(yt->te_xpix))
+            return grid_coord(xt->te_ypix) - grid_coord(yt->te_ypix);
+        else
+            return sel_order_r *
+                (grid_coord(xt->te_xpix) - grid_coord(yt->te_xpix));
+    } else {
+        if (grid_coord(xt->te_ypix) == grid_coord(yt->te_ypix))
+            return grid_coord(xt->te_xpix) - grid_coord(yt->te_xpix);
+        else
+            return sel_order_r *
+                (grid_coord(xt->te_ypix) - grid_coord(yt->te_ypix));
+    }
+}
+
+void canvas_sort_selection_according_to_location(t_canvas *x, t_gobj *y1, t_gobj *y2)
 {
     int n_selected = glist_selectionindex(x, 0, 1); // get all selected objects
     //fprintf(stderr,"n_selected = %d\n", n_selected);
-    t_selection *traverse, *sel[n_selected];
-    int map[n_selected];
-    int already_mapped = 0;
-    int i = 0, j = 0, k = 0, leftmost = 99999, topmost = 99999;
-    t_text *yt;
+    t_selection *traverse;
+    // vertical order = top-to-bottom, left-to-right
+    // horizontal order = left-to-right, top-to-bottom
+    t_sel_map sel_v[n_selected], sel_h[n_selected];
+    int i = 0;
     for (traverse = x->gl_editor->e_selection; traverse; traverse = traverse->sel_next)
     {
-        sel[i] = traverse;
-        map[i] = -1;
+        sel_v[i].sel = traverse;
+        sel_v[i].i = i;
+        sel_h[i].sel = traverse;
+        sel_h[i].i = i;
         i++;
     }
-    for (i = 0; i < n_selected; i++)
-    {
-        for (j = 0; j < n_selected; j++)
-        {
-            yt = (t_text *)(sel[j]->sel_what);
-            if ((yt->te_xpix < leftmost) ||
-                (yt->te_xpix == leftmost && yt->te_ypix <= topmost))
-            {
-                for (k = 0; k < n_selected; k++)
-                {
-                    if (map[k] == j)
-                    {
-                        already_mapped = 1;
-                    }
-                }
-                if (!already_mapped)
-                {
-                    map[i] = j;
-                    leftmost = yt->te_xpix;
-                    topmost = yt->te_ypix;
-                }
-                already_mapped = 0;
-            }
-        }
-        leftmost = 99999;
-        topmost = 99999;
+    // compute both orders
+    int i1 = -1, i2 = -1;
+    sel_order_r = 1;
+    sel_order = 0;
+    qsort(sel_v, n_selected, sizeof(t_sel_map), sel_compare);
+    int count_v = analyze_order(sel_v, n_selected, y1, y2, &i1, &i2);
+    int offs_v = i2 - i1;
+    sel_order = 1;
+    qsort(sel_h, n_selected, sizeof(t_sel_map), sel_compare);
+    int count_h = analyze_order(sel_h, n_selected, y1, y2, &i1, &i2);
+    int offs_h = i2 - i1;
+    // Assess whether the vertical or the horizontal order is most likely,
+    // based on the number of columns and rows in the resulting pairing of
+    // objects, respectively. Break ties in favor of the vertical order.
+    sel_order = 0;
+    t_sel_map *sel = sel_v;
+    int offs = offs_v;
+    if (count_v < count_h) {
+        sel_order = 1;
+        sel = sel_h;
+        offs = offs_h;
     }
-    /*
-    // debug
-    for (i = 0; i < n_selected; i++) {
-        yt = (t_text *)(sel[map[i]]->sel_what);
-        fprintf(stderr,"sorted: %d (%d) x=%d y=%d\n",
-            i, map[i], yt->te_xpix, yt->te_ypix);
-    }*/
-    x->gl_editor->e_selection = sel[map[0]];
+    if (offs < 0) {
+        // If i2 < i1 then the target y2 comes before source y1 in the
+        // computed order. Our algorithm assumes that i1 < i2. We can try to
+        // fix up the order on the fly by reversing the primary coordinate.
+        // This won't do any good if both y1 and y2 are at the same primary
+        // coordinate, but then the whole bipartite pairing of sources and
+        // targets won't work anyway, and the algorithm will detect this error
+        // condition later.
+        sel_order_r = -1;
+        qsort(sel, n_selected, sizeof(t_sel_map), sel_compare);
+    }
+    // apply the constructed order
+    x->gl_editor->e_selection = sel[0].sel;
     for (i = 0; i < n_selected-1; i++)
     {
-        sel[map[i]]->sel_next = sel[map[i+1]];
+        sel[i].sel->sel_next = sel[i+1].sel;
     }
-    sel[map[n_selected-1]]->sel_next = 0;
+    sel[n_selected-1].sel->sel_next = 0;
 
-    /*
+#if 0
     // debug
     i = 0;
     for (traverse = x->gl_editor->e_selection; traverse; traverse = traverse->sel_next) {
-        yt = (t_text *)(traverse->sel_what);
-        fprintf(stderr,"final: %d x=%d y=%d\n", i, yt->te_xpix, yt->te_ypix);
+        t_text *yt = (t_text *)(traverse->sel_what);
+        post("sel[%d/%d] x=%d y=%d", i, sel[i].i, yt->te_xpix, yt->te_ypix);
+        binbuf_print(yt->te_binbuf);
+        fprintf(stderr,"final: %d/%d x=%d y=%d\n", i, sel[i].i, yt->te_xpix, yt->te_ypix);
         i++;
-    }*/
+    }
+#endif
 }
 
 void canvas_drawconnection(t_canvas *x, int lx1, int ly1, int lx2, int ly2,
@@ -4746,6 +4839,7 @@ int canvas_doconnect_doit(t_canvas *x, t_gobj *y1, t_gobj *y2,
     return(0);
 }
 
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
 {
     //fprintf(stderr,"canvas_trymulticonnect\n");
@@ -4768,10 +4862,10 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
     if ((y1 = canvas_findhitbox(x, xwas, ywas, &x11, &y11, &x12, &y12))
             && (y2 = canvas_findhitbox(x, xpos, ypos, &x21, &y21, &x22, &y22)))
     {
-        /* FIRST OPTION: if two objects are selected and the one that is
-           originating is one of the selected objects try multi-connecting
-           all outlets into all inlets starting with the user-made one as
-           an offset */
+        /* FIRST OPTION (1:1 multi-connect): if two objects are selected and
+           the one that is originating is one of the selected objects try
+           multi-connecting all outlets into all inlets starting with the
+           user-made one as an offset */
         if (!x->gl_editor->e_selection->sel_next->sel_next &&
             glist_isselected(x, y1) && glist_isselected(x, y2))
         {
@@ -4815,16 +4909,15 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                     return_val = canvas_doconnect_doit(
                         x, y1, y2, closest1 + i, closest2 + i, 1, 1);
                 }
-                hotspot1=hotspot1; hotspot2=hotspot2; // silence warnings (unused vars)
             }
             canvas_undo_add(x, UNDO_SEQUENCE_END, "multiconnect (mode-1)", 0);
             return(return_val);
         /* end of FIRST OPTION */
         }
-        /* SECOND OPTION: if two or more objects are selected and the one
-           that is originating is not one of the selected, connect originating
-           to all selected objects' the outlets specified by the first
-           connection */
+        /* SECOND OPTION (1:N a.k.a. fan-out single-connect): if two or more
+           objects are selected and the one that is originating is *not* one
+           of the selected, connect originating to the inlet of all selected
+           objects which was specified by the first connection */
         else if (x->gl_editor->e_selection->sel_next &&
                  !glist_isselected(x, y1) && glist_isselected(x, y2))
         {
@@ -4882,18 +4975,17 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                         }
                     }
                 }    
-                hotspot1=hotspot1; hotspot2=hotspot2; // silence warnings (unused vars)
             }
             canvas_undo_add(x, UNDO_SEQUENCE_END, "multiconnect (mode-2)", 0);
             return(return_val);
         /* end of SECOND OPTION */
         }
 
-        /* THIRD OPTION: if two or more objects are selected and the one
-           that is receiving connection is one of the selected, and the
-           target object is selected, connect nth outlet (as specified by
-           the first connection) from all selected objects into the inlet
-           of the unselected one */
+        /* THIRD OPTION (N:1 a.k.a. fan-in single-connect): if two or more
+           objects are selected and the one that is receiving connection is
+           *not* one of the selected, connect the outlet of all selected
+           objects which was specified by the first connection to the inlet of
+           the receiving object */
         else if (x->gl_editor->e_selection->sel_next &&
                  glist_isselected(x, y1) && !glist_isselected(x, y2))
         {
@@ -4952,25 +5044,86 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                         }
                     }
                 }
-                hotspot1=hotspot1; hotspot2=hotspot2; // silence warnings (unused vars)
             }
             canvas_undo_add(x, UNDO_SEQUENCE_END, "multiconnect (mode-3)", 0);
             return(return_val);
         /* end of THIRD OPTION */
         }
 
-        /* FOURTH OPTION: if more than two objects are selected and both y1
-           and y2 are selected connect each originating object's outlet to
-           each of the outgoing objects' inlets until you run out of objects
-           or outlets. This one is tricky as there is no guarrantee that
-           objects will be selected in proper visual order, so we order the
-           selection from left to right and top to bottom to ensure proper
-           visual pairing. This option has two variants, A and B.
+        /* FOURTH OPTION (1:N a.k.a. fan-out, N:1 a.k.a. fan-in, or N:N
+           parallel multi-connect): At least *three* objects are selected
+           which include *both* the originating object y1 and the receiving
+           object y2. This is the most versatile but also the most complicated
+           option. The precise outcome depends on the initial connection and
+           the status of the ctrl key when doing the initial connection, see
+           options A-C below.
 
-           OPTION A VS B: we either connect outgoing to each of other objects
-           (A) or incoming to all other objects (B). We determine which one of
-           the two options is selected based on which condition will yield more
-           successful connections. */
+           Since both y1 and y2 are selected, there's no a-priori way to tell
+           which of the selected objects will be originating and which will be
+           receiving connections, so the selection is sorted based on the
+           positions of the objects on the canvas instead. The present
+           implementation assumes that the selection can be organized into
+           rows or columns with the originating object in one of these, and
+           the receiving object in another. A heuristic is used to determine
+           which configuration is most likely, based on the layout and the
+           positions of y1 and y2. To keep things simple, let's imagine that
+           the objects are arranged in two rows a, b as depicted below, where
+           y1 = a[i] and y2 = b[j]:
+
+           a[1] ... a[i-1] y1 a[i+1] ... a[m]
+           b[1] ... b[j-1] y2 b[j+1] ... b[n]
+
+           Then one of the following options A-C will be taken. Option A and B
+           are multi-connect variations of the fan-out and fan-in (mode 2 and
+           3) single-connect operations above. Option C is only active when
+           holding the ctrl key while doing the connection. It produces N:N
+           parallel connections.
+
+           - OPTION A (fan-out): Beginning with the *outlet* of the initial
+             connection y1-y2, the outlets of y1 will be connected to the same
+             inlet of as many objects b[j], b[j+1], ... as possible, in that
+             order, starting with y2=b[j].
+
+           - OPTION B (fan-in): Beginning with the *inlet* of the initial
+             connection y1-y2, the inlets of y2 will be connected to the same
+             outlet of as many objects a[i], a[i+1], ... as possible, in that
+             order, starting with y1=a[i].
+
+           - OPTION C (parallel connections): Beginning with the initial y1-y2
+             connection, connect as many pairs y1=a[i] -> y2=b[j], a[i+1] ->
+             b[j+1], ... as possible, using the same inlet and outlet numbers
+             as in the initial connection.
+
+           In the vertical, row-based order sketched out above, the algorithm
+           enforces a strict top-to-bottom, left-to-right order of doing
+           connections.  Likewise, in the horizontal, column-based order,
+           connections are done from left-to-right, top-to-bottom. This limits
+           the possible connections, but makes the results more predictable
+           and more likely to resemble the user's intentions.
+
+           Option C is only taken if the ctrl key is pressed while doing the
+           initial connection. Otherwise, the operation automatically chooses
+           fan-out or fan-in depending on which option gives you the larger
+           number of connections, breaking ties in favor of fan-out.
+
+           CAVEAT: This operation is not 100% foolproof. The current
+           implementation doesn't really try to arrange the selected objects
+           into two neat rows or columns as depicted above, it only goes by
+           the precomputed linear selection order. In the real world, patches
+           tend to be messy, with objects rarely being lined up perfectly. The
+           algorithm tries to account for this by rounding coordinates to a
+           grid (see grid_coord() above), but you can also help it along by
+           employing the tidy-up operation in the edit menu to line things up
+           beforehand.
+
+           It also helps if the positions of the selected objects at least
+           roughly follow the row- or column-based layout assumed by the
+           algorithm. Moreover, you can avoid ambiguities by selecting minimal
+           'a' and 'b' sets of objects which will give you the connections
+           that you want. In particular, if the algorithm gives you a fan-out,
+           but you actually wanted a fan-in instead, try deselecting all 'b'
+           objects except the one that you want to fan into. In the same way,
+           a fan-out can be forced by selecting only a single 'a' object. */
         else if (x->gl_editor->e_selection->sel_next->sel_next &&
                  glist_isselected(x, y1) && glist_isselected(x, y2))
         {
@@ -5002,8 +5155,6 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 }
                 else closest2 = 0, hotspot2 = x21;
 
-                hotspot1=hotspot1; hotspot2=hotspot2; // silence warnings (unused vars)
-
                 if (closest1 >= noutlet1)
                     closest1 = noutlet1 - 1;
                 if (closest2 >= ninlet2)
@@ -5015,24 +5166,93 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 // now that we made the initial connection and know where to
                 // begin and where to connect to, let's connect the rest
                 t_selection *sel;
-                // resort selection
-                canvas_sort_selection_according_to_location(x);
+                int i, i1 = -1, i2 = -1;
+                int last_x = -1;
+                // re-order the selection
+                canvas_sort_selection_according_to_location(x, y1, y2);
+
+                if (glob_ctrl) {
+                    // OPTION C (N:N multi-connect)
+                    t_selection *sel1 = NULL;
+                    int count = 0, counting = 0;
+                    for (sel = x->gl_editor->e_selection, i = 0; sel; sel = sel->sel_next, i++)
+                    {
+                        // check for wrap-around
+                        if (check_wrap(sel->sel_what, &last_x)) {
+                            if (counting)
+                                counting = 0;
+                            else if (i2 != -1)
+                                break;
+                        }
+                        // identify original source and target as we go along
+                        if (sel->sel_what == y1) {
+                            i1 = i;
+                            // found the original source
+                            sel1 = sel;
+                            // start counting
+                            counting = 1;
+                        } else if (sel->sel_what == y2) {
+                            i2 = i;
+                            last_x = -1;
+                            // original target comes before source => fail
+                            if (i1 == -1) break;
+                            // otherwise we found the original target, start
+                            // doing connections
+                            counting = 0;
+                        } else if (i2 != -1) {
+                            // still doing connections
+                            sel1 = sel1->sel_next;
+                            // connected as many sources as we got => done
+                            if (!sel1 || --count < 0) break;
+                            // connect the current source to the current
+                            // target, using the original outlet and inlet
+                            // numbers
+                            ob1 = pd_checkobject(&sel1->sel_what->g_pd);
+                            noutlet1 = obj_noutlets(ob1);
+                            ob2 = pd_checkobject(&sel->sel_what->g_pd);
+                            ninlet2 = obj_ninlets(ob2);
+                            if (closest1 < noutlet1 && closest2 < ninlet2)
+                            {
+                                return_val = canvas_doconnect_doit(
+                                    x, sel1->sel_what, sel->sel_what,
+                                    closest1, closest2, 1, 1);
+                            }
+                        } else if (counting) {
+                            count++;
+                        }
+                    }
+                    canvas_undo_add(x, UNDO_SEQUENCE_END, "multiconnect (mode-4)", 0);
+                    return(return_val);
+                }
+
                 // now check for OPTION A vs. B (see description above)
                 int successA = 0;
                 int successB = 0;
                 int do_count;
 
-                // try option A
+                // try option A (fan-out)
                 int tmp_closest1 = closest1;
                 int tmp_closest2 = closest2;
                 t_object *tmp_ob1 = ob1;
                 t_object *tmp_ob2 = ob2;
                 int tmp_noutlet1 = noutlet1;
                 int tmp_ninlet2 = ninlet2;
-                for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+                for (sel = x->gl_editor->e_selection, i = 0; sel; sel = sel->sel_next, i++)
                 {
-                    if (sel->sel_what != y1 && sel->sel_what != y2)
-                    {
+                    // check for wrap-around
+                    if (check_wrap(sel->sel_what, &last_x)) {
+                        if (i2 != -1) break;
+                    }
+                    // identify original source and target as we go along
+                    if (sel->sel_what == y1) {
+                        i1 = i;
+                    } else if (sel->sel_what == y2) {
+                        i2 = i;
+                        last_x = -1;
+                        // original target comes before source => fail
+                        if (i1 == -1) break;
+                        // otherwise, start doing connections
+                    } else if (i2 != -1) {
                         tmp_ob2 = pd_checkobject(&sel->sel_what->g_pd);
                         tmp_ninlet2 = obj_ninlets(tmp_ob2);
                         tmp_closest1++;
@@ -5072,17 +5292,30 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 }
                 //fprintf(stderr,"successA %d\n", successA);
 
-                // try option B
+                // try option B (fan-in)
                 tmp_closest1 = closest1;
                 tmp_closest2 = closest2;
                 tmp_ob1 = ob1;
                 tmp_ob2 = ob2;
                 tmp_noutlet1 = noutlet1;
                 tmp_ninlet2 = ninlet2;
-                for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+                i1 = -1; i2 = -1;
+                last_x = -1;
+                for (sel = x->gl_editor->e_selection, i = 0; sel; sel = sel->sel_next, i++)
                 {
-                    if (sel->sel_what != y1 && sel->sel_what != y2)
-                    {
+                    // check for wrap-around
+                    if (check_wrap(sel->sel_what, &last_x)) {
+                        break;
+                    }
+                    // identify original source and target as we go along
+                    if (sel->sel_what == y1) {
+                        i1 = i;
+                        // found the original source, start doing connections
+                    } else if (sel->sel_what == y2) {
+                        i2 = i;
+                        // reached the original target, we're done
+                        break;
+                    } else if (i1 != -1) {
                         tmp_ob1 = pd_checkobject(&sel->sel_what->g_pd);
                         tmp_noutlet1 = obj_noutlets(tmp_ob1);
                         tmp_closest2++;
@@ -5124,18 +5357,29 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 
                 // now decide which one is better
                 // (we give preference to option A if both are equal)
-                // AG: Also take into account the ctrl mod status, so
-                // that the user can reverse our default choice (otherwise
-                // we usually just end up preferring outgoing connections)
-                if (glob_ctrl ? successA < successB : successA >= successB)
+                i1 = -1; i2 = -1;
+                last_x = -1;
+                if (successA >= successB)
                 {
-                    // OPTION A (see description above)
-                    for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+                    // OPTION A (fan-out)
+                    for (sel = x->gl_editor->e_selection, i = 0; sel; sel = sel->sel_next, i++)
                     {
-                        /* do this only with objects that have not
-                           been connected as of yet */
-                        if (sel->sel_what != y1 && sel->sel_what != y2)
-                        {
+                        // check for wrap-around
+                        if (check_wrap(sel->sel_what, &last_x)) {
+                            if (i2 != -1) break;
+                        }
+                        // identify original source and target as we go along
+                        if (sel->sel_what == y1) {
+                            i1 = i;
+                        } else if (sel->sel_what == y2) {
+                            i2 = i;
+                            last_x = -1;
+                            // original target comes before source => fail
+                            if (i1 == -1) break;
+                            // otherwise, found the original target, start
+                            // doing connections
+                        } else if (i2 != -1) {
+                            // still doing connections
                             ob2 = pd_checkobject(&sel->sel_what->g_pd);
                             ninlet2 = obj_ninlets(ob2);
                             closest1++;
@@ -5156,13 +5400,24 @@ int canvas_trymulticonnect(t_canvas *x, int xpos, int ypos, int which, int doit)
                 }
                 else
                 {
-                    // OPTION B (see description above)
-                    for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
+                    // OPTION B (fan-in)
+                    for (sel = x->gl_editor->e_selection, i = 0; sel; sel = sel->sel_next, i++)
                     {
-                        // do this only with objects that have not
-                        // been connected as of yet
-                        if (sel->sel_what != y1 && sel->sel_what != y2)
-                        {
+                        // check for wrap-around
+                        if (check_wrap(sel->sel_what, &last_x)) {
+                            break;
+                        }
+                        // identify original source and target as we go along
+                        if (sel->sel_what == y1) {
+                            i1 = i;
+                            // found the original source, start doing
+                            // connections
+                        } else if (sel->sel_what == y2) {
+                            i2 = i;
+                            // reached the original target, we're done
+                            break;
+                        } else if (i1 != -1) {
+                            // still doing connections
                             ob1 = pd_checkobject(&sel->sel_what->g_pd);
                             noutlet1 = obj_noutlets(ob1);
                             closest2++;
@@ -5629,12 +5884,12 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
     else gotkeysym = gensym("?");
     //fflag = (av[0].a_type == A_FLOAT ? av[0].a_w.w_float : 0);
     keynum = (av[1].a_type == A_FLOAT ? av[1].a_w.w_float : 0);
+#if 0 // ag 20240916: allow backslashes typed by the user.
     if (keynum == '\\')
     {
         post("keycode %d: dropped", (int)keynum);
         return;
     }
-#if 0
     post("keynum %d, down %d, gotkeysym %s",
         (int)keynum, down, gotkeysym->s_name);
 #endif
@@ -5702,7 +5957,9 @@ void canvas_key(t_canvas *x, t_symbol *s, int ac, t_atom *av)
 
     if (!x || !x->gl_editor)
         return;
-    if (x && down)
+    // ag 20240917: We also need to report Shift key up here, otherwise the
+    // keynameafn will only ever receive Shift key down events.
+    if (x && (down || (gotkeysym && strcmp(gotkeysym->s_name, "Shift") == 0)))
     {
             /* cancel any dragging action */
         if (x->gl_editor->e_onmotion == MA_MOVE)
@@ -5903,6 +6160,8 @@ static void canvas_snap_to_grid(t_canvas *x, int xwas, int ywas, int xnew,
 
 static void delay_move(t_canvas *x)
 {
+    if (!x || !x->gl_editor || !x->gl_editor->e_selection)
+        return;
     int dx, dy;
     int xwas = x->gl_editor->e_xwas, ywas = x->gl_editor->e_ywas,
         xnew = x->gl_editor->e_xnew, ynew = x->gl_editor->e_ynew;
@@ -6572,20 +6831,15 @@ static t_binbuf *canvas_docopy(t_canvas *x)
     {
         if (glist_isselected(x, y))
         {
-            //fprintf(stderr,"saving object\n");
             gobj_save(y, b);
         }
     }
     linetraverser_start(&t, x);
-    while (oc = linetraverser_next(&t))
+    while ((oc = linetraverser_next(&t)))
     {
-        //fprintf(stderr,"found some lines %d %d\n",
-        //    glist_isselected(x, &t.tr_ob->ob_g),
-        //    glist_isselected(x, &t.tr_ob2->ob_g));
         if (glist_isselected(x, &t.tr_ob->ob_g)
             && glist_isselected(x, &t.tr_ob2->ob_g))
         {
-            //fprintf(stderr,"saving lines leading into selected object\n");
             binbuf_addv(b, "ssiiii;", gensym("#X"), gensym("connect"),
                 glist_selectionindex(x, &t.tr_ob->ob_g, 1), t.tr_outno,
                 glist_selectionindex(x, &t.tr_ob2->ob_g, 1), t.tr_inno);
@@ -6610,7 +6864,6 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
 
     if (!ac && !copyfromexternalbuffer)
     {
-        //fprintf(stderr,"init\n");
         copyfromexternalbuffer = 1;
         screenx1 = 0;
         screeny1 = 0;
@@ -6640,7 +6893,6 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
             binbuf_clear(copy_binbuf);
             return;
         }
-        //fprintf(stderr,"fill %d\n", ac);
         if (copyfromexternalbuffer != 1 || !begin_patch || ac != 7)
         {
         // not a patch header, just copy
@@ -6655,8 +6907,6 @@ static void canvas_copyfromexternalbuffer(t_canvas *x, t_symbol *s,
         // patch header, if the canvas is empty adjust window size and
         // position here...
             int check = 0;
-            //fprintf(stderr,
-            //    "copying canvas properties for copyfromexternalbuffer\n");
             if (av[2].a_type == A_FLOAT)
             {
                 screenx1 = av[2].a_w.w_float;
@@ -6726,28 +6976,7 @@ static void canvas_copy(t_canvas *x)
     copiedfont = 0;
     binbuf_free(copy_binbuf);
     clipboard_istext = 0;
-    //fprintf(stderr, "canvas_copy\n");
-    /* We're not replacing the following sys_vgui call because nw.js's
-       paste mechanism works a bit differently and doesn't require this.
-       But if I missed some functionality this-- as well as the rest of the
-       insanely complicated externalbuffer logic-- should be revisited. */
-
-    //sys_vgui("pdtk_canvas_reset_last_clipboard\n");
     copy_binbuf = canvas_docopy(x);
-    if (!x->gl_editor->e_selection)
-    {
-        /* Ok, this makes no sense-- if we return above when there's no
-           e_selection, then how could the following possibly be true? */
-
-        //sys_vgui("pdtk_canvas_update_edit_menu .x%zx 0\n", x);
-    }
-    else
-    {
-        /* Still not exactly sure what this is doing.  If it's just
-           disabling menu items related to the clipboard I think we can
-           do without it. */
-        //sys_vgui("pdtk_canvas_update_edit_menu .x%zx 1\n", x);
-    }
     paste_xyoffset = 1;
     if (x->gl_editor->e_textedfor)
     {
@@ -6788,13 +7017,6 @@ static void canvas_doclear(t_canvas *x)
              x->gl_editor->e_selectline_outno,
              x->gl_editor->e_selectline_index2,
              x->gl_editor->e_selectline_inno);
-        /*canvas_setundo(x, canvas_undo_disconnect,
-            canvas_undo_set_disconnect(x,
-                x->gl_editor->e_selectline_index1,
-                x->gl_editor->e_selectline_outno,
-                x->gl_editor->e_selectline_index2,
-                x->gl_editor->e_selectline_inno),
-            "disconnect");*/
         canvas_undo_add(x, 2, "disconnect", canvas_undo_set_disconnect(x,
                 x->gl_editor->e_selectline_index1,
                 x->gl_editor->e_selectline_outno,
@@ -6834,10 +7056,6 @@ static void canvas_doclear(t_canvas *x)
 
                 /* now destroy the object */
                 glist_delete(x, y);
-#if 0
-                if (y2) post("cut 5 %zx %zx", y2, y2->g_next);
-                else post("cut 6");
-#endif
                 goto next;
             }
         }
@@ -6872,8 +7090,6 @@ static void canvas_cut(t_canvas *x)
     /* else we are cutting objects */
     else if (x->gl_editor && x->gl_editor->e_selection)
     {
-        //canvas_setundo(x, canvas_undo_cut,
-        //    canvas_undo_set_cut(x, UCUT_CUT), "cut");
         canvas_undo_add(x, 3, "cut", canvas_undo_set_cut(x, UCUT_CUT));
         canvas_copy(x);
         canvas_doclear(x);
@@ -7165,28 +7381,7 @@ static void glist_donewloadbangs(t_glist *x)
 
 static void canvas_paste_xyoffset(t_canvas *x)
 {
-    //t_selection *sel;
-    //t_class *cl;
-    //int resortin = 0;
-    //int resortout = 0;
-
-    //for (sel = x->gl_editor->e_selection; sel; sel = sel->sel_next)
-    //{
-        //gobj_displace(sel->sel_what, x, paste_xyoffset*10, paste_xyoffset*10);
-        //cl = pd_class(&sel->sel_what->g_pd);
-        //if (cl == vinlet_class) resortin = 1;
-        //if (cl == voutlet_class) resortout = 1;
-    //}
     canvas_displaceselection(x, paste_xyoffset*10, paste_xyoffset*10);
-
-    //if (resortin) canvas_resortinlets(x);
-    //if (resortout) canvas_resortoutlets(x);
-
-    // alternative one-line implementation that
-    // replaces the entire function
-    //canvas_displaceselection(x, 10, 10);
-
-    //paste_xyoffset++; //a part of original way
 }
 
 static void canvas_paste_atmouse(t_canvas *x)
@@ -7238,7 +7433,6 @@ static void canvas_paste_atmouse(t_canvas *x)
     canvas_undo_already_set_move = 1;
     canvas_displaceselection(x,
         (x->gl_editor->e_xwas)-x1-8, (x->gl_editor->e_ywas)-y1-8);
-    //glist_setlastxy(x, (int)((x->gl_editor->e_xwas)+5-x1), (int)((x->gl_editor->e_ywas)-y1));
     canvas_startmotion(x);
 }
 
@@ -7338,8 +7532,6 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
 
     paste_canvas = 0;
 
-    //fprintf(stderr,"dopaste autopatching? %d==%d %d\n",
-    //    count, nbox, connectme);
     do_not_redraw -= 1;
 
     /* TODO: Ico: because figuring out exact position/size for a scalar
@@ -7374,13 +7566,12 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
     /* if we are pasting into a new window and this is not copied from external
        buffer OR if we are copying from external buffer and the current canvas
        is not empty */
-    else if (canvas_undo_name && !strcmp(canvas_undo_name, "paste") &&
-             !copyfromexternalbuffer ||
-             copyfromexternalbuffer && !canvas_empty)
+    else if ((canvas_undo_name && !strcmp(canvas_undo_name, "paste") &&
+              !copyfromexternalbuffer) ||
+             (copyfromexternalbuffer && !canvas_empty))
     {
         //if (!copyfromexternalbuffer) canvas_paste_xyoffset(x);
         if (!we_are_undoing) canvas_paste_atmouse(x);
-        //fprintf(stderr,"doing a paste\n");
     }
     //else let's provide courtesy offset
     else if (!copyfromexternalbuffer && offset)
@@ -7389,13 +7580,6 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
     }
 
     canvas_dirty(x, 1);
-    //fprintf(stderr,"dopaste redraw %d\n", do_not_redraw);
-    //if (!canvas_undo_name || !strcmp(canvas_undo_name, "duplicate")) {
-        // need to redraw duplicated objects as
-        // they need to be drawn with an offset
-        // fprintf(stderr,"canvas_dopaste redraw objects\n");
-        // canvas_redraw(x);
-    //}
 
     scrollbar_update(x);
     if (!abort_when_pasting_from_external_buffer)
@@ -7411,46 +7595,25 @@ static void canvas_dopaste(t_canvas *x, t_binbuf *b)
     canvas_resume_dsp(dspstate);
     abort_when_pasting_from_external_buffer = 0;
     glob_preset_node_list_check_loc_and_update();
-    //fprintf(stderr,"end dopaste\n");
 }
 
 static void canvas_paste(t_canvas *x)
 {
-    if (!x->gl_editor)
+    if (!x->gl_editor ||
+        // ico@vt.edu: prevent pasting in a toplevel garray window
+        (x->gl_list && glist_istoplevel(x) && canvas_hasarray(x)))
         return;
-    // ico@vt.edu: prevent pasting in a toplevel garray window
-    if (x->gl_list && glist_istoplevel(x) && canvas_hasarray(x))
-        return;
-    if (x->gl_editor->e_textedfor)
-    {
-            /* simulate keystrokes as if the copy buffer were typed in. */
-//#if defined(MSW) || defined(__APPLE__)
-            /* for Mac or Windows,  ask the GUI to send the clipboard down */
-        sys_gui("pdtk_pastetext\n");
-//#else
-            /* in X windows we kept the text in our own copy buffer */
-/*        int i;
-        for (i = 0; i < canvas_textcopybufsize; i++)
-        {
-            pd_vmess(&x->gl_gobj.g_pd, gensym("key"), "iii",
-                1, canvas_textcopybuf[i]&0xff, 0);
-        }*/
-//#endif
-    }
     // ico@vt.edu: need to check that the copy_binbuf is not null. This
     // currently prevents the crash when opening a new patch with nothing
     // in the buffer and pressing paste since the paste menu item is not
     // being properly initialized. This is probably a good safety check
     // anyhow. We will also have to investigate why the undo/paste menus
     // are not being properly initialized and fix them accordingly.
-    else if (!clipboard_istext && copy_binbuf != NULL)
+    if (!x->gl_editor->e_textedfor && !clipboard_istext && copy_binbuf != NULL)
     {
-        //canvas_setundo(x, canvas_undo_paste, canvas_undo_set_paste(x),
-        //    "paste");
         canvas_undo_add(x, 5, "paste",
             (void *)canvas_undo_set_paste(x, 0, 0, 0));
         canvas_dopaste(x, copy_binbuf);
-        //canvas_paste_xyoffset(x);
     }
 }
 
@@ -8575,7 +8738,6 @@ static void canvas_tip(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
     }
 }
 
-t_binbuf *newobjbuf;
 static void canvas_addtobuf(t_canvas *x, t_symbol *s, int argc, t_atom *argv)
 {
     if (!newobjbuf)

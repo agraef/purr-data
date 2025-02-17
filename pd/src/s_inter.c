@@ -11,6 +11,7 @@ that didn't really belong anywhere. */
 #include "s_stuff.h"
 #include "m_imp.h"
 #include "g_canvas.h"   /* for GUI queueing stuff */
+#include "s_net.h"
 
 /* Use this if you want to point the guidir at a local copy of the
  * repo while developing. Then recompile and copy the pd-l2ork binary
@@ -129,8 +130,10 @@ struct _socketreceiver
     int sr_intail;
     void *sr_owner;
     int sr_udp;
+    struct sockaddr_storage *sr_fromaddr; /* optional */
     t_socketnotifier sr_notifier;
     t_socketreceivefn sr_socketreceivefn;
+    t_socketfromaddrfn sr_fromaddrfn; /* optional */
 };
 
 extern char *pd_version;
@@ -532,36 +535,68 @@ static int socketreceiver_doread(t_socketreceiver *x)
 static void socketreceiver_getudp(t_socketreceiver *x, int fd)
 {
     char buf[INBUFSIZE+1];
-    int ret = recv(fd, buf, INBUFSIZE, 0);
-    if (ret < 0)
+    socklen_t fromaddrlen = sizeof(struct sockaddr_storage);
+    int ret, readbytes = 0;
+    while (1)
     {
-        sys_sockerror("recv");
-        sys_rmpollfn(fd);
-        sys_closesocket(fd);
-    }
-    else if (ret > 0)
-    {
-        buf[ret] = 0;
-#if 0
-        post("%s", buf);
-#endif
-        if (buf[ret-1] != '\n')
+        ret = (int)recvfrom(fd, buf, INBUFSIZE, 0,
+            (struct sockaddr *)x->sr_fromaddr, (x->sr_fromaddr ? &fromaddrlen : 0));
+        if (ret < 0)
         {
-#if 0
-            buf[ret] = 0;
-            error("dropped bad buffer %s\n", buf);
-#endif
+                /* socket_errno_udp() ignores some error codes */
+            if (socket_errno_udp())
+            {
+                sys_sockerror("recv (udp)");
+                    /* only notify and shutdown a UDP sender! */
+                if (x->sr_notifier)
+                {
+                    (*x->sr_notifier)(x->sr_owner, fd);
+                    sys_rmpollfn(fd);
+                    sys_closesocket(fd);
+                }
+            }
+            return;
         }
-        else
+        else if (ret > 0)
         {
-            char *semi = strchr(buf, ';');
-            if (semi) 
-                *semi = 0;
-            binbuf_text(inbinbuf, buf, strlen(buf));
-            outlet_setstacklim();
-            if (x->sr_socketreceivefn)
-                (*x->sr_socketreceivefn)(x->sr_owner, inbinbuf);
-            else bug("socketreceiver_getudp");
+                /* handle too large UDP packets */
+            if (ret > INBUFSIZE)
+            {
+                post("warning: incoming UDP packet truncated from %d to %d bytes.",
+                    ret, INBUFSIZE);
+                ret = INBUFSIZE;
+            }
+            buf[ret] = 0;
+    #if 0
+            post("%s", buf);
+    #endif
+            if (buf[ret-1] != '\n')
+            {
+    #if 0
+                error("dropped bad buffer %s\n", buf);
+    #endif
+            }
+            else
+            {
+                char *semi = strchr(buf, ';');
+                if (semi)
+                    *semi = 0;
+                if (x->sr_fromaddrfn)
+                    (*x->sr_fromaddrfn)(x->sr_owner, (const void *)x->sr_fromaddr);
+                binbuf_text(inbinbuf, buf, strlen(buf));
+                outlet_setstacklim();
+                if (x->sr_socketreceivefn)
+                    (*x->sr_socketreceivefn)(x->sr_owner,
+                        inbinbuf);
+                else bug("socketreceiver_getudp");
+            }
+            readbytes += ret;
+            /* throttle */
+            if (readbytes >= INBUFSIZE)
+                return;
+            /* check for pending UDP packets */
+            if (socket_bytes_available(fd) <= 0)
+                return;
         }
     }
 }
@@ -622,6 +657,15 @@ void socketreceiver_read(t_socketreceiver *x, int fd)
                 if (x->sr_inhead >= INBUFSIZE) x->sr_inhead = 0;
                 while (socketreceiver_doread(x))
                 {
+                    if (x->sr_fromaddrfn)
+                    {
+                        socklen_t fromaddrlen = sizeof(struct sockaddr_storage);
+                        if(!getpeername(fd,
+                                        (struct sockaddr *)x->sr_fromaddr,
+                                        &fromaddrlen))
+                            (*x->sr_fromaddrfn)(x->sr_owner,
+                                (const void *)x->sr_fromaddr);
+                    }
                     outlet_setstacklim();
                     if (x->sr_socketreceivefn)
                         (*x->sr_socketreceivefn)(x->sr_owner, inbinbuf);
@@ -631,6 +675,22 @@ void socketreceiver_read(t_socketreceiver *x, int fd)
                 }
             }
         }
+    }
+}
+
+void socketreceiver_set_fromaddrfn(t_socketreceiver *x,
+    t_socketfromaddrfn fromaddrfn)
+{
+    x->sr_fromaddrfn = fromaddrfn;
+    if (fromaddrfn)
+    {
+        if (!x->sr_fromaddr)
+            x->sr_fromaddr = malloc(sizeof(struct sockaddr_storage));
+    }
+    else if (x->sr_fromaddr)
+    {
+        free(x->sr_fromaddr);
+        x->sr_fromaddr = NULL;
     }
 }
 
@@ -1786,6 +1846,7 @@ void sys_bail(int n)
 extern void glob_closeall(void *dummy, t_floatarg fforce);
 
 extern int do_not_redraw;
+extern void glob_savepreferences(t_pd *dummy);
 
 void glob_quit(void *dummy, t_floatarg status)
 {
@@ -1812,6 +1873,8 @@ void glob_quit(void *dummy, t_floatarg status)
     canvas_suspend_dsp();
     do_not_redraw = 1;
     glob_closeall(0, 1);
+    // ico@vt.edu 2022-12-14: save preferences on quit
+    glob_savepreferences(dummy);
     //sys_vgui("exit\n");
     gui_vmess("app_quit", "");
     if (!sys_nogui)

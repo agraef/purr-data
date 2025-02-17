@@ -91,24 +91,43 @@ static t_int *sigifft_perform(t_int *w)
 
 static void sigfft_dspx(t_sigfft *x, t_signal **sp, t_int *(*f)(t_int *w))
 {
-    int n = sp[0]->s_n;
-    t_sample *in1 = sp[0]->s_vec;
-    t_sample *in2 = sp[1]->s_vec;
-    t_sample *out1 = sp[2]->s_vec;
-    t_sample *out2 = sp[3]->s_vec;
-    if (out1 == in2 && out2 == in1)
-        dsp_add(sigfft_swap, 3, out1, out2, (t_int)n);
-    else if (out1 == in2)
+    int length = sp[0]->s_length, nchans = (sp[0]->s_nchans < sp[1]->s_nchans ?
+        sp[0]->s_nchans : sp[1]->s_nchans), ch;
+    if (sp[0]->s_nchans != sp[1]->s_nchans)
+        pd_error(x,
+            "FFT inputs have different channel counts - ignoring extras");
+    signal_setmultiout(&sp[2], nchans);
+    signal_setmultiout(&sp[3], nchans);
+    if (length < 4 || (length != (1 << ilog2(length))))
     {
-        dsp_add(copy_perform, 3, in2, out2, (t_int)n);
-        dsp_add(copy_perform, 3, in1, out1, (t_int)n);
+        if (length < 4)
+            pd_error(x, "fft: minimum 4 points");
+        else
+            pd_error(x, "fft: blocksize (%d) not a power of 2", length);
+        dsp_add_zero(sp[2]->s_vec, length * nchans);
+        dsp_add_zero(sp[3]->s_vec, length * nchans);
+        return;
     }
-    else
+    for (ch = 0; ch < nchans; ch++)
     {
-        if (out1 != in1) dsp_add(copy_perform, 3, in1, out1, (t_int)n);
-        if (out2 != in2) dsp_add(copy_perform, 3, in2, out2, (t_int)n);
+        t_sample *in1 = sp[0]->s_vec + ch * length;
+        t_sample *in2 = sp[1]->s_vec + ch * length;
+        t_sample *out1 = sp[2]->s_vec + ch * length;
+        t_sample *out2 = sp[3]->s_vec + ch * length;
+        if (out1 == in2 && out2 == in1)
+            dsp_add(sigfft_swap, 3, out1, out2, (t_int)length);
+        else if (out1 == in2)
+        {
+            dsp_add(copy_perform, 3, in2, out2, (t_int)length);
+            dsp_add(copy_perform, 3, in1, out1, (t_int)length);
+        }
+        else
+        {
+            if (out1 != in1) dsp_add(copy_perform, 3, in1, out1, (t_int)length);
+            if (out2 != in2) dsp_add(copy_perform, 3, in2, out2, (t_int)length);
+        }
+        dsp_add(f, 3, out1, out2, (t_int)length);
     }
-    dsp_add(f, 3, sp[2]->s_vec, sp[3]->s_vec, (t_int)n);
 }
 
 static void sigfft_dsp(t_sigfft *x, t_signal **sp)
@@ -124,13 +143,13 @@ static void sigifft_dsp(t_sigfft *x, t_signal **sp)
 static void sigfft_setup(void)
 {
     sigfft_class = class_new(gensym("fft~"), sigfft_new, 0,
-        sizeof(t_sigfft), 0, 0);
+        sizeof(t_sigfft), CLASS_MULTICHANNEL, 0);
     CLASS_MAINSIGNALIN(sigfft_class, t_sigfft, x_f);
     class_addmethod(sigfft_class, (t_method)sigfft_dsp, gensym("dsp"),
         A_CANT, 0);
 
     sigifft_class = class_new(gensym("ifft~"), sigifft_new, 0,
-        sizeof(t_sigfft), 0, 0);
+        sizeof(t_sigfft), CLASS_MULTICHANNEL, 0);
     CLASS_MAINSIGNALIN(sigifft_class, t_sigfft, x_f);
     class_addmethod(sigifft_class, (t_method)sigifft_dsp, gensym("dsp"),
         A_CANT, 0);
@@ -166,29 +185,40 @@ static t_int *sigrfft_perform(t_int *w)
 
 static void sigrfft_dsp(t_sigrfft *x, t_signal **sp)
 {
-    int n = sp[0]->s_n, n2 = (n>>1);
-    t_sample *in1 = sp[0]->s_vec;
-    t_sample *out1 = sp[1]->s_vec;
-    t_sample *out2 = sp[2]->s_vec;
-    if (n < 4)
+    int length = sp[0]->s_length, n2 = (length>>1), ch;
+    int nchans = sp[0]->s_nchans;
+    signal_setmultiout(&sp[1], nchans);
+    signal_setmultiout(&sp[2], nchans);
+    if (length < 4 || (length != (1 << ilog2(length))))
     {
-        error("fft: minimum 4 points");
+        if (length < 4)
+            pd_error(x, "fft: minimum 4 points");
+        else
+            pd_error(x, "fft: blocksize (%d) not a power of 2", length);
+        dsp_add_zero(sp[1]->s_vec, length * nchans);
+        dsp_add_zero(sp[2]->s_vec, length * nchans);
         return;
     }
-    if (in1 != out1)
-        dsp_add(copy_perform, 3, in1, out1, (t_int)n);
-    dsp_add(sigrfft_perform, 2, out1, (t_int)n);
-    dsp_add(sigrfft_flip, 3, out1 + (n2+1), out2 + n2, (t_int)(n2-1));
-    dsp_add_zero(out1 + (n2+1), ((n2-1)&(~7)));
-    dsp_add_zero(out1 + (n2+1) + ((n2-1)&(~7)), ((n2-1)&7));
-    dsp_add_zero(out2 + n2, n2);
-    dsp_add_zero(out2, 1);
+    for (ch = 0; ch < nchans; ch++)
+    {
+        t_sample *in1 = sp[0]->s_vec + ch * length;
+        t_sample *out1 = sp[1]->s_vec + ch * length;
+        t_sample *out2 = sp[2]->s_vec + ch * length;
+        if (in1 != out1)
+            dsp_add(copy_perform, 3, in1, out1, (t_int)length);
+        dsp_add(sigrfft_perform, 2, out1, (t_int)length);
+        dsp_add(sigrfft_flip, 3, out1 + (n2+1), out2 + n2, (t_int)(n2-1));
+        dsp_add_zero(out1 + (n2+1), ((n2-1)&(~7)));
+        dsp_add_zero(out1 + (n2+1) + ((n2-1)&(~7)), ((n2-1)&7));
+        dsp_add_zero(out2 + n2, n2);
+        dsp_add_zero(out2, 1);
+    }
 }
 
 static void sigrfft_setup(void)
 {
     sigrfft_class = class_new(gensym("rfft~"), sigrfft_new, 0,
-        sizeof(t_sigrfft), 0, 0);
+        sizeof(t_sigrfft), CLASS_MULTICHANNEL, 0);
     CLASS_MAINSIGNALIN(sigrfft_class, t_sigrfft, x_f);
     class_addmethod(sigrfft_class, (t_method)sigrfft_dsp, gensym("dsp"),
         A_CANT, 0);
@@ -224,32 +254,45 @@ static t_int *sigrifft_perform(t_int *w)
 
 static void sigrifft_dsp(t_sigrifft *x, t_signal **sp)
 {
-    int n = sp[0]->s_n, n2 = (n>>1);
-    t_sample *in1 = sp[0]->s_vec;
-    t_sample *in2 = sp[1]->s_vec;
-    t_sample *out1 = sp[2]->s_vec;
-    if (n < 4)
+    int length = sp[0]->s_length, n2 = (length>>1),
+        nchans = (sp[0]->s_nchans < sp[1]->s_nchans ?
+            sp[0]->s_nchans : sp[1]->s_nchans), ch;
+    if (sp[0]->s_nchans != sp[1]->s_nchans)
+        pd_error(x,
+            "rifft~ inputs have different channel counts - ignoring extras");
+    signal_setmultiout(&sp[2], nchans);
+    if (length < 4 || (length != (1 << ilog2(length))))
     {
-        error("fft: minimum 4 points");
+        if (length < 4)
+            pd_error(x, "fft: minimum 4 points");
+        else
+            pd_error(x, "fft: blocksize (%d) not a power of 2", length);
+        dsp_add_zero(sp[2]->s_vec, length * nchans);
         return;
     }
-    if (in2 == out1)
+    for (ch = 0; ch < nchans; ch++)
     {
-        dsp_add(sigrfft_flip, 3, out1+1, out1 + n, (t_int)(n2-1));
-        dsp_add(copy_perform, 3, in1, out1, (t_int)(n2+1));
+        t_sample *in1 = sp[0]->s_vec + ch * length;
+        t_sample *in2 = sp[1]->s_vec + ch * length;
+        t_sample *out1 = sp[2]->s_vec + ch * length;
+        if (in2 == out1)
+        {
+            dsp_add(sigrfft_flip, 3, out1+1, out1 + length, (t_int)(n2-1));
+            dsp_add(copy_perform, 3, in1, out1, (t_int)(n2+1));
+        }
+        else
+        {
+            if (in1 != out1) dsp_add(copy_perform, 3, in1, out1, (t_int)(n2+1));
+            dsp_add(sigrfft_flip, 3, in2+1, out1 + length, (t_int)(n2-1));
+        }
+        dsp_add(sigrifft_perform, 2, out1, (t_int)length);
     }
-    else
-    {
-        if (in1 != out1) dsp_add(copy_perform, 3, in1, out1, (t_int)(n2+1));
-        dsp_add(sigrfft_flip, 3, in2+1, out1 + n, (t_int)(n2-1));
-    }
-    dsp_add(sigrifft_perform, 2, out1, (t_int)n);
 }
 
 static void sigrifft_setup(void)
 {
     sigrifft_class = class_new(gensym("rifft~"), sigrifft_new, 0,
-        sizeof(t_sigrifft), 0, 0);
+        sizeof(t_sigrifft), CLASS_MULTICHANNEL, 0);
     CLASS_MAINSIGNALIN(sigrifft_class, t_sigrifft, x_f);
     class_addmethod(sigrifft_class, (t_method)sigrifft_dsp, gensym("dsp"),
         A_CANT, 0);

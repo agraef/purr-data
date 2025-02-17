@@ -767,9 +767,9 @@ function search_args(title) {
 function index_obj_completion(obj_or_msg, obj_or_msg_text) {
     var title, arg;
     if (obj_or_msg === "obj") {
-        let text_array = obj_or_msg_text.split(" ");
+        let text_array = obj_or_msg_text.split(/(?<!\\) /);
         title = text_array[0];
-        arg = text_array.slice(1, text_array.length).toString().replace(/\,/g, " ");
+        arg = text_array.slice(1, text_array.length).join(" ");
     } else { // the autocomplete feature doesn't work with messages and comments
         return;
     }
@@ -1699,12 +1699,14 @@ exports.encode_for_dialog = encode_for_dialog;
 
 // originally used to enquote a string to send it to a tcl function
 function enquote (x) {
-    var foo = x.replace(/,/g, "");
-    foo = foo.replace(/;/g, "");
-    foo = foo.replace(/"/g, "");
-    foo = foo.replace(/ /g, "\\ ");
-    foo = foo.trim();
-    return foo;
+    // ag: there's no need to get rid of special symbols like comma anymore,
+    // we can now just escape them
+    return x.replace(/,/g, "\\,")
+    .replace(/;/g, "\\;")
+    .replace(/"/g, "\\\"")
+    .replace(/ /g, "\\ ")
+    // trim whitespace (unless escaped)
+    .replace(/^\s+|(?<!\\)\s+$/g, "");
 }
 
 // from stackoverflow.com/questions/21698906/how-to-check-if-a-path-is-absolute-or-relative
@@ -1746,10 +1748,6 @@ var duplicate = 0;
 
 function do_post(object_id, selector, string, type, loglevel) {
     var my_p, my_a, span, text, sel_span, printout, dup_span;
-    // ag 20240909: We get escapes for some characters (\ { } ;) in the string
-    // argument directly from s_print.c. Probably a remnant from the Tcl/Tk
-    // days, but I won't touch that C code, so we must unescape those here.
-    string = string.replace(/\\([\\{};])/g, "$1");
     current_string = current_string + string;
     my_p = pd_window.document.getElementById("p1");
     // We can get posts from Pd that are build incrementally, with the final
@@ -3234,6 +3232,10 @@ function pdsend() {
     // some reason.  But it doesn't look like it makes that much
     // of a difference
     var string = Array.prototype.join.call(arguments, " ");
+    // ag: If the message string ends in '\', make sure to add an extra space
+    // at the end so that the message is properly terminated with an unescaped
+    // ';' character.
+    if (string.slice(-1) === "\\") string = string + " ";
     connection.write(string + ";");
     // reprint the outgoing string to the pdwindow
     //post(string + ";", "red");
@@ -3792,22 +3794,100 @@ function text_line_height_kludge(fontsize, fontsize_type) {
     }
 }
 
-function text_to_tspans(cid, svg_text, text) {
+function text_to_tspans(cid, svg_text, text, type) {
     var lines, i, len, tspan, fontsize, text_node;
+    // the type argument is optional, but it *will* be set when we're being
+    // called via rtext_senditup() in order to update an object text
+    var is_comment = type && type === "text";
     lines = text.split("\n");
     len = lines.length;
     // Get fontsize (minus the trailing "px")
     fontsize = svg_text.getAttribute("font-size").slice(0, -2);
+    var dy = text_line_height_kludge(+fontsize, "gui");
+    var init_attr, style = {}, fill = null;
+    function make_tspan(span) {
+        if (is_comment) {
+            // tags can be escaped with <!tag>, show these as literals
+            span = span.replace(/<!([!=a-z0-9#/]+)>/g, "<$1>");
+        }
+        if (span.length > 0) {
+            // find a way to abstract away the canvas array and the DOM here
+            var attr = init_attr;
+            if (fill) attr.fill = fill;
+            tspan = create_item(cid, "tspan", attr);
+            for (var x in style) tspan.style[x] = style[x];
+            text_node = patchwin[cid].window.document
+                .createTextNode(span);
+            if (!/^\s*$/.test(span)) init_attr = {};
+            tspan.appendChild(text_node);
+            svg_text.appendChild(tspan);
+        }
+    }
     for (i = 0; i < len; i++) {
-        tspan = create_item(cid, "tspan", {
-            dy: i == 0 ? 0 : text_line_height_kludge(+fontsize, "gui") + "px",
-            x: 0
-        });
-        // find a way to abstract away the canvas array and the DOM here
-        text_node = patchwin[cid].window.document
-                    .createTextNode(lines[i]);
-        tspan.appendChild(text_node);
-        svg_text.appendChild(tspan);
+        var spans = [lines[i]], tags = null;
+        init_attr = { dy: i==0 ? 0 : dy + "px", x: 0 };
+        delete style.visibility;
+        if (/^\s*$/.test(lines[i])) {
+            // ag: empty spans won't render correctly, so add something other
+            // than a blank and hide the contents of the tspan. See
+            // https://stackoverflow.com/a/58429593
+            style.visibility = "hidden";
+            spans[0] = ".";
+        } else if (is_comment) {
+            // split the text into individual spans and tags
+            spans = lines[i].split(/<\/?(?:[bhisu]|=[a-z0-9#]+)>/);
+            tags = lines[i].match(/<\/?([bhisu]|=[a-z0-9#]+)>/g);
+        }
+        make_tspan(spans[0]);
+        if (tags) {
+            for (var j = 1, k = 0; j < spans.length; j++, k++) {
+                var tag = tags[k];
+                switch (tag) {
+                case "<b>":
+                    style.fontWeight = "bold";
+                    break;
+                case "</b>":
+                    delete style.fontWeight;
+                    break;
+                case "<i>":
+                    style.fontStyle = "italic";
+                    break;
+                case "</i>":
+                    delete style.fontStyle;
+                    break;
+                case "<s>":
+                    style.textDecoration = "line-through";
+                    break;
+                case "</s>":
+                    delete style.textDecoration;
+                    break;
+                case "<u>":
+                    style.textDecoration = "underline";
+                    break;
+                case "</u>":
+                    delete style.textDecoration;
+                    break;
+                case "<h>":
+                    style.fontSize = "120%";
+                    style.fontWeight = "bold";
+                    break;
+                case "</h>":
+                    delete style.fontSize;
+                    delete style.fontWeight;
+                    break;
+                default:
+                    // any tag starting with '=' is taken to be a color
+                    if (tag.startsWith("<=")) {
+                        fill = tag.slice(2, -1);
+                    } else if (tag.startsWith("</=") &&
+                               tag.slice(3, -1) === fill) {
+                        fill = null;
+                    }
+                    break;
+                }
+                make_tspan(spans[j]);
+            }
+        }
     }
 }
 
@@ -3943,7 +4023,7 @@ function gui_text_new(cid, tag, type, isselected, left_margin, font_height, text
         // whitespace.
         text = text.trim();
         // fill svg_text with tspan content by splitting on '\n'
-        text_to_tspans(cid, svg_text, text);
+        text_to_tspans(cid, svg_text, text, type);
         frag.appendChild(svg_text);
         if (isselected) {
             gui_gobj_select(cid, tag);
@@ -3960,11 +4040,11 @@ function gui_gobj_erase(cid, tag) {
     });
 }
 
-function gui_text_set (cid, tag, text) {
+function gui_text_set (cid, tag, text, type) {
     gui(cid).get_elem(tag + "text", function(e) {
         text = text.trim();
         e.textContent = "";
-        text_to_tspans(cid, e, text);
+        text_to_tspans(cid, e, text, type);
     });
 }
 
@@ -4974,90 +5054,10 @@ function gui_scalar_new(cid, tag, isselected, t1, t2, t3, t4, t5, t6,
     var g;
     // we should probably use gui_gobj_new here, but we"re doing some initial
     // scaling that normal gobjs don't need...
-    //post("gui_scalar_new " + t1 + " " + t2 +
-    //    " " + t3 + " " + t4 + " " + t5 + " " + t6);
-        
-    /* ico@vt.edu HACKTASCTIC: calculating scrollbars is throwing 0.997 for
-       plots drawn inside the subpatch and it is a result of the -1 in the 
-       (min_width - 1) / width call inside canvas_params. Yet, if we don't
-       call this, we don't have nice flush scrollbars with the regular edges.
-       This is why here we make a hacklicious hack and simply hide hscrollbar
-       since the scroll is not doing anything anyhow.
-       
-       After further testing, it seems that the aforesaid margin is a hit'n'miss
-       depending on the patch, so we will disable this and make the aforesaid
-       canvas_params equation min_width / width.
-
-    if (is_toplevel === 1) {
-        gui(cid).get_elem("hscroll", function(elem) {
-            elem.style.setProperty("display", "none");
-        });
-        gui(cid).get_elem("vscroll", function(elem) {
-            elem.style.setProperty("display", "none");
-        });
-    }*/
-      
     gui(cid).get_elem("patchsvg", function(svg_elem) {
         var matrix, transform_string, selection_rect;
-        if (is_toplevel === 1) {
-            // here we deal with weird scrollbar offsets and
-            // inconsistencies for the various plot styles.
-            // the matrix format is xscale, 0, 0, yscale, width, height
-            // we don't use the matrix for the bar graph since it is
-            // difficult to get the right ratio, so we do the manual
-            // translate and scale instead.
-            // cases are: 0=points, 1=plot, 2=bezier, 3=bars
-            switch (plot_style) {
-                case 0:
-                    matrix = [t1,t2,t3,t4,t5,t6+0.5];
-                    break;
-                case 1:
-                    matrix = [t1,t2,t3,t4,t5,t6+1.5];
-                    break;
-                case 2:
-                    matrix = [t1,t2,t3,t4,t5,t6+1.5];
-                    break;
-                case 3:
-                    //matrix = [t1*.995,t2,t3,t4+1,t5+0.5,t6-2];
-                    matrix = 0;
-                    transform_string = "translate(" + 0 +
-                        "," + (t6+1) + ") scale(" + t1 + "," + t4 + ")";
-                    //post("transform_string = " + transform_string);
-                    break;
-                default:
-                    // we are a non-plot scalar
-                    matrix = [t1,t2,t3,t4,t5,t6];
-                    break;        
-            }
-        }        
-        else {
-            switch (plot_style) {
-                case 0:
-                    matrix = [t1,t2,t3,t4,t5,t6+0.5];
-                    break;
-                case 1:
-                    matrix = [t1,t2,t3,t4,t5,t6+1.5];
-                    break;
-                case 2:
-                    matrix = [t1,t2,t3,t4,t5,t6+1.5];
-                    break;
-                case 3:
-                    //matrix = [t1,t2,t3,t4+1,t5+0.5,t6+0.5];
-                    matrix = 0;
-                    transform_string = "translate(" + (t5+(t1 < 1 ? 0.5 : 1.5)) +
-                        "," + (t6+1.5) + ") scale(" + t1 + "," + t4 + ")";
-                    //post("transform_string = " + transform_string);
-                    break;
-                default:
-                    // we are a non-plot scalar
-                    matrix = [t1,t2,t3,t4,t5,t6];
-                    break; 
-            }
-        }
-        
-        if (matrix !== 0) {
-            transform_string = "matrix(" + matrix.join() + ")";
-        }
+        matrix = [t1,t2,t3,t4,t5,t6];
+        transform_string = "matrix(" + matrix.join() + ")";
         g = create_item(cid, "g", {
             id: tag + "gobj",
             transform: transform_string,
@@ -5912,26 +5912,28 @@ function gui_pianoroll_erase_innards(cid, tag) {
     });
 }
 
-// pd-lua gfx helpers (ag@gmail.com)
+// pd-lua gfx helpers (aggraef@gmail.com)
 
 // create the graphics container (a gobj)
 function gui_luagfx_new(cid, tag, xpos, ypos, is_toplevel) {
     gui_gobj_new(cid, tag, "obj", xpos, ypos, is_toplevel, 0);
 }
 
-// clear the contents of the graphics container
+// create a graphics layer (pd-lua 0.12.19)
+function gui_luagfx_new_layer(cid, tag, layer_tag) {
+    gui(cid).get_gobj(tag)
+    .append(function(frag) {
+        var layer = create_item(cid, "g", { id: layer_tag + "gobj" });
+        frag.appendChild(layer);
+        return frag;
+    });
+}
+
+// clear the contents of the graphics container (or layer, per pd-lua 0.12.19)
 function gui_luagfx_clear(cid, tag) {
     // get rid of all contents
     gui(cid).get_gobj(tag, function(g) {
         g.innerHTML = "";
-    });
-}
-
-// clear the contents, old version (we keep this around for backward
-// compatibility with pd-lua 0.12.1)
-function gui_luagfx_clear_contents(cid, tag) {
-    gui(cid).get_gobj(tag, function(e) {
-        e.innerHTML = "";
     });
 }
 
@@ -6956,7 +6958,7 @@ exports.raise_pd_window= gui_raise_pd_window;
 
 var file_dialog_target;
 
-function file_dialog(cid, type, target, start_path) {
+function file_dialog(cid, type, target, start_path, mode) {
     file_dialog_target = target;
     var query_string = (type === "open" ?
                         "openpanelSpan" : "savepanelSpan"),
@@ -6999,7 +7001,15 @@ function file_dialog(cid, type, target, start_path) {
         // using an absolute path here, see comment above
         nwworkingdir: funkify_windows_path(start_path)
     };
-    if (type !== "open") {
+    if (type === "open") {
+        if (mode == 1) {
+            // nw.js extension, see:
+            // https://nwjs.readthedocs.io/en/latest/search.html?q=nwdirectory
+            dialog_options.nwdirectory = null;
+        } else if (mode == 2) {
+            dialog_options.multiple = null;
+        }
+    } else {
         dialog_options.nwsaveas = "";
     }
     input_string = build_file_dialog_string(dialog_options);
@@ -7009,8 +7019,12 @@ function file_dialog(cid, type, target, start_path) {
         (type === "open" ? "openpanel_dialog" : "savepanel_dialog"));
     // And add an event handler for the callback
     input_elem.onchange = function() {
+        var file_list = this.files, files = [];
+        for (var i = 0; i < file_list.length; ++i) {
+            files[i] = file_list[i].path; // nw.js extension
+        }
+        file_dialog_callback(files);
         // reset value so that we can open the same file twice
-        file_dialog_callback(this.value);
         this.value = null;
         //console.log("openpanel/savepanel called");
     };
@@ -7020,17 +7034,26 @@ function file_dialog(cid, type, target, start_path) {
     );
 }
 
-function gui_openpanel(cid, target, path) {
-    file_dialog(cid, "open", target, path);
+function gui_openpanel(cid, target, path, mode) {
+    file_dialog(cid, "open", target, path, mode);
 }
 
 function gui_savepanel(cid, target, path) {
-    file_dialog(cid, "save", target, path);
+    file_dialog(cid, "save", target, path, 0);
 }
 
-function file_dialog_callback(file_string) {
-    pdsend(file_dialog_target, "callback",
-        enquote(defunkify_windows_path(file_string)));
+function file_dialog_callback(files) {
+    // files may either be an array of file names, or a single file as a
+    // string (the latter option is for backward compatibility)
+    if (Array.isArray(files)) {
+        var args = files.map(function (f) {
+                return enquote(defunkify_windows_path(f));
+            });
+        pdsend.apply(null, [file_dialog_target, "callback"].concat(args));
+    } else {
+        var file = enquote(defunkify_windows_path(files));
+        pdsend(file_dialog_target, "callback", file);
+    }
 }
 
 exports.file_dialog_callback = file_dialog_callback;
@@ -7697,6 +7720,19 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
     gui(cid).get_nw_window(function(nw_win) {
         zoom = nw_win.zoomLevel;
     });
+    if (type === "comment") {
+        // ag: Replace \v -> \n in visually formatted comments so that we
+        // render them as newlines when editing a comment. We also remove any
+        // \n immediately preceding a \v, which may have been added
+        // automatically by the binbuf unparser after a semicolon.
+
+        // NOTE: \v (a.k.a. vertical tab a.k.a. ^K a.k.a. ASCII code 11) will
+        // only ever occur in comments when using explicit line breaks. These
+        // *will* end up in the patch file, and render as funny-looking glyphs
+        // in vanilla, so you better avoid explicit line breaks if you want to
+        // keep your patches "vanilla-clean".
+        text = text.replace(/\n?\v/g, "\n");
+    }
     if (state !== 0) {
         // Make sure we're in editmode
         canvas_set_editmode(cid, 1);
@@ -7741,7 +7777,7 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
         });
         svg_view = patchwin[cid].window.document.getElementById("patchsvg")
             .viewBox.baseVal;
-        p.classList.add(type);
+        p.classList.add(type === "msg" ? "msg" : "obj");
         p.contentEditable = "true";
 
         if (is_gop != 0) {
@@ -7773,7 +7809,10 @@ function gui_textarea(cid, tag, type, x, y, width_spec, height_spec, text,
             p.style.setProperty("min-height", height_spec - 4 + "px");
         }
         // remove leading/trailing whitespace
-        text = text.trim();
+        if (type !== "comment") {
+            // trim whitespace at the beginning and end (unless escaped)
+            text = text.replace(/^\s+|(?<!\\)\s+$/g, "");
+        }
         p.textContent = text;
         // append to doc body
         patchwin[cid].window.document.body.appendChild(p);

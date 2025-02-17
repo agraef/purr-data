@@ -25,29 +25,6 @@
 
 #define DOLLARALL -0x7fffffff /* sentinel value for "$@" dollar arg */
 
-/* escape characters for saving */
-static char* strnescape(char *dest, const char *src, size_t outlen)
-{
-    int ptin = 0;
-    unsigned ptout = 0;
-    for(; ptout < outlen; ptin++, ptout++)
-    {
-        int c = src[ptin];
-        if (c == ' ' || c=='\t')
-            dest[ptout++] = '\\';
-        dest[ptout] = src[ptin];
-        if (c==0) break;
-    }
-
-    if(ptout < outlen)
-        dest[ptout]=0;
-    else
-        dest[outlen-1]=0;
-
-    return dest;
-}
-
-
 struct _binbuf
 {
     int b_n;
@@ -243,6 +220,123 @@ void binbuf_text(t_binbuf *x, char *text, size_t size)
     x->b_n = natom;
 }
 
+// listbox variant: This is the same as binbuf_text, but assumes no quoting
+// and uses ALIST_DELIM instead of whitespace to separate elements.
+void binbuf_text_s(t_binbuf *x, char *text, size_t size)
+{
+    //fprintf(stderr, "current text: %.*s\n", size, text);
+    char buf[MAXPDSTRING+1], *bufp, *ebuf = buf+MAXPDSTRING;
+    const char *textp = text, *etext = text+size;
+    t_atom *ap;
+    int nalloc = 16, natom = 0;
+    t_freebytes(x->b_vec, x->b_n * sizeof(*x->b_vec));
+    x->b_vec = t_getbytes(nalloc * sizeof(*x->b_vec));
+    ap = x->b_vec;
+    x->b_n = 0;
+    while (1)
+    {
+        //int type;
+            /* skip leading space */
+        while (textp != etext && *textp == ALIST_DELIM) textp++;
+        if (textp == etext) break;
+        else
+        {
+            char c;
+            int floatstate = 0;
+            bufp = buf;
+            do
+            {
+                c = *bufp++ = *textp++;
+
+                if (floatstate >= 0)
+                {
+                    int digit = (c >= '0' && c <= '9'),
+                        dot = (c == '.'), minus = (c == '-'),
+                        plusminus = (minus || (c == '+')),
+                        expon = (c == 'e' || c == 'E');
+                    if (floatstate == 0)    /* beginning */
+                    {
+                        if (minus) floatstate = 1;
+                        else if (digit) floatstate = 2;
+                        else if (dot) floatstate = 3;
+                        else floatstate = -1;
+                    }
+                    else if (floatstate == 1)   /* got minus */
+                    {
+                        if (digit) floatstate = 2;
+                        else if (dot) floatstate = 3;
+                        else floatstate = -1;
+                    }
+                    else if (floatstate == 2)   /* got digits */
+                    {
+                        if (dot) floatstate = 4;
+                        else if (expon) floatstate = 6;
+                        else if (!digit) floatstate = -1;
+                    }
+                    else if (floatstate == 3)   /* got '.' without digits */
+                    {
+                        if (digit) floatstate = 5;
+                        else floatstate = -1;
+                    }
+                    else if (floatstate == 4)   /* got '.' after digits */
+                    {
+                        if (digit) floatstate = 5;
+                        else if (expon) floatstate = 6;
+                        else floatstate = -1;
+                    }
+                    else if (floatstate == 5)   /* got digits after . */
+                    {
+                        if (expon) floatstate = 6;
+                        else if (!digit) floatstate = -1;
+                    }
+                    else if (floatstate == 6)   /* got 'e' */
+                    {
+                        if (plusminus) floatstate = 7;
+                        else if (digit) floatstate = 8;
+                        else floatstate = -1;
+                    }
+                    else if (floatstate == 7)   /* got plus or minus */
+                    {
+                        if (digit) floatstate = 8;
+                        else floatstate = -1;
+                    }
+                    else if (floatstate == 8)   /* got digits */
+                    {
+                        if (!digit) floatstate = -1;
+                    }
+                }
+            }
+            while (textp != etext && bufp != ebuf && *textp != ALIST_DELIM);
+            *bufp = 0;
+#if 0
+            post("binbuf_text: buf %s", buf);
+#endif
+            if (floatstate == 2 || floatstate == 4 || floatstate == 5 ||
+                floatstate == 8)
+                    SETFLOAT(ap, atof(buf));
+                /* LATER try to figure out how to mix "$" and "\$" correctly;
+                here, the backslashes were already stripped so we assume all
+                "$" chars are real dollars.  In fact, we only know at least one
+                was. */
+            else SETSYMBOL(ap, gensym(buf));
+        }
+        ap++;
+        natom++;
+        if (natom == nalloc)
+        {
+            x->b_vec = t_resizebytes(x->b_vec, nalloc * sizeof(*x->b_vec),
+                nalloc * (2*sizeof(*x->b_vec)));
+            nalloc = nalloc * 2;
+            ap = x->b_vec + natom;
+        }
+        if (textp == etext) break;
+    }
+    /* reallocate the vector to exactly the right size */
+    x->b_vec = t_resizebytes(x->b_vec, nalloc * sizeof(*x->b_vec),
+        natom * sizeof(*x->b_vec));
+    x->b_n = natom;
+}
+
     /* convert a binbuf to text; no null termination. */
 void binbuf_gettext(t_binbuf *x, char **bufp, int *lengthp)
 {
@@ -255,33 +349,61 @@ void binbuf_gettext(t_binbuf *x, char **bufp, int *lengthp)
 
     for (ap = x->b_vec, indx = x->b_n; indx--; ap++)
     {
-        //fprintf(stderr,"=====\n");
         if ((ap->a_type == A_SEMI || ap->a_type == A_COMMA) &&
                 length && buf[length-1] == ' ') 
         {
-            //fprintf(stderr, "subtracting length\n");
             length--;
         }
         atom_string(ap, string, MAXPDSTRING);
         newlength = length + strlen(string) + 1;
         if (!(newbuf = resizebytes(buf, length, newlength))) break;
         buf = newbuf;
-        //fprintf(stderr,"string=<%s> buf=<%s> length=%d\n", string, buf, length);
         strcpy(buf + length, string);
         length = newlength;
         if (ap->a_type == A_SEMI) buf[length-1] = '\n';
         else buf[length-1] = ' ';
-        //if (ap->a_type == A_COMMA) length--;
     }
     if (length && buf[length-1] == ' ')
     {
-        if (newbuf = t_resizebytes(buf, length, length-1))
+        if ((newbuf = t_resizebytes(buf, length, length-1)))
         {
             buf = newbuf;
             length--;
         }
     }
-    //fprintf(stderr,"binbuf_gettext: <%s>\n", buf);
+    *bufp = buf;
+    *lengthp = length;
+}
+
+// listbox variant: This is the same as binbuf_gettext, but bypasses
+// auto-quoting and uses ALIST_DELIM to separate elements.
+void binbuf_gettext_s(t_binbuf *x, char **bufp, int *lengthp)
+{
+    char *buf = getbytes(0), *newbuf;
+    int length = 0;
+    char string[MAXPDSTRING];
+    t_atom *ap;
+    int indx;
+    int newlength;
+
+    for (ap = x->b_vec, indx = x->b_n; indx--; ap++)
+    {
+        atom_string_s(ap, string, MAXPDSTRING);
+        newlength = length + strlen(string) + 1;
+        if (!(newbuf = resizebytes(buf, length, newlength))) break;
+        buf = newbuf;
+        strcpy(buf + length, string);
+        length = newlength;
+        buf[length-1] = ALIST_DELIM;
+    }
+    if (length && buf[length-1] == ALIST_DELIM)
+    {
+        if ((newbuf = t_resizebytes(buf, length, length-1)))
+        {
+            buf = newbuf;
+            length--;
+        }
+    }
     *bufp = buf;
     *lengthp = length;
 }
@@ -367,34 +489,30 @@ done:
 }
 
 /* add a binbuf to another one for saving.  Semicolons and commas go to
-symbols ";", "'",; We assume here (probably incorrectly) that there's
-no symbol whose name is ";" - should we be escaping those?. */
+symbols ";", "'",; and inside symbols, characters ';', ',' and '$' get
+escaped.  LATER also figure out about escaping white space */
 
 void binbuf_addbinbuf(t_binbuf *x, t_binbuf *y)
 {
     //fprintf(stderr,"starting binbuf_addbinbuf\n");
     t_binbuf *z = binbuf_new();
-    int i;
+    int i, fixit;
     t_atom *ap;
     binbuf_add(z, y->b_n, y->b_vec);
     for (i = 0, ap = z->b_vec; i < z->b_n; i++, ap++)
     {
-        char tbuf[MAXPDSTRING];
+        char tbuf[MAXPDSTRING], *s;
         switch (ap->a_type)
         {
         case A_FLOAT:
-            //fprintf(stderr,"addbinbuf: float\n");
             break;
         case A_SEMI:
-            //fprintf(stderr,"addbinbuf: semi\n");
             SETSYMBOL(ap, gensym(";"));
             break;
         case A_COMMA:
-            //fprintf(stderr,"addbinbuf: comma\n");
             SETSYMBOL(ap, gensym(","));
             break;
         case A_DOLLAR:
-            //fprintf(stderr,"addbinbuf: dollar\n");
             if(ap->a_w.w_index==DOLLARALL){ /* JMZ: $@ expansion */
                 SETSYMBOL(ap, gensym("$@"));
             } else {
@@ -403,17 +521,18 @@ void binbuf_addbinbuf(t_binbuf *x, t_binbuf *y)
             }
             break;
         case A_DOLLSYM:
-            //fprintf(stderr,"addbinbuf: dollsym\n");
             atom_string(ap, tbuf, MAXPDSTRING);
             SETSYMBOL(ap, gensym(tbuf));
             break;
         case A_SYMBOL:
-            //fprintf(stderr,"addbinbuf: symbol\n");
-                /* FIXME make this general */
-            /*if (!strcmp(ap->a_w.w_symbol->s_name, ";"))
-                SETSYMBOL(ap, gensym(";"));
-            else if (!strcmp(ap->a_w.w_symbol->s_name, ","))
-                SETSYMBOL(ap, gensym(","));*/
+            for (s = ap->a_w.w_symbol->s_name, fixit = 0; *s; s++)
+                if (*s == ';' || *s == ',' || *s == '$' || *s == '\\')
+                    fixit = 1;
+            if (fixit)
+            {
+                atom_string(ap, tbuf, MAXPDSTRING);
+                SETSYMBOL(ap, gensym(tbuf));
+            }
             break;
         default:
             bug("binbuf_addbinbuf");
@@ -422,7 +541,6 @@ void binbuf_addbinbuf(t_binbuf *x, t_binbuf *y)
     
     binbuf_add(x, z->b_n, z->b_vec);
     binbuf_free(z);
-    //fprintf(stderr,"done binbuf_addbinbuf\n");
 }
 
 void binbuf_addsemi(t_binbuf *x)
@@ -440,8 +558,8 @@ void binbuf_restore(t_binbuf *x, int argc, t_atom *argv)
 {
     int newsize = x->b_n + argc, i;
     t_atom *ap;
-    if (ap = t_resizebytes(x->b_vec, x->b_n * sizeof(*x->b_vec),
-        newsize * sizeof(*x->b_vec)))
+    if ((ap = t_resizebytes(x->b_vec, x->b_n * sizeof(*x->b_vec),
+        newsize * sizeof(*x->b_vec))))
             x->b_vec = ap;
     else
     {
@@ -453,7 +571,8 @@ void binbuf_restore(t_binbuf *x, int argc, t_atom *argv)
     {
         if (argv->a_type == A_SYMBOL)
         {
-            char *str = argv->a_w.w_symbol->s_name, *str2;
+            char *str = argv->a_w.w_symbol->s_name;
+            const char *str2;
             if (!strcmp(str, ";")) SETSEMI(ap);
             else if (!strcmp(str, ",")) SETCOMMA(ap);
             else if (!strcmp(str, "$@")) /* JMZ: $@ expansion */
@@ -461,45 +580,61 @@ void binbuf_restore(t_binbuf *x, int argc, t_atom *argv)
                 ap->a_type = A_DOLLAR;
                 ap->a_w.w_index = DOLLARALL;
             }
-            else if ((str2 = strchr(str, '$')) && str2[1] >= '0'
-                && str2[1] <= '9')
+            else
             {
-                int dollsym = 0;
-                if (*str != '$')
-                    dollsym = 1;
-                else for (str2 = str + 1; *str2; str2++)
-                    if (*str2 < '0' || *str2 > '9')
+                char buf[MAXPDSTRING], *sp1;
+                const char *sp2, *usestr;
+                int dollar = 0;
+                if (strchr(str, '\\'))
                 {
-                    dollsym = 1;
-                    break;
+                    int slashed = 0;
+                    for (sp1 = buf, sp2 = argv->a_w.w_symbol->s_name;
+                        *sp2 && sp1 < buf + (MAXPDSTRING-1);
+                            sp2++)
+                    {
+                        if (slashed)
+                            *sp1++ = *sp2, slashed = 0;
+                        else if (*sp2 == '\\')
+                            slashed = 1;
+                        else
+                        {
+                            if (*sp2 == '$' && sp2[1] >= '0' && sp2[1] <= '9')
+                                dollar = 1;
+                            *sp1++ = *sp2;
+                            slashed = 0;
+                        }
+                    }
+                    *sp1 = 0;
+                    usestr = buf;
                 }
-                if (dollsym)
-                    SETDOLLSYM(ap, gensym(str));
-                else
+                else usestr = str;
+                if (dollar || (usestr== str && (str2 = strchr(usestr, '$')) &&
+                    str2[1] >= '0' && str2[1] <= '9'))
                 {
-                    int dollar = 0;
-                    sscanf(argv->a_w.w_symbol->s_name + 1, "%d", &dollar);
-                    SETDOLLAR(ap, dollar);
+                    int dollsym = 0;
+                    if (*usestr != '$')
+                        dollsym = 1;
+                    else for (str2 = usestr + 1; *str2; str2++)
+                        if (*str2 < '0' || *str2 > '9')
+                    {
+                        dollsym = 1;
+                        break;
+                    }
+                    if (dollsym)
+                        SETDOLLSYM(ap, usestr == str ?
+                            argv->a_w.w_symbol : gensym(usestr));
+                    else
+                    {
+                        int dollar = 0;
+                        sscanf(usestr + 1, "%d", &dollar);
+                        SETDOLLAR(ap, dollar);
+                    }
                 }
+                else SETSYMBOL(ap, usestr == str ?
+                    argv->a_w.w_symbol : gensym(usestr));
+                /* fprintf(stderr, "arg %s -> binbuf %s type %d\n",
+                    argv->a_w.w_symbol->s_name, usestr, ap->a_type); */
             }
-            else if (strchr(argv->a_w.w_symbol->s_name, '\\'))
-            {
-                char buf[MAXPDSTRING], *sp1, *sp2;
-                int slashed = 0;
-                for (sp1 = buf, sp2 = argv->a_w.w_symbol->s_name;
-                    *sp2 && sp1 < buf + (MAXPDSTRING-1);
-                        sp2++)
-                {
-                    if (slashed)
-                        *sp1++ = *sp2;
-                    else if (*sp2 == '\\')
-                        slashed = 1;
-                    else *sp1++ = *sp2, slashed = 0;
-                }
-                *sp1 = 0;
-                SETSYMBOL(ap, gensym(buf));
-            }
-            else *ap = *argv;
             argv++;
         }
         else *ap = *(argv++);
@@ -568,39 +703,41 @@ int canvas_getdollarzero(t_pd *x);
  * buf="10"
  * return value = 1; (s+1=="-bla")
  */
-int binbuf_expanddollsym(char*s, char*buf,t_atom dollar0, int ac, t_atom *av,
-    int tonew)
+static int binbuf_expanddollsym(const char *s, char *buf, t_atom *dollar0,
+    int ac, const t_atom *av, int tonew)
 {
-  int argno=atol(s);
-  int arglen=0;
-  char*cs=s;
-  char c=*cs;
-  *buf=0;
+    char *cs;
+    int argno = (int)strtol(s, &cs, 10);
 
-  while(c && (c >= '0') && (c <= '9'))
-  {
-    c = *cs++;
-    arglen++;
-  }
-
-  if (cs==s) { /* invalid $-expansion (like "$bla") */
-    sprintf(buf, "$");
-    return 0;
-  }
-  else if (argno < 0 || argno > ac) /* undefined argument */
+    *buf=0;
+    if (cs==s)      /* invalid $-expansion (like "$bla") */
     {
-      if(!tonew)return 0;
-      sprintf(buf, "$%d", argno);
+        sprintf(buf, "$");
+        return 0;
     }
-  else if (argno == 0){ /* $0 */
-    atom_string(&dollar0, buf, MAXPDSTRING/2-1);
-  }
-  else{ /* fine! */
-    atom_string(av+(argno-1), buf, MAXPDSTRING/2-1);
-  }
-  return (arglen-1);
+    else if (argno < 0 || argno > ac) /* undefined argument */
+    {
+        if (!tonew)
+            return 0;
+        sprintf(buf, "$%d", argno);
+    }
+    else        /* well formed; expand it */
+    {
+        const t_atom *dollarvalue = (argno ? &av[argno-1] : dollar0);
+        if (dollarvalue->a_type == A_SYMBOL)
+        {
+            strncpy(buf, dollarvalue->a_w.w_symbol->s_name, MAXPDSTRING/2-1);
+            buf[MAXPDSTRING/2-2] = 0;
+        }
+        else atom_string(dollarvalue, buf, MAXPDSTRING/2-1);
+    }
+    return (cs - s);
 }
 
+/* expand any '$' variables in the symbol s.  "tonow" is set if this is in the
+context of a message to create a new object; in this case out-of-range '$'
+args become 0 - otherwise zero is returned and the caller has to check the
+result. */
 /* LATER remove the dependence on the current canvas for $0; should be another
 argument. */
 static t_symbol *binbuf_dorealizedollsym(t_pd *target, t_symbol *s, int ac,
@@ -608,57 +745,49 @@ static t_symbol *binbuf_dorealizedollsym(t_pd *target, t_symbol *s, int ac,
 {
     char buf[MAXPDSTRING];
     char buf2[MAXPDSTRING];
-    char*str=s->s_name;
+    const char*str=s->s_name;
     char*substr;
-    int next=0, i=MAXPDSTRING;
+    int next=0;
     t_atom dollarnull;
     SETFLOAT(&dollarnull, canvas_getdollarzero(target));
-    while(i--)buf2[i]=0;
+    buf2[0] = buf2[MAXPDSTRING-1] = 0;
 
-#if 1
-    /* JMZ: currently, a symbol is detected to be
-     * A_DOLLSYM if it starts with '$'
-     * the leading $ is stripped and the rest stored in "s"
-     * i would suggest to NOT strip the leading $
-     * and make everything a A_DOLLSYM that contains(!) a $
-     *
-     * whenever this happened, enable this code
-     */
     substr=strchr(str, '$');
     if (!substr || substr-str >= MAXPDSTRING)
         return (s);
 
-    strncat(buf2, str, (substr-str));
+    strncpy(buf2, str, (substr-str));
+    buf2[substr-str] = 0;
     str=substr+1;
 
-#endif
-
-    while((next=binbuf_expanddollsym(str, buf, dollarnull, ac, av, tonew))>=0)
+    while((next=binbuf_expanddollsym(str, buf, &dollarnull, ac, av, tonew))>=0)
     {
         /*
         * JMZ: i am not sure what this means, so i might have broken it
         * it seems like that if "tonew" is set and the $arg cannot be expanded
         * (or the dollarsym is in reality a A_DOLLAR)
-        * 0 is returned from binbuf_dorealizedollsym
+        * 0 is returned from binbuf_realizedollsym
         * this happens, when expanding in a message-box, but does not happen
         * when the A_DOLLSYM is the name of a subpatch
         */
-        if(!tonew&&(0==next)&&(0==*buf))
+        if (!tonew && (0==next) && (0==*buf))
         {
-            return 0; /* JMZ: this should mimick the original behaviour */
+            return 0; /* JMZ: this should mimic the original behaviour */
         }
 
-        strncat(buf2, buf, MAXPDSTRING/2-1);
+        strncat(buf2, buf, MAXPDSTRING-strlen(buf2)-1);
         str+=next;
         substr=strchr(str, '$');
-        if(substr)
+        if (substr)
         {
-            strncat(buf2, str, (substr-str));
+            unsigned long n = substr-str;
+            if(n>MAXPDSTRING-strlen(buf2)-1) n=MAXPDSTRING-strlen(buf2)-1;
+            strncat(buf2, str, n);
             str=substr+1;
-        } 
+        }
         else
         {
-            strcat(buf2, str);
+            strncat(buf2, str, MAXPDSTRING-strlen(buf2)-1);
             goto done;
         }
     }
@@ -941,6 +1070,10 @@ void binbuf_eval(t_binbuf *x, t_pd *target, int argc, t_atom *argv)
                 if (nargs == 1) pd_float(target, mstack->a_w.w_float);
                 else pd_list(target, 0, nargs, mstack);
                 break;
+            case A_POINTER:
+                if (nargs == 1) pd_pointer(target, mstack->a_w.w_gpointer);
+                else pd_list(target, 0, nargs, mstack);
+                break;
             case A_BLOB: /* MP 20070106 blob type */
                 if (nargs == 1) pd_blob(target, mstack->a_w.w_blob);
                 else pd_list(target, 0, nargs, mstack);
@@ -1087,7 +1220,7 @@ int binbuf_write(t_binbuf *x, char *filename, char *dir, int crflag)
             /* estimate how many characters will be needed.  Printing out
             symbols may need extra characters for inserting backslashes. */
         if (ap->a_type == A_SYMBOL || ap->a_type == A_DOLLSYM)
-            length = 80 + strlen(ap->a_w.w_symbol->s_name);
+            length = 80 + (int)strlen(ap->a_w.w_symbol->s_name);
         else length = 40;
         if (ep - bp < length)
         {
@@ -1102,11 +1235,8 @@ int binbuf_write(t_binbuf *x, char *filename, char *dir, int crflag)
             bp > sbuf && bp[-1] == ' ') bp--;
         if (!crflag || ap->a_type != A_SEMI)
         {
-            char bp2[WBUFSIZE];
-            atom_string(ap, bp2, WBUFSIZE);
-            strnescape(bp, bp2, (ep-bp)-2);
-            //atom_string(ap, bp, (ep-bp)-2);
-            length = strlen(bp);
+            atom_string(ap, bp, (unsigned int)((ep-bp)-2));
+            length = (int)strlen(bp);
             bp += length;
             ncolumn += length;
         }

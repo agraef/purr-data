@@ -78,10 +78,10 @@ t_symbol *atom_getsymbolarg(int which, int argc, t_atom *argv)
 /* convert an atom into a string, in the reverse sense of binbuf_text (q.v.)
 * special attention is paid to symbols containing the special characters
 * ';', ',', '$', and '\'; these are quoted with a preceding '\', except that
-* the '$' only gets quoted at the beginning of the string.
+* the '$' only gets quoted if followed by a digit.
 */
 
-void atom_string(t_atom *a, char *buf, unsigned int bufsize)
+void atom_string(const t_atom *a, char *buf, unsigned int bufsize)
 {
     char tbuf[30];
     switch(a->a_type)
@@ -98,17 +98,19 @@ void atom_string(t_atom *a, char *buf, unsigned int bufsize)
         else  strcat(buf, "+");
         break;
     case A_SYMBOL:
+    case A_DOLLSYM:
     {
         char *sp;
         unsigned int len;
-        int quote;
-        if(!strcmp(a->a_w.w_symbol->s_name, "$@")) /* JMZ: #@ quoting */
+        int quote, a_sym = a->a_type == A_SYMBOL;
+        if(a_sym && !strcmp(a->a_w.w_symbol->s_name, "$@")) /* JMZ: #@ quoting */
             quote=1;
         else
         {
             for (sp = a->a_w.w_symbol->s_name, len = 0, quote = 0; *sp; sp++, len++)
-                if (*sp == ';' || *sp == ',' || *sp == '\\' || 
-                    (*sp == '$' && sp[1] >= '0' && sp[1] <= '9'))
+                if (*sp == ';' || *sp == ',' || *sp == '\\' || *sp == ' ' ||
+                    (a_sym && *sp == ALIST_DELIM) ||
+                    (a_sym && *sp == '$' && sp[1] >= '0' && sp[1] <= '9'))
                     quote = 1;
         }
         if (quote)
@@ -117,10 +119,12 @@ void atom_string(t_atom *a, char *buf, unsigned int bufsize)
             sp = a->a_w.w_symbol->s_name;
             while (bp < ep && *sp)
             {
-                if (*sp == ';' || *sp == ',' || *sp == '\\' ||
-                    (*sp == '$' && ((sp[1] >= '0' && sp[1] <= '9')||sp[1]=='@')))
+                if (*sp == ';' || *sp == ',' || *sp == '\\' || *sp == ' ' ||
+                    (a_sym && *sp == '$' && ((sp[1] >= '0' && sp[1] <= '9') || sp[1]=='@')))
                         *bp++ = '\\';
-                *bp++ = *sp++;
+                // replace the special non-printable listbox delim character
+                // with a blank
+                *bp++ = a_sym && *sp == ALIST_DELIM ? ' ' : *sp; sp++;
             }
             if (*sp) *bp++ = '*';
             *bp = 0;
@@ -148,11 +152,52 @@ void atom_string(t_atom *a, char *buf, unsigned int bufsize)
             sprintf(buf, "$%d", a->a_w.w_index);
         }
         break;
-    case A_DOLLSYM:
-        strncpy(buf, a->a_w.w_symbol->s_name, bufsize);
-        buf[bufsize-1] = 0;
-        break;
     default:
         bug("atom_string");
+    }
+}
+
+// same as atom_string, but without the auto-quoting
+void atom_string_s(const t_atom *a, char *buf, unsigned int bufsize)
+{
+    char tbuf[30];
+    switch(a->a_type)
+    {
+    case A_SEMI: strcpy(buf, ";"); break;
+    case A_COMMA: strcpy(buf, ","); break;
+    case A_POINTER:
+        strcpy(buf, "(pointer)");
+        break;
+    case A_FLOAT:
+        sprintf(tbuf, M_ATOM_FLOAT_SPECIFIER, a->a_w.w_float);
+        if (strlen(tbuf) < bufsize-1) strcpy(buf, tbuf);
+        else if (a->a_w.w_float < 0) strcpy(buf, "-");
+        else  strcat(buf, "+");
+        break;
+    case A_SYMBOL:
+    case A_DOLLSYM:
+        {
+            char *sp = a->a_w.w_symbol->s_name;
+            unsigned int len = strlen(sp);
+            if (len < bufsize-1) strcpy(buf, sp);
+            else {
+                strncpy(buf, sp, bufsize - 2);
+                strcpy(buf + (bufsize - 2), "*");
+            }
+        }
+        break;
+    case A_DOLLAR:
+        if(a->a_w.w_index == DOLLARALL)
+        {
+            /* JMZ: $@ expansion */
+            sprintf(buf, "$@");
+        }
+        else
+        {
+            sprintf(buf, "$%d", a->a_w.w_index);
+        }
+        break;
+    default:
+        bug("atom_string_s");
     }
 }

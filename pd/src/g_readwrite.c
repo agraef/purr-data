@@ -486,7 +486,7 @@ void canvas_doaddtemplate(t_symbol *templatesym,
     *p_ntemplates = n+1;
 }
 
-static void glist_writelist(t_gobj *y, t_binbuf *b);
+//static void glist_writelist(t_gobj *y, t_binbuf *b);
 
 void binbuf_savetext(t_binbuf *bfrom, t_binbuf *bto);
 
@@ -568,8 +568,8 @@ static void glist_writelist(t_gobj *y, t_binbuf *b)
 
     /* ------------ routines to write out templates for data ------- */
 
-static void canvas_addtemplatesforlist(t_gobj *y,
-    int  *p_ntemplates, t_symbol ***p_templatevec);
+//static void canvas_addtemplatesforlist(t_gobj *y,
+//    int  *p_ntemplates, t_symbol ***p_templatevec);
 
 static void canvas_addtemplatesforscalar(t_symbol *templatesym,
     t_word *w, int *p_ntemplates, t_symbol ***p_templatevec)

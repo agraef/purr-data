@@ -1,10 +1,10 @@
-#N canvas 420 26 555 619 10;
-#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
-14 -228856 -66577 0;
+#N canvas 683 200 555 667 10;
+#X obj 0 645 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 #dcdcdc #404040 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header message 3 12 0 18
--204280 -1 0;
+#c4dcdc #000000 0;
 #X obj 0 189 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
--228856 -1 0;
+#dcdcdc #000000 0;
 #N canvas 485 287 494 344 META 0;
 #X text 12 125 LIBRARY internal;
 #X text 12 165 WEBSITE http://crca.ucsd.edu/~msp/;
@@ -20,33 +20,33 @@ adddollsym;
 #X text 12 5 KEYWORDS control GUI nonlocal symbol_op list_op anything_op
 bang_op;
 #X text 12 185 RELEASE_DATE 1997;
-#X restore 500 597 pd META;
+#X restore 500 647 pd META;
 #X obj 0 334 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
-13 -228856 -1 0;
+13 #dcdcdc #000000 0;
 #X obj 0 385 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
-0 13 -228856 -1 0;
-#X obj 0 555 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
-0 13 -228856 -1 0;
-#N canvas 219 520 428 109 Related_objects 0;
+0 13 #dcdcdc #000000 0;
+#X obj 0 605 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 #dcdcdc #000000 0;
+#N canvas 221 520 428 109 Related_objects 0;
 #X obj 116 43 list;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
+14 #c4dcdc #000000 0;
 #X msg 12 3;
 #X text 40 2 Related Objects;
 #X obj 22 43 symbol;
 #X obj 72 43 float;
-#X restore 102 597 pd Related_objects;
-#X obj 78 198 cnv 17 3 127 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
-#X obj 78 343 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
+#X restore 102 647 pd Related_objects;
+#X obj 78 198 cnv 17 3 127 empty \$0-pddp.cnv.let.0 0 5 9 0 16 #dcdcdc
+#9c9c9c 0;
+#X obj 78 343 cnv 17 3 35 empty \$0-pddp.cnv.let.0 0 5 9 0 16 #dcdcdc
+#9c9c9c 0;
 #X msg 514 11;
 #X msg 101 141 walk the dog;
 #X obj 101 164 print;
-#N canvas 75 14 431 608 dollarsign_variables 0;
+#N canvas 76 28 431 608 dollarsign_variables 0;
 #X obj 23 156 print;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
+14 #c4dcdc #000000 0;
 #X msg 12 2;
 #X text 40 2 Dollarsign Variables in Message Boxes;
 #X msg 23 131 pitch \$3;
@@ -108,7 +108,7 @@ send its message as output.;
 #N canvas 50 89 428 405 messages_for_changing_the_content_of_a_message_box
 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
+14 #c4dcdc #000000 0;
 #X msg 12 3;
 #X text 40 2 Changing Messages;
 #X msg 23 76 set dog;
@@ -152,13 +152,13 @@ message).;
 #X text 100 513 semicolon;
 #N canvas 88 49 428 453 Using_Commas_in_Message_Boxes 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
+14 #c4dcdc #000000 0;
 #X msg 12 3;
 #X text 40 2 About Commas and Semicolons;
 #X obj 23 136 list length;
 #X floatatom 23 164 5 0 0 3 No_of_atoms - -, f 5;
-#X obj 23 94 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
--1;
+#X obj 23 94 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc #000000
+#000000;
 #X obj 23 114 list append one \, 3;
 #X text 141 115 This list actually contains three atoms:;
 #X text 141 135 1) The symbol "one";
@@ -190,7 +190,7 @@ next begins.;
 #X restore 172 495 pd Using_Commas_in_Message_Boxes;
 #N canvas 82 29 428 495 Using_Semicolons_In_Message_Boxes 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
+14 #c4dcdc #000000 0;
 #X msg 12 3;
 #X obj 24 362 print;
 #X obj 228 291 receive my-receiver-name;
@@ -206,7 +206,7 @@ next begins.;
 out of [receive msg2r];
 #X msg 201 441 \; pd dsp 1;
 #X msg 25 441 dsp 1;
-#X obj 25 468 s dsp;
+#X obj 25 468 s pd;
 #X text 85 451 is the same as;
 #X text 22 396 For messages to a single named-object \, however \,
 it is probably clearer to use a message box and a [send] object \,
@@ -242,15 +242,15 @@ subpatch below for more info:;
 #X text 98 97 Clicking on a message also sends it \, so you can use
 messsage boxes as push buttons. For instance \, click here while watching
 the printout window:;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 4 647 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X obj 100 559 pddp/pddplink all_about_messages.pd -text all_about_messages
+#X obj 100 609 pddp/pddplink all_about_messages.pd -text all_about_messages
 ;
-#X obj 100 574 pddp/pddplink all_about_symbol_construction.pd -text
+#X obj 100 624 pddp/pddplink all_about_symbol_construction.pd -text
 all_about_symbol_construction;
-#X obj 286 559 pddp/pddplink ../2.control.examples/04.messages.pd -text
+#X obj 286 609 pddp/pddplink ../2.control.examples/04.messages.pd -text
 doc/2.control.examples/04.messages.pd;
-#X obj 286 574 pddp/pddplink ../2.control.examples/10.more.messages.pd
+#X obj 286 624 pddp/pddplink ../2.control.examples/10.more.messages.pd
 -text doc/2.control.examples/10.more.messages.pd;
 #X text 331 10 To create \, click <Control-2>;
 #X text 98 57 Message boxes hold one or more messages. Anytime the
@@ -260,9 +260,9 @@ are all sent to their destinations.;
 #X text 141 164 <- object box (notice the different border);
 #X text 81 402 n) symbol atom;
 #X text 100 417 float;
-#N canvas 423 174 432 262 \$0_variable 0;
+#N canvas 424 174 432 262 \$0_variable 0;
 #X obj 24 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12
-0 14 -204280 -1 0;
+0 14 #c4dcdc #000000 0;
 #X msg 35 2;
 #X text 63 2 \$0 Variable in Message Boxes;
 #X msg 40 92 \$0;
@@ -271,8 +271,8 @@ which resolves into canvas instance number \, just like placing such
 a variable inside a regular object.;
 #X floatatom 40 114 5 0 0 0 - - -, f 5;
 #X text 68 92 <--click on this message;
-#X obj 242 92 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
--1;
+#X obj 242 92 bng 15 250 50 0 empty empty empty 17 7 0 10 #fcfcfc #000000
+#000000;
 #X obj 242 112 \$0;
 #X floatatom 242 134 5 0 0 0 - - -, f 5;
 #X text 261 92 <--compare to this;
@@ -286,4 +286,74 @@ a variable inside a regular object.;
 #X connect 11 0 12 0;
 #X connect 12 0 13 0;
 #X restore 318 457 pd \$0_variable;
+#N canvas 670 235 1021 464 escaping-characters 0;
+#X symbolatom 71 181 20 0 0 0 - - -, f 20;
+#X obj 638 410 text fromlist example;
+#X obj 606 194 text define example;
+#X msg 666 372 list \\\$1 is literal and \$1 is not;
+#X symbolatom 250 181 10 0 0 0 - - -, f 10;
+#X symbolatom 326 181 10 0 0 0 - - -, f 10;
+#X floatatom 403 181 5 0 0 0 - - -, f 5;
+#X obj 250 148 unpack symbol symbol float;
+#X text 252 96 three items list;
+#X text 644 254 Click on the messages to store them in the [text] object.
+, f 30;
+#X text 531 18 Here's another example. Below we have a list where commas
+and semicolons are escaped and therefore they are not treated as they
+normally would. The comma does not separate the message and the semicolon
+does not define a send address. Note \, however \, how the backslash
+needs to be after a space \, so you end up with an item followed separately
+by a comma or a semicolon \, otherwise it is treated as part of the
+element it is attached to., f 66;
+#X floatatom 666 345 5 0 0 0 - - -, f 5;
+#X text 710 344 sets the value of non literal "\$1";
+#X msg 638 300 list Hi \\\, how are you? \\\; Fine \\\, thanks! \\\;
+;
+#X msg 241 359 receive \\\$0-x;
+#X obj 39 401 send \$0-x;
+#X text 53 290 The locality symbol "\$0" can be escaped and used in
+messages to set the send or receive names of iemGUIS \, see the example
+with the slider below.;
+#X text 552 149 The messages below are properly stored in this text
+object \, which is an object that defines and manipulates texts in
+Pd.;
+#X msg 257 387 receive \\\$0-y;
+#X floatatom 39 368 5 0 127 0 - - -, f 5;
+#X floatatom 139 368 5 0 127 0 - - -, f 5;
+#X obj 139 401 send \$0-y;
+#X msg 141 222 \\\\-x;
+#X obj 141 257 print;
+#X text 183 221 <= click;
+#X text 189 258 see result in printout window;
+#X text 29 18 The backlash character is used in Pd to escape special
+characters that are handled differently in Pd. Such characters are:
+spaces \, commas \, semicolons \, dollar signs (as in the locality
+syntax) and the backslash character itself. See examples below., f
+66;
+#X text 753 194 <-- click to open text window;
+#X obj 241 416 hsl 162 19 0 127 0 0 empty \$0-y empty -2 -10 0 12 #dfdfdf
+#000000 #000000 0 1;
+#X text 412 415 <-- check properties;
+#X text 344 358 <-- click;
+#X msg 71 117 symbol one\ symbol;
+#X msg 81 148 symbol one\\\,\\\ symbol;
+#X msg 250 117 list one\ item two 3;
+#X connect 3 0 1 0;
+#X connect 7 0 4 0;
+#X connect 7 1 5 0;
+#X connect 7 2 6 0;
+#X connect 11 0 3 0;
+#X connect 13 0 1 0;
+#X connect 14 0 28 0;
+#X connect 18 0 28 0;
+#X connect 19 0 15 0;
+#X connect 20 0 21 0;
+#X connect 22 0 23 0;
+#X connect 31 0 0 0;
+#X connect 32 0 0 0;
+#X connect 33 0 7 0;
+#X restore 172 585 pd escaping-characters;
+#X text 100 555 Special characters can be escaped with backslashes:
+"\\\;". click and open the subpatch below for more information., f
+66;
 #X connect 11 0 12 0;

@@ -1,10 +1,10 @@
-#N canvas 398 77 555 619 10;
-#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
-14 -228856 -66577 0;
+#N canvas 398 77 553 747 10;
+#X obj 0 725 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 #dcdcdc #404040 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header netsend 3 12 0 18
--204280 -1 0;
-#X obj 0 348 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
--228856 -1 0;
+#c4dcdc #000000 0;
+#X obj 0 398 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
+#dcdcdc #000000 0;
 #N canvas 46 242 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
@@ -18,26 +18,31 @@ Jonathan Wilkes to conform to the PDDP template for Pd version 0.42.
 #X text 12 65 INLET_0 connect disconnect send;
 #X text 12 85 OUTLET_0 float;
 #X text 12 165 RELEASE_DATE 1997;
-#X restore 500 597 pd META;
-#X obj 0 478 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
-13 -228856 -1 0;
-#X obj 0 515 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
-0 13 -228856 -1 0;
-#X obj 0 558 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
-0 13 -228856 -1 0;
-#N canvas 54 478 428 109 Related_objects 0;
-#X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
+#X restore 504 727 pd META;
+#X obj 0 528 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
+13 #dcdcdc #000000 0;
+#X obj 0 565 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 #dcdcdc #000000 0;
+#X obj 0 688 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 #dcdcdc #000000 0;
+#N canvas 54 478 378 109 Related_objects 0;
+#X obj 1 1 cnv 15 376 20 empty \$0-pddp.cnv.subheading empty 3 12 0
+14 #c4dcdc #000000 0;
 #X text 8 2 [netsend] Related Objects;
-#X obj 11 34 netreceive;
-#X obj 83 34 disis_netsend;
-#X obj 173 34 disis_netreceive;
-#X restore 102 598 pd Related_objects;
-#X obj 78 357 cnv 17 3 110 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
-#X text 98 486 float;
-#X obj 78 487 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
+#X obj 13 33 netreceive;
+#X obj 83 33 netserver;
+#X obj 148 33 mrpeach/udpsend;
+#X obj 249 33 mrpeach/udpreceive;
+#X obj 13 56 mrpeach/udpsend~;
+#X obj 118 56 mrpeach/udpreceive~;
+#X obj 242 56 mrpeach/tcpclient;
+#X obj 13 79 mrpeach/tcpserver;
+#X restore 102 728 pd Related_objects;
+#X obj 78 407 cnv 17 3 110 empty \$0-pddp.cnv.let.0 0 5 9 0 16 #dcdcdc
+#9c9c9c 0;
+#X text 98 536 float;
+#X obj 78 537 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 #dcdcdc
+#9c9c9c 0;
 #X text 11 23 send Pd messages over a network;
 #X obj 445 20 pddp/pddplink http://wiki.puredata.info/en/netsend -text
 pdpedia: netsend;
@@ -45,15 +50,15 @@ pdpedia: netsend;
 #X obj 15 238 netsend;
 #X msg 15 79 connect localhost 3000;
 #X msg 23 213 send foo \$1;
-#X floatatom 23 186 0 0 0 0 - - -;
+#X floatatom 23 186 0 0 0 0 - - - 0 0;
 #X msg 15 160 disconnect;
 #X msg 186 213 send foo \$1;
-#X floatatom 186 186 0 0 0 0 - - -;
+#X floatatom 186 186 0 0 0 0 - - - 0 0;
 #X msg 178 160 disconnect;
 #X obj 178 238 netsend 1;
 #X msg 178 79 connect localhost 3001;
-#X floatatom 15 265 0 0 0 0 - - -;
-#X floatatom 178 265 0 0 0 0 - - -;
+#X floatatom 15 265 0 0 0 0 - - - 0 0;
+#X floatatom 178 265 0 0 0 0 - - - 0 0;
 #X text 66 58 TCP;
 #X text 253 55 UDP;
 #X text 325 79 Connect to "localhost" port 3000/3001;
@@ -65,14 +70,14 @@ pdpedia: netsend;
 #X msg 178 106 connect molloy 3001;
 #X msg 15 133 connect bug 3000;
 #X msg 178 133 connect bug 3000;
-#X text 98 356 connect;
-#X text 98 413 disconnect;
-#X text 98 443 send;
-#X text 168 486 - nonzero if the connection is open \, zero otherwise.
+#X text 98 406 connect;
+#X text 98 463 disconnect;
+#X text 98 493 send;
+#X text 168 536 - nonzero if the connection is open \, zero otherwise.
 ;
 #N canvas 55 339 428 233 About_netsend 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
+14 #c4dcdc #000000 0;
 #X text 8 2 [netsend] More Info;
 #X text 20 39 The [netsend] object connects to another machine over
 the network for sending TCP ("stream") or UDP ("datagram") messages.
@@ -83,20 +88,177 @@ host with a matching port number.;
 #X text 20 148 The Linux version of Pd comes with "pdsend" and "pdreceive"
 standalone programs. These haven't been tested in Windows yet (but
 the source is included in the Pd distribution).;
-#X restore 102 567 pd About_netsend;
-#X text 80 535 1) float;
-#X text 168 535 - (optional) 0 for TCP \, nonzero for UDP. (Default
+#X restore 102 697 pd About_netsend;
+#X text 80 662 1) float;
+#X text 168 662 - (optional) 0 for TCP \, nonzero for UDP. (Default
 is TCP.);
-#X text 168 413 - disconnect from the remote machine. When it is disconnected
+#X text 168 463 - disconnect from the remote machine. When it is disconnected
 \, a "0" is sent to the outlet.;
-#X text 168 443 - after successfully connecting \, use the "send" message
+#X text 168 493 - after successfully connecting \, use the "send" message
 to forward data to the remote machine.;
-#X text 168 356 - use the "connect" message to connect to the specified
+#X text 168 406 - use the "connect" message to connect to the specified
 remote machine-- providing its name or IP address-- on the specified
 port (e.g. \, "connect localhost 3000"). A "1" is output if the connection
 is successful.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 4 727 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
+#X text 94 321 IMPORTANT! netsend and netreceive has been updated in
+pd vanilla and the newest changes are reflected in the subpatch below.
+;
+#N canvas 546 100 1026 655 new_version_of_netsend_compatible_with_pd_0.51
+0;
+#X obj -1 0 cnv 15 1026 20 empty \$0-pddp.cnv.subheading empty 3 12
+0 14 #c4dcdc #000000 0;
+#X text 22 621 this patch works in combination with the;
+#X text 339 621 help file;
+#X text 2 2 [netsend] More Info on the New Version Compatible with
+Pd 0.51 and Newer, f 75;
+#X obj 15 393 netsend;
+#X msg 15 207 connect localhost 3000;
+#X msg 42 353 send foo \$1;
+#X floatatom 42 313 0 0 0 0 - - - 0 0;
+#X msg 31 246 disconnect;
+#X msg 226 361 send foo \$1;
+#X msg 217 304 disconnect;
+#X msg 209 207 connect localhost 3001;
+#X floatatom 15 420 0 0 0 0 - - - 0 0;
+#X floatatom 209 419 0 0 0 0 - - - 0 0;
+#X text 712 303 Close the connection;
+#X obj 402 579 netsend 1;
+#X text 465 579 (UDP);
+#X text 22 560 An old (pre-0.45) calling convention is provided for
+compatibility: a single float argument \, "0" or "1" for TCP or UDP
+respectively:, f 69;
+#X obj 209 392 netsend -u;
+#X text 759 394 creation arguments:;
+#X text 827 413 optional -u flag for UDP;
+#X text 827 432 optional -b flag for binary;
+#X floatatom 226 334 0 0 0 0 - - - 0 0;
+#X text 74 301 Send messages to "foo" on remote machine, f 16;
+#X msg 416 308 disconnect;
+#X floatatom 406 420 0 0 0 0 - - - 0 0;
+#X floatatom 428 333 0 0 0 0 - - - 0 0;
+#X msg 428 360 send 1 2 3 \$1;
+#X msg 406 207 connect localhost 3002;
+#X msg 632 304 disconnect;
+#X floatatom 623 420 0 0 0 0 - - - 0 0;
+#X floatatom 640 335 0 0 0 0 - - - 0 0;
+#X text 672 186 UDP \, binary;
+#X msg 640 362 send 1 2 3 \$1;
+#X obj 623 393 netsend -u -b;
+#X text 455 186 TCP \, binary;
+#X text 782 199 Connect to "localhost" port number, f 22;
+#X obj 406 393 netsend -b;
+#X msg 611 207 connect localhost 3003;
+#X text 18 71 The Netsend object connects to another machine over the
+network for sending TCP ("stream") or UDP ("datagram") messages. An
+outlet reports whether the connection is open or not. A connection
+request should specify the name or IP address of the other host and
+the port number. There should be a "netreceive" on the remote host
+with a matching port number., f 68;
+#X text 524 35 By default the messages are ASCII text messages compatible
+with Pd (i.e. \, numbers and symbols terminated with a semicolon --
+the "FUDI" protocol). The "-b" creation argument specifies binary messages
+instead \, which appear in Pd as lists of numbers from 0 to 255 (You
+could use this to send OSC messages \, for example.), f 69;
+#X obj 61 421 print backward;
+#X obj 473 426 print backward;
+#X text 21 468 First outlet is nonzero if connection is open \, zero
+otherwise., f 62;
+#X obj 276 419 print backward;
+#X obj 711 423 print backward;
+#X text 21 490 Second outlet outputs messages sent back from netreceive
+object. In TCP mode this works for any established connection. In UDP
+you have to send at least one message forward through the connection
+for backward messages to find their way back., f 71;
+#X msg 623 257 connect localhost 3003 3010;
+#X text 811 241 an additional port argument;
+#X text 811 273 messages sent back from receiver;
+#X text 811 257 specifies port number for;
+#X obj 33 35 netsend;
+#X text 90 33 - send Pd messages over a network;
+#X text 526 121 The Pd distribution includes "pdsend" and "pdreceive"
+standalone programs that work with netsend/netreceive in FUDI mode.
+, f 64;
+#X text 66 186 TCP \, FUDI;
+#X text 284 186 UDP \, FUDI;
+#X msg 354 257 timeout 3000;
+#X text 449 251 TCP connect timeout (ms) - don't set it too low!,
+f 19;
+#X text 743 362 lists work like "send" (as of Pd 0.51);
+#X text 833 621 updated for Pd version 0.51.;
+#X text 689 493 As of 0.51 \, Pd supports IPv6 addresses \, netsend
+-u (UDP) is fully "connectionless" and no longer closes if no one receives
+a UDP message \, and netsend (TCP) has a settable connect timeout which
+defaults to 10 seconds., f 52;
+#N canvas 517 67 538 456 IP 0;
+#X obj 58 374 netsend -u;
+#X msg 154 282 disconnect;
+#X text 331 213 IPv4 multicast;
+#X text 309 245 IPv6 multicast;
+#X msg 258 318 send \$1;
+#X floatatom 258 283 5 0 0 0 - - - 0 0, f 5;
+#X msg 138 246 connect ff00::114 3005;
+#X msg 118 214 connect 239.200.200.200 3005;
+#X msg 100 178 connect ::1 3005;
+#X msg 81 144 connect 127.0.0.1 3005;
+#X msg 58 110 connect localhost 3005;
+#X text 230 109 IPv4 messages (default);
+#X text 251 143 IPv4 messages;
+#X text 233 177 IPv6 messages;
+#X obj 377 369 netsend;
+#X msg 390 339 send \$1;
+#X floatatom 390 315 5 0 0 0 - - - 0 0, f 5;
+#X msg 377 288 connect ::1 3005;
+#X text 20 16 As of Pd 0.51 \, netsend supports sending IPv6 and multicast
+messages. Also \, it will try to detect the IP version based on the
+given address or hostname. Hostname resolution favors IPv4 results
+for backwards compatibility., f 70;
+#X connect 1 0 0 0;
+#X connect 4 0 0 0;
+#X connect 5 0 4 0;
+#X connect 6 0 0 0;
+#X connect 7 0 0 0;
+#X connect 8 0 0 0;
+#X connect 9 0 0 0;
+#X connect 10 0 0 0;
+#X connect 15 0 14 0;
+#X connect 16 0 15 0;
+#X connect 17 0 14 0;
+#X restore 839 573 pd IP version and multicast;
+#X obj 270 621 netreceive;
+#X connect 4 0 12 0;
+#X connect 4 1 41 0;
+#X connect 5 0 4 0;
+#X connect 6 0 4 0;
+#X connect 7 0 6 0;
+#X connect 8 0 4 0;
+#X connect 9 0 18 0;
+#X connect 10 0 18 0;
+#X connect 11 0 18 0;
+#X connect 18 0 13 0;
+#X connect 18 1 44 0;
+#X connect 22 0 9 0;
+#X connect 24 0 37 0;
+#X connect 26 0 27 0;
+#X connect 27 0 37 0;
+#X connect 28 0 37 0;
+#X connect 29 0 34 0;
+#X connect 31 0 33 0;
+#X connect 33 0 34 0;
+#X connect 34 0 30 0;
+#X connect 34 1 45 0;
+#X connect 37 0 25 0;
+#X connect 37 1 42 0;
+#X connect 38 0 34 0;
+#X connect 47 0 34 0;
+#X connect 56 0 37 0;
+#X restore 113 366 pd new_version_of_netsend_compatible_with_pd_0.51
+;
+#X text 80 591 optional -u flag for UDP;
+#X text 80 610 optional -b flag for binary;
+#X text 80 572 NEW (see the subpatch above for the version 0.51):;
+#X text 80 642 LEGACY (backwards-compatible):;
 #X connect 14 0 24 0;
 #X connect 15 0 14 0;
 #X connect 16 0 14 0;

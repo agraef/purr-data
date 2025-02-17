@@ -47,9 +47,12 @@ void glob_forward_files_from_secondary_instance(void);
 void glob_recent_files(t_pd *dummy);
 void glob_add_recent_file(t_pd *dummy, t_symbol *s);
 void glob_clear_recent_files(t_pd *dummy);
-void glob_open(t_pd *ignore, t_symbol *name, t_symbol *dir, t_floatarg f);
+void glob_settracing(void *dummy, t_float f);
+void glob_fastforward(t_pd *ignore, t_floatarg f);
 
 void alsa_resync( void);
+
+void glob_open(t_pd *ignore, t_symbol *name, t_symbol *dir, t_floatarg f);
 
 static void glob_compatibility(t_pd *dummy, t_floatarg level)
 {
@@ -233,6 +236,10 @@ void glob_init(void)
         gensym("clear-recent-files"), 0);
     class_addmethod(glob_pdobject, (t_method)glob_gui_busy, gensym("gui-busy"),
         A_DEFFLOAT, 0);
+    class_addmethod(glob_pdobject, (t_method)glob_settracing,
+        gensym("set-tracing"), A_FLOAT, 0);
+    class_addmethod(glob_pdobject, (t_method)glob_fastforward,
+         gensym("fast-forward"), A_FLOAT, 0);
 #ifdef UNIX
     class_addmethod(glob_pdobject, (t_method)glob_watchdog,
         gensym("watchdog"), 0);

@@ -1,15 +1,21 @@
 ## Purr-Data
 
-**Note to Github users**: Please use our [**GitLab Repository**](https://git.purrdata.net/jwilkes/purr-data).
-
-
 Maintainers:
 
-* Ivica Ico Bukvic <ico@vt.edu>
-* Albert Graef <aggraef@gmail.com>
-* Jonathan Wilkes <jancsika@yahoo.com>
+* Ivica Ico Bukvic <ico@vt.edu> (Pd-l2ork)
+* Jonathan Wilkes <jancsika@yahoo.com> (Purr Data)
+* Albert Graef <aggraef@gmail.com> (GitHub Mirror, JGU Packages)
 
 Contact: [DISIS mailing list](http://disis.music.vt.edu/cgi-bin/mailman/listinfo/l2ork-dev)
+
+**GitLab Repository:** <https://git.purrdata.net/jwilkes/purr-data>
+
+Official Purr Data source code in the "master" branch.
+
+**GitHub Mirror:** <https://github.com/agraef/purr-data>
+
+Mirrors the GitLab "master" branch, and also has "release" and "testing"
+branches, binary packages, a website, and a wiki (WIP).
 
 Contents:
 
@@ -146,9 +152,7 @@ Hard drive space required: *roughly 2.5 GB*
 
         sudo apt-get update && sudo apt-get upgrade
 
-1. Install the dependencies (please note that the packages may be named
-   slightly differently for different Linux distributions; the given names are
-   for Debian/Ubuntu)
+1. Install the dependencies:
 
         sudo apt-get install bison flex automake libasound2-dev \
              libjack-jackd2-dev libtool libbluetooth-dev libgl1-mesa-dev \
@@ -161,9 +165,16 @@ Hard drive space required: *roughly 2.5 GB*
              libslv2-dev dssi-utils vco-plugins wah-plugins fil-plugins \
              mda-lv2 libmp3lame-dev libspeex-dev libgsl0-dev \
              portaudio19-dev liblua5.3-dev python-dev libsmpeg0 libjpeg62-turbo \
-             flite1-dev libgsm1-dev libgtk2.0-dev git libstk0-dev \
+             libgsm1-dev libgtk2.0-dev git libstk0-dev \
              libfluidsynth-dev fluid-soundfont-gm byacc \
              python3-markdown
+
+   **Note:** The given package names are for a generic Debian/Ubuntu system.
+   However, package names and versions vary *a lot* between different Linux
+   distributions and releases, thus it's impossible to give a definitive and
+   up-to-date package list here.  Please consult your distribution's
+   documentation and package manager to find the exact package names for your
+   system.
 
 2. The gui toolkit may require installing the following extra dependencies
 

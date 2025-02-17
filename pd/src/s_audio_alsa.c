@@ -664,33 +664,25 @@ void alsa_resync( void)
 
 void alsa_putzeros(int iodev, int n)
 {
-    int i, result;
+    int i;
     memset(alsa_snd_buf, 0,
         alsa_outdev[iodev].a_sampwidth * DEFDACBLKSIZE *
             alsa_outdev[iodev].a_channels);
     for (i = 0; i < n; i++)
     {
-        result = snd_pcm_writei(alsa_outdev[iodev].a_handle, alsa_snd_buf,
+        snd_pcm_writei(alsa_outdev[iodev].a_handle, alsa_snd_buf,
             DEFDACBLKSIZE);
-#if 0
-        if (result != DEFDACBLKSIZE)
-            post("result %d", result);
-#endif
     }
     /* post ("putzeros %d", n); */
 }
 
 void alsa_getzeros(int iodev, int n)
 {
-    int i, result;
+    int i;
     for (i = 0; i < n; i++)
     {
-        result = snd_pcm_readi(alsa_indev[iodev].a_handle, alsa_snd_buf,
+        snd_pcm_readi(alsa_indev[iodev].a_handle, alsa_snd_buf,
             DEFDACBLKSIZE);
-#if 0
-        if (result != DEFDACBLKSIZE)
-            post("result %d", result);
-#endif
     }
     /* post ("getzeros %d", n); */
 }

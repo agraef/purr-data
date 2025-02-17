@@ -203,23 +203,47 @@ var canvas_events = (function() {
                 return prev.concat(curr)
             }).join(" ");
         },
-        text_to_fudi = function(text) {
-            text = text.trim();
+        text_to_fudi = function(text, obj_class, escapes) {
+            if (obj_class !== "comment") {
+                // trim whitespace at the beginning and end (unless escaped)
+                text = text.replace(/^\s+|(?<!\\)\s+$/g, "");
+            }
+
             // special case for draw path d="arbitrary path string" ...
-            if (text.search(/^draw\s+path\s+d\s*=\s*"/) !== -1) {
+            if (obj_class === "obj" &&
+                text.search(/^draw\s+path\s+d\s*=\s*"/) !== -1) {
                 text = text_to_normalized_svg_path(text);
             }
-            // escape dollar signs
-            text = text.replace(/(\$[0-9]+)/g, "\\$1");
 
-            // escape special $@ sign
-            text = text.replace(/(\$@)/g, "\\$@");
+            if (escapes) {
+                // regex doesn't really work here, do some straight string
+                // processing instead
+                var buf = "", quote = false, len = text.length;
+                for (var i = 0; i < len; i++) {
+                    var c = text[i];
+                    if (quote) {
+                        buf += "\\"+c;
+                        quote = false;
+                    } else if (c == "," || c == ";") {
+                        // '\;' and '\,' need spaces around them
+                        buf += " \\"+c+" ";
+                    } else if (c == "$" && /^([0-9]|@)/.test(text.slice(i+1))) {
+                        buf += "\\"+c;
+                    } else if (c == "\\") {
+                        quote = 1;
+                        // double escape
+                        buf += "\\\\";
+                    } else {
+                        buf += c;
+                    }
+                }
+                text = buf;
+            }
 
-            // escape "," and ";"
-            text = text.replace(/(?<!\\)(,|;)/g, " \\$1 ");
-
-            // filter consecutive ascii32
-            text = text.replace(/\u0020+/g, " ");
+            if (obj_class !== "comment") {
+                // filter consecutive ascii32
+                text = text.replace(/\u0020+/g, " ");
+            }
             return text;
         },
         string_to_array_of_chunks = function(msg) {
@@ -233,7 +257,10 @@ var canvas_events = (function() {
             if (msg.length <= chunk_max) {
                 out_array.push([msg]);
             } else {
-                in_array = msg.split(/[\s\n]/); // split on newlines or spaces
+                // ag: make sure to exclude \v below since we need these as
+                // newline substitutes which survive binbuf treatment
+                // split on newlines or (unescaped) spaces
+                in_array = msg.split(/(?<!\\) |[\t\n]/);
                 while (in_array.length) {
                     left = in_array.slice(); // make a copy of in_array
                     if (left.toString().length > chunk_max) {
@@ -711,8 +738,23 @@ var canvas_events = (function() {
             },
             text_paste: function(evt) {
                 evt.preventDefault();
-                document.execCommand("insertText", false,
-                    evt.clipboardData.getData("text"));
+                var text = evt.clipboardData.getData("text");
+                // ag: We need to insert each line individually here, with
+                // line breaks in between. Otherwise the behavior of
+                // "insertText" is to insert a *paragraph* break between
+                // lines, so that we get two newlines for each newline in the
+                // input. (Who thought that this was a good design? There's
+                // probably a reason why this WebKit API is deprecated, but
+                // since there's no replacement for it, we have to use it.)
+                // Also note that we skip the line break at the end of the
+                // paste buffer, since it will be stripped off on the C side
+                // during object creation anyway.
+                var lines = text.split("\n");
+                for (var i = 0; i < lines.length; i++) {
+                    document.execCommand("insertText", false, lines[i]);
+                    if (i < lines.length-1)
+                        document.execCommand("insertLineBreak", false);
+                }
                 grow_svg_for_element(textbox());
             },
             floating_text_click: function(evt) {
@@ -1012,20 +1054,44 @@ var canvas_events = (function() {
                 // here.  I want those newlines: although that isn't
                 // standard in Pd-Vanilla, Pd-l2ork uses and preserves
                 // them inside comments
-                var fudi_msg = text_to_fudi(textbox().innerText),
-                    fudi_array = string_to_array_of_chunks(fudi_msg),
-                    i;
-                for (i = 0; i < fudi_array.length; i++) {
-                    pdgui.pdsend(name, "obj_addtobuf", fudi_array[i].join(" "));
+                var msg = textbox().innerText;
+                // GB: find obj class and remove word "selected"
+                let obj = document
+                    .getElementById(textbox().getAttribute("tag")+"gobj");
+                let obj_class = obj.getAttribute("class")
+                    .toString().split(" ").slice(0,1).toString();
+                if (obj_class == "comment") {
+                    // ag: This might be a bug in the browser engine, but the
+                    // <p> element tries to be clever about newlines and adds
+                    // extra newlines where it thinks they are appropriate
+                    // (they never are). Therefore we replace 2 or more
+                    // consecutive empty lines by a single one. Alas, this
+                    // means that you can only ever have a single empty line
+                    // in sequence. To work around this, enter a space on an
+                    // empty line and it will be preserved.
+                    msg = msg.replace(/\n\n\n+/g, "\n\n");
+                    // ag: Visual comment formatting: We need to replace \n
+                    // with \v to protect the newlines from the binbuf
+                    // routines on the C side -- for them, \n is just
+                    // whitespace which they eat for breakfast. However, we
+                    // also need to preserve comma and semicolon atoms which
+                    // get special treatment from the binfuf parser.
+                    msg = msg.replace(/\n/g, "\v");
+                    msg = msg.replace(/,[ \t]*\v/g, ", \v");
+                    msg = msg.replace(/;[ \t]*\v/g, "; ");
+                }
+                var fudi_msg = text_to_fudi(msg, obj_class, true),
+                    fudi_array = string_to_array_of_chunks(fudi_msg);
+                for (var i = 0; i < fudi_array.length; i++) {
+                    var chunk = fudi_array[i].join(" ");
+                    pdgui.pdsend(name, "obj_addtobuf", chunk);
                 }
                 pdgui.pdsend(name, "obj_buftotext");
 
                 // GB: index created object
-                let obj = document.getElementById(textbox().getAttribute("tag")+"gobj");
-                // find obj class and remove word "selected"
-                let obj_class = obj.getAttribute("class").toString().split(" ").slice(0,1).toString();
                 if (pdgui.autocomplete_enabled()) {
-                    pdgui.index_obj_completion(obj_class, fudi_msg);
+                    var obj_text = text_to_fudi(msg, obj_class, false);
+                    pdgui.index_obj_completion(obj_class, obj_text);
                     // GB: save every 50 changes, so that we don't loose too
                     // much data in case purr-data unexpectedly quits or crashes
                     if (changes_in_completion_index===0 ||

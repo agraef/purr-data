@@ -1,9 +1,9 @@
 An auto-tuning PD External, based on 
 autotalent an auto-tuning LADSPA plugin and an older port by Maxus Germanus
 
-Free software by Thomas A. Baran.
-http://web.mit.edu/tbaran/www/autotune.html
-VERSION 0.2
+Autotalent v0.2
+Free software (GPLv2) by Thomas A. Baran.
+http://tombaran.info/autotalent.html
 
 Ivica Ico Bukvic <ico.bukvic.net>
 VERSION 0.9.1

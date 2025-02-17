@@ -145,7 +145,7 @@ lib_targets = loaders-libdir pddp
 lib_targets += $(addons)
 INCREMENTAL = yes
 else
-lib_targets = adaptive arraysize autotune bassemu bendinfix boids bsaylor comport creb cxc cyclone disis earplug ekext ext13 fftease flatgui fluid freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdlua pdogg plugin pmpd rjlib sigpack smlib tof unauthorized vbap windowing zexy
+lib_targets = adaptive arraysize autotune bassemu bendinfix boids bsaylor comport creb cxc cyclone disis earplug ekext ext13 fftease flatgui flite fluid freeverb ggee hcs iem_ambi iem_bin_ambi iemlib iemgui iemguts iem_adaptfilt iemmatrix iemxmlrpc iem_delay iem_roomsim iem_spec2 iem_tab jasch_lib loaders-libdir lyonpotpourri mapping markex maxlib mjlib moocow moonlib motex mrpeach oscx pan pdcontainer pddp pdlua pdogg plugin pmpd rjlib sigpack smlib tof unauthorized vbap windowing zexy
 endif
 
 # NEW (IN-PROGRESS): flext
@@ -335,6 +335,7 @@ autotune:
 autotune_install:
 	make -C $(externals_src)/autotune DESTDIR="$(DESTDIR)" \
 		objectsdir="$(objectsdir)" install
+	install -d $(DESTDIR)$(objectsdir)/images
 	install -p $(externals_src)/autotune/autotune_scale_warp.png \
 		$(DESTDIR)/$(objectsdir)/images
 
@@ -1478,6 +1479,19 @@ pddp_install:
 
 pddp_clean:
 	make -C $(externals_src)/pddp clean
+
+
+#------------------------------------------------------------------------------#
+# FLITE
+
+flite:
+	make -C $(externals_src)/pd-flite PDINCLUDEDIR="$(pd_src)/src" PDBINDIR="$(pd_src)/src"
+
+flite_install:
+	make -C $(externals_src)/pd-flite DESTDIR="$(DESTDIR)" objectsdir="$(objectsdir)" install
+
+flite_clean:
+	make -C $(externals_src)/pd-flite clean
 
 
 #------------------------------------------------------------------------------#

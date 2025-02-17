@@ -203,10 +203,14 @@ EXTERN_STRUCT _socketreceiver;
 
 typedef void (*t_socketnotifier)(void *x, int n);
 typedef void (*t_socketreceivefn)(void *x, t_binbuf *b);
+    /* from addr sockaddr_storage struct, optional */
+typedef void (*t_socketfromaddrfn)(void *x, const void *fromaddr);
 
 EXTERN t_socketreceiver *socketreceiver_new(void *owner,
     t_socketnotifier notifier, t_socketreceivefn socketreceivefn, int udp);
 EXTERN void socketreceiver_read(t_socketreceiver *x, int fd);
+EXTERN void socketreceiver_set_fromaddrfn(t_socketreceiver *x,
+    t_socketfromaddrfn fromaddrfn);
 EXTERN void sys_sockerror(char *s);
 EXTERN void sys_closesocket(int fd);
 
@@ -438,5 +442,10 @@ EXTERN void alist_list(t_alist *x, t_symbol *s, int argc, t_atom *argv);
 EXTERN void alist_anything(t_alist *x, t_symbol *s, int argc, t_atom *argv);
 EXTERN void alist_toatoms(t_alist *x, t_atom *to, int onset, int count);
 EXTERN void alist_clone(t_alist *x, t_alist *y, int onset, int count);
+
+/* safe cross-platform alternatives to snprintf and vsnprintf. */
+EXTERN int pd_snprintf(char *buf, size_t size, const char *fmt, ...);
+EXTERN int pd_vsnprintf(char *buf, size_t size, const char *fmt,
+    va_list argptr);
 
 #endif /* __s_stuff_h_ */

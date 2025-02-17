@@ -1412,7 +1412,7 @@ nono:
     return (w+4);
 }
 
-void sigfiddle_dsp(t_sigfiddle *x, t_signal **sp)
+static void sigfiddle_dsp(t_sigfiddle *x, t_signal **sp)
 {
     x->x_sr = sp[0]->s_sr;
     sigfiddle_reattack(x, x->x_attacktime, x->x_attackthresh);
@@ -1424,7 +1424,7 @@ void sigfiddle_dsp(t_sigfiddle *x, t_signal **sp)
     the "bang" method; you can leave "auto" on to get this called
     automatically (the default) or turn auto off and bang it yourself. */
 
-void sigfiddle_bang(t_sigfiddle *x)
+static void sigfiddle_bang(t_sigfiddle *x)
 {
     int i;
     t_pitchhist *ph;
@@ -1454,7 +1454,7 @@ void sigfiddle_bang(t_sigfiddle *x)
         if (ph->h_pitch) outlet_float(x->x_noteout, ph->h_pitch);
 }
 
-void sigfiddle_ff(t_sigfiddle *x)               /* cleanup on free */
+static void sigfiddle_ff(t_sigfiddle *x)               /* cleanup on free */
 {
     if (x->x_inbuf)
     {
@@ -1468,7 +1468,7 @@ void sigfiddle_ff(t_sigfiddle *x)               /* cleanup on free */
 
 static t_class *sigfiddle_class;
 
-void *sigfiddle_new(t_floatarg npoints, t_floatarg npitch,
+static void *sigfiddle_new(t_floatarg npoints, t_floatarg npitch,
     t_floatarg fnpeakanal, t_floatarg fnpeakout)
 {
     t_sigfiddle *x = (t_sigfiddle *)pd_new(sigfiddle_class);

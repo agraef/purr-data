@@ -8,6 +8,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <stdio.h>
 #include "m_pd.h"
 #include "m_imp.h"
@@ -206,6 +207,35 @@ flag is set from the GUI if this happens.  LATER take this out: early 2006? */
 extern int sys_oldtclversion;           
 extern int is_dropdown(t_text *x);
 
+// Parse rtf tags. The syntax is [bhisu]|=color, optionally preceded by '/'
+// indicating an end tag, and enclosed in '<' and '>'. Here, 'color' indicates
+// an HTML color spec which can be either an (alphanumeric) color name, or a
+// color triplet beginning with '#'. NOTE: We want to be as specific as
+// possible here, since help patches also use <...> as ad-hoc syntax for
+// certain meta variables, in which case we want to treat them as literals.
+static int is_tag_char(char c, int j)
+{
+    // simple DFA: j==1 indicates the beginning og the parse; state 0 is at
+    // the beginning of the tag, state 1 is when we've read an initial '/',
+    // state 2 when we've read the '=' prefix starting a color spec, and state
+    // -1 is error (we've reached a final state where we can't accept any more
+    // characters).
+    static int state = 0;
+    int ret = 0;
+    if (j == 1) state = 0;
+    if (state == 0) {
+        ret = strchr("bhisu=/", c) != NULL;
+        state = c=='/' ? 1 : c=='=' ? 2 : -1;
+    } else if (state == 1) {
+        ret = strchr("bhisu=", c) != NULL;
+        state = c=='=' ? 2 : -1;
+    } else if (state == 2) {
+        // here we keep eating away all chars that can be in a color spec
+        ret = islower(c) || isdigit(c) || c == '#';
+    }
+    return ret;
+}
+
 static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
     int *indexp)
 {
@@ -241,6 +271,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
         if (x->x_bufsize >= 100)
              tempbuf = (char *)t_getbytes(2 * x->x_bufsize + 1);
         else tempbuf = smallbuf;
+        int large = 0;
         while (x_bufsize_c - inindex_c > 0)
         {
             int inchars_b  = x->x_bufsize - inindex_b;
@@ -249,6 +280,42 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
                 (inchars_c > widthlimit_c ? widthlimit_c : inchars_c);
             int maxindex_b = u8_offset(x->x_buf + inindex_b, maxindex_c,
                 x->x_bufsize - inindex_b);
+            // deal with rich text tags in the input (comment text)
+            int tag_width = 0, extra_width = 0;
+            if (x->x_text->te_type == T_TEXT) {
+                int extra = 0, in_tag = 0;
+                for (int i = inindex_b; i < inindex_b+maxindex_b &&
+                         x->x_buf[i] != '\n' && x->x_buf[i] != '\v'; i++) {
+                    if (x->x_buf[i] == '<' &&
+                        // skip escaped tags
+                        i+1 < inindex_b+maxindex_b && x->x_buf[i+1] != '!') {
+                        int j;
+                        for (j = i+1; j < inindex_b+maxindex_b &&
+                                 is_tag_char(x->x_buf[j], j-i); j++) ;
+                        if (j < inindex_b+maxindex_b && x->x_buf[j] == '>') {
+                            if (strncmp(x->x_buf+i+1, "h", j-i-1) == 0)
+                                large = 1;
+                            else if (strncmp(x->x_buf+i+1, "/h", j-i-1) == 0)
+                                large = 0;
+                            tag_width += j-i+1;
+                            in_tag = 1;
+                        }
+                    } else if (in_tag && x->x_buf[i] == '>') {
+                        in_tag = 0;
+                    } else if (large && !in_tag) {
+                        extra++;
+                    }
+                }
+                // ag: This is a rough estimate of extra width needed to
+                // accommodate the large font size of headers.
+                extra_width = (int)(extra*0.2+0.5);
+            }
+            int tag_offs = tag_width - extra_width;
+            if (tag_offs && maxindex_c == widthlimit_c) {
+                // recalculate offsets
+                maxindex_c += tag_offs;
+                maxindex_b += tag_offs;
+            }
             int eatchar = 1;
             //fprintf(stderr, "firstone <%s> inindex_b=%d maxindex_b=%d\n", x->x_buf + inindex_b, inindex_b, maxindex_b);
             int foundit_b  = firstone(x->x_buf + inindex_b, '\n', maxindex_b);
@@ -261,7 +328,7 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
             if (foundit_b < 0) //if we did not find an \n
             { 
                 /* too much text to fit in one line? */
-                if (inchars_c > widthlimit_c)
+                if (inchars_c - tag_offs > widthlimit_c)
                 {
                     /* is there a space to break the line at?  OK if it's even
                     one byte past the end since in this context we know there's
@@ -308,17 +375,9 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
             if (inindex_b < x->x_bufsize)
                 tempbuf[outchars_b++] = '\n';
             // if we found a row that is longer than previous (total width)
-            if (foundit_c > ncolumns)
-                ncolumns = foundit_c;
+            if (foundit_c - tag_offs > ncolumns)
+                ncolumns = foundit_c - tag_offs;
             nlines++;
-        }
-        // append new line in case we end our input with an \n
-        if (x_bufsize_c > 0 && (x->x_buf[x_bufsize_c - 1] == '\n' || x->x_buf[x_bufsize_c - 1] == '\v'))
-        {
-            nlines++;
-            tempbuf[outchars_b++] = '\n';
-            //tempbuf[outchars_b] = '\0';
-            //outchars_b++;
         }
         if (!reportedindex)
             *indexp = outchars_b;
@@ -354,10 +413,9 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
             int widthwas = x->x_text->te_width, newwidth = 0, newheight = 0,
                 newindex = 0;
             x->x_text->te_width = 0;
-            rtext_senditup(x, 0, &newwidth, &newheight, &newindex);
+            rtext_senditup(x, SEND_CHECK, &newwidth, &newheight, &newindex);
             if (newwidth/fontwidth != widthwas)
                 x->x_text->te_width = widthwas;
-            else x->x_text->te_width = 0;
         }
         if (action == SEND_FIRST)
         {
@@ -373,7 +431,9 @@ static void rtext_senditup(t_rtext *x, int action, int *widthp, int *heightp,
         }
         else if (action == SEND_UPDATE)
         {
-            gui_vmess("gui_text_set", "xss", canvas, x->x_tag, tempbuf);
+            // note that the type argument comes last here since it is optional
+            gui_vmess("gui_text_set", "xsss",
+                      canvas, x->x_tag, tempbuf, rtext_gettype(x)->s_name);
 
             // We add the check for T_MESSAGE below so that the box border
             // gets resized correctly using our interim event handling in
@@ -427,14 +487,26 @@ void rtext_retext(t_rtext *x)
     t_text *text = x->x_text;
     t_freebytes(x->x_buf, x->x_bufsize);
     binbuf_gettext(text->te_binbuf, &x->x_buf, &x->x_bufsize);
+    t_atom *atomp = binbuf_getvec(text->te_binbuf);
+    int natom = binbuf_getnatom(text->te_binbuf);
+    int bufsize = x->x_bufsize;
+    /* special case: for symbol and listbox gatoms, get rid of an extra
+       trailing backslash, which is an artifact of applying atom_string() in
+       binbuf_gettext(). Note that the trailing backslash itself will be
+       removed later, this happens in gatom_key(). */
+    if (bufsize > 4 && text->te_type == T_ATOM &&
+        natom == 1 && atomp->a_type == A_SYMBOL &&
+        strncmp(x->x_buf+bufsize-5, "\\\\...", 5) == 0) {
+        // the rest of the code seems to assume that the buffer ends in a
+        // space character, so we re-add one at the end
+        strncpy(x->x_buf+bufsize-5, "\\... ", 5);
+        bufsize--;
+    }
     /* special case: for number boxes, try to pare the number down
        to the specified width of the box. */
     if (text->te_width > 0 && text->te_type == T_ATOM &&
-        x->x_bufsize > text->te_width)
+        bufsize > text->te_width)
     {
-        t_atom *atomp = binbuf_getvec(text->te_binbuf);
-        int natom = binbuf_getnatom(text->te_binbuf);
-        int bufsize = x->x_bufsize;
         if (natom == 1 && atomp->a_type == A_FLOAT)
         {
             /* try to reduce size by dropping decimal digits */
@@ -557,6 +629,18 @@ void rtext_select(t_rtext *x, int state)
     //canvas_editing = canvas;
 }
 
+static void text_get_typestring(int type, char *buf)
+{
+    if (type == T_OBJECT)
+        sprintf(buf, "%s", "obj");
+    else if (type == T_MESSAGE)
+        sprintf(buf, "%s", "msg");
+    else if (type == T_TEXT)
+        sprintf(buf, "%s", "comment");
+    else
+        sprintf(buf, "%s", "atom");
+}
+
 void rtext_activate(t_rtext *x, int state)
 {
     //fprintf(stderr,"rtext_activate state=%d\n", state);
@@ -639,13 +723,14 @@ void rtext_activate(t_rtext *x, int state)
        null terminated. If this becomes a problem we can revisit
        it later */
     tmpbuf = t_getbytes(x->x_bufsize + 1);
-    sprintf(tmpbuf, "%.*s", (int)x->x_bufsize, x->x_buf);
-    /* in case x_bufsize is 0... */
+    snprintf(tmpbuf, x->x_bufsize+1, "%s", x->x_buf);
     tmpbuf[x->x_bufsize] = '\0';
+    char type[8];
+    text_get_typestring(x->x_text->te_type, type);
     gui_vmess("gui_textarea", "xssiiiisiiiiiii",
         canvas,
         x->x_tag,
-        (__is_message_class(pd_class((t_pd *)x->x_text)) ? "msg" : "obj"),
+        type,
         x->x_text->te_xpix,
         x->x_text->te_ypix,
         widthspec,

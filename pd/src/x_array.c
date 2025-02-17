@@ -897,6 +897,18 @@ void x_array_setup(void )
     class_addmethod(array_define_class, (t_method)array_define_ignore,
         gensym("done-popup"), A_GIMME, 0);
 
+    // ico@vt.edu 2022-06-13: added dummy calls for three calls that get
+    // called when clicking on array define because those are interpreted
+    // as opening of a new canvas whose main class is actually array define
+    class_addmethod(array_define_class, (t_method)array_define_ignore,
+        gensym("query-editmode"), A_GIMME, 0);
+    class_addmethod(array_define_class, (t_method)array_define_ignore,
+        gensym("updatemenu"), A_GIMME, 0);
+    class_addmethod(array_define_class, (t_method)array_define_ignore,
+        gensym("mouseup_fake"), A_GIMME, 0);
+    class_addmethod(array_define_class, (t_method)array_define_ignore,
+        gensym("magicglass"), A_GIMME, 0);
+
     class_addcreator((t_newmethod)arrayobj_new, gensym("array"), A_GIMME, 0);
 
     class_addcreator((t_newmethod)table_new, gensym("table"),

@@ -848,69 +848,86 @@ t_float glist_xtopixels(t_glist *x, t_float xval)
     }
 }
 
-t_float glist_ytopixels(t_glist *x, t_float yval)
+/* ico@vt.edu 2022-11-29:
+   provide width per scalar (used for arrays only to minimize errors
+   with large arrays where x offset appears to play a role in producing
+   a rounding error. only applies to scalars drawn inside GOP on
+   the parent canvas */
+t_float glist_norm_x_per_scalar(t_glist *x, t_float xval)
 {
+    // we use this function only for scalars drawn inside GOP on a parent canvas
+    // for other cases, we revert to the glist_xtopixels above.
+    if (!x->gl_isgraph || x->gl_havewindow)
+        return glist_xtopixels(x, xval);
+
+    // ico@vt.edu: used to deal with the bar graph
     t_float plot_offset = 0;
+
     t_gobj *g = x->gl_list;
 
+    /* ico@vt.edu: some really stupid code to compensate for the fact
+       that the svg stroke feature adds unaccounted width to the bars
+       TODO LATER: cycle through all garray classes in case there are multiple
+       garrays inside the same array object? is this necessary?
+    */
+    if (g != NULL && g->g_pd == garray_class)
+    {
+        if (garray_get_style((t_garray *)g) == PLOTSTYLE_BARS)
+            plot_offset = 2;
+    }
+    int x1, y1, x2, y2;
+    if (!x->gl_owner)
+        bug("glist_norm_x_per_scalar");
+    graph_graphrect(&x->gl_gobj, x->gl_owner, &x1, &y1, &x2, &y2);
+    // key difference here (when compared to the glist_xtopixels above
+    // is the removal of "x1 + " at the beginning of the function,
+    // which makes the calculation more accurate and prevents too long
+    // or too short of array width
+    return ((x2 - x1 - plot_offset) * (xval - x->gl_x1) / (x->gl_x2 - x->gl_x1));
+}
+
+t_float glist_ytopixels(t_glist *x, t_float yval)
+{
     if (!x->gl_isgraph)
         return ((yval - x->gl_y1) / (x->gl_y2 - x->gl_y1));
     else if (x->gl_isgraph && x->gl_havewindow)
     {
-        if (g != NULL && g->g_pd == garray_class)
-        {
-            /*t_garray *g_a = (t_garray *)g;
-            if (garray_get_style((t_garray *)g) == PLOTSTYLE_POLY ||
-                    garray_get_style((t_garray *)g) == PLOTSTYLE_BEZ)*/
-            switch (garray_get_style((t_garray *)g))
-            {
-            case PLOTSTYLE_POINTS:
-                plot_offset = 2;
-                break;
-            case PLOTSTYLE_POLY:
-                plot_offset = 2;
-                break;
-            case PLOTSTYLE_BEZ:
-                plot_offset = 2;
-                break;
-            case PLOTSTYLE_BARS:
-                plot_offset = 2;
-                break;
-            }
-        }
-        return (x->gl_screeny2 - x->gl_screeny1 - plot_offset) *
+        //fprintf(stderr, "glist_ytopixels toplevel graph\n");
+        return (x->gl_screeny2 - x->gl_screeny1) *
             (yval - x->gl_y1) / (x->gl_y2 - x->gl_y1);
     }
     else 
     {
-        /* ico@vt.edu: some really stupid code to compensate for the fact
-           that the poly and bezier tend to overlap the GOP edges */
-        if (g != NULL && g->g_pd == garray_class)
-        {
-            /*t_garray *g_a = (t_garray *)g;
-            if (garray_get_style((t_garray *)g) == PLOTSTYLE_POLY ||
-                    garray_get_style((t_garray *)g) == PLOTSTYLE_BEZ)*/
-            switch (garray_get_style((t_garray *)g))
-            {
-                case PLOTSTYLE_POINTS:
-                    plot_offset = 2;
-                    break;
-                case PLOTSTYLE_POLY:
-                    plot_offset = 2;
-                    break;
-                case PLOTSTYLE_BEZ:
-                    plot_offset = 2;
-                    break;
-                case PLOTSTYLE_BARS:
-                    plot_offset = 2;
-                    break;
-            }
-        }
         int x1, y1, x2, y2;
         if (!x->gl_owner)
             bug("glist_pixelstoy");
         graph_graphrect(&x->gl_gobj, x->gl_owner, &x1, &y1, &x2, &y2);
-        return (y1 + (y2 - y1 - plot_offset) * (yval - x->gl_y1) / (x->gl_y2 - x->gl_y1));
+        return (y1 + (y2 - y1) * (yval - x->gl_y1) / (x->gl_y2 - x->gl_y1));
+    }
+}
+
+/* ico@vt.edu 2022-11-29:
+   provide height per scalar (used for arrays only to minimize errors
+   with large arrays where y offset appears to play a role in producing
+   a rounding error. only applies to scalars drawn inside GOP on
+   the parent canvas */
+t_float glist_norm_y_per_scalar(t_glist *x, t_float yval)
+{
+    // we use this function only for scalars drawn inside GOP on a parent canvas
+    // for other cases, we revert to the glist_xtopixels above.
+    if (!x->gl_isgraph || x->gl_havewindow)
+        return glist_ytopixels(x, yval);
+    else
+    {
+        int x1, y1, x2, y2;
+        if (!x->gl_owner)
+            bug("glist_norm_y_per_scalar");
+        graph_graphrect(&x->gl_gobj, x->gl_owner, &x1, &y1, &x2, &y2);
+        // key difference here (when compared to the glist_xtopixels above
+        // is the removal of "y1 + " at the beginning of the function,
+        // which makes the calculation more accurate and prevents too long
+        // or too short of array height
+        return ((y2 - y1) * (yval - x->gl_y1) / (x->gl_y2 - x->gl_y1));
     }
 }
 
@@ -1272,7 +1289,10 @@ static void graph_vis(t_gobj *gr, t_glist *parent_glist, int vis)
                 glist_getcanvas(x),
                 tag,
                 (int)glist_xtopixels(x, atof(x->gl_xlabel[i]->s_name)),
-                (int)glist_ytopixels(x, x->gl_xlabely),
+                // ico@vt.edu 2022-06-13: added +7 offset for the x label
+                // because it was otherwise overlapping with the array
+                // and potentially unreadable
+                (int)glist_ytopixels(x, x->gl_xlabely) + 7,
                 x->gl_xlabel[i]->s_name,
                 sys_font, 
                 sys_hostfontsize(glist_getfont(x)),

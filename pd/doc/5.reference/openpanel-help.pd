@@ -1,10 +1,10 @@
-#N canvas 431 36 555 619 10;
-#X obj 0 595 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
-14 -228856 -66577 0;
+#N canvas 1039 127 555 721 10;
+#X obj 1 694 cnv 15 552 21 empty \$0-pddp.cnv.footer empty 20 12 0
+14 #dcdcdc #404040 0;
 #X obj 0 0 cnv 15 552 40 empty \$0-pddp.cnv.header openpanel 3 12 0
-18 -204280 -1 0;
+18 #c4dcdc #000000 0;
 #X obj 0 310 cnv 3 550 3 empty \$0-pddp.cnv.inlets inlets 8 12 0 13
--228856 -1 0;
+#dcdcdc #000000 0;
 #N canvas 485 284 494 344 META 0;
 #X text 12 105 LIBRARY internal;
 #X text 12 145 WEBSITE http://crca.ucsd.edu/~msp/;
@@ -18,32 +18,31 @@ Wilkes revised the patch to conform to the PDDP template for Pd version
 #X text 12 65 INLET_0 bang symbol;
 #X text 12 85 OUTLET_0 symbol;
 #X text 12 165 RELEASE_DATE 1997;
-#X restore 500 597 pd META;
+#X restore 501 696 pd META;
 #X obj 0 432 cnv 3 550 3 empty \$0-pddp.cnv.outlets outlets 8 12 0
-13 -228856 -1 0;
-#X obj 0 475 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
-0 13 -228856 -1 0;
-#X obj 0 503 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
-0 13 -228856 -1 0;
-#X text 98 479 (none);
+13 #dcdcdc #000000 0;
+#X obj 0 501 cnv 3 550 3 empty \$0-pddp.cnv.argument arguments 8 12
+0 13 #dcdcdc #000000 0;
+#X obj 0 598 cnv 3 550 3 empty \$0-pddp.cnv.more_info more_info 8 12
+0 13 #dcdcdc #000000 0;
 #N canvas 216 520 428 109 Related_objects 0;
 #X obj 1 1 cnv 15 425 20 empty \$0-pddp.cnv.subheading empty 3 12 0
-14 -204280 -1 0;
+14 #c4dcdc #000000 0;
 #X obj 22 43 savepanel;
 #X obj 92 43 soundfiler;
 #X text 8 2 [openpanel] Related Objects;
-#X restore 102 597 pd Related_objects;
-#X obj 78 319 cnv 17 3 105 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
-#X obj 78 441 cnv 17 3 17 empty \$0-pddp.cnv.let.0 0 5 9 0 16 -228856
--162280 0;
+#X restore 103 696 pd Related_objects;
+#X obj 78 319 cnv 17 3 105 empty \$0-pddp.cnv.let.0 0 5 6 0 16 #dcdcdc
+#646464 0;
+#X obj 78 441 cnv 17 3 49 empty \$0-pddp.cnv.let.0 0 5 6 0 16 #dcdcdc
+#646464 0;
 #X obj 484 11 openpanel;
-#X msg 171 104 bang;
-#X obj 171 217 print;
-#X text 211 104 Starts open panel in current directory;
-#X msg 187 130 symbol /tmp;
-#X msg 187 159 symbol C:/;
-#X text 265 130 Starts in a specified directory;
+#X msg 20 110 bang;
+#X obj 20 223 print;
+#X text 60 110 Starts open panel in current directory;
+#X msg 36 136 symbol /tmp;
+#X msg 36 165 symbol C:/;
+#X text 114 136 Starts in a specified directory;
 #X text 98 318 bang;
 #X text 98 364 symbol;
 #X text 98 398 list;
@@ -53,10 +52,10 @@ at the outet.;
 #X text 168 364 - sending a symbol will start the "Open file" browser
 in the specified directory.;
 #X text 98 440 symbol;
-#X obj 171 192 openpanel;
+#X obj 20 198 openpanel;
 #X text 167 440 - the filename of the selected file is output from
 the outlet.;
-#X text 99 507 Unlike other symbol-handling objects in Pd \, [openpanel]
+#X text 100 606 Unlike other symbol-handling objects in Pd \, [openpanel]
 can output a symbol that contains spaces \, which will get handled
 propertly by an object like [soundfiler]. However \, if you set this
 filename to a message box and save the patch \, the symbol will be
@@ -64,9 +63,30 @@ converted to a list the next time you open the patch.;
 #X text 11 23 query the user for a filename;
 #X text 168 398 - a list starting with a symbol will be truncated to
 the first element.;
-#X obj 4 597 pddp/pddplink all_about_help_patches.pd -text Usage Guide
+#X obj 5 696 pddp/pddplink all_about_help_patches.pd -text Usage Guide
 ;
-#X connect 12 0 24 0;
-#X connect 15 0 24 0;
-#X connect 16 0 24 0;
-#X connect 24 0 13 0;
+#X text 98 505 mode) float;
+#X text 165 506 - allows you to choose between selecting a single file
+\, multiple files \, or a directory. Defaults to mode 0 0 - Single
+File - Outlets a symbol1 - Directory - Outlets a symbol2 - Multiple
+Files - Outlets a list;
+#X text 166 473 - a list of all filenames of the selected files isoutput
+from the outlet.;
+#X text 97 473 list;
+#X obj 210 200 openpanel 1;
+#X obj 210 225 print;
+#X obj 375 200 openpanel 2;
+#X obj 375 225 print;
+#X msg 210 175 bang;
+#X msg 375 175 bang;
+#X text 250 174 Select a folder;
+#X text 415 175 Select multiple files;
+#X text 20 80 Select a file;
+#X connect 11 0 23 0;
+#X connect 14 0 23 0;
+#X connect 15 0 23 0;
+#X connect 23 0 12 0;
+#X connect 33 0 34 0;
+#X connect 35 0 36 0;
+#X connect 37 0 33 0;
+#X connect 38 0 35 0;
