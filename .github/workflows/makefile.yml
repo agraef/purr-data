@@ -13,7 +13,7 @@ jobs:
     runs-on: macos-13
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
         fetch-depth: 0
@@ -44,7 +44,7 @@ jobs:
       run: make check
 
     - name: upload
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: purr-data-${{ env.version }}-macos-x86_64
         path: Purr-Data-*.dmg
@@ -57,7 +57,7 @@ jobs:
       DEBEMAIL: "Albert Graef <aggraef@gmail.com>"
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
         fetch-depth: 0
@@ -83,7 +83,7 @@ jobs:
       run: echo handled by debuild
 
     - name: upload
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: purr-data-${{ env.version }}-ubuntu-x86_64
         path: debuild/purr-data*.deb
@@ -102,7 +102,7 @@ jobs:
     steps:
     - uses: msys2/setup-msys2@v2
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
         fetch-depth: 0
@@ -130,7 +130,7 @@ jobs:
       run: make check
 
     - name: upload
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: purr-data-${{ env.version }}-mingw-x86_64
         path: Purr-Data-*.exe
