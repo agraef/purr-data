@@ -24,7 +24,7 @@ typedef struct _split
      t_symbol* x_splitter;
 } t_split;
 
-void split_anything(t_split *, struct _symbol *, long int,  t_atom *);
+void split_anything(t_split *, t_symbol *, t_int,  t_atom *);
 
 
 void split_symbol(t_split *x, t_symbol *s)
