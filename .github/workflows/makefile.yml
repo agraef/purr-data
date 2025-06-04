@@ -52,7 +52,7 @@ jobs:
 
   ubuntu-build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       DEBEMAIL: "Albert Graef <aggraef@gmail.com>"
 
