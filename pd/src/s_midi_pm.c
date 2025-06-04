@@ -3,11 +3,9 @@
 * For information on usage and redistribution, and for a DISCLAIMER OF ALL
 * WARRANTIES, see the file, "LICENSE.txt," in this distribution.
 
-   this file calls portmidi to do MIDI I/O for MSW and Mac OSX. 
+   this file calls portmidi to do MIDI I/O for MSW and Mac OSX.
 
 */
-
-#include "config.h"
 
 #include "m_pd.h"
 #include "s_stuff.h"
@@ -15,13 +13,31 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #include <sys/time.h>
+#ifndef _WIN32
 #include <sys/resource.h>
-#endif
+#endif /* _WIN32 */
+#endif /* HAVE_UNISTD_H */
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
 #include "portmidi.h"
 #include "porttime.h"
+
+/* full status byte definitions in s_midi.c */
+/* channel voice messages */
+#define MIDI_NOTEOFF        0x80
+#define MIDI_NOTEON         0x90
+#define MIDI_POLYAFTERTOUCH 0xa0
+#define MIDI_CONTROLCHANGE  0xb0
+#define MIDI_PROGRAMCHANGE  0xc0
+#define MIDI_AFTERTOUCH     0xd0
+#define MIDI_PITCHBEND      0xe0
+/* system common messages */
+#define MIDI_SYSEX          0xf0
+#define MIDI_TIMECODE       0xf1
+#define MIDI_SONGPOS        0xf2
+#define MIDI_SONGSELECT     0xf3
+#define MIDI_SYSEXEND       0xf7
 
 static PmStream *mac_midiindevlist[MAXMIDIINDEV];
 static PmStream *mac_midioutdevlist[MAXMIDIOUTDEV];
@@ -34,7 +50,7 @@ void sys_do_open_midi(int nmidiin, int *midiinvec,
     int i = 0, j, devno;
     int n = 0;
     PmError err;
-    
+
     Pt_Start(1, 0, 0); /* start a timer with millisecond accuracy */
 
     mac_nmidiindev = 0;
@@ -52,11 +68,12 @@ void sys_do_open_midi(int nmidiin, int *midiinvec,
                     if (err)
                         post("could not open midi input %d (%s): %s",
                             j, info->name, Pm_GetErrorText(err));
-        
-                    else        
+                    else
                     {
+                        /* disable default active sense filtering */
+                        Pm_SetFilter(mac_midiindevlist[mac_nmidiindev], 0);
                         if (sys_verbose)
-                            post("Midi Input (%s) opened.",
+                            post("midi input (%s) opened.",
                                 info->name);
                         mac_nmidiindev++;
                     }
@@ -64,7 +81,7 @@ void sys_do_open_midi(int nmidiin, int *midiinvec,
                 devno++;
             }
         }
-    }   
+    }
 
     mac_nmidioutdev = 0;
     for (i = 0; i < nmidiout; i++)
@@ -82,10 +99,10 @@ void sys_do_open_midi(int nmidiin, int *midiinvec,
                     if (err)
                         post("could not open midi output %d (%s): %s",
                             j, info->name, Pm_GetErrorText(err));
-                    else        
+                    else
                     {
                         if (sys_verbose)
-                            post("Midi Output (%s) opened.",
+                            post("midi output (%s) opened.",
                                 info->name);
                         mac_nmidioutdev++;
                     }
@@ -93,7 +110,7 @@ void sys_do_open_midi(int nmidiin, int *midiinvec,
                 devno++;
             }
         }
-    }   
+    }
 }
 
 void sys_close_midi( void)
@@ -104,7 +121,7 @@ void sys_close_midi( void)
     mac_nmidiindev = 0;
     for (i = 0; i < mac_nmidioutdev; i++)
         Pm_Close(mac_midioutdevlist[i]);
-    mac_nmidioutdev = 0; 
+    mac_nmidioutdev = 0;
 }
 
 void pm_fini_midi(void)
@@ -142,16 +159,21 @@ void sys_putmidibyte(int portno, int byte)
         fit into PortMidi buffers. */
     static int mess[4];
     static int nbytes = 0, sysex = 0, i;
-    if (byte >= 0xf8)   /* MIDI real time */
-        writemidi4(mac_midioutdevlist[portno], byte, 0, 0, 0);
-    else if (byte == 0xf0)
+    if (byte > MIDI_SYSEXEND)
     {
-        mess[0] = 0xf0;
+        /* realtime */
+        writemidi4(mac_midioutdevlist[portno], byte, 0, 0, 0);
+    }
+    else if (byte == MIDI_SYSEX)
+    {
+        /* sysex start */
+        mess[0] = MIDI_SYSEX;
         nbytes = 1;
         sysex = 1;
     }
-    else if (byte == 0xf7)
+    else if (byte == MIDI_SYSEXEND)
     {
+        /* sysex end */
         mess[nbytes] = byte;
         for (i = nbytes+1; i < 4; i++)
             mess[i] = 0;
@@ -160,22 +182,26 @@ void sys_putmidibyte(int portno, int byte)
         sysex = 0;
         nbytes = 0;
     }
-    else if (byte >= 0x80)
+    else if (byte >= MIDI_NOTEOFF)
     {
+        /* status byte */
         sysex = 0;
-        if (byte == 0xf4 || byte == 0xf5 || byte == 0xf6)
+        if (byte > MIDI_SONGSELECT)
         {
+            /* 0 data bytes */
             writemidi4(mac_midioutdevlist[portno], byte, 0, 0, 0);
             nbytes = 0;
         }
         else
         {
+            /* 1 or 2 data bytes */
             mess[0] = byte;
             nbytes = 1;
         }
     }
     else if (sysex)
     {
+        /* sysex data byte */
         mess[nbytes] = byte;
         nbytes++;
         if (nbytes == 4)
@@ -187,16 +213,16 @@ void sys_putmidibyte(int portno, int byte)
     }
     else if (nbytes)
     {
+        /* channel or system message */
         int status = mess[0];
-        if (status < 0xf0)
+        if (status < MIDI_SYSEX)
             status &= 0xf0;
-                /* 2 byte messages: */
-        if (status == 0xc0 || status == 0xd0 ||
-            status == 0xf1 || status == 0xf3)
+        if (status == MIDI_PROGRAMCHANGE || status == MIDI_AFTERTOUCH ||
+            status == MIDI_TIMECODE || status == MIDI_SONGSELECT)
         {
             writemidi4(mac_midioutdevlist[portno],
                 mess[0], byte, 0, 0);
-            nbytes = (status < 0xf0 ? 1 : 0);
+            nbytes = (status < MIDI_SYSEX ? 1 : 0);
         }
         else
         {
@@ -216,33 +242,33 @@ void sys_putmidibyte(int portno, int byte)
 }
 
 /* this is non-zero if we are in the middle of transmitting sysex */
+int nd_sysex_mode = 0;
 
-int nd_sysex_mode=0;
-
-/* send in 4 bytes of sysex data. if one of the bytes is 0xF7 (sysex end) stop and unset nd_sysex_mode */ 
+/* send in 4 bytes of sysex data. if one of the bytes is sysex end
+    stop and unset nd_sysex_mode */
 void nd_sysex_inword(int midiindev, int status, int data1, int data2, int data3)
 {
     if (nd_sysex_mode) {
         sys_midibytein(midiindev, status);
-        if (status == 0xF7)
+        if (status == MIDI_SYSEXEND)
             nd_sysex_mode = 0;
     }
 
     if (nd_sysex_mode) {
         sys_midibytein(midiindev, data1);
-        if (data1 == 0xF7)
+        if (data1 == MIDI_SYSEXEND)
             nd_sysex_mode = 0;
     }
 
     if (nd_sysex_mode) {
         sys_midibytein(midiindev, data2);
-        if (data2 == 0xF7)
+        if (data2 == MIDI_SYSEXEND)
             nd_sysex_mode = 0;
     }
 
     if (nd_sysex_mode) {
         sys_midibytein(midiindev, data3);
-        if (data3 == 0xF7)
+        if (data3 == MIDI_SYSEXEND)
             nd_sysex_mode = 0;
     }
 }
@@ -253,7 +279,7 @@ void sys_poll_midi(void)
     PmEvent buffer;
     for (i = 0; i < mac_nmidiindev; i++)
     {
-        while (1)
+        if(Pm_Poll(mac_midiindevlist[i]))
         {
             if (!throttle--)
                 goto overload;
@@ -263,34 +289,51 @@ void sys_poll_midi(void)
                 int status = Pm_MessageStatus(buffer.message);
                 int data1  = Pm_MessageData1(buffer.message);
                 int data2  = Pm_MessageData2(buffer.message);
-                int data3 = ((buffer.message >> 24) & 0xFF);
-                int msgtype = (status >> 4) - 8;
-                switch (msgtype)
+                int data3  = ((buffer.message >> 24) & 0xff);
+                int msgtype = ((status & 0xf0) == 0xf0 ?
+                                status : (status & 0xf0));
+
+                if (status > MIDI_SYSEXEND)
                 {
-                case 0: 
-                case 1: 
-                case 2:
-                case 3:
-                case 6:
+                    /* realtime message */
                     sys_midibytein(i, status);
-                    sys_midibytein(i, data1);
-                    sys_midibytein(i, data2);
-                    break; 
-                case 4:
-                case 5:
-                    sys_midibytein(i, status);
-                    sys_midibytein(i, data1);
-                    break;
-                case 7:
-                    nd_sysex_mode=1;
+                }
+                else if (nd_sysex_mode)
                     nd_sysex_inword(i, status, data1, data2, data3);
-                    break; 
-                default:
-                    if (nd_sysex_mode)
+                else switch (msgtype)
+                {
+                    /* 2 data bytes */
+                    case MIDI_NOTEOFF:
+                    case MIDI_NOTEON:
+                    case MIDI_POLYAFTERTOUCH:
+                    case MIDI_CONTROLCHANGE:
+                    case MIDI_PITCHBEND:
+                    case MIDI_SONGPOS:
+                        sys_midibytein(i, status);
+                        sys_midibytein(i, data1);
+                        sys_midibytein(i, data2);
+                        break;
+                    /* 1 data byte */
+                    case MIDI_PROGRAMCHANGE:
+                    case MIDI_AFTERTOUCH:
+                    case MIDI_TIMECODE:
+                    case MIDI_SONGSELECT:
+                        sys_midibytein(i, status);
+                        sys_midibytein(i, data1);
+                        break;
+                    /* no data bytes */
+                    case MIDI_SYSEX:
+                        nd_sysex_mode = 1;
                         nd_sysex_inword(i, status, data1, data2, data3);
+                        break;
+                    /* all others */
+                    default:
+                        sys_midibytein(i, status);
+                        break;
                 }
             }
-            else break;
+            else if (nmess != pmBufferOverflow)
+                break;
         }
     }
     overload: ;
