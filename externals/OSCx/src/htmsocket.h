@@ -34,7 +34,6 @@ The OSC webpage is http://cnmat.cnmat.berkeley.edu/OpenSoundControl
 #define TRUE 1
 #define FALSE 0
 #endif
-typedef int bool;
 
 /* open a socket for HTM communication to given  host on given portnumber */
 /* if host is 0 then UNIX protocol is used (i.e. local communication) */
@@ -42,7 +41,7 @@ void *OpenHTMSocket(char *host, int portnumber, short *multicast_TTL);
 
 /* send a buffer of data over htm socket, returns TRUE on success.
  Note that udp sends rarely fail. UNIX sends fail if a kernal buffer overflows */
-bool SendHTMSocket(void *htmsendhandle, int length_in_bytes, void *buffer);
+int SendHTMSocket(void *htmsendhandle, int length_in_bytes, void *buffer);
 
 /* close the socket(2) and release memory associated with it */
 void CloseHTMSocket(void *htmsendhandle);

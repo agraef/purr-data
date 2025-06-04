@@ -23,7 +23,6 @@ void fftease_rfft( t_float *x, int N, int forward )
 		N2p1;
   static int 	first = 1;
 /*t_float PI, TWOPI;*/
-void fftease_cfft();
 
     if ( first ) {
 
@@ -101,7 +100,6 @@ void fftease_cfft( t_float *x, int NC, int forward )
 		i,j,
 		delta;
 
-void fftease_bitreverse();
 
     ND = NC<<1;
     fftease_bitreverse( x, ND );

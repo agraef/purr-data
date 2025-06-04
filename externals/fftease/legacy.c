@@ -61,7 +61,6 @@ void old_unconvert( float *C, float *S, int N2, float *lastphase, float fundamen
 		freq;
   float 	mag,
 		phase;
-double sin(), cos();
 
     for ( i = 0; i <= N2; i++ ) {
 

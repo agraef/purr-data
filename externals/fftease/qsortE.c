@@ -53,7 +53,7 @@ Boston, MA 02111-1307, USA. */
 
 /* requisite prototype */
 
-int qsortE (char *base_ptr, int total_elems, int size, int (*cmp)());
+int qsortE (char *base_ptr, int total_elems, int size, int (*cmp)(const void *a, const void *b));
 
 
 
@@ -88,7 +88,7 @@ typedef struct
       smaller partition.  This *guarantees* no more than log (n)
       stack size is needed (actually O(1) in this case)! */
 
-int qsortE (char *base_ptr, int total_elems, int size, int (*cmp)())
+int qsortE (char *base_ptr, int total_elems, int size, int (*cmp)(const void *a, const void *b))
 {
   /* Allocating SIZE bytes for a pivot buffer facilitates a better
      algorithm below since we can do comparisons directly on the pivot. */

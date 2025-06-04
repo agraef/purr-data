@@ -10,7 +10,7 @@ typedef struct _maskxor
   t_float suml, sumr;
   t_float f_in, yes;
   t_float mode;
-  t_outlet *thru, *bool, *maskout;
+  t_outlet *thru, *flag, *maskout;
 } t_maskxor;
 
 void maskxor_float(t_maskxor *x, t_floatarg fin)
@@ -21,7 +21,7 @@ void maskxor_float(t_maskxor *x, t_floatarg fin)
       {
 	x->f_in = fin;
 	x->yes = atom_getfloatarg(input, x->lengthm, x->maskxor);
-	outlet_float(x->bool, x->yes);
+	outlet_float(x->flag, x->yes);
 	if(x->yes != 0)
 	  {
 	    outlet_float(x->thru, x->f_in);
@@ -31,7 +31,7 @@ void maskxor_float(t_maskxor *x, t_floatarg fin)
       {
 	x->f_in = fin;
 	x->yes = atom_getfloatarg(input, x->lengthm, x->maskxor);
-	outlet_float(x->bool, x->yes);
+	outlet_float(x->flag, x->yes);
 	if(x->yes != 0)
 	  {
 	    outlet_float(x->thru, x->f_in);
@@ -43,7 +43,7 @@ void maskxor_float(t_maskxor *x, t_floatarg fin)
 void maskxor_bang(t_maskxor *x, t_symbol *s)
 {
   outlet_list(x->maskout, &s_list, x->lengthm, x->maskxor);
-  outlet_float(x->bool, x->yes);
+  outlet_float(x->flag, x->yes);
   if(x->yes != 0)
     {
       outlet_float(x->thru, x->f_in);
@@ -191,7 +191,7 @@ void *maskxor_new(t_floatarg fmode)
   x->lengthm = 0;
 
   x->thru = outlet_new(&x->x_obj, &s_float);
-  x->bool = outlet_new(&x->x_obj, &s_float);
+  x->flag = outlet_new(&x->x_obj, &s_float);
   x->maskout = outlet_new(&x->x_obj, &s_list);
   return (void *)x;
 }

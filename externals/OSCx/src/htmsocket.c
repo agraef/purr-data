@@ -351,7 +351,7 @@ void *OpenHTMSocket(char *host, int portnumber, short *multicast_TTL)
 
 #include <errno.h>
 
-static  bool sendudp(const struct sockaddr *sp, int sockfd,int length, int count, void  *b)
+static  int sendudp(const struct sockaddr *sp, int sockfd,int length, int count, void  *b)
 {
 	int rcount;
 	if((rcount=sendto(sockfd, b, count, 0, sp, length)) != count)
@@ -361,7 +361,7 @@ static  bool sendudp(const struct sockaddr *sp, int sockfd,int length, int count
 	}
 	return TRUE;
 }
-bool SendHTMSocket(void *htmsendhandle, int length_in_bytes, void *buffer)
+int SendHTMSocket(void *htmsendhandle, int length_in_bytes, void *buffer)
 {
 	desc *o = (desc *)htmsendhandle;
 	return sendudp(o->addr, o->sockfd, o->len, length_in_bytes, buffer);

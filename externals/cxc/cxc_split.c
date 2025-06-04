@@ -15,9 +15,6 @@
 
 /* ------------------------ split ----------------------------- */
 
-// why have to do this?
-void split_anything();
-
 static t_class *split_class;
 
 
@@ -26,6 +23,8 @@ typedef struct _split
      t_object x_obj;
      t_symbol* x_splitter;
 } t_split;
+
+void split_anything(t_split *, struct _symbol *, long int,  t_atom *);
 
 
 void split_symbol(t_split *x, t_symbol *s)
